@@ -1,0 +1,44 @@
+Since you have unzipped the folder, you are done!!! Congrats. The following describes how to get a quick demo of pipe communication up and running. 
+
+You may also want to install gnuplot to get automatic results generation in a graphical form. To get your self up and running simply open a X enabled window(such as X11).
+
+Go to the Projects/GridWorldProject/ directory and open "config.txt". Set:
+
+	Agent = mineAgent.cpp
+	env = mines.cpp
+	main = main.c
+	common = mines_common.h   
+
+Then run the bash script file build.bash:
+
+	>> bash build.bash
+
+This will determine that you wish to use direct language call (one exe), compile and link the RL-Glue to run the mineAgent code on the mines environment using the main.c experiment program that sets up an episodic experiment where performance is measured online during learning. Then to run your experiment:
+
+	>>./RL_main
+
+Data will be saved in files either listed in graphical output or on the command line if you don't have gnuplot. All data files are stored in the Data directory in excel readable format. Thats it!!!
+
+This is a simple to use demo setup. To tweak the system for your use, feel free to:
+- create your own experiment program (like main.c)
+- create your own stats collection routines in Stats/RL_util.h
+- modify graphical output in Stats/gnu.cpp
+
+Use the existing code as a guide, it should be very clear how to modify it. Agents must be placed in the Agent directory and environments must be stored in the Env directory. If you were to create a new problem and a new agent you should:
+
+- create a new agent c/java/python file (Examples  can be found in RL-Library)
+- create a new environment c/java/python (Examples can be found in RL-Library)
+- create a new common types file (Examples can be found in RL-Library)
+
+So your up and running. Feel free to read the DOC file to find more details on the interface spec, features and abilities of the software and future extensions and planed releases.
+
+Send any comments/concerns/questions to awhite@cs.ualberta.ca
+
+Enjoy!
+
+UAlberta Team
+Adam White
+Rich Sutton
+Mark Lee
+
+

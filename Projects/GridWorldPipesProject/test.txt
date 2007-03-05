@@ -1,0 +1,3 @@
+javac -Xlint -d Build/ -classpath Build/ ../../RL-Glue1p1/Pipes/pipes_main.java
+javac -d Build/ -classpath ../../RL-Glue1p1/Pipes/ Stats/RL_util.java
+javac -d Build/ -classpath Stats/:../../RL-Glue1p1/Pipes/  main.java
