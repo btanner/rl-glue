@@ -253,98 +253,98 @@ MAINV = $MAIN
 AGENTV = $AGENT 
 ENVV = $ENV 
 COMMON = $COMM \n
-all:  ../../RL-Glue1p1/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o Build/gnu.o Build/spec.o  
+all:  ../../RL-Glue/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o Build/gnu.o Build/spec.o  
 \t\${CXX}  Build/env.o Build/gnu.o Build/RL_Interface.o Build/agent.o Build/main.o Build/spec.o  -o RL_main \n
-../../RL-Glue1p1/RLcommon.h: \${COMMON}
-\tcp \${COMMON} ../../RL-Glue1p1/RLcommon.h\n 
-Build/RL_Interface.o: ../../RL-Glue1p1/RL_Interface.c 
-\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue1p1/RL_Interface.c\n
+../../RL-Glue/RLcommon.h: \${COMMON}
+\tcp \${COMMON} ../../RL-Glue/RLcommon.h\n 
+Build/RL_Interface.o: ../../RL-Glue/RL_Interface.c 
+\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue/RL_Interface.c\n
 Build/main.o: \$(MAINV)
-\t\${CXX} -I ../../RL-Glue1p1/ -I Stats/ -g -o Build/main.o -c \$(MAINV) \n
+\t\${CXX} -I ../../RL-Glue/ -I Stats/ -g -o Build/main.o -c \$(MAINV) \n
 Build/agent.o: \$(AGENTV) 
-\t\${CXX} -I ../../RL-Glue1p1/ -I Utils/ -g -o Build/agent.o -c \$(AGENTV) \n
+\t\${CXX} -I ../../RL-Glue/ -I Utils/ -g -o Build/agent.o -c \$(AGENTV) \n
 Build/env.o: \$(ENVV) 
-\t\${CXX} -I ../../RL-Glue1p1/ -g -o Build/env.o -c \$(ENVV) \n
+\t\${CXX} -I ../../RL-Glue/ -g -o Build/env.o -c \$(ENVV) \n
 Build/gnu.o: Stats/gnu.cpp 
 \t\${CXX} -g -c -o Build/gnu.o Stats/gnu.cpp \n
 Build/spec.o: Utils/C_agent_parser.cpp
 \t\${CXX} -g -c -o Build/spec.o Utils/C_agent_parser.cpp\n
 
 clean: 
-\t-rm -rf Build/*.o RL_main core* ../../RL-Glue1p1/RLcommon.h 
+\t-rm -rf Build/*.o RL_main core* ../../RL-Glue/RLcommon.h 
 clean-irix:
-\trm -rf Build/*.o RL_main core* ../../RL-Glue1p1/RLcommon.h"
+\trm -rf Build/*.o RL_main core* ../../RL-Glue/RLcommon.h"
 
 makestr1=".PHONY: all clean clean-irix\n
-MAINV = ../../RL-Glue1p1/Pipes/main_pipe_handler.cpp
+MAINV = ../../RL-Glue/Pipes/main_pipe_handler.cpp
 AGENTV = $AGENT 
 ENVV = $ENV 
 COMMON = $COMM \n
-all:  ../../RL-Glue1p1/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o Build/spec.o  
+all:  ../../RL-Glue/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o Build/spec.o  
 \t\${CXX}  Build/env.o Build/RL_Interface.o Build/agent.o Build/main.o Build/spec.o -o RL_main \n
-../../RL-Glue1p1/RLcommon.h: \${COMMON}
-\tcp \${COMMON} ../../RL-Glue1p1/RLcommon.h\n 
-Build/RL_Interface.o: ../../RL-Glue1p1/RL_Interface.c 
-\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue1p1/RL_Interface.c\n
+../../RL-Glue/RLcommon.h: \${COMMON}
+\tcp \${COMMON} ../../RL-Glue/RLcommon.h\n 
+Build/RL_Interface.o: ../../RL-Glue/RL_Interface.c 
+\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue/RL_Interface.c\n
 Build/main.o: \$(MAINV)
-\t\${CXX} -I ../../RL-Glue1p1/  -g -o Build/main.o -c \$(MAINV) \n
+\t\${CXX} -I ../../RL-Glue/  -g -o Build/main.o -c \$(MAINV) \n
 Build/agent.o: \$(AGENTV) 
-\t\${CXX} -I ../../RL-Glue1p1/ -I Utils/ -g -o Build/agent.o -c \$(AGENTV) \n
+\t\${CXX} -I ../../RL-Glue/ -I Utils/ -g -o Build/agent.o -c \$(AGENTV) \n
 Build/env.o: \$(ENVV) 
-\t\${CXX} -I ../../RL-Glue1p1/ -g -o Build/env.o -c \$(ENVV) \n
+\t\${CXX} -I ../../RL-Glue/ -g -o Build/env.o -c \$(ENVV) \n
 Build/spec.o: Utils/C_agent_parser.cpp
 \t\${CXX} -g -c -o Build/spec.o Utils/C_agent_parser.cpp\n
 
 clean: 
-\t-rm -rf Build/*.o RL_main core* ../../RL-Glue1p1/RLcommon.h 
+\t-rm -rf Build/*.o RL_main core* ../../RL-Glue/RLcommon.h 
 clean-irix:
-\trm -rf Build/*.o RL_main core* ../../RL-Glue1p1/RLcommon.h"
+\trm -rf Build/*.o RL_main core* ../../RL-Glue/RLcommon.h"
 
 makestr2=".PHONY: all clean clean-irix\n
 MAINV = $MAIN 
-AGENTV = ../../RL-Glue1p1/Pipes/pipes_agent.cpp 
-ENVV = ../../RL-Glue1p1/Pipes/pipes_env.cpp 
-COMMON = ../../RL-Glue1p1/Pipes/Pipecommon.h \n
-all: ../../RL-Glue1p1/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o Build/gnu.o 
+AGENTV = ../../RL-Glue/Pipes/pipes_agent.cpp 
+ENVV = ../../RL-Glue/Pipes/pipes_env.cpp 
+COMMON = ../../RL-Glue/Pipes/Pipecommon.h \n
+all: ../../RL-Glue/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o Build/gnu.o 
 \t\${CXX}  Build/env.o Build/gnu.o Build/RL_Interface.o Build/agent.o Build/main.o -o RL_main\n
-../../RL-Glue1p1/RLcommon.h: \${COMMON}
-\tcp \${COMMON} ../../RL-Glue1p1/RLcommon.h\n
-Build/RL_Interface.o: ../../RL-Glue1p1/RL_Interface.c
-\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue1p1/RL_Interface.c\n
+../../RL-Glue/RLcommon.h: \${COMMON}
+\tcp \${COMMON} ../../RL-Glue/RLcommon.h\n
+Build/RL_Interface.o: ../../RL-Glue/RL_Interface.c
+\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue/RL_Interface.c\n
 Build/main.o: \$(MAINV)
-\t\${CXX} -I ../../RL-Glue1p1/ -I stats/ -g -o Build/main.o -c \$(MAINV)\n
+\t\${CXX} -I ../../RL-Glue/ -I stats/ -g -o Build/main.o -c \$(MAINV)\n
 Build/agent.o: \$(AGENTV)
-\t\${CXX} -I ../../RL-Glue1p1/ -I -g -o Build/agent.o -c \$(AGENTV)\n
+\t\${CXX} -I ../../RL-Glue/ -I -g -o Build/agent.o -c \$(AGENTV)\n
 Build/env.o: \$(ENVV)
-\t\${CXX} -I ../../RL-Glue1p1/ -g -o Build/env.o -c \$(ENVV)\n
+\t\${CXX} -I ../../RL-Glue/ -g -o Build/env.o -c \$(ENVV)\n
 Build/gnu.o: Stats/gnu.cpp
 \t\${CXX} -g -c -o Build/gnu.o Stats/gnu.cpp\n
 clean:
-\t-rm -rf Build/*.o RL_main  core*  ../../RL-Glue1p1/RLcommon.h
+\t-rm -rf Build/*.o RL_main  core*  ../../RL-Glue/RLcommon.h
 clean-irix:
-\trm -rf Build/*.o RL_main  core*  ../../RL-Glue1p1/RLcommon.h"
+\trm -rf Build/*.o RL_main  core*  ../../RL-Glue/RLcommon.h"
 
 makestr3=".PHONY: all clean clean-irix\n
-MAINV = ../../RL-Glue1p1/Pipes/main_pipe_handler.cpp 
-AGENTV = ../../RL-Glue1p1/Pipes/pipes_agent.cpp 
-ENVV = ../../RL-Glue1p1/Pipes/pipes_env.cpp 
-COMMON = ../../RL-Glue1p1/Pipes/Pipecommon.h \n
-all: ../../RL-Glue1p1/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o  
+MAINV = ../../RL-Glue/Pipes/main_pipe_handler.cpp 
+AGENTV = ../../RL-Glue/Pipes/pipes_agent.cpp 
+ENVV = ../../RL-Glue/Pipes/pipes_env.cpp 
+COMMON = ../../RL-Glue/Pipes/Pipecommon.h \n
+all: ../../RL-Glue/RLcommon.h Build/RL_Interface.o Build/agent.o Build/env.o Build/main.o  
 \t\${CXX}  Build/env.o Build/RL_Interface.o Build/agent.o Build/main.o -o RL_main\n
-../../RL-Glue1p1/RLcommon.h: \${COMMON}
-\tcp \${COMMON} ../../RL-Glue1p1/RLcommon.h\n
-Build/RL_Interface.o: ../../RL-Glue1p1/RL_Interface.c
-\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue1p1/RL_Interface.c\n
+../../RL-Glue/RLcommon.h: \${COMMON}
+\tcp \${COMMON} ../../RL-Glue/RLcommon.h\n
+Build/RL_Interface.o: ../../RL-Glue/RL_Interface.c
+\t\${CXX} -g -o Build/RL_Interface.o -c ../../RL-Glue/RL_Interface.c\n
 Build/main.o: \$(MAINV)
-\t\${CXX} -I ../../RL-Glue1p1/ -g -o Build/main.o -c \$(MAINV)\n
+\t\${CXX} -I ../../RL-Glue/ -g -o Build/main.o -c \$(MAINV)\n
 Build/agent.o: \$(AGENTV)
-\t\${CXX} -I ../../RL-Glue1p1/ -I -g -o Build/agent.o -c \$(AGENTV)\n
+\t\${CXX} -I ../../RL-Glue/ -I -g -o Build/agent.o -c \$(AGENTV)\n
 Build/env.o: \$(ENVV)
-\t\${CXX} -I ../../RL-Glue1p1/ -g -o Build/env.o -c \$(ENVV)\n
+\t\${CXX} -I ../../RL-Glue/ -g -o Build/env.o -c \$(ENVV)\n
 clean:
-\t-rm -rf Build/*.o RL_main  core*  ../../RL-Glue1p1/RLcommon.h
+\t-rm -rf Build/*.o RL_main  core*  ../../RL-Glue/RLcommon.h
 clean-irix:
-\trm -rf Build/*.o RL_main  core*  ../../RL-Glue1p1/RLcommon.h"
+\trm -rf Build/*.o RL_main  core*  ../../RL-Glue/RLcommon.h"
 
 
 rm makefile
