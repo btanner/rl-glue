@@ -1,5 +1,4 @@
-So, this step was running the following command svn copy -m "Create branch to work in issue 1"
-https://rl-glue.googlecode.com/svn/trunk/ https://rl-glue.googlecode.com/svn/branches/ISSUE-1
+svn copy -m "Create branch to work in issue 1" https://rl-glue.googlecode.com/svn/trunk/ https://rl-glue.googlecode.com/svn/branches/ISSUE-1
 
 Now we want to make a tag for this issue
 
