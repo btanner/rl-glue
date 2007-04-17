@@ -1,6 +1,0 @@
-Agent = SarsaAgent
-env = mines
-main = main.c
-common = mines_common.h
-
-
