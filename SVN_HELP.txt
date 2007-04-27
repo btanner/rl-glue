@@ -8,8 +8,7 @@ Ok, I'm going to "switch" to this branch and work on the issue.  I'll report bac
 
 svn switch https://rl-glue.googlecode.com/svn/branches/ISSUE-1
 
-svn copy -m "Tag end of issue 1 - fixed"
-https://rl-glue.googlecode.com/svn/branches/ISSUE-1 https://rl-glue.googlecode.com/svn/tags/POST-1
+svn copy -m "Tag end of issue 1 - fixed" https://rl-glue.googlecode.com/svn/branches/ISSUE-1 https://rl-glue.googlecode.com/svn/tags/POST-1
 
 Switch back to working on the trunk
 

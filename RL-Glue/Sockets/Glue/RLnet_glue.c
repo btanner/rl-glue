@@ -251,27 +251,20 @@ void run_benchmark(rlSocket theConnection)
 int main(int argc, char** argv)
 {
   rlSocket theConnection;
-  int theResult = 0;
   short thePort = 4095;
 
-  rlSocket theServer = rlOpen(thePort);
-  theResult = rlIsValidSocket(theServer);
-  assert(theResult != 0);
-  
-  theResult = rlListen(theServer);
-  assert(theResult >= 0);
-  
-  theConnection = rlAcceptConnection(theServer);
-  theResult = rlIsValidSocket(theConnection);
-  assert(theResult != 0);
-  
-  run_benchmark(theConnection);
-  
-  theResult = rlClose(theConnection);
-  assert(theResult == 0);
-  
-  theResult = rlClose(theServer);
-  assert(theResult == 0);
+  while(1)
+  {
+    rlSocket theServer = rlOpen(thePort);
+    assert(rlIsValidSocket(theServer));
+    assert(rlListen(theServer) >= 0);
+    theConnection = rlAcceptConnection(theServer);
+    rlClose(theServer);
+    
+    assert(rlIsValidSocket(theConnection));
+    run_benchmark(theConnection);
+    assert(rlClose(theConnection) >= 0);
+  }
 
   return 0;
 }
