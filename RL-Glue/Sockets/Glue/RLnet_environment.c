@@ -55,14 +55,23 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
 
 Task_specification env_init()
 {
+  int isValidServerSocket = 0;
+  int isValidDataSocket = 0;
+  int isListening = 0;
   int theTaskSpecLength = 0;
   rlSocket theServer = rlOpen(4097);
+
+  isValidServerSocket = rlIsValidSocket(theServer);
   assert(rlIsValidSocket(theServer));
-  assert(rlListen(theServer) >= 0);
+
+  isListening = rlListen(theServer);
+  assert(isListening >= 0);
+
   theEnvironmentConnection = rlAcceptConnection(theServer);
   rlClose(theServer);
 
-  assert(rlIsValidSocket(theEnvironmentConnection));
+  isValidDataSocket = rlIsValidSocket(theEnvironmentConnection);
+  assert(isValidDataSocket);
 
   send_msg(theEnvironmentConnection, kEnvInit);
 

@@ -152,6 +152,7 @@ void run_agent(rlSocket theConnection)
 int main(int argc, char** argv)
 {
   rlSocket theConnection;
+  int theResult = 0;
   short thePort = 0;
 
   if (argc != 3) 
@@ -163,11 +164,16 @@ int main(int argc, char** argv)
   sscanf(argv[2], "%hd", &thePort);
 
   theConnection = rlOpen(thePort);
-  assert(rlIsValidSocket(theConnection));
-
-  assert(rlConnect(theConnection, argv[1]) >= 0);
+  theResult = rlIsValidSocket(theConnection);
+  assert(theResult);
+  
+  theResult = rlConnect(theConnection, argv[1]);
+  assert(theResult >= 0);
+  
   run_agent(theConnection);
-  assert(rlClose(theConnection) >= 0);
-
+  
+  theResult = rlClose(theConnection);
+  assert(theResult == 0);
+  
   return 0;
 }

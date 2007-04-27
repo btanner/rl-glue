@@ -50,14 +50,22 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
 
 void agent_init(Task_specification theTaskSpecBuffer)
 {
+  int theResult = 0;
   int theTaskSpecLength = 0;
-  rlSocket theServer = rlOpen(4096);
-  assert(rlIsValidSocket(theServer));
-  assert(rlListen(theServer) >= 0);
-  theAgentConnection = rlAcceptConnection(theServer);
-  rlClose(theServer);
 
-  assert(rlIsValidSocket(theAgentConnection));
+  rlSocket theServer = rlOpen(4096);
+  theResult = rlIsValidSocket(theServer);
+  assert(theResult != 0);
+
+  theResult = rlListen(theServer);
+  assert(theResult >= 0);
+
+  theAgentConnection = rlAcceptConnection(theServer);
+  theResult = rlIsValidSocket(theAgentConnection);
+  assert(theResult != 0);
+
+  theResult = rlClose(theServer);
+  assert(theResult == 0);
 
   send_msg(theAgentConnection, kAgentInit);
 
