@@ -1,6 +1,0 @@
-Agent = mineAgent.cpp
-env = mines.cpp
-main = main.c
-common = mines_common.h
-
-
