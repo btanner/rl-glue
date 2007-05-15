@@ -8,8 +8,8 @@ typedef double Reward;
 
 typedef struct RL_abstract_type_t
 {
-  int numInts;
-  int numDoubles;
+  unsigned int numInts;
+  unsigned int numDoubles;
   int* intArray;
   double* doubleArray;
 } RL_abstract_type;
