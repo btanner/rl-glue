@@ -36,6 +36,12 @@ b:
 	make -f makeBenchmark clean
 	make -f makeBenchmark
 
+ra:
+	./RL_main &
+	./RL_benchmark 127.0.0.1 4095 &
+	./RL_environment 127.0.0.1 4097 &
+	./RL_agent 127.0.0.1 4096 &
+
 clean:
 	make -f makeGlue clean
 	make -f makeAgent clean

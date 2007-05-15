@@ -6,12 +6,6 @@
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
 
-#ifdef NETWORK_DEBUG
-#define RLNET_DEBUG(x) x
-#else
-#define RLNET_DEBUG(x)
-#endif
-
 static rlSocket theGlueConnection;
 static Observation theObservation;
 static Action theAction;
@@ -37,8 +31,6 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
   char send_buffer[8] = {0};
   strncpy(send_buffer, theMessage, 8);
   rlSendData(theSocket, send_buffer, 8);
-
-  RLNET_DEBUG( fprintf(stderr, "BENCHMARK SENT: %s\n", send_buffer); )
 }
 
 static void recv_receipt(rlSocket theSocket, const char* theExpectedMessage)
@@ -54,9 +46,18 @@ static void recv_receipt(rlSocket theSocket, const char* theExpectedMessage)
 
 void RL_init()
 {
-  theGlueConnection = rlOpen(4095);
-  assert(rlIsValidSocket(theGlueConnection));
-  assert(rlConnect(theGlueConnection, "127.0.0.1") >= 0);
+  int isValidSocket = 0;
+  int isConnected = -1;
+
+  while(isConnected < 0) 
+  {
+    theGlueConnection = rlOpen(4095);
+    isValidSocket = rlIsValidSocket(theGlueConnection);
+    assert(isValidSocket);
+   
+    isConnected = rlConnect(theGlueConnection, "127.0.0.1");
+    if (isConnected < 0) rlClose(theGlueConnection); /* We need to try again */
+  }
 
   send_msg(theGlueConnection, kRLInit);
 

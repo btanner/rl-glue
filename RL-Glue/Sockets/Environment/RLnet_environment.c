@@ -6,12 +6,6 @@
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
 
-#ifdef NETWORK_DEBUG
-#define RLNET_DEBUG(x) x
-#else
-#define RLNET_DEBUG(x)
-#endif
-
 const char* kEnvInit = "init";
 const char* kEnvStart= "start";
 const char* kEnvStep = "step";
@@ -41,23 +35,6 @@ extern Random_seed_key env_get_random_seed();
 
 const char* kUnknownMessage = "Unknown Message: %s\n";
 const char* kUsage = "Usage: Environment <ip-address> <port>\n";
-
-void print_reward(Reward theReward)
-{
-  fprintf(stderr, "ENV SENT: theReward %f\n", theReward);
-}
-
-void print_action_header(Action theAction)
-{
-  fprintf(stderr, "ENV RECV: theAction.numInts = %d\n", theAction.numInts);
-  fprintf(stderr, "ENV RECV: theAction.numDoubles = %d\n", theAction.numDoubles);
-}
-
-void print_observation_header(Observation theObservation)
-{
-  fprintf(stderr, "ENV SENT: theObservation.numInts = %d\n", theObservation.numInts);
-  fprintf(stderr, "ENV SENT: theObservation.numDoubles = %d\n", theObservation.numDoubles);
-}
 
 void on_env_init(rlSocket theConnection)
 {
@@ -130,14 +107,13 @@ void on_env_get_random_seed(rlSocket theConnection)
   /* Random_seed_key env_get_random_seed(); */
 }
 
-void run_env(rlSocket theConnection)
+void run_environment(rlSocket theConnection)
 {
   char theMessage[8] = {0};
 
   do
   { 
     rlRecvData(theConnection, theMessage, 8);
-    RLNET_DEBUG( fprintf(stderr, "ENV RECV: %s\n", theMessage); )
 	      
     if (strncmp(theMessage, kEnvInit, 8) == 0)
     {
@@ -182,6 +158,11 @@ void run_env(rlSocket theConnection)
 int main(int argc, char** argv)
 {
   rlSocket theConnection;
+
+  int isValidSocket = 0;
+  int isConnected = -1;
+  int isClosed = 0;
+
   short thePort = 0;
 
   if (argc != 3) 
@@ -192,12 +173,24 @@ int main(int argc, char** argv)
 
   sscanf(argv[2], "%hd", &thePort);
 
-  theConnection = rlOpen(thePort);
-  assert(rlIsValidSocket(theConnection));
+  while(1)
+  {
+    while(isConnected < 0)
+    {
+      theConnection = rlOpen(thePort);
+      isValidSocket = rlIsValidSocket(theConnection);
+      assert(isValidSocket);
+      
+      isConnected = rlConnect(theConnection, argv[1]);
+      if (isConnected < 0) rlClose(theConnection); /* We need to try again */
+    }
 
-  assert(rlConnect(theConnection, argv[1]) >= 0);
-  run_env(theConnection);
-  assert(rlClose(theConnection) >= 0);
+    run_environment(theConnection);
+    
+    isClosed = rlClose(theConnection);
+    isConnected = -1;
+    /* assert(isClosed >= 0); */
+  }
 
   return 0;
 }

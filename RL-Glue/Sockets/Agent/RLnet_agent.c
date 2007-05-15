@@ -6,12 +6,6 @@
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
 
-#ifdef NETWORK_DEBUG
-#define RLNET_DEBUG(x) x
-#else
-#define RLNET_DEBUG(x)
-#endif
-
 const char* kAgentInit = "init";
 const char* kAgentStart= "start";
 const char* kAgentStep = "step";
@@ -37,23 +31,6 @@ extern void agent_cleanup();
 const char* kUnknownMessage = "Unknown Message: %s\n";
 const char* kUsage = "Usage: Agent <ip-address> <port>\n";
 
-void print_reward(Reward theReward)
-{
-  fprintf(stderr, "AGENT RECV: theReward %f\n", theReward);
-}
-
-void print_action_header(Action theAction)
-{
-  fprintf(stderr, "AGENT SENT: theAction.numInts = %d\n", theAction.numInts);
-  fprintf(stderr, "AGENT SENT: theAction.numDoubles = %d\n", theAction.numDoubles);
-}
-
-void print_observation_header(Observation theObservation)
-{
-  fprintf(stderr, "AGENT RECV: theObservation.numInts = %d\n", theObservation.numInts);
-  fprintf(stderr, "AGENT RECV: theObservation.numDoubles = %d\n", theObservation.numDoubles);
-}
-
 void on_agent_init(rlSocket theConnection)
 {
   theTaskSpecLength = 0;
@@ -71,32 +48,23 @@ void on_agent_start(rlSocket theConnection)
   theObservation.intArray = (int*)calloc(theObservation.numInts, sizeof(int));
   theObservation.doubleArray = (double*)calloc(theObservation.numDoubles, sizeof(double));
   rlRecvObservationBody(theConnection, &theObservation);
-  RLNET_DEBUG( print_observation_header(theObservation); )
 
   theAction = agent_start(theObservation);
   rlSendAction(theConnection, theAction);
-  RLNET_DEBUG( print_action_header(theAction); )
 }
 
 void on_agent_step(rlSocket theConnection)
 {
   rlRecvReward(theConnection, &theReward);
-  RLNET_DEBUG( print_reward(theReward); )
-
   rlRecvObservation(theConnection, &theObservation);
-  RLNET_DEBUG( print_observation_header(theObservation); )
-
   theAction = agent_step(theReward, theObservation);
 
   rlSendAction(theConnection, theAction);
-  RLNET_DEBUG( print_action_header(theAction); )
 }
 
 void on_agent_end(rlSocket theConnection)
 {
   rlRecvReward(theConnection, &theReward);
-  RLNET_DEBUG( print_reward(theReward); )
-
   agent_end(theReward);
 
   free(theObservation.intArray);
@@ -119,7 +87,6 @@ void run_agent(rlSocket theConnection)
   do
   { 
     rlRecvData(theConnection, theMessage, 8);
-    RLNET_DEBUG( fprintf(stderr, "AGENT RECV: %s\n", theMessage); )
 	      
     if (strncmp(theMessage, kAgentInit, 8) == 0)
     {
@@ -152,6 +119,11 @@ void run_agent(rlSocket theConnection)
 int main(int argc, char** argv)
 {
   rlSocket theConnection;
+
+  int isValidSocket = 0;
+  int isConnected = -1;
+  int isClosed = 0;
+
   short thePort = 0;
 
   if (argc != 3) 
@@ -162,12 +134,24 @@ int main(int argc, char** argv)
 
   sscanf(argv[2], "%hd", &thePort);
 
-  theConnection = rlOpen(thePort);
-  assert(rlIsValidSocket(theConnection));
+  while(1)
+  {
+    while(isConnected < 0)
+    {
+      theConnection = rlOpen(thePort);
+      isValidSocket = rlIsValidSocket(theConnection);
+      assert(isValidSocket);
+      
+      isConnected = rlConnect(theConnection, argv[1]);
+      if (isConnected < 0) rlClose(theConnection); /* We need to try again */
+    }
 
-  assert(rlConnect(theConnection, argv[1]) >= 0);
-  run_agent(theConnection);
-  assert(rlClose(theConnection) >= 0);
+    run_agent(theConnection);
+    
+    isClosed = rlClose(theConnection);
+    isConnected = -1;
+    /* assert(isClosed >= 0); */
+  }
 
   return 0;
 }

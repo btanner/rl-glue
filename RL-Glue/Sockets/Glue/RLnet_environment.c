@@ -1,9 +1,3 @@
-#ifdef NETWORK_DEBUG
-#define RLNET_DEBUG(x) x
-#else
-#define RLNET_DEBUG(x)
-#endif
-
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
@@ -27,42 +21,32 @@ const char* kEnvSetRandomSeed = "setrs";
 const char* kEnvGetStateKey = "getsk";
 const char* kEnvGetRandomSeed = "getrs";
 
-static void print_reward(Reward theReward)
-{
-  fprintf(stderr, "GLUE SENT: theReward %f\n", theReward);
-}
-
-static void print_action_header(Action theAction)
-{
-  fprintf(stderr, "GLUE RECV: theAction.numInts = %d\n", theAction.numInts);
-  fprintf(stderr, "GLUE RECV: theAction.numDoubles = %d\n", theAction.numDoubles);
-}
-
-static void print_observation_header(Observation theObservation)
-{
-  fprintf(stderr, "GLUE SENT: theObservation.numInts = %d\n", theObservation.numInts);
-  fprintf(stderr, "GLUE SENT: theObservation.numDoubles = %d\n", theObservation.numDoubles);
-}
-
 static void send_msg(rlSocket theSocket, const char* theMessage)
 {
   char send_buffer[8] = {0};
   strncpy(send_buffer, theMessage, 8);
   rlSendData(theSocket, send_buffer, 8);
-
-  RLNET_DEBUG( fprintf(stderr, "GLUE SENT: %s\n", send_buffer); )
 }
 
 Task_specification env_init()
 {
   int theTaskSpecLength = 0;
-  rlSocket theServer = rlOpen(4097);
-  assert(rlIsValidSocket(theServer));
-  assert(rlListen(theServer) >= 0);
-  theEnvironmentConnection = rlAcceptConnection(theServer);
-  rlClose(theServer);
+  rlSocket theServer;
+  int isValidSocket;
+  int isListening;
 
-  assert(rlIsValidSocket(theEnvironmentConnection));
+  theServer = rlOpen(4097);
+  isValidSocket = rlIsValidSocket(theServer);
+  assert(isValidSocket);
+
+  isListening = rlListen(theServer);
+  assert(isListening >= 0);
+
+  theEnvironmentConnection = rlAcceptConnection(theServer);
+  isValidSocket = rlIsValidSocket(theEnvironmentConnection);
+  assert(isValidSocket);
+
+  rlClose(theServer);
 
   send_msg(theEnvironmentConnection, kEnvInit);
 
@@ -80,8 +64,6 @@ Observation env_start()
 {
   send_msg(theEnvironmentConnection, kEnvStart);
   rlRecvObservationHeader(theEnvironmentConnection, &theObservation);
-  RLNET_DEBUG( print_observation_header(theObservation) );
-
 
   if (isAllocated == 0)
   {
@@ -103,15 +85,9 @@ Reward_observation env_step(Action theAction)
 {
   Reward_observation theRewardObservation;
 
-  send_msg(theEnvironmentConnection, kEnvStep);
-  RLNET_DEBUG( fprintf(stderr, "ENV SENT: %s\n", kEnvStep); )
-  
+  send_msg(theEnvironmentConnection, kEnvStep);  
   rlSendAction(theEnvironmentConnection, theAction);
-  RLNET_DEBUG( print_action_header(theAction) );
-
   rlRecvObservationHeader(theEnvironmentConnection, &theObservation);
-  RLNET_DEBUG( print_observation_header(theObservation) );
-
   rlRecvReward(theEnvironmentConnection, &theRewardObservation.r);
   rlRecvObservationBody(theEnvironmentConnection, &theObservation);
   rlRecvTerminal(theEnvironmentConnection, &theRewardObservation.terminal);

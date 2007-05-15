@@ -125,7 +125,6 @@ Task_specification env_init()
 
 Observation env_start()
 {   
-  int i = 0;
   int r = 0, c = 0;
 
   env_terminal = 0;
@@ -133,7 +132,7 @@ Observation env_start()
   
   while(env_map[r][c] != M.LAND)
   {
-    r =  rand()% M.row;
+    r = rand()% M.row;
     c = rand()% M.col;
   }
 
@@ -144,12 +143,6 @@ Observation env_start()
   M.agentColumn =  M.startCol;
   M.agentRow = M.startRow;
 
-  for (i = 0; i < 10; ++i)
-  {
-    o.intArray[i] = -i;
-    o.doubleArray[i] = -i - 10;
-  }
-
   o.intArray[0] = M.startRow * M.col + M.startCol;
   
   return o;
@@ -157,8 +150,6 @@ Observation env_start()
 
 Reward_observation env_step(Action a)
 {    
-  int i = 0;
-
   getNextPosition(a); /* getNextPosition will update the values of agentRow and agentColumn */
  
   o.intArray[0] = getPosition();

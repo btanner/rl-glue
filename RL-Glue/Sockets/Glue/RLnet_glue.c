@@ -5,12 +5,6 @@
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
 
-#ifdef NETWORK_DEBUG
-#define RLNET_DEBUG(x) x
-#else
-#define RLNET_DEBUG(x)
-#endif
-
 const char* kRLInit = "init";
 const char* kRLStart = "start";
 const char* kRLStep = "step";
@@ -50,8 +44,6 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
   char send_buffer[8] = {0};
   strncpy(send_buffer, theMessage, 8);
   rlSendData(theSocket, send_buffer, 8);
-
-  RLNET_DEBUG( fprintf(stderr, "GLUE SENT: %s\n", send_buffer); )
 }
 
 void on_RL_init(rlSocket theConnection)
@@ -182,7 +174,6 @@ void run_benchmark(rlSocket theConnection)
   do
   { 
     rlRecvData(theConnection, theMessage, 8);
-    RLNET_DEBUG( fprintf(stderr, "GLUE RECV: %s\n", theMessage); )
               
     if (strncmp(theMessage, kRLInit, 8) == 0)
     {
@@ -250,20 +241,30 @@ void run_benchmark(rlSocket theConnection)
 
 int main(int argc, char** argv)
 {
+  rlSocket theServer;
   rlSocket theConnection;
   short thePort = 4095;
 
+  int isValidSocket = 0;
+  int isListening = 0;
+
   while(1)
   {
-    rlSocket theServer = rlOpen(thePort);
-    assert(rlIsValidSocket(theServer));
-    assert(rlListen(theServer) >= 0);
+    theServer = rlOpen(thePort);
+    isValidSocket = rlIsValidSocket(theServer);
+    assert(isValidSocket);
+
+    isListening = rlListen(theServer);
+    assert(isListening >= 0);
+
     theConnection = rlAcceptConnection(theServer);
+    isValidSocket = rlIsValidSocket(theConnection);
+    assert(isValidSocket);
+
     rlClose(theServer);
     
-    assert(rlIsValidSocket(theConnection));
     run_benchmark(theConnection);
-    assert(rlClose(theConnection) >= 0);
+    rlClose(theConnection);
   }
 
   return 0;
