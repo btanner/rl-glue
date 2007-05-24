@@ -24,7 +24,7 @@ Action theAction;
 int isActionAllocated = 0;
 
 /* Provide forward declaration of environment interface */
-extern Task_specification env_init();
+extern Task_specification env_init(int argc, char** argv);
 extern Observation env_start();
 extern Reward_observation env_step(Action a);
 extern void env_cleanup();
@@ -36,10 +36,9 @@ extern Random_seed_key env_get_random_seed();
 const char* kUnknownMessage = "Unknown Message: %s\n";
 const char* kUsage = "Usage: Environment <ip-address> <port>\n";
 
-void on_env_init(rlSocket theConnection)
+void on_env_init(int argc, char** argv, rlSocket theConnection)
 {
-  /* Task_specification env_init(); */  
-  theTaskSpecBuffer = env_init();
+  theTaskSpecBuffer = env_init(argc, argv);
   theTaskSpecLength = strlen(theTaskSpecBuffer) + 1;
 
   rlSendMessageHeader(theConnection, theTaskSpecLength);
@@ -48,7 +47,6 @@ void on_env_init(rlSocket theConnection)
 
 void on_env_start(rlSocket theConnection)
 {
-  /* Observation env_start(); */
   Observation theObservation = env_start();
   rlSendObservation(theConnection, theObservation);
 
@@ -107,7 +105,7 @@ void on_env_get_random_seed(rlSocket theConnection)
   /* Random_seed_key env_get_random_seed(); */
 }
 
-void run_environment(rlSocket theConnection)
+void run_environment(int argc, char** argv, rlSocket theConnection)
 {
   char theMessage[8] = {0};
 
@@ -117,7 +115,7 @@ void run_environment(rlSocket theConnection)
 	      
     if (strncmp(theMessage, kEnvInit, 8) == 0)
     {
-      on_env_init(theConnection);
+      on_env_init(argc, argv, theConnection);
     }
     else if (strncmp(theMessage, kEnvStart, 8) == 0)
     {
@@ -185,7 +183,7 @@ int main(int argc, char** argv)
       if (isConnected < 0) rlClose(theConnection); /* We need to try again */
     }
 
-    run_environment(theConnection);
+    run_environment(argc, argv, theConnection);
     
     isClosed = rlClose(theConnection);
     isConnected = -1;

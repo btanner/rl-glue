@@ -23,14 +23,14 @@ Random_seed_key RL_get_random_seed();
 void RL_cleanup();
 
 /* Agent Interface */
-void agent_init(Task_specification task_spec);
+void agent_init(int argc, char** argv, Task_specification task_spec);
 Action agent_start(Observation o);
 Action agent_step(Reward r, Observation o);
 void agent_end(Reward r);  
 void agent_cleanup();
 
 /* Environment Interface */
-Task_specification env_init();
+Task_specification env_init(int argc, char** argv);
 Observation env_start();
 Reward_observation env_step(Action a);
 void env_cleanup();

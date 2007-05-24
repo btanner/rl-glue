@@ -22,16 +22,17 @@ Observation theObservation;
 Reward theReward;
 
 /* Provide forward declaration of agent interface */
-extern void agent_init(Task_specification task_spec);
+extern void agent_init(int argc, char** argv, Task_specification task_spec);
 extern Action agent_start(Observation o);
 extern Action agent_step(Reward r, Observation o);
 extern void agent_end(Reward r);
 extern void agent_cleanup();
 
 const char* kUnknownMessage = "Unknown Message: %s\n";
-const char* kUsage = "Usage: Agent <ip-address> <port>\n";
+const char* kDefaultIp = "127.0.0.1";
+const short kDefaultPort = 4096;
 
-void on_agent_init(rlSocket theConnection)
+void on_agent_init(int argc, char** argv, rlSocket theConnection)
 {
   theTaskSpecLength = 0;
   rlRecvMessageHeader(theConnection, &theTaskSpecLength);
@@ -39,7 +40,7 @@ void on_agent_init(rlSocket theConnection)
   theTaskSpecBuffer = (char*)calloc(theTaskSpecLength, 1);
   rlRecvMessageBody(theConnection, theTaskSpecBuffer, theTaskSpecLength);
 
-  agent_init(theTaskSpecBuffer);
+  agent_init(argc, argv, theTaskSpecBuffer);
 }
 
 void on_agent_start(rlSocket theConnection)
@@ -80,7 +81,7 @@ void on_agent_cleanup(rlSocket theConnection)
   free(theTaskSpecBuffer);
 }
 
-void run_agent(rlSocket theConnection)
+void run_agent(int argc, char** argv, rlSocket theConnection)
 {
   char theMessage[8] = {0};
 
@@ -90,7 +91,7 @@ void run_agent(rlSocket theConnection)
 	      
     if (strncmp(theMessage, kAgentInit, 8) == 0)
     {
-      on_agent_init(theConnection);
+      on_agent_init(argc, argv, theConnection);
     }
     else if (strncmp(theMessage, kAgentStart, 8) == 0)
     {
@@ -128,7 +129,7 @@ int main(int argc, char** argv)
 
   if (argc != 3) 
   {
-    fprintf(stderr, kUsage);
+    fprintf(stderr, "Fixme: This usage error should be removed.  We should have default ports\n");
     return 1;
   }
 
@@ -146,7 +147,7 @@ int main(int argc, char** argv)
       if (isConnected < 0) rlClose(theConnection); /* We need to try again */
     }
 
-    run_agent(theConnection);
+    run_agent(argc, argv, theConnection);
     
     isClosed = rlClose(theConnection);
     isConnected = -1;

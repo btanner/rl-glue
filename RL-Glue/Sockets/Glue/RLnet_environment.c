@@ -28,7 +28,7 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
   rlSendData(theSocket, send_buffer, 8);
 }
 
-Task_specification env_init()
+Task_specification env_init(int argc, char** argv)
 {
   int theTaskSpecLength = 0;
   rlSocket theServer;

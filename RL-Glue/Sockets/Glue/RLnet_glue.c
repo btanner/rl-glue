@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
@@ -23,7 +24,7 @@ const char* kRLCleanup = "cleanup";
 const char* kUnknownMessage = "Unknown Message: %s\n";
 const char* kUsage = "Usage: Agent <ip-address> <port>\n";
 
-extern void RL_init();
+extern void RL_init(int argc, char** argv);
 extern Observation_action RL_start();
 extern Reward_observation_action_terminal RL_step();
 extern Reward RL_return();
@@ -46,9 +47,9 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
   rlSendData(theSocket, send_buffer, 8);
 }
 
-void on_RL_init(rlSocket theConnection)
+void on_RL_init(int argc, char** argv, rlSocket theConnection)
 {
-  RL_init();
+  RL_init(argc, argv);
   send_msg(theConnection, kRLInit);
 }
 
@@ -167,7 +168,7 @@ void on_RL_cleanup(rlSocket theConnection)
   send_msg(theConnection, kRLCleanup);
 }
 
-void run_benchmark(rlSocket theConnection)
+void run_benchmark(int argc, char** argv, rlSocket theConnection)
 {
   char theMessage[8] = {0};
 
@@ -177,7 +178,7 @@ void run_benchmark(rlSocket theConnection)
               
     if (strncmp(theMessage, kRLInit, 8) == 0)
     {
-      on_RL_init(theConnection);
+      on_RL_init(argc, argv, theConnection);
     }
     else if (strncmp(theMessage, kRLStart, 8) == 0)
     {
@@ -263,7 +264,7 @@ int main(int argc, char** argv)
 
     rlClose(theServer);
     
-    run_benchmark(theConnection);
+    run_benchmark(argc, argv, theConnection);
     rlClose(theConnection);
   }
 

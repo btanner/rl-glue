@@ -44,10 +44,12 @@ static void recv_receipt(rlSocket theSocket, const char* theExpectedMessage)
 
 }
 
-void RL_init()
+void RL_init(int argc, char** argv)
 {
   int isValidSocket = 0;
   int isConnected = -1;
+
+  /* Fixme: We need to handle default & user specified ports & ips */
 
   while(isConnected < 0) 
   {

@@ -5,8 +5,13 @@
 Action theAction;
 Observation theObservation;
 
-void agent_init(Task_specification task_spec)
+void agent_init(int argc, char** argv, Task_specification task_spec)
 {
+  int i = 0;
+  fprintf(stderr, "agent_init called with parameters: ");
+  for (i = 0; i < argc; ++i) fprintf(stderr, "%s ", argv[i]);
+  fprintf(stderr, "\n");
+
   theAction.numInts = 10;
   theAction.numDoubles = 10;
   theAction.intArray = (int*)calloc(theAction.numInts, sizeof(int));

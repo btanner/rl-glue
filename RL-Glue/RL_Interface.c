@@ -18,8 +18,8 @@ Observation_action oa;
 void RL_init(int argc, char** argv)
 {
   Task_specification task_spec;
-  task_spec = env_init();
-  agent_init(task_spec);
+  task_spec = env_init(argc, argv);
+  agent_init(argc, argv, task_spec);
 	
   num_episodes = 0;
   total_steps = 0;

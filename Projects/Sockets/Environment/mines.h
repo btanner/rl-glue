@@ -2,7 +2,7 @@
 
 #include <RLcommon.h>
 
-Task_specification env_init();
+Task_specification env_init(int argc, char** argv);
 Observation env_start();
 Reward_observation env_step(Action a);
 void env_cleanup();

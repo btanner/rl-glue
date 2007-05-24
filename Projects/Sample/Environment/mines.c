@@ -87,10 +87,16 @@ Reward getReward()
 
 /* RL-Glue Interface */
 
-Task_specification env_init()
+Task_specification env_init(int argc, char** argv)
 {    
   static char Task_spec[100] = {0};
   char temp[50] = {0};
+
+  int i = 0; 
+  fprintf(stderr, "env_init called with parameters: ");
+  for (i = 0; i < argc; ++i) fprintf(stderr, "%s ", argv[i]);
+  fprintf(stderr, "\n");
+
 
   M.START = 0;
   M.GOAL = 1;
