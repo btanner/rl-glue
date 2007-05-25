@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
@@ -26,6 +27,9 @@ const char* kRLGetState = "gets";
 const char* kRLGetRandomSeed = "getrs";
 const char* kRLCleanup = "cleanup";
 
+const char* kDefaultIp = "127.0.0.1";
+const short kDefaultPort = 4695;
+
 static void send_msg(rlSocket theSocket, const char* theMessage)
 {
   char send_buffer[8] = {0};
@@ -38,10 +42,24 @@ static void recv_receipt(rlSocket theSocket, const char* theExpectedMessage)
   char recv_buffer[8] = {0};
   rlRecvData(theSocket, recv_buffer, 8);
 
-
   if(strncmp(recv_buffer, theExpectedMessage, 8) != 0)
     fprintf(stderr, "Expected: %s\nReceived: %s\n", theExpectedMessage, recv_buffer);
+}
 
+void parse_command_line(int argc, char** argv, char* const ip_buffer, int ip_buffer_size, short* port) {
+  int c = 0;
+
+  while((c = getopt(argc, argv, "h:p:")) != -1) {
+    switch(c) {
+    case 'h':
+      sscanf(optarg, "%s", ip_buffer);
+      break;
+
+    case 'p':
+      sscanf(optarg, "%hd", port);
+      break;
+    };
+  }
 }
 
 void RL_init(int argc, char** argv)
@@ -49,15 +67,20 @@ void RL_init(int argc, char** argv)
   int isValidSocket = 0;
   int isConnected = -1;
 
-  /* Fixme: We need to handle default & user specified ports & ips */
+  char ipbuffer[256] = {0};
+  int ipbuffersize = 256;
+  short port = kDefaultPort;
 
+  strncpy(ipbuffer, kDefaultIp, ipbuffersize);
+  parse_command_line(argc, argv, ipbuffer, ipbuffersize, &port);
+  
   while(isConnected < 0) 
   {
-    theGlueConnection = rlOpen(4095);
+    theGlueConnection = rlOpen(port);
     isValidSocket = rlIsValidSocket(theGlueConnection);
     assert(isValidSocket);
    
-    isConnected = rlConnect(theGlueConnection, "127.0.0.1");
+    isConnected = rlConnect(theGlueConnection, ipbuffer);
     if (isConnected < 0) rlClose(theGlueConnection); /* We need to try again */
   }
 

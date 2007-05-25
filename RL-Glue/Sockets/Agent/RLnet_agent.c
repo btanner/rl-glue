@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
@@ -30,7 +31,7 @@ extern void agent_cleanup();
 
 const char* kUnknownMessage = "Unknown Message: %s\n";
 const char* kDefaultIp = "127.0.0.1";
-const short kDefaultPort = 4096;
+const short kDefaultPort = 4697;
 
 void on_agent_init(int argc, char** argv, rlSocket theConnection)
 {
@@ -117,6 +118,22 @@ void run_agent(int argc, char** argv, rlSocket theConnection)
   } while (strncmp(theMessage, kAgentCleanup, 8) != 0);
 }
 
+void parse_command_line(int argc, char** argv, char* const ip_buffer, int ip_buffer_size, short* port) {
+  int c = 0;
+
+  while((c = getopt(argc, argv, "h:p:")) != -1) {
+    switch(c) {
+    case 'h':
+      sscanf(optarg, "%s", ip_buffer);
+      break;
+
+    case 'p':
+      sscanf(optarg, "%hd", port);
+      break;
+    };
+  }
+}
+
 int main(int argc, char** argv)
 {
   rlSocket theConnection;
@@ -125,25 +142,22 @@ int main(int argc, char** argv)
   int isConnected = -1;
   int isClosed = 0;
 
-  short thePort = 0;
+  char ipbuffer[256] = {0};
+  int ipbuffersize = 256;
+  short port = kDefaultPort;
 
-  if (argc != 3) 
-  {
-    fprintf(stderr, "Fixme: This usage error should be removed.  We should have default ports\n");
-    return 1;
-  }
-
-  sscanf(argv[2], "%hd", &thePort);
+  strncpy(ipbuffer, kDefaultIp, ipbuffersize);
+  parse_command_line(argc, argv, ipbuffer, ipbuffersize, &port);
 
   while(1)
   {
     while(isConnected < 0)
     {
-      theConnection = rlOpen(thePort);
+      theConnection = rlOpen(port);
       isValidSocket = rlIsValidSocket(theConnection);
       assert(isValidSocket);
       
-      isConnected = rlConnect(theConnection, argv[1]);
+      isConnected = rlConnect(theConnection, ipbuffer);
       if (isConnected < 0) rlClose(theConnection); /* We need to try again */
     }
 

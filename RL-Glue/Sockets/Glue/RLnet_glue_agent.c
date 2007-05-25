@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
+#include <unistd.h>
 
 /* Could be culled, used only for debugging */
 #include <stdio.h>
@@ -16,6 +17,8 @@ const char* kAgentStep = "step";
 const char* kAgentEnd  = "end";
 const char* kAgentCleanup = "cleanup";
 
+static const short kDefaultPort = 4697;
+
 static void send_msg(rlSocket theSocket, const char* theMessage)
 {
   char send_buffer[8] = {0};
@@ -23,7 +26,19 @@ static void send_msg(rlSocket theSocket, const char* theMessage)
   rlSendData(theSocket, send_buffer, 8);
 }
 
-void agent_init(Task_specification theTaskSpecBuffer)
+static void parse_command_line(int argc, char** argv, short *thePort) {
+  int c = 0;
+
+  while((c = getopt(argc, argv, "p:")) != -1) {
+    switch(c) {
+    case 'p':
+      sscanf(optarg, "%hd", thePort);
+      break;
+    };
+  }
+}
+
+void agent_init(int argc, char** argv, Task_specification theTaskSpecBuffer)
 {
   int theTaskSpecLength = 0;
 
@@ -31,7 +46,10 @@ void agent_init(Task_specification theTaskSpecBuffer)
   int isValidSocket = 0;
   int isListening = 0;
 
-  theServer = rlOpen(4096);  
+  short port = kDefaultPort;
+  parse_command_line(argc, argv, &port);
+
+  theServer = rlOpen(port);  
   isValidSocket = rlIsValidSocket(theServer);
   assert(isValidSocket);
 

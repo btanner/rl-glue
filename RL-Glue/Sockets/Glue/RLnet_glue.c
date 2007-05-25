@@ -24,7 +24,7 @@ const char* kRLCleanup = "cleanup";
 const char* kUnknownMessage = "Unknown Message: %s\n";
 
 const char* kInvalidPort = "The port is invalid, using %hd instead.\n";
-const short kDefaultPort = 4095;
+static const short kDefaultPort = 4696;
 
 extern void RL_init(int argc, char** argv);
 extern Observation_action RL_start();
@@ -170,7 +170,7 @@ void on_RL_cleanup(rlSocket theConnection)
   send_msg(theConnection, kRLCleanup);
 }
 
-void run_benchmark(int argc, char** argv, rlSocket theConnection)
+void run_experiment(int argc, char** argv, rlSocket theConnection)
 {
   char theMessage[8] = {0};
 
@@ -242,22 +242,17 @@ void run_benchmark(int argc, char** argv, rlSocket theConnection)
   } while (strncmp(theMessage, kRLCleanup, 8) != 0);
 }
 
-void parse_command_line(int argc, char** argv, short *thePort) {
+static void parse_command_line(int argc, char** argv, short *thePort) {
   int c = 0;
-
-  int isValidPort = 0;
-  short port = 0;
 
   while((c = getopt(argc, argv, "p:")) != -1) {
     switch(c) {
     case 'p':
-      isValidPort = sscanf(optarg, "%hd", &port);
+      sscanf(optarg, "%hd", thePort);
       break;
     };
   }
 
-  if (isValidPort)
-    *thePort = port;
 }
 
 int main(int argc, char** argv)
@@ -286,7 +281,7 @@ int main(int argc, char** argv)
 
     rlClose(theServer);
     
-    run_benchmark(argc, argv, theConnection);
+    run_experiment(argc, argv, theConnection);
     rlClose(theConnection);
   }
 

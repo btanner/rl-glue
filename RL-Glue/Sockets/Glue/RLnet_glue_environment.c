@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <RLcommon.h>
 #include <RLnet/RLnet.h>
+#include <unistd.h>
 
 /* Could be culled, used only for debugging */
 #include <stdio.h>
@@ -21,11 +22,26 @@ const char* kEnvSetRandomSeed = "setrs";
 const char* kEnvGetStateKey = "getsk";
 const char* kEnvGetRandomSeed = "getrs";
 
+static const short kDefaultPort = 4698;
+
 static void send_msg(rlSocket theSocket, const char* theMessage)
 {
   char send_buffer[8] = {0};
   strncpy(send_buffer, theMessage, 8);
   rlSendData(theSocket, send_buffer, 8);
+}
+
+static void parse_command_line(int argc, char** argv, short *thePort) {
+  int c = 0;
+
+  while((c = getopt(argc, argv, "p:")) != -1) {
+    switch(c) {
+    case 'p':
+      sscanf(optarg, "%hd", thePort);
+      break;
+    };
+  }
+
 }
 
 Task_specification env_init(int argc, char** argv)
@@ -35,7 +51,10 @@ Task_specification env_init(int argc, char** argv)
   int isValidSocket;
   int isListening;
 
-  theServer = rlOpen(4097);
+  short port = kDefaultPort;
+  parse_command_line(argc, argv, &port);
+
+  theServer = rlOpen(port);
   isValidSocket = rlIsValidSocket(theServer);
   assert(isValidSocket);
 
