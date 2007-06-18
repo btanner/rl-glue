@@ -1,7 +1,8 @@
-#include "stdlib.h"
-#include "stdio.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "string.h"
+#include "math.h"
 
 
 #ifndef GLUE_UTIL_H
