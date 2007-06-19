@@ -14,7 +14,6 @@ extern int rlIsExperimentConnected();
 
    If the experiment and the Glue are compiled together RL_init calls rlConnectSystems.
    If the Glue is separate, it has its own main() that calls rlConnectSystems.   
-   If all components are written in C, we can link to RL_direct.o instead of using this implementation.
 */
 
 short rlConnectPort = kDefaultPort;
