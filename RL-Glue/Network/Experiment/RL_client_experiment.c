@@ -255,7 +255,7 @@ int RL_num_episodes() {
   return numEpisodes;
 }
 
-void RL_episode(int numSteps) {
+void RL_episode(unsigned int numSteps) {
   const int experimentState = kRLEpisode;
 
   rlBufferClear(&theBuffer);

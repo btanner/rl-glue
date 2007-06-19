@@ -173,7 +173,7 @@ Random_seed_key env_get_random_seed() {
   return theRandomSeedKey;
 }
 
-char* env_message(const char* inMessage) {
+Message env_message(const Message inMessage) {
   int theInMessageLength = 0;
   int theOutMessageLength = 0;
   char * theOutMessage = NULL;

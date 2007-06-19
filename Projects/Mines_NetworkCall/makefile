@@ -2,7 +2,7 @@
 RL-GLUE = ../../RL-Glue
 
 # Compiler flags
-CC         = g++ # RL-Glue is written in C, but if you change this to g++ things will still work
+CC         = gcc # RL-Glue is written in C, but if you change this to g++ things will still work
 CFLAGS     = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
 LDFLAGS    =
 BUILD_PATH = Build/

@@ -127,7 +127,7 @@ void agent_freeze() {
   rlSendBufferData(theAgentConnection, &theBuffer);
 }
 
-char* agent_message(const char* inMessage) {
+Message agent_message(const Message inMessage) {
   int theInMessageLength = 0;
   int theOutMessageLength = 0;
   char * theOutMessage = NULL;

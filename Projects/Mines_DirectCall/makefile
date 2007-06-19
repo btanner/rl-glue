@@ -14,7 +14,7 @@ EXPERIMENTH =
 RL-GLUE = ../../RL-Glue
 
 # Compiler flags
-CC      = g++
+CC      = gcc # We can alternatively compile with g++. 
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
 LDFLAGS =
 
