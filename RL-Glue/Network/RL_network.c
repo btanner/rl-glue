@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <Network/RL_netlib.h> 
 
@@ -16,8 +17,6 @@ extern int rlIsExperimentConnected();
    If the Glue is separate, it has its own main() that calls rlConnectSystems.   
 */
 
-short rlConnectPort = kDefaultPort;
-
 int rlConnectSystems() {
   int isAgentConnected       = rlIsAgentConnected();
   int isEnvironmentConnected = rlIsEnvironmentConnected(); 
@@ -25,15 +24,24 @@ int rlConnectSystems() {
   int theClientType = 0;
   int theClient = 0;
   int theServer = 0;
-
   rlSocket theExperimentConnection = 0;
-
   rlBuffer theBuffer = {0};
+  short port = kDefaultPort;
+  char* envptr = 0;
+
+  envptr = getenv("RLGLUE_PORT");  
+  if (envptr != 0) {
+    port = strtol(envptr, 0, 10);
+    if (port == 0) {
+      port = kDefaultPort;
+    }
+  }
+
   rlBufferCreate(&theBuffer, sizeof(int) * 2);
 
   if (!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
-    theServer = rlOpen(rlConnectPort);
-    rlListen(theServer, rlConnectPort);
+    theServer = rlOpen(port);
+    rlListen(theServer, port);
   }
 
   while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {

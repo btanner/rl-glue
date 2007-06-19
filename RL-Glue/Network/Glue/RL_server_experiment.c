@@ -35,8 +35,6 @@ extern void RL_freeze();
 extern char* RL_agent_message(const char* message);
 extern char* RL_env_message(const char* message);
 
-extern short rlConnectPort;
-
 void onRLCleanup(rlSocket theConnection);
 
 int theExperimentConnection = 0;
