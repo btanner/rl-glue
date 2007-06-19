@@ -38,7 +38,7 @@ int rlConnectSystems() {
       if (port == 0) {
 	port = kDefaultPort;
       }
-      fprintf(stderr, "port=%d\n", port);
+      fprintf(stderr, "RL-Glue is listening for connections on port=%d\n", port);
     }
 
     theServer = rlOpen(port);

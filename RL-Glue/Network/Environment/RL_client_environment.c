@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
     autoReconnect = strtol(envptr, 0, 10);
   }
 
-  fprintf(stderr, "host=%s port=%d autoreconnect=%d\n", host, port, autoReconnect);
+  fprintf(stderr, "Connecting to host=%s on port=%d with autoreconnect=%d\n", host, port, autoReconnect);
 
   /* Allocate what should be plenty of space for the buffer - it will dynamically resize as needed */
   rlBufferCreate(&theBuffer, 4096);

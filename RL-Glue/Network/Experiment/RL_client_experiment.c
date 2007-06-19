@@ -1,5 +1,6 @@
 #include <stdlib.h> /* calloc */
 #include <string.h> /* strlen */
+#include <stdio.h>  /* fprintf */
 
 #include <RL_common.h>
 #include <Network/RL_netlib.h>
@@ -20,10 +21,28 @@ void RL_init() {
   const int theConnectionType = kExperimentConnection;
   const int experimentState = kRLInit;
 
+  char* host = kLocalHost;
+  short port = kDefaultPort;
+  char* envptr = 0;
+
+  host = getenv("RLGLUE_HOST");
+  if (host == 0) {
+    host = kLocalHost;
+  }
+
+  envptr = getenv("RLGLUE_PORT");  
+  if (envptr != 0) {
+    port = strtol(envptr, 0, 10);
+    if (port == 0) {
+      port = kDefaultPort;
+    }
+  }
+
+  fprintf(stderr, "Connecting to host=%s on port=%d\n", host, port);
+
+  theExperimentConnection = rlWaitForConnection(host, port, kRetryTimeout);
+
   rlBufferCreate(&theBuffer, 4096);
-
-  theExperimentConnection = rlWaitForConnection(kLocalHost, kDefaultPort, kRetryTimeout);
-
   rlBufferClear(&theBuffer);
   rlBufferWrite(&theBuffer, 0, &theConnectionType, 1, sizeof(int));
   rlSendBufferData(theExperimentConnection, &theBuffer);
