@@ -3,7 +3,7 @@ RL-GLUE = ../../RL-Glue
 
 # Compiler flags
 CC         = gcc
-CFLAGS     = -I$(RL-GLUE)/ -ansi -pedantic -Wall
+CFLAGS     = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
 LDFLAGS    =
 BUILD_PATH = Build/
 
