@@ -336,32 +336,14 @@ void runGlueEventLoop(rlSocket theConnection) {
 
 int main(int argc, char** argv) {
   rlSocket theConnection = 0;
-
-  char* host = kLocalHost;
-  short port = kDefaultPort;
   int autoReconnect = 0;
-
   char* envptr = 0;
-
-  host = getenv("RLGLUE_HOST");
-  if (host == 0) {
-    host = kLocalHost;
-  }
-
-  envptr = getenv("RLGLUE_PORT");  
-  if (envptr != 0) {
-    port = strtol(envptr, 0, 10);
-    if (port == 0) {
-      port = kDefaultPort;
-    }
-  }
 
   envptr = getenv("RLGLUE_AUTORECONNECT");
   if (envptr != 0) {
     autoReconnect = strtol(envptr, 0, 10);
   }
-
-  fprintf(stderr, "host=%s port=%d reconnect=%d\n", host, port, autoReconnect);
+  fprintf(stderr, "autoreconnect=%d\n", autoReconnect);
 
   rlBufferCreate(&theBuffer, 4096);
 

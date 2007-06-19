@@ -29,17 +29,18 @@ int rlConnectSystems() {
   short port = kDefaultPort;
   char* envptr = 0;
 
-  envptr = getenv("RLGLUE_PORT");  
-  if (envptr != 0) {
-    port = strtol(envptr, 0, 10);
-    if (port == 0) {
-      port = kDefaultPort;
-    }
-  }
-
   rlBufferCreate(&theBuffer, sizeof(int) * 2);
 
   if (!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
+    envptr = getenv("RLGLUE_PORT");  
+    if (envptr != 0) {
+      port = strtol(envptr, 0, 10);
+      if (port == 0) {
+	port = kDefaultPort;
+      }
+      fprintf(stderr, "port=%d\n", port);
+    }
+
     theServer = rlOpen(port);
     rlListen(theServer, port);
   }
