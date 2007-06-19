@@ -19,8 +19,8 @@ LDFLAGS =
 all: RL_glue RL_agent RL_environment RL_experiment
 
 # ----------------------- Compile And Link RL-Glue 2.0 (Agent/Environment Network) ----------------------
-RL_glue: RL_interface.o RL_network.o RL_netlib.o RL_server_experiment.o RL_server_environment.o RL_server_agent.o 
-	$(CC) $(LDFLAGS) -o $@ Build/RL_interface.o Build/RL_network.o Build/RL_netlib.o Build/RL_server_experiment.o Build/RL_server_environment.o Build/RL_server_agent.o
+RL_glue: RL_glue.o RL_network.o RL_netlib.o RL_server_experiment.o RL_server_environment.o RL_server_agent.o 
+	$(CC) $(LDFLAGS) -o $@ Build/RL_glue.o Build/RL_network.o Build/RL_netlib.o Build/RL_server_experiment.o Build/RL_server_environment.o Build/RL_server_agent.o
 # -------------------------------------------------------------------------------------------
 
 # ------------------------- Compile And Link the Agent (Network) ----------------------------
@@ -64,7 +64,7 @@ RLGLUE_CFLAGS  = -I$(RLGLUE_PATH)/ -ansi -pedantic -Wall
 
 # ===================================== INTERFACE ============================================
 # ------------------------------- Compile The RL-Interface ----------------------------------
-RL_interface.o: $(RLGLUE_PATH)/RL_interface.c $(RLGLUE_PATH)/RL_interface.h
+RL_glue.o: $(RLGLUE_PATH)/RL_glue.c $(RLGLUE_PATH)/RL_glue.h
 	$(RLGLUE_CC) $(RLGLUE_CFLAGS) -c $< -o Build/$@
 # -------------------------------------------------------------------------------------------
 
