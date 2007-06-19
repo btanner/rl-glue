@@ -59,7 +59,7 @@ int rlConnectSystems() {
       break;
 
     default:
-      fprintf(stderr, "RL_network.c: Unknown Connection Type!\n");
+      fprintf(stderr, "RL_network.c: Unknown Connection Type: %d\n", theClientType);
       break;
     };
   }
