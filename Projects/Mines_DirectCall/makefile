@@ -1,6 +1,6 @@
 # Agent Source Files
-AGENTC = ./Agent/ZeroAgent.c
-AGENTH = ./Agent/ZeroAgent.h
+AGENTC = ./Agent/SarsaAgent.c
+AGENTH = ./Agent/SarsaAgent.h
 
 # Environment Source Files
 ENVIRONMENTC = ./Environment/mines.c
@@ -15,7 +15,7 @@ RL-GLUE = ../../RL-Glue
 
 # Compiler flags
 CC      = gcc
-CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
+CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
 LDFLAGS =
 
 # An example of RL-Glue compiled together in C
@@ -37,6 +37,7 @@ glue.o: $(RL-GLUE)/RL_glue.c $(RL-GLUE)/RL_glue.h
 
 clean:
 	rm -fr Build/*.o
+	rm -fr RL_main
 
 tidy:
 	rm -fr *.*~

@@ -1,4 +1,4 @@
-# Path to RL-Glue to find RL_interface and related files.
+# Path to RL-Glue to find RL_glue and related files.
 RL-GLUE = ../../RL-Glue
 
 # Compiler flags
