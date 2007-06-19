@@ -39,7 +39,7 @@ void agent_init(Task_specification task_spec)
 
 Action agent_start(Observation o)
 {	
-  int i = 0;
+  unsigned int i = 0;
   action.intArray[0] = egreedy(o);
 
   /* We need to copy the action if we want to retain the values in it */
@@ -58,7 +58,7 @@ Action agent_start(Observation o)
 
 Action agent_step(Reward r, Observation o)
 {
-  int i = 0;
+  unsigned int i = 0;
   double oldQ = 0; 
   double newQ = 0; 
 
@@ -134,7 +134,7 @@ void agent_cleanup(){
   previous_action.doubleArray = 0;
 }
 
-char* agent_message(const char* message){
+Message agent_message(const Message message){
   return "SarsaAgent.c does not respond to any messages.";
 }
 

@@ -296,8 +296,8 @@ void rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst) {
 }
 
 void rlCopyBufferToADT(const rlBuffer* src, RL_abstract_type* dst) {
-  int numInts    = 0;
-  int numDoubles = 0;
+  unsigned int numInts    = 0;
+  unsigned int numDoubles = 0;
 
   int* intArray = 0;
   double * doubleArray = 0;

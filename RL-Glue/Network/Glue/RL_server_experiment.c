@@ -25,15 +25,15 @@ extern Reward_observation_action_terminal RL_step();
 extern Reward RL_return();
 extern int RL_num_steps();
 extern int RL_num_episodes();
-extern void RL_episode(int num_steps);
+extern void RL_episode(unsigned int num_steps);
 extern void RL_set_state(State_key sk);
 extern void RL_set_random_seed(Random_seed_key rsk);
 extern State_key RL_get_state();
 extern Random_seed_key RL_get_random_seed();
 extern void RL_cleanup();
 extern void RL_freeze();
-extern char* RL_agent_message(const char* message);
-extern char* RL_env_message(const char* message);
+extern Message RL_agent_message(const Message message);
+extern Message RL_env_message(const Message message);
 
 void onRLCleanup(rlSocket theConnection);
 

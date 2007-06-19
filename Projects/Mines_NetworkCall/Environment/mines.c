@@ -149,7 +149,7 @@ Random_seed_key env_get_random_seed()
 }
 
 Message env_message(const Message inMessage) {
-  return NULL;
+  return "mines.c does not respond to any messages";
 }
 
 
@@ -157,7 +157,7 @@ Message env_message(const Message inMessage) {
 
 
 void env_print(const char* header, RL_abstract_type* data) {
-  int i = 0;
+  unsigned int i = 0;
   fprintf(stderr, "%s", header);
   fprintf(stderr, "%d %d\n", data->numInts, data->numDoubles);
 

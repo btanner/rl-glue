@@ -2,23 +2,23 @@
 RL-GLUE = ../../RL-Glue
 
 # Compiler flags
-CC         = gcc
+CC         = g++ # RL-Glue is written in C, but if you change this to g++ things will still work
 CFLAGS     = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
 LDFLAGS    =
 BUILD_PATH = Build/
 
 # Object files and libraries required for linking our agent
-# Simply leave these blank if you are not using a C agent.
+# Comment these out if you are not using a C agent.
 AGENT_OBJECTS       = SarsaAgent.o
 AGENT_LDFLAGS       =
 
 # Object files and libraries required for linking our environment
-# Simply leave these blank if you are not using a C environment
+# Comment these out if you are not using a C environment.
 ENVIRONMENT_OBJECTS = mines.o
 ENVIRONMENT_LDFLAGS =
 
 # Object files and libraries required for linking our experiment
-# Simply leave these blank if you are not using a C experiment
+# Comment these out if you are not using a C experiment.
 EXPERIMENT_OBJECTS  = experiment.o
 EXPERIMENT_LDFLAGS  =
 
