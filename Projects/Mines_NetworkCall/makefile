@@ -9,7 +9,7 @@ BUILD_PATH = Build/
 
 # Object files and libraries required for linking our agent
 # Simply leave these blank if you are not using a C agent.
-AGENT_OBJECTS       = ZeroAgent.o
+AGENT_OBJECTS       = SarsaAgent.o
 AGENT_LDFLAGS       =
 
 # Object files and libraries required for linking our environment
@@ -27,9 +27,9 @@ AGENT_NET       = yes
 ENVIRONMENT_NET = yes
 EXPERIMENT_NET  = yes
 
-all: ZeroAgent.o mines.o experiment.o RL_GLUE
+all: SarsaAgent.o mines.o experiment.o RL_GLUE
 
-ZeroAgent.o: ./Agent/ZeroAgent.c ./Agent/ZeroAgent.h
+SarsaAgent.o: ./Agent/SarsaAgent.c ./Agent/SarsaAgent.h
 	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
 
 mines.o: ./Environment/mines.c ./Environment/mines.h
