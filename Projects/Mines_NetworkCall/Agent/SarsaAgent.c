@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "SarsaAgent.h"
+#include "Glue_utilities.h"
 
 #define NUM_STATES 114
 #define NUM_ACTIONS 4
@@ -11,27 +12,30 @@ Action action;
 Action previous_action;
 Observation previous_observation;
 double value[NUM_STATES][NUM_ACTIONS];
-double alpha = 0.1;
-double gamma = 0.9;
+double sarsa_alpha = 0.1;
+double sarsa_gamma = 0.9;
 int freeze = 0;
 
 void agent_init(const Task_specification task_spec)
 {
   srand(time(NULL));
+  
+  task_spec_struct tss;
+  parse_task_spec(task_spec, &tss);
 
-  action.numInts     = 1;
+  action.numInts     =  tss.num_discrete_action_dims;
   action.intArray    = (int*)malloc(sizeof(int)*action.numInts);
-  action.numDoubles  = 0;
+  action.numDoubles  = tss.num_continuous_action_dims;
   action.doubleArray = 0;
 
-  previous_action.numInts     = 1;
+  previous_action.numInts     = tss.num_discrete_action_dims;
   previous_action.intArray    = (int*)malloc(sizeof(int)*previous_action.numInts);
-  previous_action.numDoubles  = 0;
+  previous_action.numDoubles  = tss.num_continuous_action_dims;
   previous_action.doubleArray = 0;
 
-  previous_observation.numInts     = 1;
+  previous_observation.numInts     = tss.num_discrete_obs_dims;
   previous_observation.intArray    = (int*)malloc(sizeof(int)*previous_observation.numInts);
-  previous_observation.numDoubles  = 0;
+  previous_observation.numDoubles  = tss.num_continuous_obs_dims;
   previous_observation.doubleArray = 0;
 
   memset(value, 0, sizeof(double)*114*4);
@@ -74,7 +78,7 @@ Action agent_step(Reward r, Observation o)
   newQ = value[newState][newAction];
 
  if(!freeze) {
-   value[oldState][oldAction] = oldQ + alpha*(r + gamma*newQ - oldQ);
+   value[oldState][oldAction] = oldQ + sarsa_alpha*(r + sarsa_gamma*newQ - oldQ);
 
    for(i = 0; i < action.numInts; ++i) {
      previous_action.intArray[i] = action.intArray[i];
@@ -95,7 +99,7 @@ void agent_end(Reward r)
   const int oldAction = previous_action.intArray[0];
   
   double oldQ = value[oldState][oldAction];
-  value[oldState][oldAction] = oldQ + alpha*(r - oldQ);
+  value[oldState][oldAction] = oldQ + sarsa_alpha*(r - oldQ);
 }
 
 

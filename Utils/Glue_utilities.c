@@ -36,7 +36,7 @@ void parse_type(char** ts, int* dim, char** types, float** mins, float** maxs, i
 	else if(strncmp(&((*types)[i]), "f", 1) == 0)
 		(*num_continuous_dims) = (*num_continuous_dims) + 1;
 	else{
-		printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %s Exiting... \n\n", (*types)[i]);
+		printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", (*types)[i]);
 		exit(0);
 	}		
   *ts = *ts + characters_read;
@@ -54,7 +54,7 @@ if(strncmp(&((*types)[i]), "i", 1) == 0)
 else if(strncmp(&((*types)[i]), "f", 1) == 0)
 	(*num_continuous_dims) = (*num_continuous_dims) + 1;
 else{
-	printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %s Exiting... \n\n", (*types)[i]);
+	printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", (*types)[i]);
 	exit(0);
 }	
   *ts = *ts + characters_read;
@@ -64,16 +64,16 @@ else{
 /*Get the min and max values for all the variables*/  
   for (i = 0; i < (*dim)-1; i++)
   {
-	//obtain minimum value
+	/*obtain minimum value*/
 	scan_args = sscanf(*ts, " %f , %n", (&((*mins)[i])), &characters_read);
 	if(scan_args == 1)
 	{
-		//if value is read correctly
+		/*if value is read correctly*/
 		*ts = *ts + characters_read;
 	}
 	else if(scan_args ==0)
 	{
-		//if no value is read (ie we are using negative inf as the min)
+		/*if no value is read (ie we are using negative inf as the min)*/
 		((*mins)[i]) = -1*INFINITY;
 		sscanf(*ts, " , %n", &characters_read);
 		*ts = *ts + characters_read;
@@ -82,15 +82,15 @@ else{
 		printf("\n Error on trying to read the minimum value of the %d th observation or action Exiting .... \n\n", i ); 
 		exit(0);
 	}
-	//obtain maximum value
+	/*obtain maximum value*/
     scan_args = sscanf(*ts," %f ] _ [%n",(&((*maxs)[i])),&characters_read);
 	if(scan_args == 1)
 	{
-		//if value is correctly read
+		/*if value is correctly read*/
 		  *ts = *ts + characters_read;
 	}
 	else if(scan_args ==0){
-		//if no value is read (ie we are using positive inf as the max)
+		/*if no value is read (ie we are using positive inf as the max)*/
 		((*maxs)[i]) = INFINITY;
 		sscanf(*ts, " ] _ [%n", &characters_read);
 		*ts = *ts + characters_read;
@@ -99,19 +99,19 @@ else{
 		printf("\n Error on trying to read the maximum value of the %d th observation or action Exiting .... \n\n", i);
 		exit(0);
 	}
-  }//End of for loop to get values
+  }/*End of for loop to get values*/
 
-  //getting the last min max value pair
-	//obtain minimum value
+  /*getting the last min max value pair
+   *obtain minimum value*/
 	scan_args = sscanf(*ts, " %f , %n",  (&((*mins)[i])), &characters_read);
 	if(scan_args == 1)
 	{
-		//if value is read correctly
+		/*if value is read correctly*/
 		*ts = *ts + characters_read;
 	}
 	else if(scan_args ==0)
 	{
-		//if no value is read (ie we are using negative inf as the min)
+		/*if no value is read (ie we are using negative inf as the min)*/
 		((*mins)[i]) = -1*INFINITY;
 		sscanf(*ts, " , %n", &characters_read);
 		*ts = *ts + characters_read;
@@ -120,15 +120,15 @@ else{
 		printf("\n Error on trying to read the minimum value of the %d th observation or action Exiting .... \n\n", i ); 
 		exit(0);
 	}
-	//obtain maximum value
+	/*obtain maximum value*/
     scan_args = sscanf(*ts," %f ] :%n",&((*maxs)[i]),&characters_read);
 	if(scan_args == 1)
 	{
-		//if value is correctly read
+		/*if value is correctly read*/
 		  *ts = *ts + characters_read;
 	}
 	else if(scan_args ==0){
-		//if no value is read (ie we are using positive inf as the max)
+		/*if no value is read (ie we are using positive inf as the max)*/
 		(*maxs)[i] = INFINITY;
 		sscanf(*ts, " ] :%n", &characters_read);
 		  *ts = *ts + characters_read;

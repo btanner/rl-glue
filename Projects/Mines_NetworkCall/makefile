@@ -1,15 +1,16 @@
 # Path to RL-Glue to find RL_glue and related files.
 RL-GLUE = ../../RL-Glue
+UTILS = ../../Utils
 
 # Compiler flags
 CC         = gcc # RL-Glue is written in C, but if you change this to g++ things will still work
-CFLAGS     = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
+CFLAGS     = -I$(RL-GLUE)/ -I$(UTILS) -ansi -pedantic -Wall -g
 LDFLAGS    =
 BUILD_PATH = Build/
 
 # Object files and libraries required for linking our agent
 # Comment these out if you are not using a C agent.
-AGENT_OBJECTS       = SarsaAgent.o
+AGENT_OBJECTS       = SarsaAgent.o Glue_utilities.o
 AGENT_LDFLAGS       =
 
 # Object files and libraries required for linking our environment
@@ -27,7 +28,7 @@ AGENT_NET       = yes
 ENVIRONMENT_NET = yes
 EXPERIMENT_NET  = yes
 
-all: SarsaAgent.o mines.o experiment.o RL_GLUE
+all: SarsaAgent.o Glue_utilities.o mines.o experiment.o RL_GLUE
 
 SarsaAgent.o: ./Agent/SarsaAgent.c ./Agent/SarsaAgent.h
 	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
@@ -36,6 +37,9 @@ mines.o: ./Environment/mines.c ./Environment/mines.h
 	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
 
 experiment.o: ./Experiment/experiment.c
+	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
+
+Glue_utilities.o: ../../Utils/Glue_utilities.c ../../Utils/Glue_utilities.h
 	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
 
 # ============================================================================================
