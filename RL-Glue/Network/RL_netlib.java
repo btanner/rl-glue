@@ -100,4 +100,19 @@ public class RL_netlib
 	}
 	return buffer;
     }
+
+		public void writeAbstractType(RLAbstractType rlat) {
+			outputStream.writeInt(rlat.getNumInts());
+			outputStream.writeInt(rlat.getNumDoubles());
+			if (rlat.getNumInts() > 0) {
+				for (int i = 0; i < rlat.getNumInts(); i++) {
+					outputStream.writeInt(rlat.getIntArray()[i]);
+				}
+			}
+			if (rlat.getNumDoubles() > 0) {
+				for (int i = 0; i < rlat.getNumDoubles(); i++) {
+					outputStream.writeDouble(rlat.getDoubleArray()[i]);
+				}
+			}
+		}
 }
