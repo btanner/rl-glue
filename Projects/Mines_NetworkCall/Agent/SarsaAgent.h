@@ -1,5 +1,5 @@
-#ifndef LeahAgent_h
-#define LeahAgent_h
+#ifndef SarsaAgent_h
+#define SarsaAgent_h
 
 #include <RL_common.h>
 
