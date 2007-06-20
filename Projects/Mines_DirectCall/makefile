@@ -1,13 +1,13 @@
 # Agent Source Files
-AGENTC = ./Agent/SarsaAgent.c
-AGENTH = ./Agent/SarsaAgent.h
+AGENTC = ./src/SarsaAgent.c
+AGENTH = ./src/SarsaAgent.h
 
 # Environment Source Files
-ENVIRONMENTC = ./Environment/mines.c
-ENVIRONMENTH = ./Environment/mines.h
+ENVIRONMENTC = ./src/mines.c
+ENVIRONMENTH = ./src/mines.h
 
 # Experiment Source Files
-EXPERIMENTC = ./Experiment/experiment.c
+EXPERIMENTC = ./src/experiment.c
 EXPERIMENTH = 
 
 # Path to RL-Glue to find RL_glue and related files.
