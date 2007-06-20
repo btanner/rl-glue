@@ -1,4 +1,5 @@
 #ifndef mines_h
+#define mines_h
 
 #include <RL_common.h>
 
