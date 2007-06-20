@@ -21,8 +21,6 @@ typedef struct
         int action_dim;			
         int num_discrete_action_dims;
         int num_continuous_action_dims;
-        int* discrete_action_dim_lookup; // The map from discrete ordinal to total ordinal
-        int* continuous_action_dim_lookup; // The map from continuous ordinal to total ordinal
         char *action_types;		
         float *action_mins;		
         float *action_maxs;
