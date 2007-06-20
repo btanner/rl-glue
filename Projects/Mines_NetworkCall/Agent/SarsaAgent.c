@@ -15,7 +15,7 @@ double alpha = 0.1;
 double gamma = 0.9;
 int freeze = 0;
 
-void agent_init(Task_specification task_spec)
+void agent_init(const Task_specification task_spec)
 {
   srand(time(NULL));
 

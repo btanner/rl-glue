@@ -23,7 +23,7 @@ int rlIsAgentConnected() {
 }
 
 /* Send the task spec to the agent */
-void agent_init(Task_specification theTaskSpec) {
+void agent_init(const Task_specification theTaskSpec) {
   const int agentState = kAgentInit;
   const int theTaskSpecLength = strlen(theTaskSpec)+1;
   int offset = 0;

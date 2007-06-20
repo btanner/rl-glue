@@ -24,7 +24,7 @@ State_key RL_get_state();
 Random_seed_key RL_get_random_seed();
 
 /* Agent Interface */
-void agent_init(Task_specification task_spec);
+void agent_init(const Task_specification task_spec);
 Action agent_start(Observation o);
 Action agent_step(Reward r, Observation o);
 void agent_end(Reward r);  
