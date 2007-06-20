@@ -15,9 +15,10 @@ public class RL_netlib
     public RL_netlib(String host, int port) throws Exception
     {
 	/* Setup SocketChannel for communication */
+	InetSocketAddress address = new InetSocketAddress(host, port);
 	socketChannel = SocketChannel.open();
 	socketChannel.configureBlocking(true);
-	socketChannel.connect(new InetSocketAddress(host, port));
+	socketChannel.connect(address);
 	socket = socketChannel.socket();
 	socket.setTcpNoDelay(true);
 	inputStream = new DataInputStream(socket.getInputStream());
