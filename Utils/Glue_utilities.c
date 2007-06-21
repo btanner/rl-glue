@@ -17,8 +17,8 @@ void parse_type(char** ts, int* dim, char** types, double** mins, double** maxs,
   
   /*allocate the types, mins and maxs arrays*/
   *types = (char*)malloc(sizeof(char)*((*dim)+1)); 
-  *mins = (float*)malloc(sizeof(float)*(*dim));
-  *maxs = (float*)malloc(sizeof(float)*(*dim));
+  *mins = (double*)malloc(sizeof(double)*(*dim));
+  *maxs = (double*)malloc(sizeof(double)*(*dim));
 
   
   /*get all the types for all the variables.*/
@@ -142,7 +142,7 @@ else{
 
 void parse_task_spec(char* ts, task_spec_struct* ps)
 {
-  int i,characters_read;
+  int characters_read;
   int scan_args = sscanf(ts," %f : %c : %n ",&(ps->version),&(ps->episodic),&characters_read); /* read in version, episodic or continuous, and the number of characters consumed in this call to scanf*/
   if(scan_args != 2) 
   {

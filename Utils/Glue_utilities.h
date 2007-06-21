@@ -17,8 +17,8 @@ typedef struct
         int num_discrete_obs_dims;
         int num_continuous_obs_dims;
         char *obs_types;	    
-        int *obs_mins;           
-        int *obs_maxs;			
+        double *obs_mins;           
+        double *obs_maxs;			
         int action_dim;			
         int num_discrete_action_dims;
         int num_continuous_action_dims;

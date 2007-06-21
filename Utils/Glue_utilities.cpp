@@ -14,8 +14,8 @@ void parse_type(char*& ts, int& dim, char*& types, double*& mins, double*& maxs,
   }
   ts += characters_read;
   types  =new char[dim+1];
-  mins = new float[dim];
-  maxs = new float[dim];
+  mins = new double[dim];
+  maxs = new double[dim];
 
   
   /*get all the types for all the variables.*/
