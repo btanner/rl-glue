@@ -28,7 +28,8 @@ int rlConnectSystems() {
   rlBuffer theBuffer = {0};
   short port = kDefaultPort;
   char* envptr = 0;
-	fprintf(stderr, "isAgentConnected = %d, isEnvConnected = %d, isExpConnected = %d\n",isAgentConnected, isEnvironmentConnected, isExperimentConnected);
+
+  fprintf(stderr, "isAgentConnected = %d, isEnvConnected = %d, isExpConnected = %d\n",isAgentConnected, isEnvironmentConnected, isExperimentConnected);
 
   rlBufferCreate(&theBuffer, sizeof(int) * 2);
 
@@ -48,6 +49,9 @@ int rlConnectSystems() {
 
   while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
     theClient = rlAcceptConnection(theServer);
+
+    fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__);
+
     rlRecvBufferData(theClient, &theBuffer);
     rlBufferRead(&theBuffer, 0, &theClientType, 1, sizeof(int));
 
