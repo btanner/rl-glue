@@ -33,7 +33,7 @@ void parse_type(char*& ts, int& dim, char*& types, float*& mins, float*& maxs, i
 	else if(types[i] =='f')
 		num_continuous_dims++;
 	else{
-		printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %s Exiting... \n\n", types[i]);
+		printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", types[i]);
 		exit(0);
 	}		
     ts += characters_read;
@@ -50,7 +50,7 @@ if(types[i] == 'i')
 else if(types[i] =='f')
 	num_continuous_dims++;
 else{
-	printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %s Exiting... \n\n", types[i]);
+	printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", types[i]);
 	exit(0);
 }	
   ts += characters_read;
@@ -136,7 +136,7 @@ else{
 
 void parse_task_spec(char* ts, task_spec_struct* ps)
 {
-  int i,characters_read;
+  int characters_read;
   int scan_args = sscanf(ts," %f : %c : %n ",&(ps->version),&(ps->episodic),&characters_read); /* read in version, episodic or continuous, and the number of characters consumed in this call to scanf*/
   if(scan_args != 2) 
   {

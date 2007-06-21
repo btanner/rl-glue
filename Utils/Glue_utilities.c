@@ -1,22 +1,22 @@
 #include "Glue_utilities.h"
 
-
+/*NOTE for users unfamiliar with sscanf: %n in sscanf will return the number of characters read in that sscanf call. */ 
 void parse_type(char** ts, int* dim, char** types, float** mins, float** maxs, int* num_discrete_dims, int* num_continuous_dims)
 {
   int characters_read,scan_args,i;
-  *num_discrete_dims = 0;
+  *num_discrete_dims = 0; 
   *num_continuous_dims =0;
   scan_args = sscanf(*ts," %d _ [%n",dim,&characters_read); /* get the numer of dimensions to read*/
-  if(scan_args != 1)
+ 
+   if(scan_args != 1) /*If it fails to read the first arguement, exit*/
   {
     printf("\nError6: Incorrect task spec format. Cannot read number of dimensions for observation or action Exiting....\n\n"); 
     exit(0);
   }
-  *ts = *ts + characters_read;
-/*  types  =new char[dim+1];
-  mins = new float[dim];
-  maxs = new float[dim];*/
-  *types = (char*)malloc(sizeof(char)*((*dim)+1));
+  *ts = *ts + characters_read; /* move along the string*/
+  
+  /*allocate the types, mins and maxs arrays*/
+  *types = (char*)malloc(sizeof(char)*((*dim)+1)); 
   *mins = (float*)malloc(sizeof(float)*(*dim));
   *maxs = (float*)malloc(sizeof(float)*(*dim));
 
@@ -24,22 +24,23 @@ void parse_type(char** ts, int* dim, char** types, float** mins, float** maxs, i
   /*get all the types for all the variables.*/
   for (i = 0; i < (*dim)-1; i++)
   {
-    scan_args = sscanf(*ts," %c ,%n",(&((*types)[i])),&characters_read);
-    if (scan_args != 1)
+    scan_args = sscanf(*ts," %c ,%n",(&((*types)[i])),&characters_read); /* scans for the i'th variable type*/
+	
+    if (scan_args != 1) /*fails to read in arguements*/
     {
       printf("\nError7: Incorrect task spec format. Cannot read in variable type for the %d 'th observation or action Exiting....\n\n", i); 
       exit(0);
     }
 	/*counts how many discrete and how many continuous variables*/
-	if(strncmp(&((*types)[i]), "i", 1) == 0)
+	if(strncmp(&((*types)[i]), "i", 1) == 0) /*if it's an int*/
 		(*num_discrete_dims) = (*num_discrete_dims) + 1;
-	else if(strncmp(&((*types)[i]), "f", 1) == 0)
+	else if(strncmp(&((*types)[i]), "f", 1) == 0) /* if it's a float*/
 		(*num_continuous_dims) = (*num_continuous_dims) + 1;
 	else{
 		printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", (*types)[i]);
 		exit(0);
 	}		
-  *ts = *ts + characters_read;
+  *ts = *ts + characters_read; /*move along the string*/
   } 
 
   /*get the last type for the last variable*/
@@ -74,7 +75,7 @@ else{
 	else if(scan_args ==0)
 	{
 		/*if no value is read (ie we are using negative inf as the min)*/
-		((*mins)[i]) = -INFINITY;
+		((*mins)[i]) = -1*INFINITY;
 		sscanf(*ts, " , %n", &characters_read);
 		*ts = *ts + characters_read;
 	}
@@ -101,8 +102,8 @@ else{
 	}
   }/*End of for loop to get values*/
 
-  /*getting the last min max value pair
-   *obtain minimum value*/
+  /*getting the last min max value pair*/
+	/*obtain minimum value*/
 	scan_args = sscanf(*ts, " %f , %n",  (&((*mins)[i])), &characters_read);
 	if(scan_args == 1)
 	{
@@ -112,7 +113,7 @@ else{
 	else if(scan_args ==0)
 	{
 		/*if no value is read (ie we are using negative inf as the min)*/
-		((*mins)[i]) = -INFINITY;
+		((*mins)[i]) = -1*INFINITY;
 		sscanf(*ts, " , %n", &characters_read);
 		*ts = *ts + characters_read;
 	}
