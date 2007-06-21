@@ -69,7 +69,7 @@ else{
 	else if(scan_args ==0)
 	{
 		//if no value is read (ie we are using negative inf as the min)
-		mins[i] = -1*INFINITY;
+		mins[i] = FLT_MIN;
 		sscanf(ts, " , %n", &characters_read);
 		ts += characters_read;
 	}
@@ -86,7 +86,7 @@ else{
 	}
 	else if(scan_args ==0){
 		//if no value is read (ie we are using positive inf as the max)
-		maxs[i] = INFINITY;
+		maxs[i] = FLT_MAX;
 		sscanf(ts, " ] _ [%n", &characters_read);
 		ts += characters_read;
 	}
@@ -107,7 +107,7 @@ else{
 	else if(scan_args ==0)
 	{
 		//if no value is read (ie we are using negative inf as the min)
-		mins[i] = -1*INFINITY;
+		mins[i] = FLT_MIN;
 		sscanf(ts, " , %n", &characters_read);
 		ts += characters_read;
 	}
@@ -124,7 +124,7 @@ else{
 	}
 	else if(scan_args ==0){
 		//if no value is read (ie we are using positive inf as the max)
-		maxs[i] = INFINITY;
+		maxs[i] = FLT_MAX;
 		sscanf(ts, " ] :%n", &characters_read);
 		ts += characters_read;
 	}
