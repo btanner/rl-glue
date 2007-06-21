@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <Network/RL_netlib.h> 
 
-extern void rlSetAgentConnection(int);
-extern void rlSetEnvironmentConnection(int);
+
+rlSocket theAgentConnection = -1;
+rlSocket theEnvironmentConnection = -1;
+
 extern void rlSetExperimentConnection(int);
-extern int rlIsAgentConnected();
-extern int rlIsEnvironmentConnected();
 extern int rlIsExperimentConnected();
 
 /* 
@@ -18,8 +18,8 @@ extern int rlIsExperimentConnected();
 */
 
 int rlConnectSystems() {
-  int isAgentConnected       = rlIsAgentConnected();
-  int isEnvironmentConnected = rlIsEnvironmentConnected(); 
+  int isAgentConnected       = (theAgentConnection != 0);
+  int isEnvironmentConnected = (theEnvironmentConnection != 0); 
   int isExperimentConnected  = rlIsExperimentConnected();
   int theClientType = 0;
   int theClient = 0;
@@ -28,6 +28,7 @@ int rlConnectSystems() {
   rlBuffer theBuffer = {0};
   short port = kDefaultPort;
   char* envptr = 0;
+	fprintf(stderr, "isAgentConnected = %d, isEnvConnected = %d, isExpConnected = %d\n",isAgentConnected, isEnvironmentConnected, isExperimentConnected);
 
   rlBufferCreate(&theBuffer, sizeof(int) * 2);
 
@@ -52,16 +53,19 @@ int rlConnectSystems() {
 
     switch(theClientType) {
     case kAgentConnection:
-      rlSetAgentConnection(theClient);
+      fprintf(stderr, "agent connected!\n");
+      theAgentConnection = theClient;
       isAgentConnected = 1;
       break;
 
     case kEnvironmentConnection:
-      rlSetEnvironmentConnection(theClient);
+      fprintf(stderr, "env connected\n");
+      theEnvironmentConnection = theClient;
       isEnvironmentConnected = 1;
       break;
 
     case kExperimentConnection:
+      fprintf(stderr, "exp connected\n");
       rlSetExperimentConnection(theClient);
       isExperimentConnected = 1;
       theExperimentConnection = theClient;

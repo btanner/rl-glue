@@ -8,30 +8,21 @@
 
 extern int rlConnectSystems();
 
-static rlSocket theEnvironmentConnection = 0;
+extern rlSocket theEnvironmentConnection;
 static Task_specification theTaskSpec = 0;
 static Observation theObservation       = {0};
 static State_key theStateKey            = {0};
 static Random_seed_key theRandomSeedKey = {0};
 static rlBuffer theBuffer = {0};
 
-void rlSetEnvironmentConnection(int theConnection) {
-  if (theEnvironmentConnection) {
-    rlClose(theEnvironmentConnection);
-  }
-
-  theEnvironmentConnection = theConnection;
-}
-
-int rlIsEnvironmentConnected() {
-  return theEnvironmentConnection != 0;
-}
 
 Task_specification env_init() {
   const int envState = kEnvInit;
   int theTaskSpecLength = 0;
   int offset = 0;
 
+  if (theEnvironmentConnection == -1)
+	  theEnvironmentConnection = 0;
   rlConnectSystems();
 
   rlBufferCreate(&theBuffer, 4096);

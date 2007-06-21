@@ -185,7 +185,6 @@ static void runEnvironmentEventLoop(rlSocket theConnection) {
     rlBufferClear(&theBuffer);
     rlRecvBufferData(theConnection, &theBuffer);
     rlBufferRead(&theBuffer, 0, &envState, 1, sizeof(int));
-
     switch(envState) {
     case kEnvInit:
       onEnvInit(theConnection);

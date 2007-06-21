@@ -154,7 +154,6 @@ static void runAgentEventLoop(rlSocket theConnection) {
     rlBufferClear(&theBuffer);
     rlRecvBufferData(theConnection, &theBuffer);
     rlBufferRead(&theBuffer, 0, &agentState, 1, sizeof(int));
-
     switch(agentState) {
     case kAgentInit:
       onAgentInit(theConnection);

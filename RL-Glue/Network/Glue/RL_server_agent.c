@@ -6,21 +6,9 @@
 #include <Network/RL_netlib.h>
 
 extern int rlConnectSystems();
-static rlSocket theAgentConnection = 0;
+extern rlSocket theAgentConnection;
 static Action theAction = {0};
 static rlBuffer theBuffer = {0};
-
-void rlSetAgentConnection(int theConnection) {
-  if (theAgentConnection) {
-    rlClose(theAgentConnection);
-  }
-
-  theAgentConnection = theConnection;
-}
-
-int rlIsAgentConnected() {
-  return theAgentConnection != 0;
-}
 
 /* Send the task spec to the agent */
 void agent_init(const Task_specification theTaskSpec) {
@@ -28,6 +16,8 @@ void agent_init(const Task_specification theTaskSpec) {
   const int theTaskSpecLength = strlen(theTaskSpec)+1;
   int offset = 0;
 
+  if (theAgentConnection == -1)
+	  theAgentConnection = 0;
   rlConnectSystems();
 
   rlBufferCreate(&theBuffer, 4096);
