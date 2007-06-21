@@ -8,13 +8,13 @@
 #include <Network/RL_netlib.h>
 
 /* Provide forward declaration of agent interface */
-extern void   agent_init(const Task_specification task_spec);
+extern void agent_init(const Task_specification task_spec);
 extern Action agent_start(Observation o);
 extern Action agent_step(Reward r, Observation o);
-extern void   agent_end(Reward r);
-extern void   agent_cleanup();
-extern void   agent_freeze();
-extern Message  agent_message(const Message inMessage);
+extern void agent_end(Reward r);
+extern void agent_cleanup();
+extern void agent_freeze();
+extern Message agent_message(const Message inMessage);
 
 static const char* kUnknownMessage = "Unknown Message: %d\n";
 

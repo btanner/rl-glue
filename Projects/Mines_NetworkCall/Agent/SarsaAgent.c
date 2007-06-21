@@ -18,9 +18,10 @@ int freeze = 0;
 
 void agent_init(const Task_specification task_spec)
 {
+  task_spec_struct tss;
+
   srand(time(NULL));
   
-  task_spec_struct tss;
   parse_task_spec(task_spec, &tss);
 
   action.numInts     =  tss.num_discrete_action_dims;

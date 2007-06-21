@@ -74,7 +74,7 @@ else{
 	else if(scan_args ==0)
 	{
 		/*if no value is read (ie we are using negative inf as the min)*/
-		((*mins)[i]) = -1*INFINITY;
+		((*mins)[i]) = -INFINITY;
 		sscanf(*ts, " , %n", &characters_read);
 		*ts = *ts + characters_read;
 	}
@@ -112,7 +112,7 @@ else{
 	else if(scan_args ==0)
 	{
 		/*if no value is read (ie we are using negative inf as the min)*/
-		((*mins)[i]) = -1*INFINITY;
+		((*mins)[i]) = -INFINITY;
 		sscanf(*ts, " , %n", &characters_read);
 		*ts = *ts + characters_read;
 	}
