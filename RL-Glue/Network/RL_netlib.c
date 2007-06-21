@@ -259,7 +259,7 @@ int rlGetSystemByteOrder() {
 }
 
 void rlSwapData(void* out, const void* in, const unsigned int size) {
-  unsigned char *src = (unsigned char *)in;
+  unsigned char *src = (const unsigned char *)in;
   unsigned char *dst = (unsigned char *)out;
   unsigned int i = 0;
   unsigned char temp = 0;
@@ -267,9 +267,12 @@ void rlSwapData(void* out, const void* in, const unsigned int size) {
   assert(out != in);
 
   for (i = 0; i < size; ++i) {
+    dst[i] = src[size-i-1];
+    /*
     temp = dst[i];
     dst[i] = src[size-i];
     src[size-i] = temp;
+    */
   }
 }
 
