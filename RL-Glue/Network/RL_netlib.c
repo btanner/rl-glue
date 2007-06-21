@@ -3,7 +3,7 @@
 #include <stdlib.h> /* calloc */
 #include <string.h> /* memset */
 
-#include <stdio.h> /* fprintf : Debug only */
+/*#include <stdio.h>*/ /* fprintf : Debug only */
 
 /* Network Headers */
 #include <unistd.h>
@@ -204,15 +204,10 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
 unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
   unsigned int sendSize = buffer->size;
   
-  fprintf(stderr, "Send Before Swap: %d\n", sendSize);
-
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
     rlSwapData(&sendSize, &buffer->size, sizeof(unsigned int));
   }
-
-  fprintf(stderr, "Send After Swap: %d\n", sendSize);
-  fprintf(stderr, "Send Should Be: %d\n", htonl(buffer->size));
   
   rlSendData(theSocket, &sendSize, sizeof(unsigned int));
   rlSendData(theSocket, buffer->data, buffer->size);
@@ -225,8 +220,6 @@ unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
 
   rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
 
-  fprintf(stderr, "Recv Before Swap: %d\n", recvSize);
-
   /* recvSize came across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
     rlSwapData(&buffer->size, &recvSize, sizeof(unsigned int));
@@ -235,9 +228,6 @@ unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
     buffer->size = recvSize;
   }
   
-  fprintf(stderr, "Recv After Swap: %d\n", buffer->size);
-  fprintf(stderr, "Recv Should Be: %d\n", ntohl(buffer->size));
-
 
   rlBufferReserve(buffer, buffer->size);
   rlRecvData(theSocket, buffer->data, buffer->size);
@@ -259,20 +249,14 @@ int rlGetSystemByteOrder() {
 }
 
 void rlSwapData(void* out, const void* in, const unsigned int size) {
-  unsigned char *src = (const unsigned char *)in;
+  const unsigned char *src = (const unsigned char *)in;
   unsigned char *dst = (unsigned char *)out;
   unsigned int i = 0;
-  unsigned char temp = 0;
 
   assert(out != in);
 
   for (i = 0; i < size; ++i) {
     dst[i] = src[size-i-1];
-    /*
-    temp = dst[i];
-    dst[i] = src[size-i];
-    src[size-i] = temp;
-    */
   }
 }
 
