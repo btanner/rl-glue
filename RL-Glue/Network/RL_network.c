@@ -29,7 +29,7 @@ int rlConnectSystems() {
   short port = kDefaultPort;
   char* envptr = 0;
 
-  fprintf(stderr, "isAgentConnected = %d, isEnvConnected = %d, isExpConnected = %d\n",isAgentConnected, isEnvironmentConnected, isExperimentConnected);
+  /* fprintf(stderr, "isAgentConnected = %d, isEnvConnected = %d, isExpConnected = %d\n",isAgentConnected, isEnvironmentConnected, isExperimentConnected); */
 
   rlBufferCreate(&theBuffer, sizeof(int) * 2);
 
@@ -50,26 +50,26 @@ int rlConnectSystems() {
   while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
     theClient = rlAcceptConnection(theServer);
 
-    fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__);
+    /* fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__); */
 
     rlRecvBufferData(theClient, &theBuffer);
     rlBufferRead(&theBuffer, 0, &theClientType, 1, sizeof(int));
 
     switch(theClientType) {
     case kAgentConnection:
-      fprintf(stderr, "agent connected!\n");
+      /* fprintf(stderr, "agent connected!\n"); */
       theAgentConnection = theClient;
       isAgentConnected = 1;
       break;
 
     case kEnvironmentConnection:
-      fprintf(stderr, "env connected\n");
+      /* fprintf(stderr, "env connected\n"); */
       theEnvironmentConnection = theClient;
       isEnvironmentConnected = 1;
       break;
 
     case kExperimentConnection:
-      fprintf(stderr, "exp connected\n");
+      /* fprintf(stderr, "exp connected\n"); */
       rlSetExperimentConnection(theClient);
       isExperimentConnected = 1;
       theExperimentConnection = theClient;

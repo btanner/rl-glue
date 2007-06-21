@@ -20,8 +20,6 @@ void agent_init(const Task_specification task_spec)
 {
   task_spec_struct tss;
   srand(time(NULL));
-
-  printf("task_spec is: %s\n", task_spec);
   
   parse_task_spec(task_spec, &tss);
 
