@@ -173,7 +173,7 @@ unsigned int rlBufferWrite(rlBuffer *buffer, unsigned int offset, const void* se
 
   /* For each of the new data items, swap the endianness and add them to the buffer */
   for (i = 0; i < count; ++i) {
-    if (rlGetSystemByteOrder() == 1) {
+    if (1) { /*rlGetSystemByteOrder() == 1) {*/
       rlSwapData(&data_ptr[i * size], &data[i * size], size);
     }
     else {
@@ -191,7 +191,7 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
 
   /* For each of the new data items, swap the endianness and read them from the buffer */
   for (i = 0; i < count; ++i) {
-    if (rlGetSystemByteOrder() == 1) {
+    if (1) { /*rlGetSystemByteOrder() == 1) {*/
       rlSwapData(&data[i * size], &buffer->data[(i * size) + offset], size);
     }
     else {
@@ -206,7 +206,7 @@ unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
   int sendSize = buffer->size;
   
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
-  if (rlGetSystemByteOrder() == 1) {
+  if (1) /*rlGetSystemByteOrder() == 1) {*/
     rlSwapData(&sendSize, &buffer->size, sizeof(int));
   }
   
