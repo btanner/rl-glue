@@ -202,39 +202,42 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
 }
 
 unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
-  int sendSize = buffer->size;
+  unsigned int sendSize = buffer->size;
   
   fprintf(stderr, "Send Before Swap: %d\n", sendSize);
 
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
-    rlSwapData(&sendSize, &buffer->size, sizeof(int));
+    rlSwapData(&sendSize, &buffer->size, sizeof(unsigned int));
   }
 
   fprintf(stderr, "Send After Swap: %d\n", sendSize);
+  fprintf(stderr, "Send Should Be: %d\n", htonl(buffer->size));
   
-  rlSendData(theSocket, &sendSize, sizeof(int));
+  rlSendData(theSocket, &sendSize, sizeof(unsigned int));
   rlSendData(theSocket, buffer->data, buffer->size);
 
   return buffer->size; /* Returns payload size, not actual data sent ! */
 }
 
 unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
-  int recvSize = 0;
+  unsigned int recvSize = 0;
 
-  rlRecvData(theSocket, &recvSize, sizeof(int));
+  rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
 
   fprintf(stderr, "Recv Before Swap: %d\n", recvSize);
 
   /* recvSize came across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
-    rlSwapData(&buffer->size, &recvSize, sizeof(int));
+    rlSwapData(&buffer->size, &recvSize, sizeof(unsigned int));
   }
   else {
     buffer->size = recvSize;
   }
   
   fprintf(stderr, "Recv After Swap: %d\n", buffer->size);
+  fprintf(stderr, "Recv Should Be: %d\n", ntohl(buffer->size));
+
 
   rlBufferReserve(buffer, buffer->size);
   rlRecvData(theSocket, buffer->data, buffer->size);
