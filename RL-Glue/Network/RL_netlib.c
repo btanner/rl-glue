@@ -3,7 +3,7 @@
 #include <stdlib.h> /* calloc */
 #include <string.h> /* memset */
 
-/*#include <stdio.h>*/ /* fprintf : Debug only */
+#include <stdio.h> /* fprintf : Debug only */
 
 /* Network Headers */
 #include <unistd.h>
@@ -15,7 +15,6 @@
 
 /* RL_netlib Library Header */
 #include <Network/RL_netlib.h>
-
 
 extern void rlSetAgentConnection(int);
 extern void rlSetEnvironmentConnection(int);
@@ -205,10 +204,14 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
 unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
   int sendSize = buffer->size;
   
+  fprintf(stderr, "Send Before Swap: %d\n", sendSize);
+
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
     rlSwapData(&sendSize, &buffer->size, sizeof(int));
   }
+
+  fprintf(stderr, "Send After Swap: %d\n", sendSize);
   
   rlSendData(theSocket, &sendSize, sizeof(int));
   rlSendData(theSocket, buffer->data, buffer->size);
@@ -218,7 +221,11 @@ unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
 
 unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
   int recvSize = 0;
+
   rlRecvData(theSocket, &recvSize, sizeof(int));
+
+  fprintf(stderr, "Recv Before Swap: %d\n", recvSize);
+
   /* recvSize came across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
     rlSwapData(&buffer->size, &recvSize, sizeof(int));
@@ -226,6 +233,8 @@ unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
   else {
     buffer->size = recvSize;
   }
+
+  fprintf(stderr, "Recv After Swap: %d\n", buffer->size);
 
   rlBufferReserve(buffer, buffer->size);
   rlRecvData(theSocket, buffer->data, buffer->size);
@@ -244,12 +253,15 @@ int rlGetSystemByteOrder() {
   const char endian = *(char*)&one;
 
   return endian;
+  /*return one;*/
 }
 
 void rlSwapData(void* out, const void* in, const unsigned int size) {
   const unsigned char *src = (const unsigned char *)in;
   unsigned char *dst = (unsigned char *)out;
   unsigned int i = 0;
+
+  assert(out != in);
 
   for (i = 0; i < size; ++i) {
     dst[i] = src[size-i];
