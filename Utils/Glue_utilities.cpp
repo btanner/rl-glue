@@ -60,7 +60,7 @@ else{
   for (i = 0; i < dim-1; i++)
   {
 	//obtain minimum value
-	scan_args = sscanf(ts, " %f , %n", &(mins[i]), &characters_read);
+	scan_args = sscanf(ts, " %lf , %n", &(mins[i]), &characters_read);
 	if(scan_args == 1)
 	{
 		//if value is read correctly
@@ -69,7 +69,7 @@ else{
 	else if(scan_args ==0)
 	{
 		//if no value is read (ie we are using negative inf as the min)
-		mins[i] = FLT_MIN;
+		mins[i] = DBL_MIN;
 		sscanf(ts, " , %n", &characters_read);
 		ts += characters_read;
 	}
@@ -78,7 +78,7 @@ else{
 		exit(0);
 	}
 	//obtain maximum value
-    scan_args = sscanf(ts," %f ] _ [%n",&(maxs[i]),&characters_read);
+    scan_args = sscanf(ts," %lf ] _ [%n",&(maxs[i]),&characters_read);
 	if(scan_args == 1)
 	{
 		//if value is correctly read
@@ -86,7 +86,7 @@ else{
 	}
 	else if(scan_args ==0){
 		//if no value is read (ie we are using positive inf as the max)
-		maxs[i] = FLT_MAX;
+		maxs[i] = DBL_MAX;
 		sscanf(ts, " ] _ [%n", &characters_read);
 		ts += characters_read;
 	}
@@ -98,7 +98,7 @@ else{
   
   //getting the min max value pair
 	//obtain minimum value
-	scan_args = sscanf(ts, " %f , %n", &(mins[i]), &characters_read);
+	scan_args = sscanf(ts, " %lf , %n", &(mins[i]), &characters_read);
 	if(scan_args == 1)
 	{
 		//if value is read correctly
@@ -107,7 +107,7 @@ else{
 	else if(scan_args ==0)
 	{
 		//if no value is read (ie we are using negative inf as the min)
-		mins[i] = FLT_MIN;
+		mins[i] = DBL_MIN;
 		sscanf(ts, " , %n", &characters_read);
 		ts += characters_read;
 	}
@@ -116,7 +116,7 @@ else{
 		exit(0);
 	}
 	//obtain maximum value
-    scan_args = sscanf(ts," %f ] :%n",&(maxs[i]),&characters_read);
+    scan_args = sscanf(ts," %lf ] :%n",&(maxs[i]),&characters_read);
 	if(scan_args == 1)
 	{
 		//if value is correctly read
@@ -124,7 +124,7 @@ else{
 	}
 	else if(scan_args ==0){
 		//if no value is read (ie we are using positive inf as the max)
-		maxs[i] = FLT_MAX;
+		maxs[i] = DBL_MAX;
 		sscanf(ts, " ] :%n", &characters_read);
 		ts += characters_read;
 	}

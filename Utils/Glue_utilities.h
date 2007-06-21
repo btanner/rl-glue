@@ -17,14 +17,14 @@ typedef struct
         int num_discrete_obs_dims;
         int num_continuous_obs_dims;
         char *obs_types;	    
-        float *obs_mins;           
-        float *obs_maxs;			
+        int *obs_mins;           
+        int *obs_maxs;			
         int action_dim;			
         int num_discrete_action_dims;
         int num_continuous_action_dims;
         char *action_types;		
-        float *action_mins;		
-        float *action_maxs;
+        double *action_mins;		
+        double *action_maxs;
 } task_spec_struct;
 
 
