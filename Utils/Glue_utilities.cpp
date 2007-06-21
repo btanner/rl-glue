@@ -1,7 +1,7 @@
 #include "Glue_utilities.h"
 
 
-void parse_type(char*& ts, int& dim, char*& types, float*& mins, float*& maxs, int& num_discrete_dims, int& num_continuous_dims)
+void parse_type(char*& ts, int& dim, char*& types, double*& mins, double*& maxs, int& num_discrete_dims, int& num_continuous_dims)
 {
   int characters_read,scan_args,i;
   num_discrete_dims = 0;
