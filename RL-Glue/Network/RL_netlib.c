@@ -207,13 +207,9 @@ unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
   fprintf(stderr, "Send Before Swap: %d\n", sendSize);
 
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
-  /*
   if (rlGetSystemByteOrder() == 1) {
     rlSwapData(&sendSize, &buffer->size, sizeof(int));
   }
-  */
-
-  sendSize = htonl(buffer->size);
 
   fprintf(stderr, "Send After Swap: %d\n", sendSize);
   
@@ -231,17 +227,13 @@ unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
   fprintf(stderr, "Recv Before Swap: %d\n", recvSize);
 
   /* recvSize came across in network byte order, swap it if we're little endian */
-  /*
   if (rlGetSystemByteOrder() == 1) {
     rlSwapData(&buffer->size, &recvSize, sizeof(int));
   }
   else {
     buffer->size = recvSize;
   }
-  */
   
-  buffer->size = ntohl(recvSize);
-
   fprintf(stderr, "Recv After Swap: %d\n", buffer->size);
 
   rlBufferReserve(buffer, buffer->size);
@@ -264,14 +256,17 @@ int rlGetSystemByteOrder() {
 }
 
 void rlSwapData(void* out, const void* in, const unsigned int size) {
-  const unsigned char *src = (const unsigned char *)in;
+  unsigned char *src = (unsigned char *)in;
   unsigned char *dst = (unsigned char *)out;
   unsigned int i = 0;
+  unsigned char temp = 0;
 
   assert(out != in);
 
   for (i = 0; i < size; ++i) {
+    temp = dst[i];
     dst[i] = src[size-i];
+    src[size-i] = temp;
   }
 }
 
