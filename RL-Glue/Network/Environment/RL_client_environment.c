@@ -5,9 +5,7 @@
 #include <stdlib.h> /* calloc, getenv, exit */
 
 #include <ctype.h> /* isdigit */
-#include <netdb.h> /* getaddrinfo */
-#include <sys/types.h> /* addrinfo */
-#include <sys/socket.h> /* for getaddrinfo types */
+#include <netdb.h> /* gethostbyname */
 #include <arpa/inet.h> /* inet_ntoa */
 
 #include <RL_common.h>
@@ -240,8 +238,7 @@ int main(int argc, char** argv) {
   const int theConnectionType = kEnvironmentConnection;
   rlSocket theConnection = 0;
 
-  struct addrinfo *result;
-  struct sockaddr_in *addr;
+  struct hostent *host_ent;
 
   char* host = kLocalHost;
   short port = kDefaultPort;
@@ -268,9 +265,8 @@ int main(int argc, char** argv) {
   }
 
   if (isalpha(host[0])) {
-    getaddrinfo(host, 0, 0, &result); 
-    addr = (struct sockaddr_in*)(result->ai_addr);
-    host = inet_ntoa( addr->sin_addr );
+    host_ent = gethostbyname(host); 
+    host = inet_ntoa(*(struct in_addr*)host_ent->h_addr);
   }
 
   fprintf(stderr, "Connecting to host=%s on port=%d with autoreconnect=%d\n", host, port, autoReconnect);
