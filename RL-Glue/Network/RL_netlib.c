@@ -156,7 +156,7 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     buffer->data = new_data;
 
     /* Set the new capacity */
-    buffer->capacity = capacity + (capacity - buffer->capacity) * 2;
+    buffer->capacity = new_capacity;
   }
 }
 
