@@ -6,6 +6,7 @@
 
 #include <ctype.h> /* isdigit */
 #include <netdb.h> /* getaddrinfo */
+#include <sys/types.h> /* addrinfo */
 #include <arpa/inet.h> /* inet_ntoa */
 
 #include <RL_common.h>
