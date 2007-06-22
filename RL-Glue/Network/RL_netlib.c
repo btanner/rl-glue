@@ -126,6 +126,7 @@ void rlBufferCreate(rlBuffer *buffer, unsigned int capacity) {
 
 void rlBufferDestroy(rlBuffer *buffer) {
   free(buffer->data);
+  buffer->data = 0;
 }
 
 void rlBufferClear(rlBuffer *buffer) {
