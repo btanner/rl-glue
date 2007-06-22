@@ -209,6 +209,7 @@ void onRLAgentMessage(rlSocket theConnection) {
   rlSendBufferData(theConnection, &theBuffer);
 
   free(inMessage);
+  inMessage = 0;
 }
 
 void onRLEnvMessage(rlSocket theConnection) {
