@@ -16,10 +16,6 @@
 /* RL_netlib Library Header */
 #include <Network/RL_netlib.h>
 
-extern void rlSetAgentConnection(int);
-extern void rlSetEnvironmentConnection(int);
-extern void rlSetExperimentConnection(int);
-
 rlSocket rlOpen(short thePort) {
   int flag = 1;
   rlSocket theSocket = 0;
