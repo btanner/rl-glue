@@ -166,11 +166,11 @@ void agent_cleanup(){
 }
 
 Message agent_message(const Message message){
-	/*no messages currently implemented*/
+  /*no messages currently implemented*/
   return "SarsaAgent.c does not respond to any messages.";
 }
 
 void agent_freeze(){
-	/*sets the agent to freeze mode*/
+  /*sets the agent to freeze mode*/
   freeze = 1;
 }
