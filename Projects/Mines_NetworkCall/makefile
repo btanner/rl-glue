@@ -47,9 +47,9 @@ Glue_utilities.o: ../../Utils/Glue_utilities.c ../../Utils/Glue_utilities.h
 # ============================================================================================
 #                                     RLGLUE 2.0
 # ============================================================================================
-GLUE_AGENT        = $(AGENT_OBJECTS)
-GLUE_ENVIRONMENT  = $(ENVIRONMENT_OBJECTS)
-GLUE_EXPERIMENT   = $(EXPERIMENT_OBJECTS)
+GLUE_AGENT        = RL_direct_agent.o $(AGENT_OBJECTS)
+GLUE_ENVIRONMENT  = RL_direct_environment.o $(ENVIRONMENT_OBJECTS)
+GLUE_EXPERIMENT   = RL_direct_experiment.o $(EXPERIMENT_OBJECTS)
 
 
 AGENT_TARGET      = 
@@ -125,6 +125,22 @@ endif
 # ===================================== INTERFACE ============================================
 # ------------------------------- Compile The RL-Interface ----------------------------------
 RL_glue.o: $(RL-GLUE)/RL_glue.c $(RL-GLUE)/RL_glue.h
+	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
+# -------------------------------------------------------------------------------------------
+
+
+# ====================================== DIRECT =============================================
+# ----------------------------------- Direct Call Objects -----------------------------------
+RL_direct_glue.o: $(RL-GLUE)/Direct/Glue/RL_direct_glue.c
+	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
+
+RL_direct_agent.o: $(RL-GLUE)/Direct/Agent/RL_direct_agent.c
+	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
+
+RL_direct_environment.o: $(RL-GLUE)/Direct/Environment/RL_direct_environment.c
+	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
+
+RL_direct_experiment.o: $(RL-GLUE)/Direct/Experiment/RL_direct_experiment.c
 	$(CC) $(CFLAGS) -c $< -o $(addprefix $(BUILD_PATH), $@)
 # -------------------------------------------------------------------------------------------
 
