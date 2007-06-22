@@ -17,12 +17,11 @@ double sarsa_gamma = 0.9;
 int freeze = 0;
 
 void agent_init(const Task_specification task_spec)
-{
-
-  srand(0);/*seed the randomness*/
-  
+{  
   task_spec_struct tss;					/*declare task_spec_struct*/
+  srand(0);/*seed the randomness*/
   parse_task_spec(task_spec, &tss);		/*Parsing task_specification*/	
+
 
 /*allocating memory for one Action*/
   action.numInts     =  tss.num_discrete_action_dims;
@@ -114,15 +113,16 @@ Action agent_step(Reward r, Observation o)
 
 void agent_end(Reward r)
 { 
+    const int oldState = previous_observation.intArray[0];
+    const int oldAction = previous_action.intArray[0];
+    
+    const double oldQ = value[oldState][oldAction];
+
 /*if the agent isn't frozen, do the last update to the value function, in sarsa this
 *means the currentQ is zero for this calculation*/
-if(!frozen){
-  const int oldState = previous_observation.intArray[0];
-  const int oldAction = previous_action.intArray[0];
-  
-  double oldQ = value[oldState][oldAction];
-  value[oldState][oldAction] = oldQ + sarsa_alpha*(r - oldQ);
-	}
+    if(!freeze) {
+      value[oldState][oldAction] = oldQ + sarsa_alpha*(r - oldQ);
+    }
 }
 
 
