@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <Glue_utilities.h>
+#include "Glue_utilities.h"
 #include "SarsaAgent.h"
 
 #define NUM_STATES 108
