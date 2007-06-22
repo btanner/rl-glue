@@ -6,7 +6,7 @@ from RL_common import *
 sarsaAgentAction = Action()
 Q = []
 Epsilon = 0.1
-alpha = 0.01
+alpha = 0.1
 gamma = 0.9
 NumStates = 108
 NumActions = 4

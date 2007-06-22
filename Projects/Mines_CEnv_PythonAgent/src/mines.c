@@ -24,7 +24,7 @@ mine_env M;
 Reward_observation ro;
 int env_terminal;
 
-int env_map[6][19] = 
+int env_map[6][18] = 
 { 
   { 3, 3, 3, 3, 3, 3 ,3 ,3, 3, 3 ,3 ,3 ,3, 3, 3, 3, 3, 3 }, 
   { 3, 2, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 0, 2, 2, 2, 2, 3 }, 
@@ -47,7 +47,7 @@ Task_specification env_init()
   M.OBSTACLE = 3;
   M.MINE = 4;
   
-  M.row = 5;
+  M.row = 6;
   M.col = 18;
   M.startRow= 1;
   M.startCol = 12;
@@ -59,6 +59,8 @@ Task_specification env_init()
 
   o.intArray    = (int*)malloc(sizeof(int)*o.numInts);
   o.doubleArray = 0;
+
+	srand(0);
 
   /* Return task specification */
   

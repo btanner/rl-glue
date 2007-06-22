@@ -5,7 +5,7 @@
 #include "SarsaAgent.h"
 #include "Glue_utilities.h"
 
-#define NUM_STATES 114
+#define NUM_STATES 108
 #define NUM_ACTIONS 4
 
 Action action;
@@ -19,7 +19,7 @@ int freeze = 0;
 void agent_init(const Task_specification task_spec)
 {
   task_spec_struct tss;
-  srand(time(NULL));
+  srand(0);
   
   parse_task_spec(task_spec, &tss);
 
@@ -109,7 +109,7 @@ int egreedy(Observation o){
   int i = 1;
 
   if((freeze == 0) && (rand() % 10 == 1)) {
-    return rand() % 4;	
+    return rand() % 4;
   }
 
   max = 0;
