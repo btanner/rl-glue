@@ -1,0 +1,1 @@
+This example is to show how RL-Glue can be used when directly compiling an agent, environment, and experiment all written in C together with the glue. The direct compilation process provides an advantage in speed and simplicity. This example includes a SarsaAgent and a mines environment (as well as a generic sample experiment program). 
