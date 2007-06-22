@@ -37,7 +37,7 @@ extern Message RL_env_message(const Message message);
 
 void onRLCleanup(rlSocket theConnection);
 
-int theExperimentConnection = 0;
+extern rlSocket theExperimentConnection;
 State_key theStateKey = {0};
 Random_seed_key theRandomSeedKey = {0};
 rlBuffer theBuffer = {0};
@@ -50,19 +50,6 @@ void termination_handler(int signum) {
   rlBufferDestroy(&theBuffer);
   exit(0);
 }
-
-void rlSetExperimentConnection(int theConnection) {
-  if (theExperimentConnection) {
-    rlClose(theExperimentConnection);
-  }
-
-  theExperimentConnection = theConnection;
-}
-
-int rlIsExperimentConnected() {
-  return theExperimentConnection != 0;
-}
-
 
 void onRLInit(rlSocket theConnection) {
   RL_init();
@@ -348,6 +335,8 @@ int main(int argc, char** argv) {
   rlBufferCreate(&theBuffer, 4096);
 
   do {
+	  if (theExperimentConnection == -1)
+			theExperimentConnection = 0;
     theConnection = rlConnectSystems();
     assert(rlIsValidSocket(theConnection));
     runGlueEventLoop(theConnection);

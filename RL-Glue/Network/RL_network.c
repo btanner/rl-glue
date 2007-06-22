@@ -5,9 +5,7 @@
 
 rlSocket theAgentConnection = -1;
 rlSocket theEnvironmentConnection = -1;
-
-extern void rlSetExperimentConnection(int);
-extern int rlIsExperimentConnected();
+rlSocket theExperimentConnection = -1;
 
 /* 
    rlConnectSystems is responsible for ensuring that the Glue has an agent, environment and experiment
@@ -20,11 +18,10 @@ extern int rlIsExperimentConnected();
 int rlConnectSystems() {
   int isAgentConnected       = (theAgentConnection != 0);
   int isEnvironmentConnected = (theEnvironmentConnection != 0); 
-  int isExperimentConnected  = rlIsExperimentConnected();
+  int isExperimentConnected  = (theExperimentConnection != 0);
   int theClientType = 0;
   int theClient = 0;
   int theServer = 0;
-  rlSocket theExperimentConnection = 0;
   rlBuffer theBuffer = {0};
   short port = kDefaultPort;
   char* envptr = 0;
@@ -70,7 +67,6 @@ int rlConnectSystems() {
 
     case kExperimentConnection:
       /* fprintf(stderr, "exp connected\n"); */
-      rlSetExperimentConnection(theClient);
       isExperimentConnected = 1;
       theExperimentConnection = theClient;
       break;

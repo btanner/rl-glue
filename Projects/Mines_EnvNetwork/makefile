@@ -24,9 +24,9 @@ EXPERIMENT_OBJECTS  = experiment.o
 EXPERIMENT_LDFLAGS  =
 
 # Uncomment next line to use network agent
-AGENT_NET       = yes
+#AGENT_NET       = no
 ENVIRONMENT_NET = yes
-EXPERIMENT_NET  = yes
+#EXPERIMENT_NET  = no
 
 all: SarsaAgent.o Glue_utilities.o mines.o experiment.o RL_GLUE
 
