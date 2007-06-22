@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <Glue_utilities.h>
 #include "SarsaAgent.h"
-#include "Glue_utilities.h"
 
 #define NUM_STATES 108
 #define NUM_ACTIONS 4

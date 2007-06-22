@@ -10,7 +10,7 @@ BUILD_PATH = Build/
 
 # Object files and libraries required for linking our agent
 # Comment these out if you are not using a C agent.
-AGENT_OBJECTS       = SarsaAgent.o Glue_utilities.o
+AGENT_OBJECTS       = SarsaAgent.o Glue_utilities.o # The glue utilites include the task spec parser. SarsaAgent uses the task spec.
 AGENT_LDFLAGS       =
 
 # Object files and libraries required for linking our environment
