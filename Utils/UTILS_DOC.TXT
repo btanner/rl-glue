@@ -1,0 +1,5 @@
+For details on what is included in the Glue_utilities and how to use them, go to:
+
+http://rlai.cs.ualberta.ca/RLBB/Utilities.html
+
+Enjoy! 
