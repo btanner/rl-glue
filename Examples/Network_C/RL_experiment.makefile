@@ -5,10 +5,10 @@ CC      = gcc
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
 LDFLAGS =
 
-OBJECTS = experiment.o RL_client_experiment.o RL_netlib_experiment.o
+EXPERIMENT_OBJECTS = experiment.o RL_client_experiment.o RL_netlib_experiment.o
 
-RL_experiment: $(OBJECTS)
-	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(OBJECTS))
+RL_experiment: $(EXPERIMENT_OBJECTS)
+	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(EXPERIMENT_OBJECTS))
 	
 experiment.o: ./src/experiment.c .
 	$(CC) -c $(CFLAGS) $< -o $(BUILD_PATH)/$@

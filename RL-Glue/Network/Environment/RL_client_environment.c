@@ -4,6 +4,10 @@
 #include <stdio.h>  /* fprintf */
 #include <stdlib.h> /* calloc, getenv, exit */
 
+#include <ctype.h> /* isdigit */
+#include <netdb.h> /* getaddrinfo */
+#include <arpa/inet.h> /* inet_ntoa */
+
 #include <RL_common.h>
 #include <Network/RL_netlib.h>
 
@@ -234,6 +238,9 @@ int main(int argc, char** argv) {
   const int theConnectionType = kEnvironmentConnection;
   rlSocket theConnection = 0;
 
+  struct addrinfo *result;
+  struct sockaddr_in *addr;
+
   char* host = kLocalHost;
   short port = kDefaultPort;
   int autoReconnect = 0;
@@ -256,6 +263,12 @@ int main(int argc, char** argv) {
   envptr = getenv("RLGLUE_AUTORECONNECT");
   if (envptr != 0) {
     autoReconnect = strtol(envptr, 0, 10);
+  }
+
+  if (isalpha(host[0])) {
+    getaddrinfo(host, 0, 0, &result); 
+    addr = (struct sockaddr_in*)(result->ai_addr);
+    host = inet_ntoa( addr->sin_addr );
   }
 
   fprintf(stderr, "Connecting to host=%s on port=%d with autoreconnect=%d\n", host, port, autoReconnect);

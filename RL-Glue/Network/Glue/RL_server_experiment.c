@@ -3,14 +3,6 @@
 #include <signal.h> /* handle ctrl-C */
 #include <stdlib.h> /* exit */
 #include <string.h> /* strlen, strncmp */
-#include <unistd.h> /* getopt */
-#include <ctype.h> /* isdigit */
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-
 
 #include <RL_common.h>
 #include <Network/RL_netlib.h>
@@ -336,8 +328,9 @@ int main(int argc, char** argv) {
   rlBufferCreate(&theBuffer, 4096);
 
   do {
-	  if (theExperimentConnection == -1)
-			theExperimentConnection = 0;
+    if (theExperimentConnection == -1) {
+      theExperimentConnection = 0;
+    }
     theConnection = rlConnectSystems();
     assert(rlIsValidSocket(theConnection));
     runGlueEventLoop(theConnection);

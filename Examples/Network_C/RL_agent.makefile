@@ -7,10 +7,10 @@ CC      = gcc
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
 LDFLAGS =
 
-OBJECTS = SarsaAgent.o Glue_utilities.o RL_client_agent.o RL_netlib_agent.o
+AGENT_OBJECTS = SarsaAgent.o Glue_utilities.o RL_client_agent.o RL_netlib_agent.o
 
-RL_agent: $(OBJECTS)
-	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(OBJECTS))
+RL_agent: $(AGENT_OBJECTS)
+	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(AGENT_OBJECTS))
 	
 SarsaAgent.o: ./src/SarsaAgent.c ./src/SarsaAgent.h
 	$(CC) -c $(CFLAGS) -I$(UTILS) $< -o $(BUILD_PATH)/$@

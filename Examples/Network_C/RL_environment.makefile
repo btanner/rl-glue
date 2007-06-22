@@ -5,10 +5,10 @@ CC      = gcc
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
 LDFLAGS =
 
-OBJECTS = mines.o RL_client_environment.o RL_netlib_environment.o
+ENVIRONMENT_OBJECTS = mines.o RL_client_environment.o RL_netlib_environment.o
 
-RL_environment: $(OBJECTS)
-	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(OBJECTS))
+RL_environment: $(ENVIRONMENT_OBJECTS)
+	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(ENVIRONMENT_OBJECTS))
 	
 mines.o: ./src/mines.c ./src/mines.h
 	$(CC) -c $(CFLAGS) $< -o $(BUILD_PATH)/$@
