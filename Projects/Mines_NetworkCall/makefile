@@ -1,6 +1,6 @@
 # Path to RL-Glue to find RL_glue and related files.
 RL-GLUE = ../../RL-Glue
-UTILS = ../../Utils
+UTILS = ../../Utils # The agent and environment use the task spec parser.  If you are not using the task spec, you don't need this.
 
 # Compiler flags
 CC         = gcc # RL-Glue is written in C, but if you change this to g++ things will still work
@@ -23,10 +23,12 @@ ENVIRONMENT_LDFLAGS =
 EXPERIMENT_OBJECTS  = experiment.o
 EXPERIMENT_LDFLAGS  =
 
-# Uncomment next line to use network agent
+#### The following selects which parts of the glue are run over a network. To compile a part directly into the glue
+#### comment out the corresponding line.
 AGENT_NET       = yes
 ENVIRONMENT_NET = yes
 EXPERIMENT_NET  = yes
+####
 
 all: SarsaAgent.o Glue_utilities.o mines.o experiment.o RL_GLUE
 
