@@ -1,11 +1,11 @@
 # Agent Source Files
-AGENT = ./Agent/ZeroAgent.py
+AGENT = ./src/SarsaAgent.py
 
 # Environment Source Files
-ENVIRONMENT = ./Environment/mines.py
+ENVIRONMENT = ./src/mines.py
 
 # Experiment Source Files
-EXPERIMENT = ./Experiment/experiment.py
+EXPERIMENT = ./src/experiment.py
 
 # Path to RL-Glue to find RL_interface and related files.
 RL-GLUE = ../../RL-Glue
