@@ -134,12 +134,14 @@ void rlBufferClear(rlBuffer *buffer) {
 
 void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
   unsigned char* new_data = 0;
+  unsigned int new_capacity = 0;
 
   /* Ensure the buffer can hold the new data */
   if (capacity > buffer->capacity) {
-
     /* Allocate enough memory for the additional data */
-    new_data = (unsigned char*)malloc(capacity + (capacity - buffer->capacity) * 2);
+    new_capacity = capacity + (capacity - buffer->capacity) * 2;
+    assert(new_capacity > 0);
+    new_data = (unsigned char*)malloc(new_capacity);
     assert(new_data != 0);
 
     /* Copy the existing data into the the larger memory allocation */
