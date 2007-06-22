@@ -4,16 +4,18 @@ from RL_common import *
 
 class MineEnv:
 	START = 0					# Start marker in grid
-	GOAL = 0					# End marker in grid
-	LAND = 0					# Free space in grid
-	OBSTACLE = 0			# Obstical in grid
-	MINE = 0					# Mine in grid
-	row = 0						# Number of rows in grid
-	col = 0						# Number of columns in grid
-	startRow = 0			# Starting position
-	startCol = 0			# Starting position
+	GOAL = 1					# End marker in grid
+	LAND = 2					# Free space in grid
+	OBSTACLE = 3			# Obstical in grid
+	MINE = 4					# Mine in grid
+	row = 6						# Number of rows in grid
+	col = 18					# Number of columns in grid
+	startRow = 1			# Starting position
+	startCol = 12			# Starting position
 	agentRow = 0			# Agent's current position
 	agentColumn = 0		# Agent's current position
+
+MINES_RANDOM_START=1 #Whether or not to start agent in a random position each episode
 
 mine_observation = Observation()
 M = MineEnv()
@@ -65,20 +67,7 @@ def getReward():
 	else:
 		return -1
 
-def env_init():
-  M.START = 0
-  M.GOAL = 1
-  M.LAND = 2
-  M.OBSTACLE = 3
-  M.MINE = 4
-  
-  M.row = 5
-  M.col = 18
-  M.startRow= 1
-  M.startCol = 12
-  M.agentRow = M.startRow
-  M.agentColumn = M.startCol
-  
+def env_init():  
   mine_observation.numInts = 1
   mine_observation.numDoubles = 0
 
@@ -93,24 +82,26 @@ def env_init():
   return Task_spec;
 
 def env_start():
+	global mine_terminal
 	r = 0
 	c = 0
 
 	mine_terminal = 0
 	env_map[M.startRow][M.startCol] = M.LAND
 
-	while env_map[r][c] != M.LAND:
-		r = random.randint(0,2) % M.row
-		c = random.randint(0,2) % M.col
-
-	M.startRow = r
-	M.startCol = c
-	env_map[M.startRow][M.startCol] = M.START    
+	if MINES_RANDOM_START: #should we start each episode in a random position?
+		while env_map[r][c] != M.LAND:
+			r = random.randint(0,M.row-1)
+			c = random.randint(0,M.col-1)
+		M.startRow = r
+		M.startCol = c
 
 	M.agentColumn =  M.startCol
 	M.agentRow = M.startRow
+	
+	env_map[M.startRow][M.startCol] = M.START
 
-	mine_observation.intArray = [M.startRow * M.col + M.startCol]
+	mine_observation.intArray = [getPosition()]
 	sys.stderr.write('env_start observation %d\n' % (mine_observation.intArray[0]))
 	return mine_observation
 	

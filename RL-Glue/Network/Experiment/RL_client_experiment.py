@@ -1,3 +1,4 @@
+import os
 import sys
 import getopt
 import socket
@@ -12,20 +13,14 @@ def RL_init():
 	port = kDefaultPort
 	host = kLocalHost
 
-	try:
-		opts, args = getopt.getopt(sys.argv[1:], "", ["stayalive","port=","host="])
-	except getopt.GetoptError:
-		# print help information and exit:
-		print "Invalid args"
-		sys.exit(2)
+	if os.environ.has_key('RLGLUE_HOST'):
+		host = socket.gethostbyname(os.environ['RLGLUE_HOST'])
 
-	for o, a in opts:
-		if o == "--stayalive":
-			isDaemon = True
-		if o == "--port":
-			port = int(a)
-		if o == "--host":
-			host = socket.gethostbyname(a)
+	if os.environ.has_key('RLGLUE_PORT'):
+		port = int(os.environ['RLGLUE_PORT'])
+
+	if os.environ.has_key('RLGLUE_AUTORECONNECT'):
+		isDaemon = int(os.environ['RLGLUE_AUTORECONNECT']) != 0
 
 	sock = waitForConnection(host,port,kRetryTimeout)
 	sock.sendInt(kExperimentConnection)

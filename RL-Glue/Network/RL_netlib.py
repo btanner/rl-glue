@@ -81,27 +81,25 @@ class rlSocket:
 	def isValidSocket(self):
 		return self.socket == None
 	
-	def sendString(self, string):
-		sys.stderr.write("sending string %s, length is %d\n" % (string, len(string)))
-		
+	def sendString(self, string):		
 		self._sendInt(4 + len(string))
 		self._sendInt(len(string))
 		self.socket.sendall(string)
 	
 	def _sendInt(self, data):
-		packet = struct.pack('i',socket.htonl(data))
+		packet = struct.pack('!i',data)
 		self.socket.sendall(packet)
 	
 	def _sendDouble(self,data):
-		packet = struct.pack('d',data)
+		packet = struct.pack('!d',data)
 		self.socket.sendall(packet)
 	
 	def _sendInts(self, data):
-		packet = array.array('l',data)
+		packet = struct.pack("!%dl" % (len(data)),*data)
 		self.socket.sendall(packet)
 
 	def _sendDoubles(self,data):
-		packet = array.array('d',data)
+		packet = struct.pack("!%dd" % (len(data)),*data)
 		self.socket.sendall(packet)
 	
 	def recvString(self):
@@ -115,25 +113,25 @@ class rlSocket:
 		s = ''
 		while len(s) < 4:
 			s += self.socket.recv(4)
-		return struct.unpack('i',s)[0]
+		return struct.unpack('!i',s)[0]
 		
 	def _recvDouble(self):
 		s = ''
 		while len(s) < 8:
 			s += self.socket.recv(8)
-		return struct.unpack('d',s)[0]
+		return struct.unpack('!d',s)[0]
 	
 	def _recvInts(self,num):
 		s = ''
 		while len(s) < num*4:
 			s += self.socket.recv(num*4)
-		return struct.unpack("%di" % (num),s)
+		return struct.unpack("!%di" % (num),s)
 
 	def _recvDoubles(self,num):
 		s = ''
 		while len(s) < num*8:
 			s += self.socket.recv(num*8)
-		return struct.unpack("%dd" % (num),s)
+		return struct.unpack("!%dd" % (num),s)
 
 	def sendADT(self, data):
 		self._sendInt(8 + 4*data.numInts + 8*data.numDoubles)
