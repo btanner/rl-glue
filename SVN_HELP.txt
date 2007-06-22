@@ -1,0 +1,18 @@
+svn copy -m "Create branch to work in issue 3" https://rl-glue.googlecode.com/svn/trunk/ https://rl-glue.googlecode.com/svn/branches/ISSUE-3
+
+Now we want to make a tag for this issue
+
+svn copy -m "Tag start of issue 3" https://rl-glue.googlecode.com/svn/branches/ISSUE-3 https://rl-glue.googlecode.com/svn/tags/PRE-3
+
+Ok, I'm going to "switch" to this branch and work on the issue.  I'll report back how it works out.
+
+svn switch https://rl-glue.googlecode.com/svn/branches/ISSUE-3
+
+svn copy -m "Tag end of issue 3 - fixed" https://rl-glue.googlecode.com/svn/branches/ISSUE-3 https://rl-glue.googlecode.com/svn/tags/POST-3
+
+Switch back to working on the trunk
+
+svn switch https://rl-glue.googlecode.com/svn/trunk/
+
+Apply the changes between the two tags to the trunk
+svn merge https://rl-glue.googlecode.com/svn/tags/PRE-3 https://rl-glue.googlecode.com/svn/tags/POST-3
