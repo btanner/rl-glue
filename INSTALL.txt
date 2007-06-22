@@ -1,10 +1,25 @@
-Since you have unzipped the folder, you are done!!! Congrats. The following describes how to get a quick demo of pipe communication up and running. 
+Since you have unzipped the folder, you are done!!! Congrats.
 
-In Examples, there are a few sample projects included with RL-Glue. Mines_DirectCall is an example of the direct connect approach, where all files must be written in C and compiled together. Mines_NetworkCall is an example of the socket connect approach, where all files can be written in different languages (though all the files in this sample are written in C again) and can be compiled separately. The agent, environment and experiment can all be compiled on different computers and connect via a network to run the experiment. The last example is the Mines_PythonCall, which provides an example of writing socketed code in different languages.
+There are a few examples included with RL-Glue, in the Examples/ directory, as listed below.  Each example provides information on a useful feature of RL-Glue.
 
-To run any of these experiments, just go into their their folder where their makefile is stored. In your terminal type make and the project will compile. If you compiled the DirectCall example, one executable titled RL_glue will appear. Run RL_glue by typing ./RL_glue into your terminal and the experiment will run. If you compiled with the Network example, four executables will appear: RL_glue, RL_agent, RL_environment, RL_experiment. Run RL_glue and then run the other executables in any order. Once all four have been run, the experiment will begin. 
+Direct/
+Network_C/
+Network_Python/
+Network_MixedMode/
 
-To begin writing your own code, check out our DOC.txt for a pointer to the current documentation and examples page. Feel free to Experiment!
+Direct/ is an example of the direct connection approach. Each of the files is written in C and compiled and linked into a single executable for highest performance.
+
+Network_C/ is an example of the network connection approach. The agent, the environment, the experiment and the glue are all compiled into separate executables.  Since all modules communicate via a network connection each executable can be deployed on a different machine. (See the online documentation for more information.)
+
+Network_Python/ provides an example of writing an agent, environment, and experiment in Python. Languages that can not be compiled directly into RL-Glue for Direct mode execution can still integrate with RL-Glue through network communication.
+
+Network_MixedMode/ is a combination of the above techniques.  The experiment is directly compiled into RL-Glue; The agent and the environment communicate through sockets.  The agent is written in Python and the Environment is written in C.
+
+To run any of these experiments, go into their folder where their makefile is stored. In your terminal type "make" and the project will compile. 
+
+If you compiled the Direct/ example, one executable titled RL_glue will appear. Run RL_glue by typing "./RL_glue" into your terminal and the experiment will run. Compiling the Network_C/ example creates four executables: RL_glue, RL_agent, RL_environment, and RL_experiment. The experiment will begin after all four executables have been run. The order in which they are started does not matter.
+
+To begin writing your own code, check out DOC.txt for a pointer to the current documentation and examples page. Feel free to Experiment!
 
 Send any comments/concerns/questions to awhite@cs.ualberta.ca
 
@@ -14,5 +29,5 @@ UAlberta Team
 Adam White
 Rich Sutton
 Mark Lee
-
-
+Andrew Butcher
+Leah Hackman
