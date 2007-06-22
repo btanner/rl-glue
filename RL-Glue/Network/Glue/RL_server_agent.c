@@ -16,8 +16,10 @@ void agent_init(const Task_specification theTaskSpec) {
   const int theTaskSpecLength = strlen(theTaskSpec)+1;
   int offset = 0;
 
-  if (theAgentConnection == -1)
-	  theAgentConnection = 0;
+  if (theAgentConnection == -1) {
+    theAgentConnection = 0;
+  }
+
   rlConnectSystems();
 
   rlBufferCreate(&theBuffer, 4096);

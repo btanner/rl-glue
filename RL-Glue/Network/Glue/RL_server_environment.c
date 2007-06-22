@@ -21,8 +21,10 @@ Task_specification env_init() {
   int theTaskSpecLength = 0;
   int offset = 0;
 
-  if (theEnvironmentConnection == -1)
-	  theEnvironmentConnection = 0;
+  if (theEnvironmentConnection == -1) {
+    theEnvironmentConnection = 0;
+  }
+
   rlConnectSystems();
 
   rlBufferCreate(&theBuffer, 4096);
