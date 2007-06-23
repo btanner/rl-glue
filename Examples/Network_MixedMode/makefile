@@ -8,3 +8,4 @@ clean:
 	rm -f RL_glue
 	rm -f RL_agent
 	rm -f RL_environment
+	rm -f Build/*.o
