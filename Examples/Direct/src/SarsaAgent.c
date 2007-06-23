@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "Glue_utilities.h"
 #include "SarsaAgent.h"
 
 #define NUM_STATES 108
@@ -18,29 +17,30 @@ int freeze = 0;
 
 void agent_init(const Task_specification task_spec)
 {  
-  task_spec_struct tss;					/*declare task_spec_struct*/
   srand(0);/*seed the randomness*/
-  parse_task_spec(task_spec, &tss);		/*Parsing task_specification*/	
 
+/* Since we're compiling everything together, we know the sizes for the actions and the observations.
+   To make this agent more general, we could read the task spec and parse it (as is done in the network example)
+   but we wanted to show that you don't strictly need to do so.
+*/
 
 /*allocating memory for one Action*/
-  action.numInts     =  tss.num_discrete_action_dims;
+  action.numInts     = 1;
   action.intArray    = (int*)malloc(sizeof(int)*action.numInts);
-  action.numDoubles  = tss.num_continuous_action_dims;
+  action.numDoubles  = 0;
   action.doubleArray = 0;
 
 /*allocating memory for one Action*/
-  previous_action.numInts     = tss.num_discrete_action_dims;
+  previous_action.numInts     = 1;
   previous_action.intArray    = (int*)malloc(sizeof(int)*previous_action.numInts);
-  previous_action.numDoubles  = tss.num_continuous_action_dims;
+  previous_action.numDoubles  = 0;
   previous_action.doubleArray = 0;
   
 /*allocating memory for one Observation*/
-  previous_observation.numInts     = tss.num_discrete_obs_dims;
+  previous_observation.numInts     = 1;
   previous_observation.intArray    = (int*)malloc(sizeof(int)*previous_observation.numInts);
-  previous_observation.numDoubles  = tss.num_continuous_obs_dims;
+  previous_observation.numDoubles  = 0;
   previous_observation.doubleArray = 0;
-
 
   /*reset the value function*/
   memset(value, 0, sizeof(double)*NUM_STATES*NUM_ACTIONS);
