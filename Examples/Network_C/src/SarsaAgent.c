@@ -43,7 +43,7 @@ void agent_init(const Task_specification task_spec)
 
 
   /*reset the value function*/
-  memset(value, 0, sizeof(double)*114*4);
+  memset(value, 0, sizeof(double)*NUM_STATES*NUM_ACTIONS);
 }
 
 Action agent_start(Observation o)
