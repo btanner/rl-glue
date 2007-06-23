@@ -2,6 +2,10 @@
 #include <string.h> /* strlen */
 #include <stdio.h>  /* fprintf */
 
+#include <ctype.h> /* isdigit */
+#include <netdb.h> /* gethostbyname */
+#include <arpa/inet.h> /* inet_ntoa */
+
 #include <RL_common.h>
 #include <Network/RL_netlib.h>
 
@@ -21,6 +25,8 @@ void RL_init() {
   const int theConnectionType = kExperimentConnection;
   const int experimentState = kRLInit;
 
+  struct hostent *host_ent;
+
   char* host = kLocalHost;
   short port = kDefaultPort;
   char* envptr = 0;
@@ -36,6 +42,11 @@ void RL_init() {
     if (port == 0) {
       port = kDefaultPort;
     }
+  }
+
+  if (isalpha(host[0])) {
+    host_ent = gethostbyname(host); 
+    host = inet_ntoa(*(struct in_addr*)host_ent->h_addr);
   }
 
   fprintf(stderr, "Connecting to host=%s on port=%d\n", host, port);
