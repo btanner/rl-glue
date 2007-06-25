@@ -7,7 +7,7 @@ import java.net.*;
 
 import RLGlue.*;
 
-public class RL_netlib
+public class Network
 {
     protected Socket socket;
     protected SocketChannel socketChannel;
