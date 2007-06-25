@@ -101,7 +101,7 @@ public class RL_netlib
 	return buffer;
     }
 
-    public void writeObservation(Observation theObservation) {
+    public void writeObservation(Observation theObservation) throws IOException {
 	outputStream.writeInt(theObservation.intArray.length);
 	outputStream.writeInt(theObservation.doubleArray.length);
 
@@ -114,7 +114,7 @@ public class RL_netlib
 	}
     }
 
-    public void writeAction(Action theAction) {
+    public void writeAction(Action theAction) throws IOException {
 	outputStream.writeInt(theAction.intArray.length);
 	outputStream.writeInt(theAction.doubleArray.length);
 
@@ -127,7 +127,7 @@ public class RL_netlib
 	}
     }
 
-    public void writeStateKey(StateKey theStateKey) {
+    public void writeStateKey(StateKey theStateKey) throws IOException {
 	outputStream.writeInt(theStateKey.intArray.length);
 	outputStream.writeInt(theStateKey.doubleArray.length);
 
@@ -140,7 +140,7 @@ public class RL_netlib
 	}
     }
 
-    public void writeRandomSeedKey(RandomSeedKey theRandomSeedKey) {
+    public void writeRandomSeedKey(RandomSeedKey theRandomSeedKey) throws IOException {
 	outputStream.writeInt(theRandomSeedKey.intArray.length);
 	outputStream.writeInt(theRandomSeedKey.doubleArray.length);
 
@@ -153,7 +153,7 @@ public class RL_netlib
 	}
     }
 
-    public Observation readObservation() {
+    public Observation readObservation() throws IOException {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
@@ -166,9 +166,11 @@ public class RL_netlib
 	for (int i = 0; i < numDoubles; ++i) {
 	    theObservation.doubleArray[i] = inputStream.readDouble();
 	}
+
+	return theObservation;
     }
 
-    public Action readAction() {
+    public Action readAction() throws IOException {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
@@ -181,9 +183,11 @@ public class RL_netlib
 	for (int i = 0; i < numDoubles; ++i) {
 	    theAction.doubleArray[i] = inputStream.readDouble();
 	}
+
+	return theAction;
     }
 
-    public StateKey readStateKey() {
+    public StateKey readStateKey() throws IOException {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
@@ -196,9 +200,11 @@ public class RL_netlib
 	for (int i = 0; i < numDoubles; ++i) {
 	    theStateKey.doubleArray[i] = inputStream.readDouble();
 	}
+
+	return theStateKey;
     }
 
-    public RandomSeedKey readRandomSeedKey() {
+    public RandomSeedKey readRandomSeedKey() throws IOException {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
@@ -211,6 +217,8 @@ public class RL_netlib
 	for (int i = 0; i < numDoubles; ++i) {
 	    theRandomSeedKey.doubleArray[i] = inputStream.readDouble();
 	}
+
+	return theRandomSeedKey;
     }
 }
 
