@@ -101,38 +101,38 @@ public class RL_netlib
 	return buffer;
     }
 
-		public void writeAbstractType(RLAbstractType rlat) {
-			outputStream.writeInt(rlat.getNumInts());
-			outputStream.writeInt(rlat.getNumDoubles());
-			if (rlat.getNumInts() > 0) {
-				for (int i = 0; i < rlat.getNumInts(); i++) {
-					outputStream.writeInt(rlat.getIntArray()[i]);
-				}
-			}
-			if (rlat.getNumDoubles() > 0) {
-				for (int i = 0; i < rlat.getNumDoubles(); i++) {
-					outputStream.writeDouble(rlat.getDoubleArray()[i]);
-				}
-			}
-		}
+    public void writeAbstractType(RLAbstractType rlat) {
+	outputStream.writeInt(rlat.getNumInts());
+	outputStream.writeInt(rlat.getNumDoubles());
+	if (rlat.getNumInts() > 0) {
+	    for (int i = 0; i < rlat.getNumInts(); i++) {
+		outputStream.writeInt(rlat.getIntArray()[i]);
+	    }
+	}
+	if (rlat.getNumDoubles() > 0) {
+	    for (int i = 0; i < rlat.getNumDoubles(); i++) {
+		outputStream.writeDouble(rlat.getDoubleArray()[i]);
+	    }
+	}
+    }
 		
-		public RLAbstractType readAbstractType() {
-			numInts = inputStream.readInt();
-			numDoubles = inputStream.readInt();
-			int[] intArray;
-			double[] doubleArray;
-			if (numInts > 0) {
-				intArray = new int[numInts];
-				for (int i = 0; i < numInts; i++) {
-					intArray[i] = inputStream.readInt();
-				}
-			}
-			if (numDoubles > 0) {
-				doubleArray = new double[numDoubles];
-				for (int i = 0; i < numDoubles; i++) {
-					doubleArray[i] = inputStream.readDouble();
-				}
-			}
-			return new RLAbstractType(numInts,numDoubles,intArray,doubleArray);
-		}
+    public RLAbstractType readAbstractType() {
+	numInts = inputStream.readInt();
+	numDoubles = inputStream.readInt();
+	int[] intArray;
+	double[] doubleArray;
+	if (numInts > 0) {
+	    intArray = new int[numInts];
+	    for (int i = 0; i < numInts; i++) {
+		intArray[i] = inputStream.readInt();
+	    }
+	}
+	if (numDoubles > 0) {
+	    doubleArray = new double[numDoubles];
+	    for (int i = 0; i < numDoubles; i++) {
+		doubleArray[i] = inputStream.readDouble();
+	    }
+	}
+	return new RLAbstractType(numInts,numDoubles,intArray,doubleArray);
+    }
 }
