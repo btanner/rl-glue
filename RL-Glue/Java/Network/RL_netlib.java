@@ -101,38 +101,116 @@ public class RL_netlib
 	return buffer;
     }
 
-    public void writeAbstractType(RLAbstractType rlat) {
-	outputStream.writeInt(rlat.getNumInts());
-	outputStream.writeInt(rlat.getNumDoubles());
-	if (rlat.getNumInts() > 0) {
-	    for (int i = 0; i < rlat.getNumInts(); i++) {
-		outputStream.writeInt(rlat.getIntArray()[i]);
-	    }
+    public void writeObservation(Observation theObservation) {
+	outputStream.writeInt(theObservation.intArray.length);
+	outputStream.writeInt(theObservation.doubleArray.length);
+
+	for (int i = 0; i < theObservation.intArray.length; ++i) {
+	    outputStream.writeInt(theObservation.intArray[i]);
 	}
-	if (rlat.getNumDoubles() > 0) {
-	    for (int i = 0; i < rlat.getNumDoubles(); i++) {
-		outputStream.writeDouble(rlat.getDoubleArray()[i]);
-	    }
+
+	for (int i = 0; i < theObservation.doubleArray.length; ++i) {
+	    outputStream.writeDouble(theObservation.doubleArray[i]);
 	}
     }
-		
-    public RLAbstractType readAbstractType() {
-	numInts = inputStream.readInt();
-	numDoubles = inputStream.readInt();
-	int[] intArray;
-	double[] doubleArray;
-	if (numInts > 0) {
-	    intArray = new int[numInts];
-	    for (int i = 0; i < numInts; i++) {
-		intArray[i] = inputStream.readInt();
-	    }
+
+    public void writeAction(Action theAction) {
+	outputStream.writeInt(theAction.intArray.length);
+	outputStream.writeInt(theAction.doubleArray.length);
+
+	for (int i = 0; i < theAction.intArray.length; ++i) {
+	    outputStream.writeInt(theAction.intArray[i]);
 	}
-	if (numDoubles > 0) {
-	    doubleArray = new double[numDoubles];
-	    for (int i = 0; i < numDoubles; i++) {
-		doubleArray[i] = inputStream.readDouble();
-	    }
+
+	for (int i = 0; i < theAction.doubleArray.length; ++i) {
+	    outputStream.writeDouble(theAction.doubleArray[i]);
 	}
-	return new RLAbstractType(numInts,numDoubles,intArray,doubleArray);
+    }
+
+    public void writeStateKey(StateKey theStateKey) {
+	outputStream.writeInt(theStateKey.intArray.length);
+	outputStream.writeInt(theStateKey.doubleArray.length);
+
+	for (int i = 0; i < theStateKey.intArray.length; ++i) {
+	    outputStream.writeInt(theStateKey.intArray[i]);
+	}
+
+	for (int i = 0; i < theStateKey.doubleArray.length; ++i) {
+	    outputStream.writeDouble(theStateKey.doubleArray[i]);
+	}
+    }
+
+    public void writeRandomSeedKey(RandomSeedKey theRandomSeedKey) {
+	outputStream.writeInt(theRandomSeedKey.intArray.length);
+	outputStream.writeInt(theRandomSeedKey.doubleArray.length);
+
+	for (int i = 0; i < theRandomSeedKey.intArray.length; ++i) {
+	    outputStream.writeInt(theRandomSeedKey.intArray[i]);
+	}
+
+	for (int i = 0; i < theRandomSeedKey.doubleArray.length; ++i) {
+	    outputStream.writeDouble(theRandomSeedKey.doubleArray[i]);
+	}
+    }
+
+    public Observation readObservation() {
+	int numInts = inputStream.readInt();
+	int numDoubles = inputStream.readInt();
+
+	Observation theObservation = new Observation(numInts, numDoubles);
+	
+	for (int i = 0; i < numInts; ++i) {
+	    theObservation.intArray[i] = inputStream.readInt();
+	}
+
+	for (int i = 0; i < numDoubles; ++i) {
+	    theObservation.doubleArray[i] = inputStream.readDouble();
+	}
+    }
+
+    public Action readAction() {
+	int numInts = inputStream.readInt();
+	int numDoubles = inputStream.readInt();
+
+	Action theAction = new Action(numInts, numDoubles);
+	
+	for (int i = 0; i < numInts; ++i) {
+	    theAction.intArray[i] = inputStream.readInt();
+	}
+
+	for (int i = 0; i < numDoubles; ++i) {
+	    theAction.doubleArray[i] = inputStream.readDouble();
+	}
+    }
+
+    public StateKey readStateKey() {
+	int numInts = inputStream.readInt();
+	int numDoubles = inputStream.readInt();
+
+	StateKey theStateKey = new StateKey(numInts, numDoubles);
+	
+	for (int i = 0; i < numInts; ++i) {
+	    theStateKey.intArray[i] = inputStream.readInt();
+	}
+
+	for (int i = 0; i < numDoubles; ++i) {
+	    theStateKey.doubleArray[i] = inputStream.readDouble();
+	}
+    }
+
+    public RandomSeedKey readRandomSeedKey() {
+	int numInts = inputStream.readInt();
+	int numDoubles = inputStream.readInt();
+
+	RandomSeedKey theRandomSeedKey = new RandomSeedKey(numInts, numDoubles);
+	
+	for (int i = 0; i < numInts; ++i) {
+	    theRandomSeedKey.intArray[i] = inputStream.readInt();
+	}
+
+	for (int i = 0; i < numDoubles; ++i) {
+	    theRandomSeedKey.doubleArray[i] = inputStream.readDouble();
+	}
     }
 }
+
