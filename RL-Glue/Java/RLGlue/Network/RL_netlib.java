@@ -5,6 +5,8 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.net.*;
 
+import RLGlue.*;
+
 public class RL_netlib
 {
     protected Socket socket;
@@ -58,7 +60,7 @@ public class RL_netlib
     public static final int kRetryTimeout = 10;
 
 
-    public RL_netlib(String host, int port) throws Exception
+    public RL_netlib(String host, int port) throws IOException
     {
 	/* Setup SocketChannel for communication */
 	InetSocketAddress address = new InetSocketAddress(host, port);
@@ -71,7 +73,7 @@ public class RL_netlib
 	outputStream = new DataOutputStream(socket.getOutputStream());
     }
 
-    public void close() throws Exception
+    public void close() throws IOException
     {
 	inputStream.close();
 	outputStream.close();
