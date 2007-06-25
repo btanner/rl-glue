@@ -1,5 +1,9 @@
-public class Action extends RLAbstractType {
+public class Action {
+    public int [] intArray;
+    public double [] doubleArray;
+
     public Action(int numInts, int numDoubles) {
-	super(numInts, numDoubles);
+	intArray = new int[numInts];
+	doubleArray = new double[numDoubles];
     }
 }

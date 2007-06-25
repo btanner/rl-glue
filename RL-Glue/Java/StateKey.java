@@ -1,5 +1,9 @@
-public class StateKey extends RLAbstractType {
+public class StateKey {
+    public int [] intArray;
+    public double [] doubleArray;
+
     public StateKey(int numInts, int numDoubles) {
-	super(numInts, numDoubles);
+	intArray = new int[numInts];
+	doubleArray = new double[numDoubles];
     }
 }

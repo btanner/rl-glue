@@ -1,5 +1,9 @@
-public class RandomSeedKey extends RLAbstractType {
+public class RandomSeedKey {
+    public int [] intArray;
+    public double [] doubleArray;
+
     public RandomSeedKey(int numInts, int numDoubles) {
-	super(numInts, numDoubles);
+	intArray = new int[numInts];
+	doubleArray = new double[numDoubles];
     }
 }
