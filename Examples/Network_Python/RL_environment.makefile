@@ -6,5 +6,5 @@ RL-GLUE = ../../RL-Glue
 
 RL_environment: $(ENVIRONMENT) RL_netlib.py RL_common.py
 	cp $(ENVIRONMENT) Build/$@.py
-	cp $(RL-GLUE)/Network/Environment/RL_client_environment.py $@
+	cp $(RL-GLUE)/Python/RL_client_environment.py $@
 	chmod u+x $@

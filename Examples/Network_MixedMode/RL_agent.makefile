@@ -6,5 +6,5 @@ RL-GLUE = ../../RL-Glue
 
 RL_agent: $(AGENT) RL_netlib.py RL_common.py
 	cp $(AGENT) Build/$@.py
-	cp $(RL-GLUE)/Network/Agent/RL_client_agent.py $@
+	cp $(RL-GLUE)/Python/RL_client_agent.py $@
 	chmod u+x $@
