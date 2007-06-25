@@ -7,7 +7,7 @@ CC      = gcc
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
 LDFLAGS =
 
-OBJECTS = RL_glue.o RL_network.o RL_netlib.o RL_server_agent.o RL_server_environment.o RL_server_experiment.o
+OBJECTS = RL_glue.o RL_network.o RL_server_agent.o RL_server_environment.o RL_server_experiment.o
 
 # Link everything together
 RL_glue: $(OBJECTS)
@@ -19,10 +19,6 @@ RL_glue.o: $(RL-GLUE)/RL_glue.c
 
 # Build the network stuff
 RL_network.o: $(RL-GLUE)/Network/RL_network.c
-	$(CC) $(CFLAGS) -c $< -o $(BUILD_PATH)/$@
-
-# Build more network stuff
-RL_netlib.o: $(RL-GLUE)/Network/RL_netlib.c
 	$(CC) $(CFLAGS) -c $< -o $(BUILD_PATH)/$@
 
 # Compile the thing that make the Glue think its talking to an agent when its really talking over a socket
