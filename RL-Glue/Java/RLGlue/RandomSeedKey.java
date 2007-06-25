@@ -1,3 +1,5 @@
+package RLGlue;
+
 public class RandomSeedKey {
     public int [] intArray;
     public double [] doubleArray;

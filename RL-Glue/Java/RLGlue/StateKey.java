@@ -1,3 +1,5 @@
+package RLGlue;
+
 public class StateKey {
     public int [] intArray;
     public double [] doubleArray;

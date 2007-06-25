@@ -1,3 +1,5 @@
+package RLGlue;
+
 public class Observation {
     public int [] intArray;
     public double [] doubleArray;
