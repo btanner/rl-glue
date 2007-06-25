@@ -4,7 +4,7 @@
 #include <stdio.h> /* fprintf : Debug only! */
 
 #include <RL_common.h>
-#include <Network/RL_netlib.h>
+#include <Network/RL_network.h>
 
 extern int rlConnectSystems();
 

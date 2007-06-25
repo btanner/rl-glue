@@ -13,7 +13,7 @@
 #include <arpa/inet.h>
 
 /* RL_netlib Library Header */
-#include <Network/RL_netlib.h>
+#include <Network/RL_network.h>
 
 rlSocket rlOpen(short thePort) {
   int flag = 1;

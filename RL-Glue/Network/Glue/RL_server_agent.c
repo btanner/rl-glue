@@ -3,7 +3,7 @@
 #include <stdio.h> /* for fprintf: debug only */
 
 #include <RL_common.h>
-#include <Network/RL_netlib.h>
+#include <Network/RL_network.h>
 
 extern int rlConnectSystems();
 extern rlSocket theAgentConnection;

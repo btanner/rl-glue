@@ -5,7 +5,7 @@
 #include <string.h> /* strlen, strncmp */
 
 #include <RL_common.h>
-#include <Network/RL_netlib.h>
+#include <Network/RL_network.h>
 
 const char* kUnknownMessage = "Unknown Message: %s\n";
 

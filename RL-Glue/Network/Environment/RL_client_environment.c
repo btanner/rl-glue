@@ -9,7 +9,7 @@
 #include <arpa/inet.h> /* inet_ntoa */
 
 #include <RL_common.h>
-#include <Network/RL_netlib.h>
+#include <Network/RL_network.h>
 
 /* Provide forward declaration of environment interface */
 extern Task_specification env_init();
