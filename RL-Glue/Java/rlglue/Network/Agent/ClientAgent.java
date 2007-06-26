@@ -6,8 +6,8 @@ import rlglue.network.*;
 public class ClientAgent 
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
-    protected RLNetwork network;
-    protected RLAgentInterface agent;
+    protected Network network;
+    protected AgentInterface agent;
 
     public ClientAgent(AgentInterface agent) 
     {
