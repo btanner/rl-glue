@@ -7,11 +7,11 @@ public class RLClientAgent
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
     protected RLNetwork network;
-    protected AgentType agent;
+    protected RLAgentInterface agent;
 
-    public Client() 
+    public Client(RLAgentInterface agent) 
     {
-	agent = new AgentType();
+	this.agent = agent;
 	network = new rlglue.network.Network();
     }
 
@@ -120,7 +120,8 @@ public class RLClientAgent
 
     public static void main(String [] args) 
     {
-	RLClientAgent client = new RLClientAgent();
+	RLAgentType agent = new RLAgentType();
+	RLClientAgent client = new RLClientAgent(agent);
 	boolean autoReconnect = false;
 
 	do {
