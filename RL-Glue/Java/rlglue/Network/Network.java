@@ -5,7 +5,7 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.net.*;
 
-import RLGlue.*;
+import rlglue.*;
 
 public class Network
 {
@@ -60,7 +60,7 @@ public class Network
     public static final int kRetryTimeout = 10;
 
 
-    public RL_netlib(String host, int port) throws IOException
+    public Network(String host, int port) throws IOException
     {
 	/* Setup SocketChannel for communication */
 	InetSocketAddress address = new InetSocketAddress(host, port);

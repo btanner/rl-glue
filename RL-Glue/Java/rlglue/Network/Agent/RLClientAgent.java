@@ -1,9 +1,12 @@
 package rlglue.network.agent;
 
-public class Client 
+import rlglue.*;
+import rlglue.network.*;
+
+public class RLClientAgent 
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
-    protected rlglue.network.Network network;
+    protected RLNetwork network;
     protected AgentType agent;
 
     public Client() 
