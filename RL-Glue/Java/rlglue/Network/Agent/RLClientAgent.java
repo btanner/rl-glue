@@ -3,13 +3,13 @@ package rlglue.network.agent;
 import rlglue.*;
 import rlglue.network.*;
 
-public class RLClientAgent 
+public class ClientAgent 
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
     protected RLNetwork network;
     protected RLAgentInterface agent;
 
-    public Client(RLAgentInterface agent) 
+    public ClientAgent(AgentInterface agent) 
     {
 	this.agent = agent;
 	network = new rlglue.network.Network();
