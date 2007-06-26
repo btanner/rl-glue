@@ -1,5 +1,7 @@
 package rlglue.network.agent;
 
+import java.io.DataInputStream;
+
 import rlglue.*;
 import rlglue.network.*;
 
@@ -12,12 +14,13 @@ public class ClientAgent
     public ClientAgent(AgentInterface agent) 
     {
 	this.agent = agent;
-	network = new rlglue.network.Network();
     }
 
     protected void onAgentInit() 
     {
-	String taskSpec = network.getInputStream().readString();
+	final int taskSpecLength = network.getDataInputStream().readInt();
+	final String taskSpec = new String(network.read(taskSpecLength));
+	
 	agent.agent_init(taskSpec);
     }
 
@@ -30,16 +33,16 @@ public class ClientAgent
 
     protected void onAgentStep()
     {
-	final double reward = netlib.readDouble();
-	final RLAbstractType observation = netlib.readAbstractType();
-	final RLAbstractType action = agent.agent_step(reward, observation);
-	netlib.writeAbstractType(action);
+	final double reward = network.getDataInputStream().readDouble();
+	final Observation observation = network.readObservation();
+	final Action action = agent.agent_step(reward, observation);
+	network.writeAction(action);
     }
 
     protected void onAgentEnd()
     {
-	final double reward = netlib.readDouble();
-	agent.agent_end();
+	final double reward = network.getDataInputStream().readDouble();
+	agent.agent_end(reward);
     }
 
     protected void onAgentCleanup()
@@ -54,53 +57,53 @@ public class ClientAgent
 
     protected void onAgentMessage()
     {
-	final String recvMessage = netlib.readString();
+	final int recvMsgLength = network.getDataInputStream().readInt();
+	final String recvMessage = new String(network.read(recvMsgLength));
 	final String sendMessage = agent.agent_message(recvMessage);
-
-	/* this is not finished */
+	network.getDataOutputStream().writeInt(sendMessage.length());
+	network.getDataOutputStream().writeBytes(sendMessage);
     }
 
-    /* Should fix this and the RL_netlib constructor to throw more specific exceptions */
-    protected void connect(String host, int port, int timeout) throws Exception
+    protected void connect(String host, int port, int timeout)
     {	
-	netlib = new RL_netlib(host, port, timeout);
+	network = new Network(host, port, timeout);
     }
 
-    protected void runAgentEventLoop(Socket theSocket) 
+    protected void runAgentEventLoop() 
     {
 	int agentState = 0;
 
-	InputDataStream input = theSocket.getInputDataStream();
+	DataInputStream input = network.getDataInputStream();
 	agentState = input.readInt();
 
 	do {
 
 	    switch(agentState) {
-	    case kAgentInit:
+	    case Network.kAgentInit:
 		onAgentInit();
 		break;
 		
-	    case kAgentStart:
+	    case Network.kAgentStart:
 		onAgentStart();
 		break;
 		
-	    case kAgentStep:
+	    case Network.kAgentStep:
 		onAgentStep();
 		break;
 		
-	    case kAgentEnd:
+	    case Network.kAgentEnd:
 		onAgentEnd();
 		break;
 		
-	    case kAgentCleanup:
+	    case Network.kAgentCleanup:
 		onAgentCleanup();
 		break;
 		
-	    case kAgentFreeze:
+	    case Network.kAgentFreeze:
 		onAgentFreeze();
 		break;
 		
-	    case kAgentMessage:
+	    case Network.kAgentMessage:
 		onAgentMessage();
 		break;
 		
@@ -110,22 +113,25 @@ public class ClientAgent
 		break;
 	    };
 
-	} while (agentState != kAgentCleanup);
+	} while (agentState != Network.kAgentCleanup);
     }
 
     protected void close() 
     {
-	netlib.close();
+	network.close();
     }
 
     public static void main(String [] args) 
     {
-	RLAgentType agent = new RLAgentType();
-	RLClientAgent client = new RLClientAgent(agent);
+	SarsaAgent agent = new SarsaAgent();
+	ClientAgent client = new ClientAgent(agent);
 	boolean autoReconnect = false;
 
+	String host = Network.kDefaultHost;
+	int port = Network.kDefaultPort;
+
 	do {
-	    client.connect(host, port, kRetryTimeout);
+	    client.connect(host, port, Network.kRetryTimeout);
 	    client.runAgentEventLoop();
 	    client.close();
 	} while (autoReconnect);

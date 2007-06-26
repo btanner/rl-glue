@@ -55,12 +55,11 @@ public class Network
     public static final int kRLAgentMessage = 33;
     public static final int kRLEnvMessage = 34;
 
-    public static final String kLocalHost = "127.0.0.1";
+    public static final String kDefaultHost = "127.0.0.1";
     public static final int kDefaultPort = 4096;
     public static final int kRetryTimeout = 10;
 
-
-    public Network(String host, int port) throws IOException
+    public Network(String host, int port, int retryTimeout) throws IOException
     {
 	/* Setup SocketChannel for communication */
 	InetSocketAddress address = new InetSocketAddress(host, port);
@@ -75,17 +74,15 @@ public class Network
 
     public void close() throws IOException
     {
-	inputStream.close();
-	outputStream.close();
 	socket.close();
     }
 
-    public DataInputStream getInputStream() 
+    public DataInputStream getDataInputStream() 
     {
 	return inputStream;
     }
 
-    public DataOutputStream getOutputStream() 
+    public DataOutputStream getDataOutputStream() 
     {
 	return outputStream;
     }
@@ -195,7 +192,7 @@ public class Network
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
-	StateKey theStateKey = new StateKey(numInts, numDoubles);
+	State_key theStateKey = new State_key(numInts, numDoubles);
 	
 	for (int i = 0; i < numInts; ++i) {
 	    theStateKey.intArray[i] = inputStream.readInt();
@@ -212,7 +209,7 @@ public class Network
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
-	RandomSeedKey theRandomSeedKey = new RandomSeedKey(numInts, numDoubles);
+	Random_seed_key theRandomSeedKey = new Random_seed_key(numInts, numDoubles);
 	
 	for (int i = 0; i < numInts; ++i) {
 	    theRandomSeedKey.intArray[i] = inputStream.readInt();
