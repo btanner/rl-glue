@@ -1,25 +1,28 @@
-public class RL_client_agent 
+package rlglue.network.agent;
+
+public class Client 
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
-    protected RL_netlib netlib;
+    protected rlglue.network.Network network;
     protected AgentType agent;
 
-    public RL_client_agent() 
+    public Client() 
     {
 	agent = new AgentType();
+	network = new rlglue.network.Network();
     }
 
     protected void onAgentInit() 
     {
-	String taskSpec = netlib.getInputStream().readString();
+	String taskSpec = network.getInputStream().readString();
 	agent.agent_init(taskSpec);
     }
 
     protected void onAgentStart() 
     {
-	final RLAbstractType observation = netlib.readAbstractType();
-	final RLAbstractType action = agent.agent_start(observation);
-	netlib.writeAbstractType(action);
+	final Observation observation = network.readObservation();
+	final Action action = agent.agent_start(observation);
+	network.writeAction(action);
     }
 
     protected void onAgentStep()
@@ -114,7 +117,7 @@ public class RL_client_agent
 
     public static void main(String [] args) 
     {
-	RL_client_agent client = new RL_client_agent();
+	RLClientAgent client = new RLClientAgent();
 	boolean autoReconnect = false;
 
 	do {
