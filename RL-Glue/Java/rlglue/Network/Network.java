@@ -131,7 +131,7 @@ public class Network
 	}
     }
 
-    public void writeStateKey(StateKey theStateKey) throws IOException {
+    public void writeStateKey(State_key theStateKey) throws IOException {
 	outputStream.writeInt(theStateKey.intArray.length);
 	outputStream.writeInt(theStateKey.doubleArray.length);
 
@@ -144,7 +144,7 @@ public class Network
 	}
     }
 
-    public void writeRandomSeedKey(RandomSeedKey theRandomSeedKey) throws IOException {
+    public void writeRandomSeedKey(Random_seed_key theRandomSeedKey) throws IOException {
 	outputStream.writeInt(theRandomSeedKey.intArray.length);
 	outputStream.writeInt(theRandomSeedKey.doubleArray.length);
 
@@ -191,7 +191,7 @@ public class Network
 	return theAction;
     }
 
-    public StateKey readStateKey() throws IOException {
+    public State_key readStateKey() throws IOException {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
@@ -208,7 +208,7 @@ public class Network
 	return theStateKey;
     }
 
-    public RandomSeedKey readRandomSeedKey() throws IOException {
+    public Random_seed_key readRandomSeedKey() throws IOException {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
