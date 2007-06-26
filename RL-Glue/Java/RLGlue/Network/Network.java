@@ -1,4 +1,4 @@
-package RLGlue.network;
+package rlglue.network;
 
 import java.io.*;
 import java.nio.*;

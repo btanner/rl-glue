@@ -1,4 +1,4 @@
-package RLGlue;
+package rlglue;
 
 public class Observation {
     public int [] intArray;
