@@ -102,33 +102,40 @@ public class Network
 	return buffer;
     }
 
-    public void writeObservation(Observation theObservation) throws IOException {
+    public void writeObservation(Observation theObservation) throws IOException 
+    {
 	outputStream.writeInt(theObservation.intArray.length);
 	outputStream.writeInt(theObservation.doubleArray.length);
 
-	for (int i = 0; i < theObservation.intArray.length; ++i) {
+	for (int i = 0; i < theObservation.intArray.length; ++i) 
+	{
 	    outputStream.writeInt(theObservation.intArray[i]);
 	}
 
-	for (int i = 0; i < theObservation.doubleArray.length; ++i) {
+	for (int i = 0; i < theObservation.doubleArray.length; ++i) 
+	{
 	    outputStream.writeDouble(theObservation.doubleArray[i]);
 	}
     }
 
-    public void writeAction(Action theAction) throws IOException {
+    public void writeAction(Action theAction) throws IOException 
+    {
 	outputStream.writeInt(theAction.intArray.length);
 	outputStream.writeInt(theAction.doubleArray.length);
 
-	for (int i = 0; i < theAction.intArray.length; ++i) {
+	for (int i = 0; i < theAction.intArray.length; ++i) 
+	{
 	    outputStream.writeInt(theAction.intArray[i]);
 	}
 
-	for (int i = 0; i < theAction.doubleArray.length; ++i) {
+	for (int i = 0; i < theAction.doubleArray.length; ++i) 
+	{
 	    outputStream.writeDouble(theAction.doubleArray[i]);
 	}
     }
 
-    public void writeStateKey(State_key theStateKey) throws IOException {
+    public void writeStateKey(State_key theStateKey) throws IOException 
+    {
 	outputStream.writeInt(theStateKey.intArray.length);
 	outputStream.writeInt(theStateKey.doubleArray.length);
 
@@ -141,81 +148,96 @@ public class Network
 	}
     }
 
-    public void writeRandomSeedKey(Random_seed_key theRandomSeedKey) throws IOException {
+    public void writeRandomSeedKey(Random_seed_key theRandomSeedKey) throws IOException 
+    {
 	outputStream.writeInt(theRandomSeedKey.intArray.length);
 	outputStream.writeInt(theRandomSeedKey.doubleArray.length);
 
-	for (int i = 0; i < theRandomSeedKey.intArray.length; ++i) {
+	for (int i = 0; i < theRandomSeedKey.intArray.length; ++i) 
+	{
 	    outputStream.writeInt(theRandomSeedKey.intArray[i]);
 	}
 
-	for (int i = 0; i < theRandomSeedKey.doubleArray.length; ++i) {
+	for (int i = 0; i < theRandomSeedKey.doubleArray.length; ++i) 
+	{
 	    outputStream.writeDouble(theRandomSeedKey.doubleArray[i]);
 	}
     }
 
-    public Observation readObservation() throws IOException {
+    public Observation readObservation() throws IOException 
+    {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
 	Observation theObservation = new Observation(numInts, numDoubles);
 	
-	for (int i = 0; i < numInts; ++i) {
+	for (int i = 0; i < numInts; ++i) 
+	{
 	    theObservation.intArray[i] = inputStream.readInt();
 	}
 
-	for (int i = 0; i < numDoubles; ++i) {
+	for (int i = 0; i < numDoubles; ++i) 
+	{
 	    theObservation.doubleArray[i] = inputStream.readDouble();
 	}
 
 	return theObservation;
     }
 
-    public Action readAction() throws IOException {
+    public Action readAction() throws IOException 
+    {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
 	Action theAction = new Action(numInts, numDoubles);
 	
-	for (int i = 0; i < numInts; ++i) {
+	for (int i = 0; i < numInts; ++i) 
+	{
 	    theAction.intArray[i] = inputStream.readInt();
 	}
 
-	for (int i = 0; i < numDoubles; ++i) {
+	for (int i = 0; i < numDoubles; ++i)
+	{
 	    theAction.doubleArray[i] = inputStream.readDouble();
 	}
 
 	return theAction;
     }
 
-    public State_key readStateKey() throws IOException {
+    public State_key readStateKey() throws IOException 
+    {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
 	State_key theStateKey = new State_key(numInts, numDoubles);
 	
-	for (int i = 0; i < numInts; ++i) {
+	for (int i = 0; i < numInts; ++i) 
+	{
 	    theStateKey.intArray[i] = inputStream.readInt();
 	}
 
-	for (int i = 0; i < numDoubles; ++i) {
+	for (int i = 0; i < numDoubles; ++i) 
+	{
 	    theStateKey.doubleArray[i] = inputStream.readDouble();
 	}
 
 	return theStateKey;
     }
 
-    public Random_seed_key readRandomSeedKey() throws IOException {
+    public Random_seed_key readRandomSeedKey() throws IOException 
+    {
 	int numInts = inputStream.readInt();
 	int numDoubles = inputStream.readInt();
 
 	Random_seed_key theRandomSeedKey = new Random_seed_key(numInts, numDoubles);
 	
-	for (int i = 0; i < numInts; ++i) {
+	for (int i = 0; i < numInts; ++i) 
+	{
 	    theRandomSeedKey.intArray[i] = inputStream.readInt();
 	}
 
-	for (int i = 0; i < numDoubles; ++i) {
+	for (int i = 0; i < numDoubles; ++i) 
+	{
 	    theRandomSeedKey.doubleArray[i] = inputStream.readDouble();
 	}
 

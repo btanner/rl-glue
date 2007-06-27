@@ -1,8 +1,8 @@
 RL-GLUE = ../../RL-Glue
 
-RLGLUESOURCE = $(RL-GLUE)/Java/Action.java $(RL-GLUE)/Java/Observation.java $(RL-GLUE)/Java/Reward_observation.java $(RL-GLUE)/Java/State_key.java $(RL-GLUE)/Java/Random_seed_key.java $(RL-GLUE)/AgentInterface.java $(RL-GLUE)/EnvironmentInterface.java $(RL-GLUE)/ExperimentInterface.java
-JAVASOURCE = src/SarsaAgent.java $(RLGLUESOURCE)
-
 RL_agent:
-
-
+#	javac $(RL-GLUE)/Java/rlglue/*.java -d Build/ -cp $(RL-GLUE)/Java/
+#	javac $(RL-GLUE)/Java/rlglue/Network/*.java -d Build/ -cp $(RL-GLUE)/Java/
+	javac $(RL-GLUE)/Java/rlglue/Network/Agent/*.java -d Build/ -cp $(RL-GLUE)/Java/:src/
+#	javac $(RL-GLUE)/Java/rlglue/Network/Environment/*.java -d Build/ -cp $(RL-GLUE)/Java/
+#	javac $(RL-GLUE)/Java/rlglue/Network/Experiment/*.java -d Build/ -cp $(RL-GLUE)/Java/

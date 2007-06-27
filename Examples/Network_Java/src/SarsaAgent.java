@@ -3,7 +3,7 @@ import rlglue.network.*;
 
 public class SarsaAgent 
 {
-    void agent_init(final String task_spec)
+    void agent_init(final String taskSpec)
     {  
     }
 
@@ -15,7 +15,7 @@ public class SarsaAgent
 	return action;
     }
 
-    Action agent_step(Reward r, Observation o)
+    Action agent_step(double r, Observation o)
     {
 	Action action = new Action(1, 0);
 	action.intArray[0] = 0;
@@ -24,7 +24,7 @@ public class SarsaAgent
     }
     
     
-    void agent_end(Reward r)
+    void agent_end(double r)
     { 
     }
     
@@ -32,7 +32,7 @@ public class SarsaAgent
     {
     }
     
-    Message agent_message(const Message message)
+    String agent_message(final String message)
     {
 	return "This agent does not respond to any messages";
     }
