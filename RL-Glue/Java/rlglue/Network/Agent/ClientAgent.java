@@ -1,6 +1,6 @@
 package rlglue.network.agent;
 
-import java.io.DataInputStream;
+import java.io.*;
 
 import rlglue.*;
 import rlglue.network.*;
@@ -16,7 +16,7 @@ public class ClientAgent
 	this.agent = agent;
     }
 
-    protected void onAgentInit() 
+    protected void onAgentInit() throws Exception
     {
 	final int taskSpecLength = network.getDataInputStream().readInt();
 	final String taskSpec = new String(network.read(taskSpecLength));
@@ -24,14 +24,14 @@ public class ClientAgent
 	agent.agent_init(taskSpec);
     }
 
-    protected void onAgentStart() 
+    protected void onAgentStart() throws IOException
     {
 	final Observation observation = network.readObservation();
 	final Action action = agent.agent_start(observation);
 	network.writeAction(action);
     }
 
-    protected void onAgentStep()
+    protected void onAgentStep() throws IOException
     {
 	final double reward = network.getDataInputStream().readDouble();
 	final Observation observation = network.readObservation();
@@ -39,23 +39,23 @@ public class ClientAgent
 	network.writeAction(action);
     }
 
-    protected void onAgentEnd()
+    protected void onAgentEnd() throws IOException
     {
 	final double reward = network.getDataInputStream().readDouble();
 	agent.agent_end(reward);
     }
 
-    protected void onAgentCleanup()
+    protected void onAgentCleanup() throws IOException
     {
 	agent.agent_cleanup();
     }
 
-    protected void onAgentFreeze() 
+    protected void onAgentFreeze() throws IOException
     {
 	agent.agent_freeze();
     }
 
-    protected void onAgentMessage()
+    protected void onAgentMessage() throws Exception
     {
 	final int recvMsgLength = network.getDataInputStream().readInt();
 	final String recvMessage = new String(network.read(recvMsgLength));
@@ -64,12 +64,19 @@ public class ClientAgent
 	network.getDataOutputStream().writeBytes(sendMessage);
     }
 
-    protected void connect(String host, int port, int timeout)
+    public void connect(String host, int port, int timeout) throws Exception
     {	
 	network = new Network(host, port, timeout);
+	network.getDataOutputStream().writeInt(4);
+	network.getDataOutputStream().writeInt(Network.kAgentConnection);
     }
 
-    protected void runAgentEventLoop() 
+    public void close() throws IOException
+    {
+	network.close();
+    }
+
+    public void runAgentEventLoop() throws Exception
     {
 	int agentState = 0;
 
@@ -114,26 +121,5 @@ public class ClientAgent
 	    };
 
 	} while (agentState != Network.kAgentCleanup);
-    }
-
-    protected void close() 
-    {
-	network.close();
-    }
-
-    public static void main(String [] args) 
-    {
-	SarsaAgent agent = new SarsaAgent();
-	ClientAgent client = new ClientAgent(agent);
-	boolean autoReconnect = false;
-
-	String host = Network.kDefaultHost;
-	int port = Network.kDefaultPort;
-
-	do {
-	    client.connect(host, port, Network.kRetryTimeout);
-	    client.runAgentEventLoop();
-	    client.close();
-	} while (autoReconnect);
     }
 }

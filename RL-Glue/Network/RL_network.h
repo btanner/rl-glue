@@ -14,32 +14,32 @@
 #define kAgentStep    6 /* event to respond to                          */
 #define kAgentEnd     7
 #define kAgentCleanup 8
-#define kAgentFreeze  30
-#define kAgentMessage 31
+#define kAgentFreeze  9
+#define kAgentMessage 10
 
-#define kEnvInit          9
-#define kEnvStart         10
-#define kEnvStep          11
-#define kEnvCleanup       12
-#define kEnvSetState      13
-#define kEnvSetRandomSeed 14
-#define kEnvGetState      15
-#define kEnvGetRandomSeed 16
-#define kEnvMessage       32
+#define kEnvInit          11
+#define kEnvStart         12
+#define kEnvStep          13
+#define kEnvCleanup       14
+#define kEnvSetState      15
+#define kEnvSetRandomSeed 16
+#define kEnvGetState      17
+#define kEnvGetRandomSeed 18
+#define kEnvMessage       19
 
-#define kRLInit           17
-#define kRLStart          18
-#define kRLStep           19
-#define kRLCleanup        20
-#define kRLReturn         21
-#define kRLNumSteps       22
-#define kRLNumEpisodes    23
-#define kRLEpisode        24
-#define kRLSetState       25
-#define kRLSetRandomSeed  26
-#define kRLGetState       27
-#define kRLGetRandomSeed  28
-#define kRLFreeze         29
+#define kRLInit           20
+#define kRLStart          21
+#define kRLStep           22
+#define kRLCleanup        23
+#define kRLReturn         24
+#define kRLNumSteps       25
+#define kRLNumEpisodes    26
+#define kRLEpisode        27
+#define kRLSetState       28
+#define kRLSetRandomSeed  29
+#define kRLGetState       30
+#define kRLGetRandomSeed  31
+#define kRLFreeze         32
 #define kRLAgentMessage   33
 #define kRLEnvMessage     34
 
@@ -77,13 +77,13 @@ unsigned int rlBufferWrite(rlBuffer *buffer, unsigned int offset, const void* se
 unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* recvData, unsigned int count, unsigned int size);
 
 /* Utilities */
-unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer);
-unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer);
+unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const int target);
+unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int* target);
 
 int rlGetSystemByteOrder();
 void rlSwapData(void* out, const void* in, const unsigned int size);
 rlSocket rlWaitForConnection(const char *address, const short port, const int retryTimeout);
-void rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst);
-void rlCopyBufferToADT(const rlBuffer* src, RL_abstract_type* dst);
+unsigned int rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst, unsigned int offset);
+unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abstract_type* dst);
 
 #endif

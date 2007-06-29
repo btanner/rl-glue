@@ -201,36 +201,48 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
   return offset + (count * size);
 }
 
-unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer) {
+unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const int target) {
+  int sendTarget = target;
   unsigned int sendSize = buffer->size;
   
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
+    rlSwapData(&sendTarget, &target, sizeof(int));
     rlSwapData(&sendSize, &buffer->size, sizeof(unsigned int));
   }
   
+  rlSendData(theSocket, &sendTarget, sizeof(int));
   rlSendData(theSocket, &sendSize, sizeof(unsigned int));
-  rlSendData(theSocket, buffer->data, buffer->size);
+
+  if (buffer->size > 0) {
+    rlSendData(theSocket, buffer->data, buffer->size);
+  }
 
   return buffer->size; /* Returns payload size, not actual data sent ! */
 }
 
-unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer) {
+unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int *target) {
+  int recvTarget = 0;
   unsigned int recvSize = 0;
-
+  
+  rlRecvData(theSocket, &recvTarget, sizeof(int));
   rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
 
   /* recvSize came across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
+    rlSwapData(target, &recvTarget, sizeof(int));
     rlSwapData(&buffer->size, &recvSize, sizeof(unsigned int));
   }
   else {
+    *target = recvTarget;
     buffer->size = recvSize;
   }
-  
 
   rlBufferReserve(buffer, buffer->size);
-  rlRecvData(theSocket, buffer->data, buffer->size);
+  
+  if (buffer->size > 0) {
+    rlRecvData(theSocket, buffer->data, buffer->size);
+  }
 
   return buffer->size; /* Returns payload size, not actual data received ! */
 }
@@ -277,19 +289,17 @@ rlSocket rlWaitForConnection(const char *address, const short port, const int re
   return theConnection;
 }
 
-void rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst) {
+unsigned int rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst, unsigned int offset) {
   const int headerSize = sizeof(unsigned int) * 2;
-  const int intSize    = src->numInts * sizeof(int);
-  const int doubleSize = src->numDoubles * sizeof(double);
-  int offset = 0;
+  const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double);
 
-  rlBufferReserve(dst, headerSize + intSize + doubleSize);
+  rlBufferReserve(dst, dst->size + headerSize + dataSize);
 
-  /*  fprintf(stderr, "send 1 offset = %u\n", offset); */
+  /* fprintf(stderr, "send 1 offset = %u\n", offset); */
   offset = rlBufferWrite(dst, offset, &src->numInts, 1, sizeof(unsigned int));
-  /*  fprintf(stderr, "send 2 offset = %u\n", offset); */
+  /* fprintf(stderr, "send 2 offset = %u\n", offset); */
   offset = rlBufferWrite(dst, offset, &src->numDoubles, 1, sizeof(unsigned int));
-  /*  fprintf(stderr, "send 3 offset = %u\n", offset); */
+  /* fprintf(stderr, "send 3 offset = %u\n", offset); */
 
   if (src->numInts > 0) {
     offset = rlBufferWrite(dst, offset, src->intArray, src->numInts, sizeof(int));
@@ -298,22 +308,22 @@ void rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst) {
   if (src->numDoubles > 0) {
     offset = rlBufferWrite(dst, offset, src->doubleArray, src->numDoubles, sizeof(double));  
   }
+
+  return offset;
 }
 
-void rlCopyBufferToADT(const rlBuffer* src, RL_abstract_type* dst) {
+unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abstract_type* dst) {
   unsigned int numInts    = 0;
   unsigned int numDoubles = 0;
 
   int* intArray = 0;
   double * doubleArray = 0;
 
-  int offset = 0;
-
-  /*  fprintf(stderr, "recv 1 offset = %u\n", offset); */
+  /* fprintf(stderr, "recv 1 offset = %u\n", offset); */
   offset = rlBufferRead(src, offset, &numInts, 1, sizeof(unsigned int));
-  /*  fprintf(stderr, "recv 2 offset = %u\n", offset); */
+  /* fprintf(stderr, "recv 2 offset = %u\n", offset); */
   offset = rlBufferRead(src, offset, &numDoubles, 1, sizeof(unsigned int));
-  /*  fprintf(stderr, "recv 3 offset = %u\n", offset); */
+  /* fprintf(stderr, "recv 3 offset = %u\n", offset); */
 
   if (numInts > dst->numInts) {
     intArray = (int*)calloc(dst->numInts, sizeof(int));
@@ -338,6 +348,8 @@ void rlCopyBufferToADT(const rlBuffer* src, RL_abstract_type* dst) {
   if (dst->numDoubles > 0) {
     offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
   }
+
+  return offset;
 }
 
 
@@ -387,26 +399,25 @@ int rlConnectSystems() {
   while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
     theClient = rlAcceptConnection(theServer);
 
-    /* fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__); */
+    fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__);
 
-    rlRecvBufferData(theClient, &theBuffer);
-    rlBufferRead(&theBuffer, 0, &theClientType, 1, sizeof(int));
+    rlRecvBufferData(theClient, &theBuffer, &theClientType);
 
     switch(theClientType) {
     case kAgentConnection:
-      /* fprintf(stderr, "agent connected!\n"); */
+      fprintf(stderr, "agent connected!\n"); 
       theAgentConnection = theClient;
       isAgentConnected = 1;
       break;
 
     case kEnvironmentConnection:
-      /* fprintf(stderr, "env connected\n"); */
+      fprintf(stderr, "env connected\n");
       theEnvironmentConnection = theClient;
       isEnvironmentConnected = 1;
       break;
 
     case kExperimentConnection:
-      /* fprintf(stderr, "exp connected\n"); */
+      fprintf(stderr, "exp connected\n");
       isExperimentConnected = 1;
       theExperimentConnection = theClient;
       break;

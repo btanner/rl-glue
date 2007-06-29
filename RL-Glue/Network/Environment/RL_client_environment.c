@@ -33,52 +33,51 @@ static int theInMessageCapacity = 0;
 
 static void onEnvInit(rlSocket theConnection) {
   Task_specification theTaskSpec = 0;
-  int theTaskSpecLength = 0;
-  int offset = 0;
+  unsigned int theTaskSpecLength = 0;
+  unsigned int offset = 0;
 
+  /* Read the data in the buffer (data from server) */
+  /* No data to read .... */
+
+  /* Call RL method on the recv'd data */
   theTaskSpec = env_init();
   if (theTaskSpec != NULL) {
     theTaskSpecLength = strlen(theTaskSpec)+1;
   }
 
+  /* Prepare the buffer for sending data back to the server */
   rlBufferClear(&theBuffer);
   offset = rlBufferWrite(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));
   if (theTaskSpecLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
-
-  rlSendBufferData(theConnection, &theBuffer);
 }
 
 static void onEnvStart(rlSocket theConnection) {
   Observation theObservation = env_start();
-  
-  rlCopyADTToBuffer(&theObservation, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  unsigned int offset = 0;
+
+  rlBufferClear(&theBuffer);
+  offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
 }
 
 static void onEnvStep(rlSocket theConnection) {
   Reward_observation ro = {0};
-  int offset = 0;
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theAction);
-
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theAction);
   ro = env_step(theAction);
 
   rlBufferClear(&theBuffer);
+  offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &ro.terminal, 1, sizeof(int));
   offset = rlBufferWrite(&theBuffer, offset, &ro.r, 1, sizeof(Reward));
-  rlSendBufferData(theConnection, &theBuffer);
-
-  rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&ro.o, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlCopyADTToBuffer(&ro.o, &theBuffer, offset);
 }
 
 static void onEnvCleanup(rlSocket theConnection) {
   env_cleanup();
+  rlBufferClear(&theBuffer);
 
   free(theAction.intArray);
   free(theAction.doubleArray);
@@ -107,50 +106,48 @@ static void onEnvCleanup(rlSocket theConnection) {
 }
 
 static void onEnvSetState(rlSocket theConnection) {
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theStateKey);
+  unsigned int offset = 0;
 
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theStateKey);
   env_set_state(theStateKey);
+
+  rlBufferClear(&theBuffer);
 }
 
 static void onEnvSetRandomSeed(rlSocket theConnection) {
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theRandomSeedKey);
-  
+  unsigned int offset = 0;
+
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theRandomSeedKey);  
   env_set_random_seed(theRandomSeedKey);
+
+  rlBufferClear(&theBuffer);
 }
 
 static void onEnvGetState(rlSocket theConnection) {
   State_key key = env_get_state();
- 
+  unsigned int offset = 0;
+
   rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&key, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlCopyADTToBuffer(&key, &theBuffer, offset);
 }
 
 static void onEnvGetRandomSeed(rlSocket theConnection) {
   Random_seed_key key = env_get_random_seed();
+  unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&key, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  rlCopyADTToBuffer(&key, &theBuffer, offset);
 }
 
 static void onEnvMessage(rlSocket theConnection) {
-  int inMessageLength = 0;
-  int outMessageLength = 0;
+  unsigned int inMessageLength = 0;
+  unsigned int outMessageLength = 0;
   Message inMessage = 0;
   Message outMessage = 0;
-  int offset = 0;
-
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
+  unsigned int offset = 0;
 
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
-
   if (inMessageLength > theInMessageCapacity) {
     inMessage = (Message)calloc(inMessageLength, sizeof(char));
     free(theInMessage);
@@ -169,17 +166,13 @@ static void onEnvMessage(rlSocket theConnection) {
    outMessageLength = strlen(outMessage)+1;
   }
   
-  /* we want to start sending now, so we're going to reset the offset to 0 so we write the the beginning of the buffer */
+  /* we want to start sending, so we're going to reset the offset to 0 so we write the the beginning of the buffer */
   offset = 0;
-
   rlBufferClear(&theBuffer);
   offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int));
-  
   if (outMessageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, outMessageLength, sizeof(char));
   }
-
-  rlSendBufferData(theConnection, &theBuffer);
 }
 
 static void runEnvironmentEventLoop(rlSocket theConnection) {
@@ -187,8 +180,8 @@ static void runEnvironmentEventLoop(rlSocket theConnection) {
 
   do { 
     rlBufferClear(&theBuffer);
-    rlRecvBufferData(theConnection, &theBuffer);
-    rlBufferRead(&theBuffer, 0, &envState, 1, sizeof(int));
+    rlRecvBufferData(theConnection, &theBuffer, &envState);
+
     switch(envState) {
     case kEnvInit:
       onEnvInit(theConnection);
@@ -231,11 +224,12 @@ static void runEnvironmentEventLoop(rlSocket theConnection) {
       exit(0);
       break;
     };
+
+    rlSendBufferData(theConnection, &theBuffer, envState);
   } while (envState != kEnvCleanup);
 }
 
 int main(int argc, char** argv) {
-  const int theConnectionType = kEnvironmentConnection;
   rlSocket theConnection = 0;
 
   struct hostent *host_ent;
@@ -271,20 +265,17 @@ int main(int argc, char** argv) {
 
   fprintf(stderr, "Connecting to host=%s on port=%d with autoreconnect=%d\n", host, port, autoReconnect);
 
-  /* Allocate what should be plenty of space for the buffer - it will dynamically resize as needed */
-  rlBufferCreate(&theBuffer, 4096);
 
+  /* Allocate what should be plenty of space for the buffer - it will dynamically resize if it is too small */
+  rlBufferCreate(&theBuffer, 4096);
+  
   do {
     theConnection = rlWaitForConnection(host, port, kRetryTimeout);
-    /* we need to tell RL-Glue what type of object is connecting */
-
     rlBufferClear(&theBuffer);
-    rlBufferWrite(&theBuffer, 0, &theConnectionType, 1, sizeof(int));
-    rlSendBufferData(theConnection, &theBuffer);
-
+    rlSendBufferData(theConnection, &theBuffer, kEnvironmentConnection);
     runEnvironmentEventLoop(theConnection);
     rlClose(theConnection);
-  } while (autoReconnect);
+  } while(autoReconnect);
 
   rlBufferDestroy(&theBuffer);
 

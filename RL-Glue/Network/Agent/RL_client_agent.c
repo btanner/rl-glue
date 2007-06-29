@@ -32,63 +32,79 @@ static void onAgentInit(rlSocket theConnection) {
   unsigned int theTaskSpecLength = 0;
   int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
+  /* Read the data in the buffer (data from server) */
   offset = rlBufferRead(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));
-
   if (theTaskSpecLength > 0) {
     theTaskSpec = (char*)malloc(theTaskSpecLength);
     offset = rlBufferRead(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
 
+  /* Call RL method on the recv'd data */
   agent_init(theTaskSpec);
+
+  /* Prepare the buffer for sending data back to the server */
+  rlBufferClear(&theBuffer);
 }
 
 static void onAgentStart(rlSocket theConnection) {
   Action theAction = {0};
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theObservation);
+  /* Read the data in the buffer (data from server) */
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theObservation);
 
+  /* Call RL method on the recv'd data */
   theAction = agent_start(theObservation);
 
+  /* Prepare the buffer for sending data back to the server */
   rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&theAction, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = 0;
+  offset = rlCopyADTToBuffer(&theAction, &theBuffer, offset);
 }
 
 static void onAgentStep(rlSocket theConnection) {
   Reward theReward = 0;
   Action theAction = {0};
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlBufferRead(&theBuffer, 0, &theReward, 1, sizeof(theReward));
+  /* Read the data in the buffer (data from server) */
+  offset = rlBufferRead(&theBuffer, offset, &theReward, 1, sizeof(theReward));
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theObservation);
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theObservation);
-
+  /* Call RL method on the recv'd data */
   theAction = agent_step(theReward, theObservation);
 
-  rlCopyADTToBuffer(&theAction, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  /* Prepare the buffer for sending data back to the server */
+  rlBufferClear(&theBuffer);
+  offset = 0;
+  rlCopyADTToBuffer(&theAction, &theBuffer, offset);
 }
 
 static void onAgentEnd(rlSocket theConnection) {
   Reward theReward = 0;
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlBufferRead(&theBuffer, 0, &theReward, 1, sizeof(Reward));
+  /* Read the data in the buffer (data from server) */
+  offset = rlBufferRead(&theBuffer, offset, &theReward, 1, sizeof(Reward));
 
+  /* Call RL method on the recv'd data */
   agent_end(theReward);
+
+  /* Prepare the buffer for sending data back to the server */
+  rlBufferClear(&theBuffer);
 }
 
 static void onAgentCleanup(rlSocket theConnection) {
+  /* Read the data in the buffer (data from server) */
+  /* No data sent for agent cleanup */
+
+  /* Call RL method on the recv'd data */
   agent_cleanup();
 
+  /* Prepare the buffer for sending data back to the server */
+  rlBufferClear(&theBuffer);
+
+  /* Cleanup our resources */
   free(theObservation.intArray);
   free(theObservation.doubleArray);
   free(theTaskSpec);
@@ -104,19 +120,24 @@ static void onAgentCleanup(rlSocket theConnection) {
 }
 
 static void onAgentFreeze(rlSocket theConnection) {
+  /* Read the data in the buffer (data from server) */
+  /* No data sent for agent cleanup */
+
+  /* Call RL method on the recv'd data */
   agent_freeze();
+
+  /* Prepare the buffer for sending data back to the server */
+  rlBufferClear(&theBuffer);
 }
 
 static void onAgentMessage(rlSocket theConnection) {
-  int inMessageLength = 0;
-  int outMessageLength = 0;
+  unsigned int inMessageLength = 0;
+  unsigned int outMessageLength = 0;
   Message inMessage = 0;
   Message outMessage = 0;
-  int offset = 0;
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-
+  /* Read the data in the buffer (data from server) */
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
 
@@ -132,23 +153,20 @@ static void onAgentMessage(rlSocket theConnection) {
     offset = rlBufferRead(&theBuffer, offset, theInMessage, inMessageLength, sizeof(char));
   }
 
+  /* Call RL method on the recv'd data */
   outMessage = agent_message(theInMessage);
-
   if (outMessage != NULL) {
    outMessageLength = strlen(outMessage)+1;
   }
   
-  /* we want to start sending now, so we're going to reset the offset to 0 so we write to the beginning of the buffer */
-  offset = 0;
-
+  /* Prepare the buffer for sending data back to the server */
+  /* we want to start sending, so we're going to reset the offset to 0 so we write to the beginning of the buffer */
   rlBufferClear(&theBuffer);
-  offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int));
-  
+  offset = 0;
+  offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int)); 
   if (outMessageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, outMessageLength, sizeof(char));
   }
-
-  rlSendBufferData(theConnection, &theBuffer);
 }
 
 static void runAgentEventLoop(rlSocket theConnection) {
@@ -156,8 +174,8 @@ static void runAgentEventLoop(rlSocket theConnection) {
 
   do {
     rlBufferClear(&theBuffer);
-    rlRecvBufferData(theConnection, &theBuffer);
-    rlBufferRead(&theBuffer, 0, &agentState, 1, sizeof(int));
+    rlRecvBufferData(theConnection, &theBuffer, &agentState);
+
     switch(agentState) {
     case kAgentInit:
       onAgentInit(theConnection);
@@ -192,11 +210,12 @@ static void runAgentEventLoop(rlSocket theConnection) {
       exit(0);
       break;
     };
+
+    rlSendBufferData(theConnection, &theBuffer, agentState);
   } while (agentState != kAgentCleanup);
 }
 
 int main(int argc, char** argv) {
-  const int theConnectionType = kAgentConnection;
   rlSocket theConnection = 0;
 
   struct hostent *host_ent;
@@ -232,22 +251,15 @@ int main(int argc, char** argv) {
 
   fprintf(stderr, "Connecting to host=%s on port=%d with autoreconnect=%d\n", host, port, autoReconnect);
 
-
   /* Allocate what should be plenty of space for the buffer - it will dynamically resize if it is too small */
   rlBufferCreate(&theBuffer, 4096);
   
   do {
     theConnection = rlWaitForConnection(host, port, kRetryTimeout);
-    /* we need to tell RL-Glue what type of object is connecting */
-
     rlBufferClear(&theBuffer);
-    rlBufferWrite(&theBuffer, 0, &theConnectionType, 1, sizeof(int));
-    rlSendBufferData(theConnection, &theBuffer);
-
+    rlSendBufferData(theConnection, &theBuffer, kAgentConnection);
     runAgentEventLoop(theConnection);
-
     rlClose(theConnection);
-
   } while(autoReconnect);
 
   rlBufferDestroy(&theBuffer);

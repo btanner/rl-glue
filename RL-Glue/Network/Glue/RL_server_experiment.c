@@ -45,108 +45,103 @@ void termination_handler(int signum) {
 
 void onRLInit(rlSocket theConnection) {
   RL_init();
+  rlBufferClear(&theBuffer);
 }
 
 void onRLStart(rlSocket theConnection) {
+  unsigned int offset = 0;
   Observation_action obsAct = RL_start();
 
   rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&obsAct.o, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
-
-  rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&obsAct.a, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = 0;
+  offset = rlCopyADTToBuffer(&obsAct.o, &theBuffer, offset);
+  offset = rlCopyADTToBuffer(&obsAct.a, &theBuffer, offset);
 }
 
 void onRLStep(rlSocket theConnection) {
   Reward_observation_action_terminal roat = RL_step();
-  int offset = 0;
+  unsigned int offset = 0;
 
+  rlBufferClear(&theBuffer);
   offset = 0;
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  offset = rlBufferRead(&theBuffer, offset, &roat.terminal, 1, sizeof(int));
-  offset = rlBufferRead(&theBuffer, offset, &roat.r, 1, sizeof(Reward));
-  rlSendBufferData(theConnection, &theBuffer);
-
-  rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&roat.o, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
-
-  rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&roat.a, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlBufferWrite(&theBuffer, offset, &roat.terminal, 1, sizeof(int));
+  offset = rlBufferWrite(&theBuffer, offset, &roat.r, 1, sizeof(Reward));
+  offset = rlCopyADTToBuffer(&roat.o, &theBuffer, offset);
+  offset = rlCopyADTToBuffer(&roat.a, &theBuffer, offset);
 }
 
 void onRLReturn(rlSocket theConnection) {
   Reward theReward = RL_return();
-  
+  unsigned int offset = 0;
+
   rlBufferClear(&theBuffer);
-  rlBufferWrite(&theBuffer, 0, &theReward, 1, sizeof(Reward));
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
 }
 
 void onRLNumSteps(rlSocket theConnection) {
   int numSteps = RL_num_steps();
+  unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  rlBufferWrite(&theBuffer, 0, &numSteps, 1, sizeof(int));
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlBufferWrite(&theBuffer, offset, &numSteps, 1, sizeof(int));
 }
 
 void onRLNumEpisodes(rlSocket theConnection) {
   int numEpisodes = RL_num_episodes();
+  unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  rlBufferWrite(&theBuffer, 0, &numEpisodes, 1, sizeof(int));
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlBufferWrite(&theBuffer, offset, &numEpisodes, 1, sizeof(int));
 }
 
 void onRLEpisode(rlSocket theConnection) {
-  int numEpisodes = 0;
-  
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlBufferRead(&theBuffer, 0, &numEpisodes, 1, sizeof(int));
+  unsigned int numSteps = 0;
+  unsigned int offset = 0;
+  offset = rlBufferRead(&theBuffer, offset, &numSteps, 1, sizeof(unsigned int));
 
-  RL_episode(numEpisodes);
+  RL_episode(numSteps);
+
+  rlBufferClear(&theBuffer);
 }
 
 void onRLSetState(rlSocket theConnection) {
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theStateKey);
-  
+  unsigned int offset = 0;
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theStateKey);
+
   RL_set_state(theStateKey);
+  
+  rlBufferClear(&theBuffer);
 }
 
 void onRLSetRandomSeed(rlSocket theConnection) {
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  rlCopyBufferToADT(&theBuffer, &theRandomSeedKey);
+  unsigned int offset = 0;
+  offset = rlCopyBufferToADT(&theBuffer, offset, &theRandomSeedKey);
   
   RL_set_random_seed(theRandomSeedKey);
+
+  rlBufferClear(&theBuffer);
 }
 
 void onRLGetState(rlSocket theConnection) {
+  unsigned int offset = 0;
   State_key theStateKey = RL_get_state();
 
   rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&theStateKey, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlCopyADTToBuffer(&theStateKey, &theBuffer, offset);
 }
 
 void onRLGetRandomSeed(rlSocket theConnection) {
+  unsigned int offset = 0;
   Random_seed_key theRandomSeedKey = RL_get_random_seed();
 
   rlBufferClear(&theBuffer);
-  rlCopyADTToBuffer(&theRandomSeedKey, &theBuffer);
-  rlSendBufferData(theConnection, &theBuffer);
+  offset = rlCopyADTToBuffer(&theRandomSeedKey, &theBuffer, offset);
 }
 
 void onRLCleanup(rlSocket theConnection) {
   RL_cleanup();
+
+  rlBufferClear(&theBuffer);
   
   free(theStateKey.intArray);
   free(theStateKey.doubleArray);
@@ -168,17 +163,16 @@ void onRLCleanup(rlSocket theConnection) {
 
 void onRLFreeze(rlSocket theConnection) {
   RL_freeze();
+
+  rlBufferClear(&theBuffer);
 }
 
 void onRLAgentMessage(rlSocket theConnection) {
   char* inMessage = 0;
   char* outMessage = 0;
-  int messageLength = 0;
-  int offset = 0;
+  unsigned int messageLength = 0;
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
 
@@ -198,7 +192,6 @@ void onRLAgentMessage(rlSocket theConnection) {
   if (messageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, messageLength, sizeof(char));
   } 
-  rlSendBufferData(theConnection, &theBuffer);
 
   free(inMessage);
   inMessage = 0;
@@ -207,12 +200,9 @@ void onRLAgentMessage(rlSocket theConnection) {
 void onRLEnvMessage(rlSocket theConnection) {
   char* inMessage = 0;
   char* outMessage = 0;
-  int messageLength = 0;
-  int offset = 0;
+  unsigned int messageLength = 0;
+  unsigned int offset = 0;
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(theConnection, &theBuffer);
-  
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
 
@@ -226,13 +216,12 @@ void onRLEnvMessage(rlSocket theConnection) {
     messageLength = strlen(outMessage) + 1;
   }
 
-  offset = 0;
   rlBufferClear(&theBuffer);
+  offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &messageLength, 1, sizeof(int));
   if (messageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, messageLength, sizeof(char));
   } 
-  rlSendBufferData(theConnection, &theBuffer);
 
   free(inMessage);
 }
@@ -242,8 +231,7 @@ void runGlueEventLoop(rlSocket theConnection) {
 
   do { 
     rlBufferClear(&theBuffer);
-    rlRecvBufferData(theConnection, &theBuffer);
-    rlBufferRead(&theBuffer, 0, &glueState, 1, sizeof(int));
+    rlRecvBufferData(theConnection, &theBuffer, &glueState);
 
     switch(glueState) {
     case kRLInit:
@@ -306,11 +294,12 @@ void runGlueEventLoop(rlSocket theConnection) {
       onRLEnvMessage(theConnection);
       break;
 
-
     default:
       fprintf(stderr, kUnknownMessage, glueState);
       break;
     };
+
+    rlSendBufferData(theConnection, &theBuffer, glueState);
   } while (glueState != kRLCleanup);
 }
 
