@@ -43,4 +43,4 @@ public class SarsaAgent implements AgentInterface
     public void agent_freeze()
     {
     }
-}
+};

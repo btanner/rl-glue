@@ -4,72 +4,89 @@ import sys
 import time
 import socket
 import getopt
-sys.path = sys.path + ['./Build']
 from RL_environment import *
-from RL_netlib import *
+from RL_network import *
 
-def onEnvInit(sock):
+def onEnvInit(buf):
 	taskSpec = env_init()
-	sock.sendString(taskSpec)
+	buf = Buffer()
+	buf.writeString(taskSpec)
+	return buf
 
-def onEnvStart(sock):
+def onEnvStart(buf):
 	theObservation = env_start()
-	sock.sendADT(theObservation)
+	buf = Buffer()
+	buf.writeADT(theObservation)
+	return buf
 
-def onEnvStep(sock):
-	theAction = sock.recvADT()
+def onEnvStep(buf):
+	theAction = buf.readADT()
 	ro = env_step(theAction)
-	sock.sendRewardObservation(ro)
+	buf = Buffer()
+	buf.writeRewardObservation(ro)
+	return buf
 
-def onEnvCleanup(sock):
+def onEnvCleanup(buf):
 	env_cleanup()
+	return None
 
-def onEnvSetState(sock):
-	theStateKey = sock.recvADT()
+def onEnvSetState(buf):
+	theStateKey = buf.readADT()
 	env_set_state(theStateKey)
+	return None
 	
-def onEnvSetRandomSeed(sock):
-	theRandomSeed = sock.recvADT()
+def onEnvSetRandomSeed(buf):
+	theRandomSeed = buf.readADT()
 	env_set_random_seed(theRandomSeed)
+	return None
 
-def onEnvGetState(sock):
+def onEnvGetState(buf):
 	theStateKey = env_get_state()
-	sock.sendADT(theStateKey)
+	buf = Buffer()
+	buf.writeADT(theStateKey)
+	return buf
 	
-def onEnvGetRandomSeed(sock):
+def onEnvGetRandomSeed(buf):
 	theRandomSeed = env_get_random_seed()
-	sock.sendADT(theRandomSeed)
+	buf = Buffer()
+	buf.writeADT(theRandomSeed)
+	return buf
 
-def onEnvMessage(sock):
-	inMessage = sock.recvString()
+def onEnvMessage(buf):
+	inMessage = buf.readString()
 	outMessage = env_message(inMessage)
-	sock.sendString(outMessage)
+	buf = Buffer()
+	buf.writeString(outMessage)
+	return buf
 
 def runEnvironmentEventLoop(sock):
 	envState = 0
 	
 	while envState != kEnvCleanup:
-		envState = sock.recvInt()
+		(envState,buf) = sock.recvPacket()
+		print "envState = ",envState
 		if envState == kEnvInit:
-			onEnvInit(sock)
+			buf = onEnvInit(buf)
 		elif envState == kEnvStart:
-			onEnvStart(sock)
+			buf = onEnvStart(buf)
 		elif envState == kEnvStep:
-			onEnvStep(sock)
+			buf = onEnvStep(buf)
 		elif envState == kEnvCleanup:
-			onEnvCleanup(sock)
+			buf = onEnvCleanup(buf)
 		elif envState == kEnvSetState:
-			onEnvSetState(sock)
+			buf = onEnvSetState(buf)
 		elif envState == kEnvSetRandomSeed:
-			onEnvSetRandomSeed(sock)
+			buf = onEnvSetRandomSeed(buf)
 		elif envState == kEnvGetState:
-			onEnvGetState(sock)
+			buf = onEnvGetState(buf)
 		elif envState == kEnvGetRandomSeed:
-			onEnvGetRandomSeed(sock)
+			buf = onEnvGetRandomSeed(buf)
 		elif envState == kEnvMessage:
-			onEnvMessage(sock)
+			buf = onEnvMessage(buf)
 		else:
-			sys.stderr.write(kUnknownMessage % (agentState))
+			sys.stderr.write(kUnknownMessage % (envState))
+		print "sending back envState= ",envState
+		sock.sendPacket(buf,envState)
 
 first = True
 isDaemon = False
@@ -88,6 +105,6 @@ if os.environ.has_key('RLGLUE_AUTORECONNECT'):
 while isDaemon or first:
 	first = False
 	sock = waitForConnection(host,port,kRetryTimeout)
-	sock.sendInt(kEnvironmentConnection)
+	sock.sendPacket(None,kEnvironmentConnection)
 	runEnvironmentEventLoop(sock)
 	sock.close()

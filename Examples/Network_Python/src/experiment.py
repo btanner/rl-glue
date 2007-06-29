@@ -1,23 +1,23 @@
 #! /usr/local/bin/python
 import sys
-sys.path = sys.path + ['./Build']
-from RL_client_experiment import *
+import RL_common
+import RLGlue
 
-NUM_EPISODES = 100
+NUM_EPISODES = 1000
 rl_num_steps = []
 rl_return = []
 
 def run(num_episodes):
   for x in range(num_episodes):
-    RL_episode(0)
+    RLGlue.RL_episode(0)
     sys.stderr.write(".")
-    rl_num_steps.append(RL_num_steps())
-    rl_return.append(RL_return())
+    rl_num_steps.append(RLGlue.RL_num_steps())
+    rl_return.append(RLGlue.RL_return())
 
 
-RL_init()
+RLGlue.RL_init()
 run(NUM_EPISODES)
-RL_cleanup()
+RLGlue.RL_cleanup()
 avg_steps = 0.0
 avg_return = 0.0
 for i in range(NUM_EPISODES):

@@ -68,10 +68,7 @@ def getReward():
 		return -1
 
 def env_init():  
-  mine_observation.numInts = 1
-  mine_observation.numDoubles = 0
-
-  mine_observation.doubleArray = [];
+  mine_observation.doubleArray = []
 
   random.seed(0)
 

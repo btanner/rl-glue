@@ -43,7 +43,7 @@ def RL_cleanup():
 	sock.close()
 
 def RL_return():
-	sock.sendInt(None,kRLReturn)
+	sock.sendPacket(None,kRLReturn)
 	(state,buf) = sock.recvPacket()
 	return buf.readReward()
 
@@ -77,16 +77,19 @@ def RL_episode(num_steps):
 	buf = Buffer()
 	buf.writeInt(num_steps)
 	sock.sendPacket(buf,kRLEpisode)
+	(state,buf) = sock.recvPacket()
 
 def RL_set_state(theStateKey):
 	buf = Buffer()
-	buf.writeADT(theStateKey))
+	buf.writeADT(theStateKey)
 	sock.sendPacket(buf,kRLSetState)
+	(state,buf) = sock.recvPacket()
 
 def RL_set_random_seed(theRandomSeedKey):
 	buf = Buffer()
-	buf.writeADT(theRandomSeedKey))
+	buf.writeADT(theRandomSeedKey)
 	sock.sendPacket(buf,kRLSetRandomSeed)
+	(state,buf) = sock.recvPacket()
 
 def RL_get_state():
 	sock.sendPacket(None,kRLGetState)

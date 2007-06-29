@@ -15,8 +15,6 @@ old_a = 0
 
 def agent_init(taskSpec):
 	random.seed(0)
-	sarsaAgentAction.numInts = 1
-	sarsaAgentAction.numDoubles = 0
 	sarsaAgentAction.intArray = []
 	sarsaAgentAction.doubleArray = []
 	for s in range(NumStates):

@@ -4,61 +4,71 @@ import os
 import sys
 import getopt
 import socket
-sys.path = sys.path + ['./Build']
 import time
 from RL_agent import *
-from RL_netlib import *
+from RL_network import *
 
 
-def onAgentInit(sock):
-	taskSpec = sock.recvString()
+def onAgentInit(buf):
+	taskSpec = buf.readString()
 	agent_init(taskSpec)
+	return None
 
-def onAgentStart(sock):
-	theObservation = sock.recvADT()
+def onAgentStart(buf):
+	theObservation = buf.readADT()
 	theAction = agent_start(theObservation)
-	sock.sendADT(theAction)
+	buf = Buffer()
+	buf.writeADT(theAction)
+	return buf
 
-def onAgentStep(sock):
-	ro = sock.recvRewardObservation()
+def onAgentStep(buf):
+	ro = buf.readRewardObservation()
 	theAction = agent_step(ro.r, ro.o)
-	sock.sendADT(theAction)
+	buf = Buffer()
+	buf.writeADT(theAction)
+	return buf
 
-def onAgentEnd(sock):
-	reward = sock.recvDouble()
+def onAgentEnd(buf):
+	reward = buf.readReward()
 	agent_end(reward)
+	return None
 
-def onAgentCleanup(sock):
+def onAgentCleanup(buf):
 	agent_cleanup()
+	return None
 
-def onAgentFreeze(sock):
+def onAgentFreeze(buf):
 	agent_freeze()
+	return None
 
-def onAgentMessage(sock):
-	inMessage = sock.recvString()
+def onAgentMessage(buf):
+	inMessage = buf.readString()
 	outMessage = agent_message(inMessage)
-	sock.sendString(outMessage)
+	buf = Buffer()
+	buf.writeString(outMessage)
+	return buf
 
 def runAgentEventLoop(sock):
 	agentState = 0
 	while agentState != kAgentCleanup:
-		agentState = sock.recvInt()
+		(agentState,buf) = sock.recvPacket()
 		if agentState == kAgentInit:
-			onAgentInit(sock)
+			buf = onAgentInit(buf)
 		elif agentState == kAgentStart:
-			onAgentStart(sock)
+			buf = onAgentStart(buf)
 		elif agentState == kAgentStep:
-			onAgentStep(sock)
+			buf = onAgentStep(buf)
 		elif agentState == kAgentEnd:
-			onAgentEnd(sock)
+			buf = onAgentEnd(buf)
 		elif agentState == kAgentCleanup:
-			onAgentCleanup(sock)
+			buf = onAgentCleanup(buf)
 		elif agentState == kAgentFreeze:
-			onAgentFreeze(sock)
+			buf = onAgentFreeze(buf)
 		elif agentState == kAgentMessage:
-			onAgentMessage(sock)
+			buf = onAgentMessage(buf)
 		else:
 			sys.stderr.write(kUnknownMessage % (agentState))
+		sock.sendPacket(buf,agentState)
 
 first = True
 isDaemon = False
@@ -77,6 +87,6 @@ if os.environ.has_key('RLGLUE_AUTORECONNECT'):
 while isDaemon or first:
 	first = False
 	sock = waitForConnection(host,port,kRetryTimeout)
-	sock.sendInt(kAgentConnection)
+	sock.sendPacket(None,kAgentConnection)
 	runAgentEventLoop(sock)
 	sock.close()

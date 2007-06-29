@@ -1,7 +1,5 @@
 
 class RL_abstract_type:
-	numInts = 0
-	numDoubles = 0
 	intArray = []
 	doubleArray = []
 
