@@ -14,76 +14,183 @@ public class ClientAgent
     public ClientAgent(AgentInterface agent) 
     {
 	this.agent = agent;
+	this.network = new Network();
     }
 
-    protected void onAgentInit() throws Exception
+    protected void onAgentInit()
     {
-	final int taskSpecLength = network.getDataInputStream().readInt();
-	final String taskSpec = new String(network.read(taskSpecLength));
+	int target = Network.kAgentInit;
+	int size = 0;
+
+	String taskSpec = network.getString();
+	printBuffer(network);
+
+	System.out.println(taskSpec);
+       	agent.agent_init(taskSpec);
+
+	network.clearBuffer();
+	printBuffer(network);
+
+	network.putInt(target);
+	printBuffer(network);
+
+	network.putInt(size); // No data in this reply
+	printBuffer(network);
+    }
+
+    protected void onAgentStart()
+    {
+	int target = Network.kAgentStart;
+	int size = network.getInt();
+	printBuffer(network);
+
+	Observation observation = network.getObservation();
+	printBuffer(network);
+
+	Action action = agent.agent_start(observation);
 	
-	agent.agent_init(taskSpec);
+	/* In java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
+	size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
+
+	network.clearBuffer();
+	printBuffer(network);
+
+	network.putInt(target);
+	printBuffer(network);
+
+	network.putInt(size);
+	printBuffer(network);
+
+	network.putAction(action);
+	printBuffer(network);
     }
 
-    protected void onAgentStart() throws IOException
+    protected void onAgentStep()
     {
-	final Observation observation = network.readObservation();
-	final Action action = agent.agent_start(observation);
-	network.writeAction(action);
+	int target = Network.kAgentStep;
+	printBuffer(network);
+
+	int size = network.getInt();
+	printBuffer(network);
+
+	double reward = network.getDouble();
+	printBuffer(network);
+
+	Observation observation = network.getObservation();
+	printBuffer(network);
+
+	Action action = agent.agent_step(reward, observation);
+	
+	/* In Java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
+	size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
+
+	network.clearBuffer();
+	printBuffer(network);
+
+	network.putInt(target);
+	printBuffer(network);
+
+	network.putInt(size);
+	printBuffer(network);
+
+	network.putAction(action);
+	printBuffer(network);
     }
 
-    protected void onAgentStep() throws IOException
+    protected void onAgentEnd()
     {
-	final double reward = network.getDataInputStream().readDouble();
-	final Observation observation = network.readObservation();
-	final Action action = agent.agent_step(reward, observation);
-	network.writeAction(action);
-    }
+	int target = Network.kAgentEnd;
+	int size = network.getInt();
 
-    protected void onAgentEnd() throws IOException
-    {
-	final double reward = network.getDataInputStream().readDouble();
+	double reward = network.getDouble();
+
 	agent.agent_end(reward);
+	
+	size = 0;
+	network.clearBuffer();
+	network.putInt(target);
+	network.putInt(size);
     }
 
-    protected void onAgentCleanup() throws IOException
+    protected void onAgentCleanup()
     {
+	int target = Network.kAgentCleanup;
+	int size = network.getInt();
+
 	agent.agent_cleanup();
+
+	size = 0;
+	network.clearBuffer();
+	network.putInt(target);
+	network.putInt(size);
     }
 
-    protected void onAgentFreeze() throws IOException
+    protected void onAgentFreeze()
     {
+	int target = Network.kAgentFreeze;
+	int size = network.getInt();
+
 	agent.agent_freeze();
+
+	size = 0;
+	network.clearBuffer();
+	network.putInt(target);
+	network.putInt(size);
     }
 
-    protected void onAgentMessage() throws Exception
+    protected void onAgentMessage() throws UnsupportedEncodingException
     {
-	final int recvMsgLength = network.getDataInputStream().readInt();
-	final String recvMessage = new String(network.read(recvMsgLength));
-	final String sendMessage = agent.agent_message(recvMessage);
-	network.getDataOutputStream().writeInt(sendMessage.length());
-	network.getDataOutputStream().writeBytes(sendMessage);
+	int target = Network.kAgentMessage;
+	int size = network.getInt();
+
+	String message = network.getString();
+	String reply = agent.agent_message(message);
+
+	network.clearBuffer();
+	network.putInt(target);
+	network.putInt(reply.length() + 4); // Sizeof int == 4 
+	network.putString(reply); // send the length of the string and the string.
     }
 
     public void connect(String host, int port, int timeout) throws Exception
     {	
-	network = new Network(host, port, timeout);
-	network.getDataOutputStream().writeInt(4);
-	network.getDataOutputStream().writeInt(Network.kAgentConnection);
+	int target = Network.kAgentConnection;
+	int size = 0;
+
+	network.connect(host, port, timeout);
+
+	network.clearBuffer();
+	network.putInt(target);
+	network.putInt(size); // No body to this packet
+	network.flipBuffer();
+	network.sendBuffer();
     }
 
     public void close() throws IOException
     {
+	network.clearBuffer();
 	network.close();
+    }
+
+    public void printBuffer(Network network)
+    {
+	System.out.println("Position = " + network.getBuffer().position() +
+			   " Limit = " + network.getBuffer().limit() + 
+			   " Capacity = " + network.getBuffer().capacity());
     }
 
     public void runAgentEventLoop() throws Exception
     {
 	int agentState = 0;
 
-	DataInputStream input = network.getDataInputStream();
-	agentState = input.readInt();
-
 	do {
+	    network.clearBuffer();
+	    network.recvBuffer();
+	    network.flipBuffer();
+	    
+	    printBuffer(network);
+
+	    agentState = network.getInt();
 
 	    switch(agentState) {
 	    case Network.kAgentInit:
@@ -115,10 +222,13 @@ public class ClientAgent
 		break;
 		
 	    default:
-		System.err.println(kUnknownMessage + agentState + "\n");
+		System.err.println(kUnknownMessage + agentState);
 		System.exit(1);
 		break;
 	    };
+
+	    network.flipBuffer();
+	    network.sendBuffer();
 
 	} while (agentState != Network.kAgentCleanup);
     }

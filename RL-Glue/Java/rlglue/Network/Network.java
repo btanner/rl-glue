@@ -1,6 +1,8 @@
 package rlglue.network;
+import rlglue.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -54,7 +56,7 @@ public class Network
 
     public Network()
     {
-	byteBuffer = ByteBuffer.allocateDirect(65536);
+	byteBuffer = ByteBuffer.allocateDirect(64);
     }
 
     public void connect(String host, int port, int retryTimeout) throws IOException
@@ -80,14 +82,175 @@ public class Network
 	return byteBuffer;
     }
 
-    public void sendBuffer()
+    public void sendBuffer() throws IOException
     {
 	socketChannel.write(byteBuffer);
     }
 
-    public void recvBuffer()
+    public void recvBuffer() throws IOException
     {
 	socketChannel.read(byteBuffer);
+    }
+
+    public void clearBuffer()
+    {
+	byteBuffer.clear();
+    }
+
+    public void flipBuffer()
+    {
+	byteBuffer.flip();
+    }
+
+    public void putObservation(Observation observation)
+    {
+	byteBuffer.putInt(observation.intArray.length);
+	byteBuffer.putInt(observation.doubleArray.length);
+	
+	for (int i = 0; i < observation.intArray.length; ++i)
+	    byteBuffer.putInt(observation.intArray[i]);
+
+	for (int i = 0; i < observation.doubleArray.length; ++i)
+	    byteBuffer.putDouble(observation.doubleArray[i]);
+    }
+
+    public void putAction(Action action)
+    {
+	byteBuffer.putInt(action.intArray.length);
+	byteBuffer.putInt(action.doubleArray.length);
+	
+	for (int i = 0; i < action.intArray.length; ++i)
+	    byteBuffer.putInt(action.intArray[i]);
+
+	for (int i = 0; i < action.doubleArray.length; ++i)
+	    byteBuffer.putDouble(action.doubleArray[i]);
+    }
+
+    public void putStateKey(State_key key)
+    {
+	byteBuffer.putInt(key.intArray.length);
+	byteBuffer.putInt(key.doubleArray.length);
+	
+	for (int i = 0; i < key.intArray.length; ++i)
+	    byteBuffer.putInt(key.intArray[i]);
+
+	for (int i = 0; i < key.doubleArray.length; ++i)
+	    byteBuffer.putDouble(key.doubleArray[i]);
+    }
+
+    public void putRandomSeedKey(Random_seed_key key)
+    {
+	byteBuffer.putInt(key.intArray.length);
+	byteBuffer.putInt(key.doubleArray.length);
+	
+	for (int i = 0; i < key.intArray.length; ++i)
+	    byteBuffer.putInt(key.intArray[i]);
+
+	for (int i = 0; i < key.doubleArray.length; ++i)
+	    byteBuffer.putDouble(key.doubleArray[i]);
+    }
+
+    public void putString(String data) throws UnsupportedEncodingException
+    {
+	final byte[] byteString = data.getBytes("UTF-8");
+	byteBuffer.putInt(byteString.length);
+	byteBuffer.put(byteString);
+    }
+
+    public void putInt(int data)
+    {
+	byteBuffer.putInt(data);
+    }
+
+    public void putDouble(double data)
+    {
+	byteBuffer.putDouble(data);
+    }
+
+    public Observation getObservation()
+    {
+	final int numInts = byteBuffer.getInt();
+	final int numDoubles = byteBuffer.getInt();
+
+	Observation obs = new Observation(numInts, numDoubles);
+
+	for (int i = 0; i < numInts; ++i)
+	    obs.intArray[i] = byteBuffer.getInt();
+
+	for (int i = 0; i < numDoubles; ++i)
+	    obs.doubleArray[i] = byteBuffer.getDouble();
+
+	return obs;
+    }
+
+    public Action getAction()
+    {
+	final int numInts = byteBuffer.getInt();
+	final int numDoubles = byteBuffer.getInt();
+
+	Action action = new Action(numInts, numDoubles);
+
+	for (int i = 0; i < numInts; ++i)
+	    action.intArray[i] = byteBuffer.getInt();
+
+	for (int i = 0; i < numDoubles; ++i)
+	    action.doubleArray[i] = byteBuffer.getDouble();
+
+	return action;
+    }
+
+    public State_key getStateKey()
+    {
+	final int numInts = byteBuffer.getInt();
+	final int numDoubles = byteBuffer.getInt();
+
+	State_key key = new State_key(numInts, numDoubles);
+
+	for (int i = 0; i < numInts; ++i)
+	    key.intArray[i] = byteBuffer.getInt();
+
+	for (int i = 0; i < numDoubles; ++i)
+	    key.doubleArray[i] = byteBuffer.getDouble();
+
+	return key;
+    }
+
+    public Random_seed_key getRandomSeedKey()
+    {
+	final int numInts = byteBuffer.getInt();
+	final int numDoubles = byteBuffer.getInt();
+
+	Random_seed_key key = new Random_seed_key(numInts, numDoubles);
+
+	for (int i = 0; i < numInts; ++i)
+	    key.intArray[i] = byteBuffer.getInt();
+
+	for (int i = 0; i < numDoubles; ++i)
+	    key.doubleArray[i] = byteBuffer.getDouble();
+
+	return key;
+    }
+
+    public String getString()
+    {
+	final int length = byteBuffer.getInt();
+
+	System.out.println("Length = " + length);
+
+	byte[] byteString = new byte[length];
+	byteBuffer.get(byteString);
+	
+	return new String(byteString);
+    }
+
+    public int getInt()
+    {
+	return byteBuffer.getInt();
+    }
+
+    public double getDouble()
+    {
+	return byteBuffer.getDouble();
     }
 }
 

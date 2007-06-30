@@ -30,7 +30,7 @@ static int theInMessageCapacity = 0;
 
 static void onAgentInit(rlSocket theConnection) {
   unsigned int theTaskSpecLength = 0;
-  int offset = 0;
+  unsigned int offset = 0;
 
   /* Read the data in the buffer (data from server) */
   offset = rlBufferRead(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));
