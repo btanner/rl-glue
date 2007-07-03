@@ -23,29 +23,29 @@ public class ClientAgent
 	int size = 0;
 
 	String taskSpec = network.getString();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	System.out.println(taskSpec);
        	agent.agent_init(taskSpec);
 
 	network.clearBuffer();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putInt(target);
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putInt(size); // No data in this reply
-	printBuffer(network);
+	/*printBuffer(network);*/
     }
 
     protected void onAgentStart()
     {
 	int target = Network.kAgentStart;
 	int size = network.getInt();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	Observation observation = network.getObservation();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	Action action = agent.agent_start(observation);
 	
@@ -53,31 +53,31 @@ public class ClientAgent
 	size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
 
 	network.clearBuffer();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putInt(target);
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putInt(size);
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putAction(action);
-	printBuffer(network);
+	/*printBuffer(network);*/
     }
 
     protected void onAgentStep()
     {
 	int target = Network.kAgentStep;
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	int size = network.getInt();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	double reward = network.getDouble();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	Observation observation = network.getObservation();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	Action action = agent.agent_step(reward, observation);
 	
@@ -85,16 +85,16 @@ public class ClientAgent
 	size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
 
 	network.clearBuffer();
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putInt(target);
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putInt(size);
-	printBuffer(network);
+	/*printBuffer(network);*/
 
 	network.putAction(action);
-	printBuffer(network);
+	/*printBuffer(network);*/
     }
 
     protected void onAgentEnd()
@@ -182,15 +182,19 @@ public class ClientAgent
     public void runAgentEventLoop() throws Exception
     {
 	int agentState = 0;
+	int dataSize = 0;
 
 	do {
 	    network.clearBuffer();
 	    network.recvBuffer();
 	    network.flipBuffer();
-	    
-	    printBuffer(network);
+
+	    /*printBuffer(network);*/
 
 	    agentState = network.getInt();
+	    dataSize = network.getInt();
+
+	    System.out.println("agentState = " + agentState);
 
 	    switch(agentState) {
 	    case Network.kAgentInit:

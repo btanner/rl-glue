@@ -235,12 +235,10 @@ public class Network
     {
 	final int length = byteBuffer.getInt();
 
-	System.out.println("Length = " + length);
-
 	byte[] byteString = new byte[length];
 	byteBuffer.get(byteString);
 	
-	return new String(byteString);
+	return new String(byteString).trim();
     }
 
     public int getInt()

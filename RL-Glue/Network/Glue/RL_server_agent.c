@@ -2,8 +2,6 @@
 #include <stdlib.h> /* calloc */
 #include <assert.h> /* assert */
 
-#include <stdio.h> /* fprintf debug only! */
-
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
@@ -18,8 +16,6 @@ void agent_init(const Task_specification theTaskSpec) {
   const unsigned int theTaskSpecLength = strlen(theTaskSpec)+1;
   unsigned int offset = 0;
   
-  fprintf(stderr, "agent_init\n");
-
   /* Setup the connection */
   if (theAgentConnection == -1) {
     theAgentConnection = 0;
@@ -47,8 +43,6 @@ Action agent_start(Observation theObservation) {
   int agentState = kAgentStart;
   unsigned int offset = 0;
 
-  fprintf(stderr, "agent_init\n");
-
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
@@ -68,8 +62,6 @@ Action agent_start(Observation theObservation) {
 Action agent_step(Reward theReward, Observation theObservation) {
   int agentState = kAgentStep;
   unsigned int offset = 0;
-
-  fprintf(stderr, "agent_step\n");
 
   rlBufferClear(&theBuffer);
   offset = 0;
@@ -92,8 +84,6 @@ void agent_end(Reward theReward) {
   int agentState = kAgentEnd;
   unsigned int offset = 0;
 
-  fprintf(stderr, "agent_end\n");
-
   rlBufferClear(&theBuffer);
   offset = rlBufferWrite(&theBuffer, offset, &agentState, 1, sizeof(int));
   offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
@@ -107,8 +97,6 @@ void agent_end(Reward theReward) {
 /* Tell the agent that we're cleaning up */
 void agent_cleanup() {
   int agentState = kAgentCleanup;
-
-  fprintf(stderr, "agent_cleanup\n");
 
   rlBufferClear(&theBuffer);
   rlSendBufferData(theAgentConnection, &theBuffer, agentState);
