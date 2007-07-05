@@ -77,9 +77,6 @@ public class Network
 
     public int recv(ByteBuffer byteBuffer) throws IOException
     {
-	try{
-	    Thread.sleep(0);
-	}catch(Exception e){}
 	return socketChannel.read(byteBuffer);
     }
     
@@ -96,8 +93,6 @@ public class Network
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
 
-	//System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
-
 	Observation obs = new Observation(numInts, numDoubles);	
 	for (int i = 0; i < numInts; ++i)
 	    obs.intArray[i] = byteBuffer.getInt();
@@ -111,8 +106,6 @@ public class Network
     {
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
-
-	//System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
 
 	Action action = new Action(numInts, numDoubles);	
 	for (int i = 0; i < numInts; ++i)
@@ -128,8 +121,6 @@ public class Network
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
 
-	System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
-
 	State_key key = new State_key(numInts, numDoubles);
 	for (int i = 0; i < numInts; ++i)
 	    key.intArray[i] = byteBuffer.getInt();
@@ -143,8 +134,6 @@ public class Network
     {
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
-
-	System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
 
 	Random_seed_key key = new Random_seed_key(numInts, numDoubles);
 	
