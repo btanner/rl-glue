@@ -81,7 +81,6 @@ Task_specification env_init()
   sprintf(temp,"%d]",4-1);
   strcat(Task_spec,temp); 
 
-  fprintf(stderr, "taskSpec Length: %d taskSpec: %s\n", (int)strlen(Task_spec), Task_spec);
   return Task_spec;
 }
 

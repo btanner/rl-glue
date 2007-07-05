@@ -9,9 +9,6 @@ import java.nio.channels.SocketChannel;
 
 public class Network
 {
-    protected SocketChannel socketChannel;
-    protected ByteBuffer byteBuffer;
-
     public static final int kExperimentConnection  = 1;
     public static final int kAgentConnection       = 2;
     public static final int kEnvironmentConnection = 3;
@@ -54,9 +51,10 @@ public class Network
     public static final int kDefaultPort = 4096;
     public static final int kRetryTimeout = 10;
 
+    protected SocketChannel socketChannel;
+
     public Network()
     {
-	byteBuffer = ByteBuffer.allocateDirect(64);
     }
 
     public void connect(String host, int port, int retryTimeout) throws IOException
@@ -72,156 +70,84 @@ public class Network
 	socketChannel.close();
     }
 
-    public SocketChannel getChannel()
+    public int send(ByteBuffer byteBuffer) throws IOException
     {
-	return socketChannel;
+	return socketChannel.write(byteBuffer);
     }
 
-    public ByteBuffer getBuffer()
+    public int recv(ByteBuffer byteBuffer) throws IOException
     {
-	return byteBuffer;
+	try{
+	    Thread.sleep(0);
+	}catch(Exception e){}
+	return socketChannel.read(byteBuffer);
+    }
+    
+    public static String getString(ByteBuffer byteBuffer)
+    {
+	int length = byteBuffer.getInt();
+	byte [] byteString = new byte[length];
+	byteBuffer.get(byteString);
+	return new String(byteString).trim();
     }
 
-    public void sendBuffer() throws IOException
-    {
-	socketChannel.write(byteBuffer);
-    }
-
-    public void recvBuffer() throws IOException
-    {
-	socketChannel.read(byteBuffer);
-    }
-
-    public void clearBuffer()
-    {
-	byteBuffer.clear();
-    }
-
-    public void flipBuffer()
-    {
-	byteBuffer.flip();
-    }
-
-    public void putObservation(Observation observation)
-    {
-	byteBuffer.putInt(observation.intArray.length);
-	byteBuffer.putInt(observation.doubleArray.length);
-	
-	for (int i = 0; i < observation.intArray.length; ++i)
-	    byteBuffer.putInt(observation.intArray[i]);
-
-	for (int i = 0; i < observation.doubleArray.length; ++i)
-	    byteBuffer.putDouble(observation.doubleArray[i]);
-    }
-
-    public void putAction(Action action)
-    {
-	byteBuffer.putInt(action.intArray.length);
-	byteBuffer.putInt(action.doubleArray.length);
-	
-	for (int i = 0; i < action.intArray.length; ++i)
-	    byteBuffer.putInt(action.intArray[i]);
-
-	for (int i = 0; i < action.doubleArray.length; ++i)
-	    byteBuffer.putDouble(action.doubleArray[i]);
-    }
-
-    public void putStateKey(State_key key)
-    {
-	byteBuffer.putInt(key.intArray.length);
-	byteBuffer.putInt(key.doubleArray.length);
-	
-	for (int i = 0; i < key.intArray.length; ++i)
-	    byteBuffer.putInt(key.intArray[i]);
-
-	for (int i = 0; i < key.doubleArray.length; ++i)
-	    byteBuffer.putDouble(key.doubleArray[i]);
-    }
-
-    public void putRandomSeedKey(Random_seed_key key)
-    {
-	byteBuffer.putInt(key.intArray.length);
-	byteBuffer.putInt(key.doubleArray.length);
-	
-	for (int i = 0; i < key.intArray.length; ++i)
-	    byteBuffer.putInt(key.intArray[i]);
-
-	for (int i = 0; i < key.doubleArray.length; ++i)
-	    byteBuffer.putDouble(key.doubleArray[i]);
-    }
-
-    public void putString(String data) throws UnsupportedEncodingException
-    {
-	final byte[] byteString = data.getBytes("UTF-8");
-	byteBuffer.putInt(byteString.length);
-	byteBuffer.put(byteString);
-    }
-
-    public void putInt(int data)
-    {
-	byteBuffer.putInt(data);
-    }
-
-    public void putDouble(double data)
-    {
-	byteBuffer.putDouble(data);
-    }
-
-    public Observation getObservation()
+    public static Observation getObservation(ByteBuffer byteBuffer)
     {
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
 
-	Observation obs = new Observation(numInts, numDoubles);
+	//System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
 
+	Observation obs = new Observation(numInts, numDoubles);	
 	for (int i = 0; i < numInts; ++i)
 	    obs.intArray[i] = byteBuffer.getInt();
-
 	for (int i = 0; i < numDoubles; ++i)
 	    obs.doubleArray[i] = byteBuffer.getDouble();
 
 	return obs;
     }
 
-    public Action getAction()
+    public static Action getAction(ByteBuffer byteBuffer)
     {
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
 
-	Action action = new Action(numInts, numDoubles);
+	//System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
 
+	Action action = new Action(numInts, numDoubles);	
 	for (int i = 0; i < numInts; ++i)
 	    action.intArray[i] = byteBuffer.getInt();
-
 	for (int i = 0; i < numDoubles; ++i)
 	    action.doubleArray[i] = byteBuffer.getDouble();
 
 	return action;
     }
 
-    public State_key getStateKey()
+    public static State_key getStateKey(ByteBuffer byteBuffer)
     {
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
+
+	System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
 
 	State_key key = new State_key(numInts, numDoubles);
-
 	for (int i = 0; i < numInts; ++i)
 	    key.intArray[i] = byteBuffer.getInt();
-
 	for (int i = 0; i < numDoubles; ++i)
 	    key.doubleArray[i] = byteBuffer.getDouble();
 
 	return key;
     }
 
-    public Random_seed_key getRandomSeedKey()
+    public static Random_seed_key getRandomSeedKey(ByteBuffer byteBuffer)
     {
 	final int numInts = byteBuffer.getInt();
 	final int numDoubles = byteBuffer.getInt();
 
-	Random_seed_key key = new Random_seed_key(numInts, numDoubles);
+	System.out.println("NumInts: " + numInts + " NumDoubles: " + numDoubles);
 
+	Random_seed_key key = new Random_seed_key(numInts, numDoubles);
+	
 	for (int i = 0; i < numInts; ++i)
 	    key.intArray[i] = byteBuffer.getInt();
 
@@ -231,24 +157,51 @@ public class Network
 	return key;
     }
 
-    public String getString()
+    public static void putString(ByteBuffer byteBuffer, String message)
     {
-	final int length = byteBuffer.getInt();
-
-	byte[] byteString = new byte[length];
-	byteBuffer.get(byteString);
-	
-	return new String(byteString).trim();
+	byte [] byteString = message.getBytes();
+	byteBuffer.putInt(message.length());
+	byteBuffer.put(byteBuffer);
     }
 
-    public int getInt()
+    public static void putObservation(ByteBuffer byteBuffer, Observation obs)
     {
-	return byteBuffer.getInt();
+	byteBuffer.putInt(obs.intArray.length);
+	byteBuffer.putInt(obs.doubleArray.length);
+	for (int i = 0; i < obs.intArray.length; ++i)
+	    byteBuffer.putInt(obs.intArray[i]);
+	for (int i = 0; i < obs.doubleArray.length; ++i)
+	    byteBuffer.putDouble(obs.doubleArray[i]);
     }
 
-    public double getDouble()
+    public static void putAction(ByteBuffer byteBuffer, Action action)
     {
-	return byteBuffer.getDouble();
+	byteBuffer.putInt(action.intArray.length);
+	byteBuffer.putInt(action.doubleArray.length);
+	for (int i = 0; i < action.intArray.length; ++i)
+	    byteBuffer.putInt(action.intArray[i]);
+	for (int i = 0; i < action.doubleArray.length; ++i)
+	    byteBuffer.putDouble(action.doubleArray[i]);
+    }
+
+    public static void putStateKey(ByteBuffer byteBuffer, State_key key)
+    {
+	byteBuffer.putInt(key.intArray.length);
+	byteBuffer.putInt(key.doubleArray.length);
+	for (int i = 0; i < key.intArray.length; ++i)
+	    byteBuffer.putInt(key.intArray[i]);
+	for (int i = 0; i < key.doubleArray.length; ++i)
+	    byteBuffer.putDouble(key.doubleArray[i]);
+    }
+
+    public static void putRandomSeedKey(ByteBuffer byteBuffer, Random_seed_key key)
+    {
+	byteBuffer.putInt(key.intArray.length);
+	byteBuffer.putInt(key.doubleArray.length);
+	for (int i = 0; i < key.intArray.length; ++i)
+	    byteBuffer.putInt(key.intArray[i]);
+	for (int i = 0; i < key.doubleArray.length; ++i)
+	    byteBuffer.putDouble(key.doubleArray[i]);
     }
 }
 

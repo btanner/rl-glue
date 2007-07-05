@@ -8,14 +8,14 @@ public class SarsaAgent implements AgentInterface
     }
 
     public void agent_init(final String taskSpec)
-    {  
+    {
     }
 
     public Action agent_start(Observation o)
     {	
 	Action action = new Action(1, 0);
 	action.intArray[0] = 0;
-	
+
 	return action;
     }
 
@@ -23,7 +23,7 @@ public class SarsaAgent implements AgentInterface
     {
 	Action action = new Action(1, 0);
 	action.intArray[0] = 0;
-	
+
 	return action;
     }
         

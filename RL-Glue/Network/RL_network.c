@@ -204,6 +204,7 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
 unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const int target) {
   int sendTarget = target;
   unsigned int sendSize = buffer->size;
+  unsigned int header[2] = {0};
   
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
@@ -211,8 +212,13 @@ unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const 
     rlSwapData(&sendSize, &buffer->size, sizeof(unsigned int));
   }
   
-  rlSendData(theSocket, &sendTarget, sizeof(int));
-  rlSendData(theSocket, &sendSize, sizeof(unsigned int));
+  header[0] = (unsigned int)sendTarget;
+  header[1] = (unsigned int)sendSize;
+
+  /*  rlSendData(theSocket, &sendTarget, sizeof(int));
+      rlSendData(theSocket, &sendSize, sizeof(unsigned int));*/
+
+  rlSendData(theSocket, header, sizeof(unsigned int) * 2);
 
   if (buffer->size > 0) {
     rlSendData(theSocket, buffer->data, buffer->size);

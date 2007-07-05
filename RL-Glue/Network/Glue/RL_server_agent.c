@@ -2,6 +2,8 @@
 #include <stdlib.h> /* calloc */
 #include <assert.h> /* assert */
 
+#include <stdio.h> /* fprintf : debug */
+
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
@@ -71,6 +73,7 @@ Action agent_step(Reward theReward, Observation theObservation) {
 
   rlBufferClear(&theBuffer);
   rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+
   assert(agentState == kAgentStep);
 
   offset = 0;
