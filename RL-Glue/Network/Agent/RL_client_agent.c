@@ -35,7 +35,7 @@ static void onAgentInit(rlSocket theConnection) {
   /* Read the data in the buffer (data from server) */
   offset = rlBufferRead(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));
   if (theTaskSpecLength > 0) {
-    theTaskSpec = (char*)malloc(theTaskSpecLength);
+    theTaskSpec = (char*)calloc(theTaskSpecLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
 
@@ -142,7 +142,7 @@ static void onAgentMessage(rlSocket theConnection) {
   offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
 
   if (inMessageLength > theInMessageCapacity) {
-    inMessage = (Message)calloc(inMessageLength, sizeof(char));
+    inMessage = (Message)calloc(inMessageLength+1, sizeof(char));
     free(theInMessage);
 
     theInMessage = inMessage;
@@ -156,7 +156,7 @@ static void onAgentMessage(rlSocket theConnection) {
   /* Call RL method on the recv'd data */
   outMessage = agent_message(theInMessage);
   if (outMessage != NULL) {
-   outMessageLength = strlen(outMessage)+1;
+   outMessageLength = strlen(outMessage);
   }
   
   /* Prepare the buffer for sending data back to the server */

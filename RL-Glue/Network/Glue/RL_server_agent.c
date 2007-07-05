@@ -15,7 +15,7 @@ static rlBuffer theBuffer = {0};
 /* Send the task spec to the agent */
 void agent_init(const Task_specification theTaskSpec) {
   int agentState = kAgentInit;
-  const unsigned int theTaskSpecLength = strlen(theTaskSpec)+1;
+  const unsigned int theTaskSpecLength = strlen(theTaskSpec);
   unsigned int offset = 0;
   
   /* Setup the connection */
@@ -141,7 +141,7 @@ Message agent_message(const Message inMessage) {
   unsigned int offset = 0;
 
   if (inMessage != 0) {
-    theInMessageLength = strlen(inMessage) + 1;
+    theInMessageLength = strlen(inMessage);
   }
 
   rlBufferClear(&theBuffer);
@@ -159,7 +159,7 @@ Message agent_message(const Message inMessage) {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &theOutMessageLength, 1, sizeof(int));
   if (theOutMessageLength > 0) {
-    theOutMessage = (char*)calloc(theOutMessageLength, sizeof(char));
+    theOutMessage = (char*)calloc(theOutMessageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
   }
 

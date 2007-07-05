@@ -405,7 +405,7 @@ int rlConnectSystems() {
   while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
     theClient = rlAcceptConnection(theServer);
 
-    fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__);
+    /*fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__);*/
 
     rlRecvBufferData(theClient, &theBuffer, &theClientType);
 

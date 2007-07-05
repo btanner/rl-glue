@@ -188,7 +188,7 @@ int RL_num_steps() {
 
 char* RL_agent_message(const char* message) {
   int experimentState = kRLAgentMessage;
-  unsigned int messageLength = strlen(message) + 1;
+  unsigned int messageLength = strlen(message);
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
@@ -207,7 +207,7 @@ char* RL_agent_message(const char* message) {
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
   if (messageLength > theMessageCapacity) {
     free(theMessage);
-    theMessage = (char*)calloc(messageLength, sizeof(char));
+    theMessage = (char*)calloc(messageLength+1, sizeof(char));
     theMessageCapacity = messageLength;
   }
 
@@ -221,7 +221,7 @@ char* RL_agent_message(const char* message) {
 
 char* RL_env_message(const char* message) {
   int experimentState = kRLEnvMessage;
-  unsigned int messageLength = strlen(message) + 1;
+  unsigned int messageLength = strlen(message);
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
@@ -240,7 +240,7 @@ char* RL_env_message(const char* message) {
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
   if (messageLength > theMessageCapacity) {
     free(theMessage);
-    theMessage = (char*)calloc(messageLength, sizeof(char));
+    theMessage = (char*)calloc(messageLength+1, sizeof(char));
     theMessageCapacity = messageLength;
   }
 

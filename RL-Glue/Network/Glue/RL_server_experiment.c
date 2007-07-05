@@ -177,13 +177,13 @@ void onRLAgentMessage(rlSocket theConnection) {
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
 
   if (messageLength > 0) {
-    inMessage = (char*)calloc(messageLength, sizeof(char));
+    inMessage = (char*)calloc(messageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, inMessage, messageLength, sizeof(char));
   }
   
   outMessage = RL_agent_message(inMessage);
   if (outMessage != 0) {
-    messageLength = strlen(outMessage) + 1;
+    messageLength = strlen(outMessage);
   }
 
   offset = 0;
@@ -207,13 +207,13 @@ void onRLEnvMessage(rlSocket theConnection) {
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
 
   if (messageLength > 0) {
-    inMessage = (char*)calloc(messageLength, sizeof(char));
+    inMessage = (char*)calloc(messageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, inMessage, messageLength, sizeof(char));
   }
   
   outMessage = RL_env_message(inMessage);
   if (outMessage != 0) {
-    messageLength = strlen(outMessage) + 1;
+    messageLength = strlen(outMessage);
   }
 
   rlBufferClear(&theBuffer);

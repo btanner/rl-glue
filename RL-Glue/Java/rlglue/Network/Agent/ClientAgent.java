@@ -124,8 +124,6 @@ public class ClientAgent
 
     public void runAgentEventLoop() throws Exception
     {
-	int stepCount = 0;
-
 	int agentState = 0;
 	int dataSize = 0;
 	int recvSize = 0;

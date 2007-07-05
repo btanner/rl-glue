@@ -42,7 +42,7 @@ static void onEnvInit(rlSocket theConnection) {
   /* Call RL method on the recv'd data */
   theTaskSpec = env_init();
   if (theTaskSpec != NULL) {
-    theTaskSpecLength = strlen(theTaskSpec)+1;
+    theTaskSpecLength = strlen(theTaskSpec);
   }
 
   /* Prepare the buffer for sending data back to the server */
@@ -149,7 +149,7 @@ static void onEnvMessage(rlSocket theConnection) {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
   if (inMessageLength > theInMessageCapacity) {
-    inMessage = (Message)calloc(inMessageLength, sizeof(char));
+    inMessage = (Message)calloc(inMessageLength+1, sizeof(char));
     free(theInMessage);
 
     theInMessage = inMessage;
@@ -163,7 +163,7 @@ static void onEnvMessage(rlSocket theConnection) {
   outMessage = env_message(theInMessage);
 
   if (outMessage != NULL) {
-   outMessageLength = strlen(outMessage)+1;
+   outMessageLength = strlen(outMessage);
   }
   
   /* we want to start sending, so we're going to reset the offset to 0 so we write the the beginning of the buffer */

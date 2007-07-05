@@ -1,4 +1,4 @@
-package rlglue.network.agent;
+package rlglue.network.environment;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -6,103 +6,46 @@ import java.nio.ByteBuffer;
 import rlglue.*;
 import rlglue.network.*;
 
-public class ClientAgent 
+public class ClientEnvironment 
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
     protected Network network;
     protected ByteBuffer headerBuffer;
     protected ByteBuffer byteBuffer;
-    protected AgentInterface agent;
+    protected EnvironmentInterface environment;
 
-    public ClientAgent(AgentInterface agent) 
+    public ClientEnvironment(EnvironmentInterface env) 
     {
-	this.agent = agent;
+	this.environment = env;
 	this.network = new Network();
 	this.headerBuffer = ByteBuffer.allocate(8);
 	this.byteBuffer = ByteBuffer.allocate(65536);
     }
 
-    protected void onAgentInit()
+    protected void onEnvInit()
     {
-	String taskSpec = Network.getString(byteBuffer);
-
-       	agent.agent_init(taskSpec);
+       	String taskSpec = environment.env_init();
 
 	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentInit);
-	byteBuffer.putInt(0);
+	byteBuffer.putInt(Network.kEnvInit);
+	byteBuffer.putInt(taskSpec.length());
+	Network.putString(byteBuffer, taskSpec);
     }
 
-    protected void onAgentStart()
+    protected void onEnvStart()
     {
-	Observation observation = Network.getObservation(byteBuffer);
-	Action action = agent.agent_start(observation);
-
-	/* In java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
-	int size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentStart);
-	byteBuffer.putInt(size);
-	
-	Network.putAction(byteBuffer, action);
     }
 
-    protected void onAgentStep()
+    protected void onEnvStep()
     {
-	double reward = byteBuffer.getDouble();
-	Observation observation = Network.getObservation(byteBuffer);
-	Action action = agent.agent_step(reward, observation);
-	
-	/* In Java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
-	int size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentStep);
-	byteBuffer.putInt(size);
-	
-	Network.putAction(byteBuffer, action);
     }
 
-    protected void onAgentEnd()
+    protected void onEnvCleanup()
     {
-	int size = byteBuffer.getInt();
-	double reward = byteBuffer.getDouble();
-
-	agent.agent_end(reward);
-	
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentEnd);
-	byteBuffer.putInt(0);
     }
 
-    protected void onAgentCleanup()
+    protected void onEnvMessage() throws UnsupportedEncodingException
     {
-	agent.agent_cleanup();
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentCleanup);
-	byteBuffer.putInt(0);
-    }
-
-    protected void onAgentFreeze()
-    {
-	agent.agent_freeze();
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentFreeze);
-	byteBuffer.putInt(0);
-    }
-
-    protected void onAgentMessage() throws UnsupportedEncodingException
-    {
-	String message = Network.getString(byteBuffer);
-	String reply = agent.agent_message(message);
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentMessage);
-	byteBuffer.putInt(reply.length() + 4); // Sizeof int == 4 
-	Network.putString(byteBuffer, reply);  // send the length of the string and the string.
     }
 
     public void connect(String host, int port, int timeout) throws Exception
@@ -110,7 +53,7 @@ public class ClientAgent
 	network.connect(host, port, timeout);
 
 	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentConnection);
+	byteBuffer.putInt(Network.kEnvConnection);
 	byteBuffer.putInt(0); // No body to this packet
 	byteBuffer.flip();
 	network.send(byteBuffer);
@@ -124,9 +67,7 @@ public class ClientAgent
 
     public void runAgentEventLoop() throws Exception
     {
-	int stepCount = 0;
-
-	int agentState = 0;
+	int envState = 0;
 	int dataSize = 0;
 	int recvSize = 0;
 
@@ -155,32 +96,24 @@ public class ClientAgent
 	    byteBuffer.flip();
 	    
 	    switch(agentState) {
-	    case Network.kAgentInit:
-		onAgentInit();
+	    case Network.kEnvInit:
+		onEnvInit();
 		break;
 		
-	    case Network.kAgentStart:
-		onAgentStart();
+	    case Network.kEnvStart:
+		onEnvStart();
 		break;
 		
-	    case Network.kAgentStep:
-		onAgentStep();
+	    case Network.kEnvStep:
+		onEnvStep();
 		break;
-		
-	    case Network.kAgentEnd:
-		onAgentEnd();
+				
+	    case Network.kEnvCleanup:
+		onEnvCleanup();
 		break;
-		
-	    case Network.kAgentCleanup:
-		onAgentCleanup();
-		break;
-		
-	    case Network.kAgentFreeze:
-		onAgentFreeze();
-		break;
-		
-	    case Network.kAgentMessage:
-		onAgentMessage();
+			
+	    case Network.kEnvMessage:
+		onEnvMessage();
 		break;
 		
 	    default:
@@ -192,6 +125,6 @@ public class ClientAgent
 	    byteBuffer.flip();
 	    network.send(byteBuffer);
 
-	} while (agentState != Network.kAgentCleanup);
+	} while (envState != Network.kEnvCleanup);
     }
 }

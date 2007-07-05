@@ -40,7 +40,7 @@ Task_specification env_init() {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));  
   if (theTaskSpecLength > 0) {
-    theTaskSpec = (char*)calloc(theTaskSpecLength, sizeof(char));
+    theTaskSpec = (char*)calloc(theTaskSpecLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
   return theTaskSpec;
@@ -185,7 +185,7 @@ Message env_message(const Message inMessage) {
   unsigned int offset = 0;
 
   if (inMessage != NULL) {
-    theInMessageLength = strlen(inMessage) + 1;
+    theInMessageLength = strlen(inMessage);
   }
 
   rlBufferClear(&theBuffer);
@@ -203,7 +203,7 @@ Message env_message(const Message inMessage) {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &theOutMessageLength, 1, sizeof(int));
   if (theOutMessageLength > 0) {
-    theOutMessage = (char*)calloc(theOutMessageLength, sizeof(char));
+    theOutMessage = (char*)calloc(theOutMessageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
   }
   return theOutMessage;
