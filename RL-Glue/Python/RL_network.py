@@ -119,7 +119,7 @@ class Buffer:
 		return self.data.read(length)
 
 	def writeString(self,string):
-		self.writeInt(len(string) + 1)
+		self.writeInt(len(string))
 		self.data.write(string)
 
 	def readADT(self):
