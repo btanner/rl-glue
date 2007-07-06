@@ -5,7 +5,7 @@ import rlglue.network.*;
 
 public class SarsaAgent implements AgentInterface
 {
-    Random random;
+    protected Random random;
     public SarsaAgent() 
     {
 	random = new Random();
@@ -47,4 +47,4 @@ public class SarsaAgent implements AgentInterface
     public void agent_freeze()
     {
     }
-};
+}
