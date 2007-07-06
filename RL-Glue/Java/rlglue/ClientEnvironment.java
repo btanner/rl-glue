@@ -1,10 +1,7 @@
-package rlglue.network.environment;
+package rlglue;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-
-import rlglue.*;
-import rlglue.network.*;
 
 public class ClientEnvironment
 {
@@ -12,9 +9,9 @@ public class ClientEnvironment
     protected Network network;
     protected ByteBuffer headerBuffer;
     protected ByteBuffer byteBuffer;
-    protected EnvironmentInterface env;
+    protected RLEnvironment env;
 
-    public ClientEnvironment(EnvironmentInterface env) 
+    public ClientEnvironment(RLEnvironment env) 
     {
 	this.env = env;
 	this.network = new Network();

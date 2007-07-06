@@ -1,6 +1,6 @@
 package rlglue;
 
-public interface RLEnvironment
+public interface Environment
 {
     String env_init();
     Observation env_start();

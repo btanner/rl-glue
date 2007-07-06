@@ -1,6 +1,6 @@
 package rlglue;
 
-public interface RLAgent
+public interface Agent
 {
     public void agent_init(final String taskSpecification);
     public Action agent_start(Observation observation);

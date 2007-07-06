@@ -1,10 +1,7 @@
-package rlglue.network.agent;
+package rlglue.*;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-
-import rlglue.*;
-import rlglue.network.*;
 
 public class ClientAgent 
 {
@@ -12,9 +9,9 @@ public class ClientAgent
     protected Network network;
     protected ByteBuffer headerBuffer;
     protected ByteBuffer byteBuffer;
-    protected AgentInterface agent;
+    protected RLAgent agent;
 
-    public ClientAgent(AgentInterface agent) 
+    public ClientAgent(RLAgent agent) 
     {
 	this.agent = agent;
 	this.network = new Network();
