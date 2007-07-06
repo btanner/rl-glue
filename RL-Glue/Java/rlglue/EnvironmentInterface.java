@@ -4,7 +4,7 @@ public interface EnvironmentInterface
 {
     String env_init();
     Observation env_start();
-    Reward_observation env_step();
+    Reward_observation env_step(Action action);
     void env_cleanup();
     void env_set_state(State_key key);
     void env_set_random_seed(Random_seed_key key);
