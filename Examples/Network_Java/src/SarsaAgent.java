@@ -1,7 +1,6 @@
 import java.util.Random;
 
 import rlglue.*;
-import rlglue.network.*;
 
 public class SarsaAgent implements AgentInterface
 {
