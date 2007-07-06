@@ -3,7 +3,7 @@ package rlglue.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 
-public class NetAgent 
+public class ClientAgent 
 {
     protected static final String kUnknownMessage = "Unknown Message: ";
     protected Network network;
@@ -11,7 +11,7 @@ public class NetAgent
     protected ByteBuffer byteBuffer;
     protected Agent agent;
 
-    public NetAgent(Agent agent) 
+    public ClientAgent(Agent agent) 
     {
 	this.agent = agent;
 	this.network = new Network();

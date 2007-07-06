@@ -9,9 +9,9 @@ public class ClientEnvironment
     protected Network network;
     protected ByteBuffer headerBuffer;
     protected ByteBuffer byteBuffer;
-    protected RLEnvironment env;
+    protected Environment env;
 
-    public ClientEnvironment(RLEnvironment env) 
+    public ClientEnvironment(Environment env) 
     {
 	this.env = env;
 	this.network = new Network();
