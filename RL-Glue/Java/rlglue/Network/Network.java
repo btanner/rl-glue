@@ -75,17 +75,22 @@ public class Network
 	return socketChannel.write(byteBuffer);
     }
 
-    public int recv(ByteBuffer byteBuffer) throws IOException
+    public int recv(ByteBuffer byteBuffer, int size) throws IOException
     {
-	return socketChannel.read(byteBuffer);
+	int recvSize = 0;
+	while (recvSize < size)
+	{
+	    recvSize += socketChannel.read(byteBuffer);
+	}
+	return recvSize;
     }
     
-    public static String getString(ByteBuffer byteBuffer)
+    public static String getString(ByteBuffer byteBuffer) throws UnsupportedEncodingException
     {
 	int length = byteBuffer.getInt();
 	byte [] byteString = new byte[length];
 	byteBuffer.get(byteString);
-	return new String(byteString).trim();
+	return new String(byteString, "UTF-8").trim();
     }
 
     public static Observation getObservation(ByteBuffer byteBuffer)
@@ -146,11 +151,12 @@ public class Network
 	return key;
     }
 
-    public static void putString(ByteBuffer byteBuffer, String message)
+    public static void putString(ByteBuffer byteBuffer, String message) throws UnsupportedEncodingException
     {
-	byte [] byteString = message.getBytes();
+	byte [] byteString = message.getBytes("UTF-8");
 	byteBuffer.putInt(message.length());
-	byteBuffer.put(byteBuffer);
+	if (message.length() > 0)
+	    byteBuffer.put(byteString);
     }
 
     public static void putObservation(ByteBuffer byteBuffer, Observation obs)

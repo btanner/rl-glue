@@ -22,13 +22,14 @@ public class ClientEnvironment
 	this.byteBuffer = ByteBuffer.allocate(65536);
     }
 
-    protected void onEnvInit()
+    protected void onEnvInit() throws UnsupportedEncodingException 
     {
 	String taskSpec = env.env_init();
-
+	
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvInit);
-	byteBuffer.putInt(taskSpec.length());
+	byteBuffer.putInt(taskSpec.length() + 4);
+ 
 	Network.putString(byteBuffer, taskSpec);
     }
 
@@ -40,7 +41,7 @@ public class ClientEnvironment
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvStart);
 	byteBuffer.putInt(size);
-	Network.putObservation(byteBuffer, obs);	
+	Network.putObservation(byteBuffer, obs);
     }
 
     protected void onEnvStep()
@@ -99,22 +100,17 @@ public class ClientEnvironment
     {
 	int envState = 0;
 	int dataSize = 0;
-	int recvSize = 0;
 
 	do {
 	    headerBuffer.clear();
-	    recvSize = 0;
-	    while (recvSize < 8) 
-		recvSize += network.recv(headerBuffer);
+	    network.recv(headerBuffer, 8);
 	    headerBuffer.flip();
 
 	    envState = headerBuffer.getInt();
 	    dataSize = headerBuffer.getInt();
 
 	    byteBuffer.clear();    
-	    recvSize = 0;
-	    while (recvSize < dataSize) 
-		recvSize += network.recv(byteBuffer);
+	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
 	    
 	    switch(envState) {

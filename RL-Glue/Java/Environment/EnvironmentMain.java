@@ -1,13 +1,13 @@
 import rlglue.*;
 import rlglue.network.*;
-import rlglue.network.agent.*;
+import rlglue.network.environment.*;
 
-public class AgentMain
+public class EnvironmentMain
 {
     public static void main(String [] args) throws Exception
     {
-	AgentInterface agent = (AgentInterface)Class.forName(args[0]).newInstance();
-	ClientAgent client = new ClientAgent(agent);
+	EnvironmentInterface agent = (EnvironmentInterface)Class.forName(args[0]).newInstance();
+	ClientEnvironment client = new ClientEnvironment(agent);
 	boolean autoReconnect = false;
 
 	String host = Network.kDefaultHost;
@@ -15,7 +15,7 @@ public class AgentMain
 
 	do {
 	    client.connect(host, port, Network.kRetryTimeout);
-	    client.runAgentEventLoop();
+	    client.runEnvironmentEventLoop();
 	    client.close();
 	} while (autoReconnect);
     }

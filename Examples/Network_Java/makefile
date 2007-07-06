@@ -1,4 +1,4 @@
-all: RL_glue RL_agent # RL_environment RL_experiment
+all: RL_glue RL_agent RL_environment  #RL_experiment
 include RL_glue.makefile
 include RL_agent.makefile
 include RL_environment.makefile

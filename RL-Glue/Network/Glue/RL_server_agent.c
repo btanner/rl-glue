@@ -15,9 +15,12 @@ static rlBuffer theBuffer = {0};
 /* Send the task spec to the agent */
 void agent_init(const Task_specification theTaskSpec) {
   int agentState = kAgentInit;
-  const unsigned int theTaskSpecLength = strlen(theTaskSpec);
+  unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
   
+  if (theTaskSpec != NULL)
+    theTaskSpecLength = strlen(theTaskSpec);
+
   /* Setup the connection */
   if (theAgentConnection == -1) {
     theAgentConnection = 0;

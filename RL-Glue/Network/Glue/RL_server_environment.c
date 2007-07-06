@@ -43,6 +43,7 @@ Task_specification env_init() {
     theTaskSpec = (char*)calloc(theTaskSpecLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
+
   return theTaskSpec;
 }
 

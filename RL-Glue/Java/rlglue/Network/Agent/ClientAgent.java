@@ -22,7 +22,7 @@ public class ClientAgent
 	this.byteBuffer = ByteBuffer.allocate(65536);
     }
 
-    protected void onAgentInit()
+    protected void onAgentInit() throws UnsupportedEncodingException
     {
 	String taskSpec = Network.getString(byteBuffer);
 
@@ -126,22 +126,17 @@ public class ClientAgent
     {
 	int agentState = 0;
 	int dataSize = 0;
-	int recvSize = 0;
 
 	do {
 	    headerBuffer.clear();
-	    recvSize = 0;
-	    while (recvSize < 8) 
-		recvSize += network.recv(headerBuffer);
+	    network.recv(headerBuffer, 8);
 	    headerBuffer.flip();
 
 	    agentState = headerBuffer.getInt();
 	    dataSize = headerBuffer.getInt();
 
 	    byteBuffer.clear();    
-	    recvSize = 0;
-	    while (recvSize < dataSize) 
-		recvSize += network.recv(byteBuffer);
+	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
 	    
 	    switch(agentState) {
