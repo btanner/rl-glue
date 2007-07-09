@@ -2,7 +2,7 @@ import java.util.Random;
 
 import rlglue.*;
 
-public class SarsaAgent implements AgentInterface
+public class SarsaAgent implements Agent
 {
     protected Random random;
     public SarsaAgent() 
