@@ -321,7 +321,7 @@ int rlGetSystemByteOrder() {
 /* Notice that the pointers "in" and "out" are not allowed to be the same.
    When dealing with IEEE floating point numbers, you still need to swap endianness.
    For sanity, we disallow swaping back into the same memory space to discourage 
-   swaping a double/float back into its own memory.  Once these have been swapped, they should
+   swapping a double/float back into its own memory.  Once these have been swapped, they should
    not be treated as doubles/floats again until they are back into their native endianness. */
 
 void rlSwapData(void* out, const void* in, const unsigned int size) {
@@ -431,7 +431,6 @@ rlSocket theExperimentConnection = -1;
 
    If the experiment and the Glue are compiled together RL_init calls rlConnectSystems.
    If the Glue is separate, it has its own main() that calls rlConnectSystems.   
-   This function is safe to call multiple times in a row.
 */
 
 int rlConnectSystems() {
