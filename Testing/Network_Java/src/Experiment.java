@@ -51,6 +51,8 @@ public class Experiment
 	for(int x = 0; x < Experiment.kNumEpisodes; ++x) {
 	    RLGlue.RL_episode(0);
 	    System.out.print(".");
+	    System.out.println( "RL_agent_message:" + RLGlue.RL_agent_message("RL_agent_message") );
+	    System.out.println( "RL_env_message:" + RLGlue.RL_env_message("RL_env_message") );
 	    rlNumSteps[x] = RLGlue.RL_num_steps();
 	    rlReturn[x] = RLGlue.RL_return();
 	}
@@ -61,6 +63,9 @@ public class Experiment
 	    avgReturn += rlReturn[i];
 	}
 	
+	System.out.println( "RL_agent_message:" + RLGlue.RL_agent_message("RL_agent_message") );
+	System.out.println( "RL_env_message:" + RLGlue.RL_env_message("RL_env_message") );
+
 	/*average steps and returns*/
 	avgSteps /= (double)Experiment.kNumEpisodes;
 	avgReturn /= (double)Experiment.kNumEpisodes;
@@ -75,9 +80,8 @@ public class Experiment
     
     public static void main(String [] args) throws IOException {
 	RLGlue.RL_init();
-	//System.out.println("Experiment.runEpisodic");
-	//Experiment.runEpisodic();
-	System.out.println("Experiment.runStepwise");
+	System.out.println("Experiment.runEpisodic");
+	Experiment.runEpisodic();
 	Experiment.runStepwise();
 	RLGlue.RL_cleanup();
     }   
