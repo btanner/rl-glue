@@ -1,5 +1,4 @@
-package rlglue.network;
-import rlglue.*;
+package rlglue;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

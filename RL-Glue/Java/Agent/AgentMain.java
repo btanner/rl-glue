@@ -1,12 +1,10 @@
 import rlglue.*;
-import rlglue.network.*;
-import rlglue.network.agent.*;
 
 public class AgentMain
 {
     public static void main(String [] args) throws Exception
     {
-	AgentInterface agent = (AgentInterface)Class.forName(args[0]).newInstance();
+	Agent agent = (Agent)Class.forName(args[0]).newInstance();
 	ClientAgent client = new ClientAgent(agent);
 	boolean autoReconnect = false;
 

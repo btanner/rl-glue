@@ -1,4 +1,4 @@
-package rlglue.*;
+package rlglue;
 
 import java.io.*;
 import java.nio.ByteBuffer;

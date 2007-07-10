@@ -1,13 +1,11 @@
 import rlglue.*;
-import rlglue.network.*;
-import rlglue.network.environment.*;
 
 public class EnvironmentMain
 {
     public static void main(String [] args) throws Exception
     {
-	EnvironmentInterface agent = (EnvironmentInterface)Class.forName(args[0]).newInstance();
-	ClientEnvironment client = new ClientEnvironment(agent);
+	Environment env = (Environment)Class.forName(args[0]).newInstance();
+	ClientEnvironment client = new ClientEnvironment(env);
 	boolean autoReconnect = false;
 
 	String host = Network.kDefaultHost;

@@ -15,16 +15,19 @@
 /* RL_netlib Library Header */
 #include <Network/RL_network.h>
 
+/* rlSocket is an int */
+/* Open and configure a socket */
 rlSocket rlOpen(short thePort) {
   int flag = 1;
   rlSocket theSocket = 0;
 
   theSocket = socket(PF_INET, SOCK_STREAM, 0);
-  setsockopt(theSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(int));
+  setsockopt(theSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(int)); /* Disable Nagleing */
 
   return theSocket;
 }
 
+/* Calls accept on a socket */
 rlSocket rlAcceptConnection(rlSocket theSocket) {
   rlSocket theClient = 0;
   struct sockaddr_in theClientAddress = {0};
@@ -33,6 +36,7 @@ rlSocket rlAcceptConnection(rlSocket theSocket) {
   return theClient;
 }
 
+/* Connect (TCP/IP) to the given address at the given port */
 int rlConnect(rlSocket theSocket, const char* theAddress, short thePort) {
   int theStatus = 0;
   struct sockaddr_in theDestination;
@@ -48,6 +52,8 @@ int rlConnect(rlSocket theSocket, const char* theAddress, short thePort) {
   return theStatus;
 }
 
+/* Listen for an incoming connection on a given port.
+   This function blocks until it receives a new connection */
 int rlListen(rlSocket theSocket, short thePort) {
   struct sockaddr_in theServer;
   int theStatus = 0;
@@ -58,7 +64,7 @@ int rlListen(rlSocket theSocket, short thePort) {
   theServer.sin_addr.s_addr = INADDR_ANY;
   memset(&theServer.sin_zero, '\0', 8);
   
-  /* We don't really care if this fails... */
+  /* We don't really care if this fails, it just lets us reuse the port quickly */
   setsockopt(theSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
   theStatus = bind(theSocket, 
@@ -81,6 +87,10 @@ int rlIsValidSocket(rlSocket theSocket) {
   return theSocket != -1;
 }
 
+/* send doesn't guarantee that all the data will be sent.
+   rlSendData calls send continually until it is all sent, or until an error occurs.
+   the amount of data sent is returned */
+
 int rlSendData(rlSocket theSocket, const void* theData, int theLength) {
   int theBytesSent = 0;
   int theMsgError = 0;
@@ -95,6 +105,7 @@ int rlSendData(rlSocket theSocket, const void* theData, int theLength) {
   return theBytesSent;
 }
 
+/* Calls recv repeatedly until "theLength" data has been received, or an error occurs */
 int rlRecvData(rlSocket theSocket, void* theData, int theLength) {
   int theBytesRecv = 0;
   int theMsgError = 0;
@@ -110,6 +121,11 @@ int rlRecvData(rlSocket theSocket, void* theData, int theLength) {
 }
 
 /* rlBuffer API */
+
+/* We use buffers for sending and receiving network data.
+   Buffers are written to in network byte order (rlBufferWrite) and read in 
+   system byte order (rlBufferRead). */
+
 void rlBufferCreate(rlBuffer *buffer, unsigned int capacity) {
   buffer->size     = 0;
   buffer->capacity = 0;
@@ -119,6 +135,8 @@ void rlBufferCreate(rlBuffer *buffer, unsigned int capacity) {
   }
 }
 
+
+/* free up the buffer */
 void rlBufferDestroy(rlBuffer *buffer) {
   free(buffer->data);
   buffer->data = 0;
@@ -126,10 +144,12 @@ void rlBufferDestroy(rlBuffer *buffer) {
   buffer->capacity = 0;
 }
 
+/* clear the buffer */
 void rlBufferClear(rlBuffer *buffer) {
   buffer->size = 0;
 }
 
+/* Ensure that the buffer contains at least "capacity" memory */
 void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
   unsigned char* new_data = 0;
   unsigned int new_capacity = 0;
@@ -158,6 +178,15 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
   }
 }
 
+/* Write to the buffer in network byte order - will resize the buffer to facilitate a write that is too large for the 
+   current capacity
+
+   buffer: buffer to write to
+   offset: the offset to start writing into the buffer at
+   count: the number of items of size "size" to write into the buffer
+   size: the size of each individual item
+   return: the next sequential byte offset to write to, used as "offset" to the next call of rlBufferWrite
+*/
 unsigned int rlBufferWrite(rlBuffer *buffer, unsigned int offset, const void* sendData, unsigned int count, unsigned int size) {
   const unsigned char* data = (const unsigned char*)sendData;
   unsigned char* data_ptr = 0;
@@ -184,6 +213,13 @@ unsigned int rlBufferWrite(rlBuffer *buffer, unsigned int offset, const void* se
   return offset + count * size;
 }
 
+/* Read data in network byte order
+   buffer: buffer to read from
+   offset: the offset to start reading from the buffer at
+   count: the number of items of size "size" to read from the buffer
+   size: the size of each individual item
+   return: the next sequential byte offset to read from, used as offset in the next call to rlBufferRead
+*/
 unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* recvData, unsigned int count, unsigned int size) {
   unsigned char* data = (unsigned char*)recvData;
   unsigned int i = 0;
@@ -200,6 +236,11 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
 
   return offset + (count * size);
 }
+
+/* Send the buffer across the network. Sends target and the size of the buffer across the network
+   before sending the data in the buffer itself.  This could be refactored so that it just sends the
+   buffer and the caller is responsible for writing any header data into the buffer before hand.
+   This was more convenient at the time */
 
 unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const int target) {
   int sendTarget = target;
@@ -227,12 +268,23 @@ unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const 
   return buffer->size; /* Returns payload size, not actual data sent ! */
 }
 
+
+/* Corresponds to calls made by rlSendBufferData.  Reads a "target" and a size from the network,
+   then reads "size" data into rlBuffer.  See rlSendBufferData for more */
+
 unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int *target) {
   int recvTarget = 0;
   unsigned int recvSize = 0;
-  
-  rlRecvData(theSocket, &recvTarget, sizeof(int));
-  rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
+  unsigned int header[2] = {0};
+
+  rlRecvData(theSocket, header, sizeof(unsigned int) * 2);
+  recvTarget = (int)header[0];
+  recvSize = header[1];
+
+  /*
+    rlRecvData(theSocket, &recvTarget, sizeof(int));
+    rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
+  */
 
   /* recvSize came across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
@@ -266,6 +318,12 @@ int rlGetSystemByteOrder() {
   return endian;
 }
 
+/* Notice that the pointers "in" and "out" are not allowed to be the same.
+   When dealing with IEEE floating point numbers, you still need to swap endianness.
+   For sanity, we disallow swaping back into the same memory space to discourage 
+   swaping a double/float back into its own memory.  Once these have been swapped, they should
+   not be treated as doubles/floats again until they are back into their native endianness. */
+
 void rlSwapData(void* out, const void* in, const unsigned int size) {
   const unsigned char *src = (const unsigned char *)in;
   unsigned char *dst = (unsigned char *)out;
@@ -277,6 +335,7 @@ void rlSwapData(void* out, const void* in, const unsigned int size) {
     dst[i] = src[size-i-1];
   }
 }
+
 
 rlSocket rlWaitForConnection(const char *address, const short port, const int retryTimeout) {
   rlSocket theConnection = 0;
@@ -359,7 +418,8 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abst
 }
 
 
-/* Below: Was RL_network.c  Reorganization allowed us to remove a source file */
+/* Below: Was RL_network.c  Reorganization allowed us to remove a source file.  This was important because 
+   end users need to compile RL-Glue. Fewer source files makes that somewhat easier. */
 
 rlSocket theAgentConnection = -1;
 rlSocket theEnvironmentConnection = -1;
@@ -371,6 +431,7 @@ rlSocket theExperimentConnection = -1;
 
    If the experiment and the Glue are compiled together RL_init calls rlConnectSystems.
    If the Glue is separate, it has its own main() that calls rlConnectSystems.   
+   This function is safe to call multiple times in a row.
 */
 
 int rlConnectSystems() {
@@ -402,6 +463,7 @@ int rlConnectSystems() {
     rlListen(theServer, port);
   }
 
+  /* These are setup in the RL_server_agent, RL_server_environment and RL_server_experiment code. */
   while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
     theClient = rlAcceptConnection(theServer);
 
@@ -411,7 +473,7 @@ int rlConnectSystems() {
 
     switch(theClientType) {
     case kAgentConnection:
-      fprintf(stderr, "agent connected!\n"); 
+      fprintf(stderr, "agent connected\n"); 
       theAgentConnection = theClient;
       isAgentConnected = 1;
       break;
