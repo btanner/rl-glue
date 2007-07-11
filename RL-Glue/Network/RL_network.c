@@ -277,10 +277,12 @@ unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int *target)
   unsigned int recvSize = 0;
   unsigned int header[2] = {0};
 
+  fprintf(stderr, "Reading packet header\n");
+
   rlRecvData(theSocket, header, sizeof(unsigned int) * 2);
   recvTarget = (int)header[0];
   recvSize = header[1];
-
+  
   /*
     rlRecvData(theSocket, &recvTarget, sizeof(int));
     rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
@@ -296,12 +298,16 @@ unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int *target)
     buffer->size = recvSize;
   }
 
+  fprintf(stderr, "Packet Header: %d %d\n", recvTarget, recvSize);
+
   rlBufferReserve(buffer, buffer->size);
   
   if (buffer->size > 0) {
     rlRecvData(theSocket, buffer->data, buffer->size);
   }
 
+  fprintf(stderr, "Recv Finished\n");
+  
   return buffer->size; /* Returns payload size, not actual data received ! */
 }
 

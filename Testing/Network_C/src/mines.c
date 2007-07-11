@@ -169,7 +169,7 @@ Random_seed_key env_get_random_seed()
 
 Message env_message(const Message inMessage) {
 /*no messages currently implemented*/
-  return "mines.c does not respond to any messages";
+  return "mines.c does not respond to any messages.";
 }
 
 

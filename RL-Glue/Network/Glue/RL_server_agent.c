@@ -164,6 +164,7 @@ Message agent_message(const Message inMessage) {
   if (theOutMessageLength > 0) {
     theOutMessage = (char*)calloc(theOutMessageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
+    theOutMessage[theOutMessageLength] = '\0';
   }
 
   return theOutMessage;

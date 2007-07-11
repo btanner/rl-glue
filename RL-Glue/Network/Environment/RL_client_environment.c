@@ -167,8 +167,8 @@ static void onEnvMessage(rlSocket theConnection) {
   }
   
   /* we want to start sending, so we're going to reset the offset to 0 so we write the the beginning of the buffer */
-  offset = 0;
   rlBufferClear(&theBuffer);
+  offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int));
   if (outMessageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, outMessageLength, sizeof(char));

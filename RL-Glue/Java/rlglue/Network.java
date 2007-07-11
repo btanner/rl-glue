@@ -152,9 +152,13 @@ public class Network
 
     public static void putString(ByteBuffer byteBuffer, String message) throws UnsupportedEncodingException
     {
-	byte [] byteString = message.getBytes("UTF-8");
-	byteBuffer.putInt(message.length());
-	if (message.length() > 0)
+	String trimmed = message.trim(); 
+	byte [] byteString = trimmed.getBytes("UTF-8");
+	byteBuffer.putInt(byteString.length);
+
+	System.out.println("byteString: " + byteString);
+
+	if (byteString.length > 0)
 	    byteBuffer.put(byteString);
     }
 

@@ -213,6 +213,7 @@ char* RL_agent_message(const char* message) {
 
   if (messageLength > 0) {
     offset = rlBufferRead(&theBuffer, offset, theMessage, messageLength, sizeof(char));
+    theMessage[messageLength] = '\0';
   }
 
   return theMessage;
@@ -246,6 +247,7 @@ char* RL_env_message(const char* message) {
 
   if (messageLength > 0) {
     offset = rlBufferRead(&theBuffer, offset, theMessage, messageLength, sizeof(char));
+    theMessage[messageLength] = '\0';
   }
 
   return theMessage;

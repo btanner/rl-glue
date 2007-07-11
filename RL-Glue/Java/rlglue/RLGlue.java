@@ -16,11 +16,11 @@ public class RLGlue
 	headerBuffer = ByteBuffer.allocateDirect(8);
 	byteBuffer = ByteBuffer.allocateDirect(65536);
 
+	// Connect
 	network.connect(Network.kDefaultHost, 
 			Network.kDefaultPort, 
 			Network.kRetryTimeout);
 
-	// Connect
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kExperimentConnection);
 	byteBuffer.putInt(0);
@@ -171,6 +171,10 @@ public class RLGlue
 	byteBuffer.flip();
 
 	String response = network.getString(byteBuffer);
+	System.out.println("glueState: " + glueState + 
+			   " dataSize: " + dataSize + 
+			   " response Length: " + response.length() + 
+			   " response: " + response);
 	return response;
     }
 
@@ -203,6 +207,10 @@ public class RLGlue
 	byteBuffer.flip();
 
 	String response = network.getString(byteBuffer);
+	System.out.println("glueState: " + glueState + 
+			   " dataSize: " + dataSize + 
+			   " response Length: " + response.length() + 
+			   " response: " + response);
 	return response;
     }
 

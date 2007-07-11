@@ -173,18 +173,25 @@ void onRLAgentMessage(rlSocket theConnection) {
   unsigned int messageLength = 0;
   unsigned int offset = 0;
 
+  fprintf(stderr, "BEGIN AGENT MESSAGE\n");
+
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
 
   if (messageLength > 0) {
     inMessage = (char*)calloc(messageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, inMessage, messageLength, sizeof(char));
+    inMessage[messageLength] = '\0';
   }
   
+  fprintf(stderr, "Done allocating memory for string\n");
+
   outMessage = RL_agent_message(inMessage);
   if (outMessage != 0) {
     messageLength = strlen(outMessage);
   }
+
+  fprintf(stderr, "Done agent_message\n");
 
   offset = 0;
   rlBufferClear(&theBuffer);
@@ -193,8 +200,12 @@ void onRLAgentMessage(rlSocket theConnection) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, messageLength, sizeof(char));
   } 
 
+  fprintf(stderr, "Sent response\n");
+
   free(inMessage);
   inMessage = 0;
+
+  fprintf(stderr, "END AGENT MESSAGE\n");
 }
 
 void onRLEnvMessage(rlSocket theConnection) {
@@ -203,35 +214,50 @@ void onRLEnvMessage(rlSocket theConnection) {
   unsigned int messageLength = 0;
   unsigned int offset = 0;
 
+  fprintf(stderr, "BEGIN ENV MESSAGE\n");
+
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
 
   if (messageLength > 0) {
     inMessage = (char*)calloc(messageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, inMessage, messageLength, sizeof(char));
+    inMessage[messageLength] = '\0';
   }
   
+  fprintf(stderr, "Done allocating memory for string\n");
+
   outMessage = RL_env_message(inMessage);
   if (outMessage != 0) {
     messageLength = strlen(outMessage);
   }
+
+  fprintf(stderr, "Done env_message\n");
 
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &messageLength, 1, sizeof(int));
   if (messageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, messageLength, sizeof(char));
-  } 
+  }
+
+  fprintf(stderr, "Sent response\n"); 
 
   free(inMessage);
+
+  fprintf(stderr, "END ENV MESSAGE\n");
 }
 
 void runGlueEventLoop(rlSocket theConnection) {
   int glueState = 0;
 
   do { 
+
+    fprintf(stderr, "Ready...\n");
     rlBufferClear(&theBuffer);
     rlRecvBufferData(theConnection, &theBuffer, &glueState);
+
+    fprintf(stderr, "Glue State: %d\n", glueState);
 
     switch(glueState) {
     case kRLInit:
@@ -300,6 +326,8 @@ void runGlueEventLoop(rlSocket theConnection) {
     };
 
     rlSendBufferData(theConnection, &theBuffer, glueState);
+    fprintf(stderr, "Sent Reply: %d\n", glueState);
+
   } while (glueState != kRLCleanup);
 }
 

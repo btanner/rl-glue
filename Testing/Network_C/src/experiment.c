@@ -9,6 +9,15 @@ void run(int num_episodes)
 {
 /*run for num_episode number of episodes and store the number of steps and return from each episode*/        
   int x = 0;
+  char* agentResponse = 0;
+  char* envResponse = 0;
+
+  agentResponse = RL_agent_message("Dummy Message");
+  fprintf(stderr, "RL_agent_message: %s\n", agentResponse);
+
+  envResponse = RL_env_message("Dummy Message");
+  fprintf(stderr, "RL_env_message: %s\n", envResponse);
+
   for(x = 0; x < num_episodes; ++x) {
     RL_episode(0);
     fprintf(stderr, ".");
