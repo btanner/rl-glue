@@ -31,6 +31,8 @@ public class AgentMain
 	    autoReconnect = 0;
         }
 
+	System.out.println("Connecting to " + host + " on port " + port + " with autoreconnect=" + autoReconnect);
+
 	do {
 	    client.connect(host, port, Network.kRetryTimeout);
 	    client.runAgentEventLoop();
