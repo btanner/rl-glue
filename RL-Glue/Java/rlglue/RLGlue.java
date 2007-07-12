@@ -146,7 +146,7 @@ public class RLGlue
     {
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kRLAgentMessage);
-	byteBuffer.putInt(message.length());
+	byteBuffer.putInt(message.length()+4);
 	if (message.length() > 0) {
 	    Network.putString(byteBuffer, message);
 	}
@@ -171,10 +171,6 @@ public class RLGlue
 	byteBuffer.flip();
 
 	String response = network.getString(byteBuffer);
-	System.out.println("glueState: " + glueState + 
-			   " dataSize: " + dataSize + 
-			   " response Length: " + response.length() + 
-			   " response: " + response);
 	return response;
     }
 
@@ -182,7 +178,7 @@ public class RLGlue
     {
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kRLEnvMessage);
-	byteBuffer.putInt(message.length());
+	byteBuffer.putInt(message.length()+4);
 	if (message.length() > 0) {
 	    Network.putString(byteBuffer, message);
 	}
@@ -207,10 +203,6 @@ public class RLGlue
 	byteBuffer.flip();
 
 	String response = network.getString(byteBuffer);
-	System.out.println("glueState: " + glueState + 
-			   " dataSize: " + dataSize + 
-			   " response Length: " + response.length() + 
-			   " response: " + response);
 	return response;
     }
 

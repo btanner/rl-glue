@@ -156,8 +156,6 @@ public class Network
 	byte [] byteString = trimmed.getBytes("UTF-8");
 	byteBuffer.putInt(byteString.length);
 
-	System.out.println("byteString: " + byteString);
-
 	if (byteString.length > 0)
 	    byteBuffer.put(byteString);
     }

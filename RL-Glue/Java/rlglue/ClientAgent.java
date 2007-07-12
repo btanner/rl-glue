@@ -173,7 +173,6 @@ public class ClientAgent
 
 	    byteBuffer.flip();
 	    network.send(byteBuffer);
-
 	} while (agentState != Network.kAgentCleanup);
     }
 }

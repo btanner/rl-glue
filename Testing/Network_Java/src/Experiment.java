@@ -85,8 +85,8 @@ public class Experiment
 	String envResponse = RLGlue.RL_env_message("RL_env_message");
 	System.out.println("RL_env_message: " + envResponse);
 
-	//Experiment.runEpisodic();
-	//Experiment.runStepwise();
+	Experiment.runEpisodic();
+	Experiment.runStepwise();
 
 	RLGlue.RL_cleanup();
     }   
