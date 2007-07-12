@@ -21,9 +21,6 @@ RL_glue.o: $(RL-GLUE)/RL_glue.c
 RL_network.o: $(RL-GLUE)/Network/RL_network.c
 	$(CC) $(CFLAGS) -c $< -o $(BUILD_PATH)/$@
 
-mines.o: ./src/mines.c ./src/mines.h
-	$(CC) $(CFLAGS) -c $< -o $(BUILD_PATH)/$@
-
 # Compile the thing that make the Glue think its talking to an agent when its really talking over a socket
 # If you wanted to compile the agent into the glue, you wouldn't need to compile this, or link to it. Instead
 # you would just compile and link in your agent	
