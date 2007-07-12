@@ -1,6 +1,6 @@
 import rlglue.*;
 
-public class AgentMain
+public class AgentLoader
 {
     public static void main(String [] args) throws Exception
     {
