@@ -9,3 +9,4 @@ clean:
 	rm -f RL_agent
 	rm -f RL_environment
 	rm -f Build/*.o
+	rm -f Build/*.py
