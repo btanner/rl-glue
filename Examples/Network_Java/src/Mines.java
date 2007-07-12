@@ -2,7 +2,7 @@ import java.util.Random;
 
 import rlglue.*;
 
-public class DefaultEnvironment implements Environment
+public class Mines implements Environment
 {
     protected Random random;
     public DefaultEnvironment()
