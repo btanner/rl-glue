@@ -12,7 +12,7 @@ OBJECTS = SarsaAgent.o mines.o experiment.o
 
 # Link our objects into RL_glue
 RL_glue: RL_glue.o $(OBJECTS)
-	$(CC) -o $@ Build/RL_glue.o $(addprefix Build/, $(OBJECTS))
+	$(CC) -o bin/$@ Build/RL_glue.o $(addprefix Build/, $(OBJECTS))
 
 # Compile RL-Glue
 RL_glue.o: $(RL-GLUE)/RL_glue.c $(RL-GLUE)/RL_glue.h
@@ -24,7 +24,7 @@ $(OBJECTS): %.o: src/%.c
 
 clean:
 	rm -fr Build/*.o
-	rm -fr RL_glue
+	rm -fr bin/RL_glue
 
 tidy:
 	rm -fr *.*~
