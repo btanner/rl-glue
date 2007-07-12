@@ -2,7 +2,7 @@
 RL-GLUE = ../../RL-Glue
 
 RL_network.py: $(RL-GLUE)/Python/RL_network.py
-	cp $< Build/$@
+	cp $< bin/$@
 
 RL_common.py: $(RL-GLUE)/Python/RL_common.py
-	cp $< Build/$@
+	cp $< bin/$@

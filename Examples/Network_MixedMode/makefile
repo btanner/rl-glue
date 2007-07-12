@@ -5,8 +5,6 @@ include RL_environment.makefile
 include RL_network.makefile
 
 clean:
-	rm -f RL_glue
-	rm -f RL_agent
-	rm -f RL_environment
-	rm -f Build/*.o
-	rm -f Build/*.py
+	rm -f bin/*
+	rm -f Build/*
+

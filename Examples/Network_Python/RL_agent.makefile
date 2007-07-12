@@ -5,6 +5,6 @@ AGENT = ./src/SarsaAgent.py
 RL-GLUE = ../../RL-Glue
 
 RL_agent: $(AGENT) RL_network.py RL_common.py
-	cp $(AGENT) Build/$@.py
-	cp $(RL-GLUE)/Python/RL_client_agent.py $@
-	chmod u+x $@
+	cp $(AGENT) bin/$@.py
+	cp $(RL-GLUE)/Python/RL_client_agent.py bin/$@
+	chmod u+x bin/$@
