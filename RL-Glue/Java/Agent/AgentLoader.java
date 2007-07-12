@@ -15,7 +15,8 @@ public class AgentLoader
 	String portString = System.getenv("RLGLUE_PORT");
 	String reconnect = System.getenv("RLGLUE_AUTORECONNECT");
 
-	host = hostString;
+	if (hostString != null)
+	    host = hostString;
 
 	try {
 	    port = Integer.parseInt(portString);
