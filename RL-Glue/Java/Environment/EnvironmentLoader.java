@@ -1,6 +1,6 @@
 import rlglue.*;
 
-public class EnvironmentMain
+public class EnvironmentLoader
 {
     public static void main(String [] args) throws Exception
     {
