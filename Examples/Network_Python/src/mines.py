@@ -99,7 +99,7 @@ def env_start():
 	env_map[M.startRow][M.startCol] = M.START
 
 	mine_observation.intArray = [getPosition()]
-	sys.stderr.write('env_start observation %d\n' % (mine_observation.intArray[0]))
+	#sys.stderr.write('env_start observation %d\n' % (mine_observation.intArray[0]))
 	return mine_observation
 	
 def env_step(action):
@@ -115,8 +115,8 @@ def env_step(action):
 	else:
 		mine_ro.terminal = 0
 	
-  	sys.stderr.write('env_step action %d\n' % (action.intArray[0]))
-	sys.stderr.write('env_step observation %d\n' % (mine_observation.intArray[0]))
+  	#sys.stderr.write('env_step action %d\n' % (action.intArray[0]))
+	#sys.stderr.write('env_step observation %d\n' % (mine_observation.intArray[0]))
 	return mine_ro
 
 def env_cleanup():

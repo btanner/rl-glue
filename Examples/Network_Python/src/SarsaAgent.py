@@ -29,8 +29,8 @@ def agent_start(observation):
 	old_s = s
 	old_a = a
 	sarsaAgentAction.intArray = [a]
-	sys.stderr.write('agent_start observation: %d\n' % (observation.intArray[0]))
-	sys.stderr.write('agent_start action: %d\n' % (sarsaAgentAction.intArray[0]))
+	#sys.stderr.write('agent_start observation: %d\n' % (observation.intArray[0]))
+	#sys.stderr.write('agent_start action: %d\n' % (sarsaAgentAction.intArray[0]))
 	return sarsaAgentAction
 
 
@@ -42,8 +42,8 @@ def agent_step(reward, observation):
 	old_s = s
 	old_a = a
 	sarsaAgentAction.intArray = [a]
-	sys.stderr.write('agent_step observation: %d\n' % (observation.intArray[0]))
-	sys.stderr.write('agent_step action: %d\n' % (sarsaAgentAction.intArray[0]))
+	#sys.stderr.write('agent_step observation: %d\n' % (observation.intArray[0]))
+	#sys.stderr.write('agent_step action: %d\n' % (sarsaAgentAction.intArray[0]))
 	return sarsaAgentAction
 
 def agent_end(reward):
