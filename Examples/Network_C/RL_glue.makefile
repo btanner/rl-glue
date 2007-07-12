@@ -11,7 +11,7 @@ GLUE_OBJECTS = RL_glue.o RL_network.o RL_server_agent.o RL_server_environment.o 
 
 # Link everything together
 RL_glue: $(GLUE_OBJECTS)
-	$(CC) -o $@ $(addprefix $(BUILD_PATH)/, $(GLUE_OBJECTS))
+	$(CC) -o bin/$@ $(addprefix $(BUILD_PATH)/, $(GLUE_OBJECTS))
 
 # Build the main interface. 
 RL_glue.o: $(RL-GLUE)/RL_glue.c
