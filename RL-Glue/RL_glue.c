@@ -1,18 +1,18 @@
 #include <RL_glue.h>
 
-Action last_action     = {0};
-Observation last_state = {0};
+static Action last_action     = {0};
+static Observation last_state = {0};
 
-Reward last_reward  = 0;
-Reward total_reward = 0;
+static Reward last_reward  = 0;
+static Reward total_reward = 0;
 
-int is_terminal     = 0;
-int num_steps       = 0;
-int total_steps     = 0;
-int num_episodes    = 0;
+static int is_terminal     = 0;
+static int num_steps       = 0;
+static int total_steps     = 0;
+static int num_episodes    = 0;
 
-Reward_observation_action_terminal roa;
-Observation_action oa;
+static Reward_observation_action_terminal roa;
+static Observation_action oa;
 
 void RL_init() {
   Task_specification task_spec = 0;
