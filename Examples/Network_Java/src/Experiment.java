@@ -9,7 +9,8 @@ public class Experiment
 
     protected static void run(int numEpisodes) throws IOException
     {
-	/*run for num_episode number of episodes and store the number of steps and return from each episode*/        	for(int x = 0; x < numEpisodes; ++x) {
+	/*run for num_episode number of episodes and store the number of steps and return from each episode*/        	
+	for(int x = 0; x < numEpisodes; ++x) {
 	    RLGlue.RL_episode(0);
 	    System.out.print(".");
 	    rlNumSteps[x] = RLGlue.RL_num_steps();
@@ -26,6 +27,13 @@ public class Experiment
 
 	/*basic main loop*/
 	RLGlue.RL_init();
+
+	String agentMessage = RLGlue.RL_agent_message("poke");
+	System.out.println(agentMessage);
+
+	String envMessage = RLGlue.RL_env_message("prod");
+	System.out.println(envMessage);
+
 	run(kNumEpisodes);
 	RLGlue.RL_cleanup();
 	

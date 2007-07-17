@@ -68,12 +68,13 @@ public class ClientEnvironment
 
     protected void onEnvMessage() throws UnsupportedEncodingException
     {
-	String recvMessage = Network.getString(byteBuffer);
-	String sendMessage = env.env_message(recvMessage);
+	String message = Network.getString(byteBuffer);
+	String reply = env.env_message(message);
 
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvMessage);
-	Network.putString(byteBuffer, sendMessage);
+	byteBuffer.putInt(reply.length() + 4);
+	Network.putString(byteBuffer, reply);
     }
 
     public void connect(String host, int port, int timeout) throws Exception
