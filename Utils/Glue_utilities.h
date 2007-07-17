@@ -28,6 +28,6 @@ typedef struct
 } task_spec_struct;
 
 
-void parse_task_spec(char* ts, task_spec_struct* ps);
+void parse_task_spec(const char* ts, task_spec_struct* ps);
 
 #endif /*GLUE_UTIL_H_*/

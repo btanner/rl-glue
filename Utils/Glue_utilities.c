@@ -1,7 +1,7 @@
 #include "Glue_utilities.h"
 
 /*NOTE for users unfamiliar with sscanf: %n in sscanf will return the number of characters read in that sscanf call. */ 
-void parse_type(char** ts, int* dim, char** types, double** mins, double** maxs, int* num_discrete_dims, int* num_continuous_dims)
+void parse_type(const char** ts, int* dim, char** types, double** mins, double** maxs, int* num_discrete_dims, int* num_continuous_dims)
 {
   int characters_read,scan_args,i;
   *num_discrete_dims = 0; 
@@ -140,7 +140,7 @@ else{
 	}
 }
 
-void parse_task_spec(char* ts, task_spec_struct* ps)
+void parse_task_spec(const char* ts, task_spec_struct* ps)
 {
   int characters_read;
   int scan_args = sscanf(ts," %f : %c : %n ",&(ps->version),&(ps->episodic),&characters_read); /* read in version, episodic or continuous, and the number of characters consumed in this call to scanf*/

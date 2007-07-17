@@ -26,7 +26,7 @@ static char* theTaskSpec = 0;
 static Observation theObservation = {0};
 static rlBuffer theBuffer = {0};
 static Message theInMessage = 0;
-static int theInMessageCapacity = 0;
+static unsigned int theInMessageCapacity = 0;
 
 static void onAgentInit(rlSocket theConnection) {
   unsigned int theTaskSpecLength = 0;

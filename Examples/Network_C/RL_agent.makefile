@@ -5,7 +5,7 @@ BUILD_PATH = Build
 BIN_PATH = bin
 SRC_PATH = src
 
-CC      = gcc  
+CC      = gcc
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
 LDFLAGS =
 
