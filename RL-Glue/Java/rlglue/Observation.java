@@ -1,10 +1,16 @@
 package rlglue;
 
-public class Observation {
+public class Observation 
+{
     public int [] intArray;
     public double [] doubleArray;
 
-    public Observation(int numInts, int numDoubles) {
+    public Observation()
+    {
+    }
+
+    public Observation(int numInts, int numDoubles) 
+    {
 	intArray = new int[numInts];
 	doubleArray = new double[numDoubles];
     }
