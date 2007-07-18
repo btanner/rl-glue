@@ -11,7 +11,7 @@ public class AgentLoader
 	    "RLGLUE_PORT  : If set the agent will use this port to connect on rather than " + Network.kDefaultPort + "\n" +
 	    "RLGLUE_AUTORECONNECT  : If set the agent will reconnect to the glue after an experiment has finished\n";
   
-	if (args.length < 2) {
+	if (args.length < 1) {
 	    System.out.println(usage);
 	    System.out.println(envVars);
 	    System.exit(1);
