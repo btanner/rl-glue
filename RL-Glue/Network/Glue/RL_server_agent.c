@@ -7,10 +7,11 @@
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
-extern int rlConnectSystems();
-extern rlSocket theAgentConnection;
 static Action theAction = {0};
 static rlBuffer theBuffer = {0};
+
+extern void rlSetAgentConnection(int);
+extern int rlGetAgentConnection();
 
 /* Send the task spec to the agent */
 void agent_init(const Task_specification theTaskSpec) {
@@ -21,12 +22,6 @@ void agent_init(const Task_specification theTaskSpec) {
   if (theTaskSpec != NULL)
     theTaskSpecLength = strlen(theTaskSpec);
 
-  /* Setup the connection */
-  if (theAgentConnection == -1) {
-    theAgentConnection = 0;
-  }
-
-  rlConnectSystems();
   rlBufferCreate(&theBuffer, 4096);
 
   /* send across agent_init specific data */
@@ -36,10 +31,10 @@ void agent_init(const Task_specification theTaskSpec) {
   if (theTaskSpecLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentInit);
 }
 
@@ -51,10 +46,10 @@ Action agent_start(Observation theObservation) {
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentStart);
     
   offset = 0;
@@ -72,10 +67,10 @@ Action agent_step(Reward theReward, Observation theObservation) {
   offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
   offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
 
   assert(agentState == kAgentStep);
 
@@ -93,10 +88,10 @@ void agent_end(Reward theReward) {
   rlBufferClear(&theBuffer);
   offset = rlBufferWrite(&theBuffer, offset, &agentState, 1, sizeof(int));
   offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentEnd);
 }
 
@@ -105,14 +100,14 @@ void agent_cleanup() {
   int agentState = kAgentCleanup;
 
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentCleanup);
  
-  rlClose(theAgentConnection);
-  theAgentConnection = 0;
+  rlClose(rlGetAgentConnection());
+  rlSetAgentConnection(0);
 
   free(theAction.intArray);
   free(theAction.doubleArray);
@@ -128,10 +123,10 @@ void agent_freeze() {
   int agentState = kAgentFreeze;
 
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentFreeze);
 }
 
@@ -153,10 +148,10 @@ Message agent_message(const Message inMessage) {
   if (theInMessageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, inMessage, theInMessageLength, sizeof(char));
   }
-  rlSendBufferData(theAgentConnection, &theBuffer, agentState);
+  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theAgentConnection, &theBuffer, &agentState);
+  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentMessage);
 
   offset = 0;

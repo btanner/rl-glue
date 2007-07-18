@@ -15,11 +15,10 @@
 /* RL_netlib Library Header */
 #include <Network/RL_network.h>
 
-/* rlSocket is an int */
 /* Open and configure a socket */
-rlSocket rlOpen(short thePort) {
+int rlOpen(short thePort) {
   int flag = 1;
-  rlSocket theSocket = 0;
+  int theSocket = 0;
 
   theSocket = socket(PF_INET, SOCK_STREAM, 0);
   setsockopt(theSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(int)); /* Disable Nagleing */
@@ -28,8 +27,8 @@ rlSocket rlOpen(short thePort) {
 }
 
 /* Calls accept on a socket */
-rlSocket rlAcceptConnection(rlSocket theSocket) {
-  rlSocket theClient = 0;
+int rlAcceptConnection(int theSocket) {
+  int theClient = 0;
   struct sockaddr_in theClientAddress = {0};
   unsigned int theSocketSize = sizeof(struct sockaddr_in);
   theClient = accept(theSocket, (struct sockaddr*)&theClientAddress, &theSocketSize);
@@ -37,7 +36,7 @@ rlSocket rlAcceptConnection(rlSocket theSocket) {
 }
 
 /* Connect (TCP/IP) to the given address at the given port */
-int rlConnect(rlSocket theSocket, const char* theAddress, short thePort) {
+int rlConnect(int theSocket, const char* theAddress, short thePort) {
   int theStatus = 0;
   struct sockaddr_in theDestination;
   theDestination.sin_family = AF_INET;
@@ -54,7 +53,7 @@ int rlConnect(rlSocket theSocket, const char* theAddress, short thePort) {
 
 /* Listen for an incoming connection on a given port.
    This function blocks until it receives a new connection */
-int rlListen(rlSocket theSocket, short thePort) {
+int rlListen(int theSocket, short thePort) {
   struct sockaddr_in theServer;
   int theStatus = 0;
   int yes = 1;
@@ -79,11 +78,11 @@ int rlListen(rlSocket theSocket, short thePort) {
   return theStatus;
 }
 
-int rlClose(rlSocket theSocket) {
+int rlClose(int theSocket) {
   return close(theSocket);
 }
 
-int rlIsValidSocket(rlSocket theSocket) {
+int rlIsValidSocket(int theSocket) {
   return theSocket != -1;
 }
 
@@ -91,7 +90,7 @@ int rlIsValidSocket(rlSocket theSocket) {
    rlSendData calls send continually until it is all sent, or until an error occurs.
    the amount of data sent is returned */
 
-int rlSendData(rlSocket theSocket, const void* theData, int theLength) {
+int rlSendData(int theSocket, const void* theData, int theLength) {
   int theBytesSent = 0;
   int theMsgError = 0;
   const char* theDataBuffer = (const char*)theData;
@@ -106,7 +105,7 @@ int rlSendData(rlSocket theSocket, const void* theData, int theLength) {
 }
 
 /* Calls recv repeatedly until "theLength" data has been received, or an error occurs */
-int rlRecvData(rlSocket theSocket, void* theData, int theLength) {
+int rlRecvData(int theSocket, void* theData, int theLength) {
   int theBytesRecv = 0;
   int theMsgError = 0;
   char* theDataBuffer = (char*)theData;
@@ -242,7 +241,7 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
    buffer and the caller is responsible for writing any header data into the buffer before hand.
    This was more convenient at the time */
 
-unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const int target) {
+unsigned int rlSendBufferData(int theSocket, const rlBuffer* buffer, const int target) {
   int sendTarget = target;
   unsigned int sendSize = buffer->size;
   unsigned int header[2] = {0};
@@ -272,7 +271,7 @@ unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const 
 /* Corresponds to calls made by rlSendBufferData.  Reads a "target" and a size from the network,
    then reads "size" data into rlBuffer.  See rlSendBufferData for more */
 
-unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int *target) {
+unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
   int recvTarget = 0;
   unsigned int recvSize = 0;
   unsigned int header[2] = {0};
@@ -337,8 +336,8 @@ void rlSwapData(void* out, const void* in, const unsigned int size) {
 }
 
 
-rlSocket rlWaitForConnection(const char *address, const short port, const int retryTimeout) {
-  rlSocket theConnection = 0;
+int rlWaitForConnection(const char *address, const short port, const int retryTimeout) {
+  int theConnection = 0;
   int isConnected = -1;
 
   while(isConnected == -1) {
@@ -415,88 +414,4 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abst
   }
 
   return offset;
-}
-
-
-/* Below: Was RL_network.c  Reorganization allowed us to remove a source file.  This was important because 
-   end users need to compile RL-Glue. Fewer source files makes that somewhat easier. */
-
-rlSocket theAgentConnection = -1;
-rlSocket theEnvironmentConnection = -1;
-rlSocket theExperimentConnection = -1;
-
-/* 
-   rlConnectSystems is responsible for ensuring that the Glue has an agent, environment and experiment
-   program before the Glue attempts to run an experiment.
-
-   If the experiment and the Glue are compiled together RL_init calls rlConnectSystems.
-   If the Glue is separate, it has its own main() that calls rlConnectSystems.   
-*/
-
-int rlConnectSystems() {
-  int isAgentConnected       = (theAgentConnection != 0);
-  int isEnvironmentConnected = (theEnvironmentConnection != 0); 
-  int isExperimentConnected  = (theExperimentConnection != 0);
-  int theClientType = 0;
-  int theClient = 0;
-  int theServer = 0;
-  rlBuffer theBuffer = {0};
-  short port = kDefaultPort;
-  char* envptr = 0;
-
-  /* fprintf(stderr, "isAgentConnected = %d, isEnvConnected = %d, isExpConnected = %d\n",isAgentConnected, isEnvironmentConnected, isExperimentConnected); */
-
-  rlBufferCreate(&theBuffer, sizeof(int) * 2);
-
-  if (!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
-    envptr = getenv("RLGLUE_PORT");  
-    if (envptr != 0) {
-      port = strtol(envptr, 0, 10);
-      if (port == 0) {
-	port = kDefaultPort;
-      }
-      fprintf(stderr, "RL-Glue is listening for connections on port=%d\n", port);
-    }
-
-    theServer = rlOpen(port);
-    rlListen(theServer, port);
-  }
-
-  /* These are setup in the RL_server_agent, RL_server_environment and RL_server_experiment code. */
-  while(!isAgentConnected || !isEnvironmentConnected || !isExperimentConnected) {
-    theClient = rlAcceptConnection(theServer);
-
-    /*fprintf(stderr, "%s %d: Connection Attempt\n", __FILE__, __LINE__);*/
-
-    rlRecvBufferData(theClient, &theBuffer, &theClientType);
-
-    switch(theClientType) {
-    case kAgentConnection:
-      fprintf(stderr, "agent connected.\n"); 
-      theAgentConnection = theClient;
-      isAgentConnected = 1;
-      break;
-
-    case kEnvironmentConnection:
-      fprintf(stderr, "environment connected.\n");
-      theEnvironmentConnection = theClient;
-      isEnvironmentConnected = 1;
-      break;
-
-    case kExperimentConnection:
-      fprintf(stderr, "experiment connected.\n");
-      isExperimentConnected = 1;
-      theExperimentConnection = theClient;
-      break;
-
-    default:
-      fprintf(stderr, "RL_network.c: Unknown Connection Type: %d\n", theClientType);
-      break;
-    };
-  }
-
-  rlClose(theServer);
-  rlBufferDestroy(&theBuffer);
-
-  return theExperimentConnection;
 }

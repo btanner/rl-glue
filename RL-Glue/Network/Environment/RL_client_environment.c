@@ -31,7 +31,7 @@ static rlBuffer theBuffer               = {0};
 static Message theInMessage = 0;
 static int theInMessageCapacity = 0;
 
-static void onEnvInit(rlSocket theConnection) {
+static void onEnvInit(int theConnection) {
   Task_specification theTaskSpec = 0;
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
@@ -53,7 +53,7 @@ static void onEnvInit(rlSocket theConnection) {
   }
 }
 
-static void onEnvStart(rlSocket theConnection) {
+static void onEnvStart(int theConnection) {
   Observation theObservation = env_start();
   unsigned int offset = 0;
 
@@ -61,7 +61,7 @@ static void onEnvStart(rlSocket theConnection) {
   offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
 }
 
-static void onEnvStep(rlSocket theConnection) {
+static void onEnvStep(int theConnection) {
   Reward_observation ro = {0};
   unsigned int offset = 0;
 
@@ -75,7 +75,7 @@ static void onEnvStep(rlSocket theConnection) {
   offset = rlCopyADTToBuffer(&ro.o, &theBuffer, offset);
 }
 
-static void onEnvCleanup(rlSocket theConnection) {
+static void onEnvCleanup(int theConnection) {
   env_cleanup();
   rlBufferClear(&theBuffer);
 
@@ -105,7 +105,7 @@ static void onEnvCleanup(rlSocket theConnection) {
   theInMessageCapacity = 0;
 }
 
-static void onEnvSetState(rlSocket theConnection) {
+static void onEnvSetState(int theConnection) {
   unsigned int offset = 0;
 
   offset = rlCopyBufferToADT(&theBuffer, offset, &theStateKey);
@@ -114,7 +114,7 @@ static void onEnvSetState(rlSocket theConnection) {
   rlBufferClear(&theBuffer);
 }
 
-static void onEnvSetRandomSeed(rlSocket theConnection) {
+static void onEnvSetRandomSeed(int theConnection) {
   unsigned int offset = 0;
 
   offset = rlCopyBufferToADT(&theBuffer, offset, &theRandomSeedKey);  
@@ -123,7 +123,7 @@ static void onEnvSetRandomSeed(rlSocket theConnection) {
   rlBufferClear(&theBuffer);
 }
 
-static void onEnvGetState(rlSocket theConnection) {
+static void onEnvGetState(int theConnection) {
   State_key key = env_get_state();
   unsigned int offset = 0;
 
@@ -131,7 +131,7 @@ static void onEnvGetState(rlSocket theConnection) {
   offset = rlCopyADTToBuffer(&key, &theBuffer, offset);
 }
 
-static void onEnvGetRandomSeed(rlSocket theConnection) {
+static void onEnvGetRandomSeed(int theConnection) {
   Random_seed_key key = env_get_random_seed();
   unsigned int offset = 0;
 
@@ -139,7 +139,7 @@ static void onEnvGetRandomSeed(rlSocket theConnection) {
   rlCopyADTToBuffer(&key, &theBuffer, offset);
 }
 
-static void onEnvMessage(rlSocket theConnection) {
+static void onEnvMessage(int theConnection) {
   unsigned int inMessageLength = 0;
   unsigned int outMessageLength = 0;
   Message inMessage = 0;
@@ -175,7 +175,7 @@ static void onEnvMessage(rlSocket theConnection) {
   }
 }
 
-static void runEnvironmentEventLoop(rlSocket theConnection) {
+static void runEnvironmentEventLoop(int theConnection) {
   int envState = 0;
 
   do { 
@@ -230,7 +230,7 @@ static void runEnvironmentEventLoop(rlSocket theConnection) {
 }
 
 int main(int argc, char** argv) {
-  rlSocket theConnection = 0;
+  int theConnection = 0;
 
   struct hostent *host_ent;
 

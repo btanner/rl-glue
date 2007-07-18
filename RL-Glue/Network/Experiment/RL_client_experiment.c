@@ -10,7 +10,7 @@
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
-static rlSocket theExperimentConnection = 0;
+static int theExperimentConnection = 0;
 
 static Observation theObservation       = {0};
 static Action theAction                 = {0};

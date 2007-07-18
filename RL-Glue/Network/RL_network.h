@@ -1,5 +1,5 @@
-#ifndef RL_netlib_h
-#define RL_netlib_h
+#ifndef RL_network_h
+#define RL_network_h
 
 /* Defines types for RL-Glue */
 #include <RL_common.h>
@@ -48,8 +48,6 @@
 #define kRetryTimeout 10
 
 /* Data types */
-typedef int rlSocket;
-
 typedef struct rlBuffer_t {
   unsigned int size;
   unsigned int capacity;
@@ -57,16 +55,16 @@ typedef struct rlBuffer_t {
 } rlBuffer;
 
 /* Basic network functionality */
-rlSocket rlOpen(short thePort);
-rlSocket rlAcceptConnection(rlSocket theSocket);
+int rlOpen(short thePort);
+int rlAcceptConnection(int theSocket);
 
-int rlConnect(rlSocket theSocket, const char* theAddress, short thePort);
-int rlListen(rlSocket theSocket, short thePort);
-int rlClose(rlSocket theSocket);
-int rlIsValidSocket(rlSocket theSocket);
+int rlConnect(int theSocket, const char* theAddress, short thePort);
+int rlListen(int theSocket, short thePort);
+int rlClose(int theSocket);
+int rlIsValidSocket(int theSocket);
 
-int rlSendData(rlSocket socket, const void* data, int length);
-int rlRecvData(rlSocket socket, void* data, int length);
+int rlSendData(int socket, const void* data, int length);
+int rlRecvData(int socket, void* data, int length);
 
 /* rlBuffer API */
 void rlBufferCreate(rlBuffer *buffer, unsigned int capacity);
@@ -77,12 +75,12 @@ unsigned int rlBufferWrite(rlBuffer *buffer, unsigned int offset, const void* se
 unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* recvData, unsigned int count, unsigned int size);
 
 /* Utilities */
-unsigned int rlSendBufferData(rlSocket theSocket, const rlBuffer* buffer, const int target);
-unsigned int rlRecvBufferData(rlSocket theSocket, rlBuffer* buffer, int* target);
+unsigned int rlSendBufferData(int theSocket, const rlBuffer* buffer, const int target);
+unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int* target);
 
 int rlGetSystemByteOrder();
 void rlSwapData(void* out, const void* in, const unsigned int size);
-rlSocket rlWaitForConnection(const char *address, const short port, const int retryTimeout);
+int rlWaitForConnection(const char *address, const short port, const int retryTimeout);
 unsigned int rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst, unsigned int offset);
 unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abstract_type* dst);
 

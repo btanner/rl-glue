@@ -28,7 +28,7 @@ static rlBuffer theBuffer = {0};
 static Message theInMessage = 0;
 static unsigned int theInMessageCapacity = 0;
 
-static void onAgentInit(rlSocket theConnection) {
+static void onAgentInit(int theConnection) {
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
 
@@ -46,7 +46,7 @@ static void onAgentInit(rlSocket theConnection) {
   rlBufferClear(&theBuffer);
 }
 
-static void onAgentStart(rlSocket theConnection) {
+static void onAgentStart(int theConnection) {
   Action theAction = {0};
   unsigned int offset = 0;
 
@@ -62,7 +62,7 @@ static void onAgentStart(rlSocket theConnection) {
   offset = rlCopyADTToBuffer(&theAction, &theBuffer, offset);
 }
 
-static void onAgentStep(rlSocket theConnection) {
+static void onAgentStep(int theConnection) {
   Reward theReward = 0;
   Action theAction = {0};
   unsigned int offset = 0;
@@ -80,7 +80,7 @@ static void onAgentStep(rlSocket theConnection) {
   rlCopyADTToBuffer(&theAction, &theBuffer, offset);
 }
 
-static void onAgentEnd(rlSocket theConnection) {
+static void onAgentEnd(int theConnection) {
   Reward theReward = 0;
   unsigned int offset = 0;
 
@@ -94,7 +94,7 @@ static void onAgentEnd(rlSocket theConnection) {
   rlBufferClear(&theBuffer);
 }
 
-static void onAgentCleanup(rlSocket theConnection) {
+static void onAgentCleanup(int theConnection) {
   /* Read the data in the buffer (data from server) */
   /* No data sent for agent cleanup */
 
@@ -119,7 +119,7 @@ static void onAgentCleanup(rlSocket theConnection) {
   theInMessageCapacity = 0;
 }
 
-static void onAgentFreeze(rlSocket theConnection) {
+static void onAgentFreeze(int theConnection) {
   /* Read the data in the buffer (data from server) */
   /* No data sent for agent cleanup */
 
@@ -130,7 +130,7 @@ static void onAgentFreeze(rlSocket theConnection) {
   rlBufferClear(&theBuffer);
 }
 
-static void onAgentMessage(rlSocket theConnection) {
+static void onAgentMessage(int theConnection) {
   unsigned int inMessageLength = 0;
   unsigned int outMessageLength = 0;
   Message inMessage = 0;
@@ -169,7 +169,7 @@ static void onAgentMessage(rlSocket theConnection) {
   }
 }
 
-static void runAgentEventLoop(rlSocket theConnection) {
+static void runAgentEventLoop(int theConnection) {
   int agentState = 0;
 
   do {
@@ -216,7 +216,7 @@ static void runAgentEventLoop(rlSocket theConnection) {
 }
 
 int main(int argc, char** argv) {
-  rlSocket theConnection = 0;
+  int theConnection = 0;
 
   struct hostent *host_ent;
 

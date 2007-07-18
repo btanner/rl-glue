@@ -7,15 +7,14 @@
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
-extern int rlConnectSystems();
-
-extern rlSocket theEnvironmentConnection;
 static Task_specification theTaskSpec = 0;
 static Observation theObservation       = {0};
 static State_key theStateKey            = {0};
 static Random_seed_key theRandomSeedKey = {0};
 static rlBuffer theBuffer = {0};
 
+extern void rlSetEnvironmentConnection();
+extern int rlGetEnvironmentConnection();
 
 Task_specification env_init() {
   /* Setup the connection */
@@ -23,18 +22,14 @@ Task_specification env_init() {
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
 
-  if (theEnvironmentConnection == -1) {
-    theEnvironmentConnection = 0;
-  }
-  rlConnectSystems();
   rlBufferCreate(&theBuffer, 4096);
 
   /* env init-specific data */
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvInit);
 
   offset = 0;
@@ -53,10 +48,10 @@ Observation env_start() {
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvStart);
 
   offset = rlCopyBufferToADT(&theBuffer, offset, &theObservation);
@@ -71,10 +66,10 @@ Reward_observation env_step(Action theAction) {
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlCopyADTToBuffer(&theAction, &theBuffer, offset);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvStep);
 
   offset = 0;
@@ -90,14 +85,14 @@ void env_cleanup() {
   int envState = kEnvCleanup;
 
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvCleanup);
 
-  rlClose(theEnvironmentConnection);
-  theEnvironmentConnection = 0;
+  rlClose(rlGetEnvironmentConnection());
+  rlSetEnvironmentConnection(0);
 
   free(theObservation.intArray);
   free(theObservation.doubleArray);
@@ -127,10 +122,10 @@ void env_set_state(State_key theStateKey) {
 
   rlBufferClear(&theBuffer);
   offset = rlCopyADTToBuffer(&theStateKey, &theBuffer, offset);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvSetState);
 }
 
@@ -140,10 +135,10 @@ void env_set_random_seed(Random_seed_key theRandomSeedKey) {
 
   rlBufferClear(&theBuffer);
   offset = rlCopyADTToBuffer(&theRandomSeedKey, &theBuffer, offset);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvSetRandomSeed);
 }
 
@@ -152,10 +147,10 @@ State_key env_get_state() {
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvGetState);
 
   offset = rlCopyBufferToADT(&theBuffer, offset, &theStateKey);
@@ -168,10 +163,10 @@ Random_seed_key env_get_random_seed() {
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvGetRandomSeed);
 
   offset = rlCopyBufferToADT(&theBuffer, offset, &theRandomSeedKey);
@@ -196,10 +191,10 @@ Message env_message(const Message inMessage) {
   if (theInMessageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, inMessage, theInMessageLength, sizeof(char));
   }
-  rlSendBufferData(theEnvironmentConnection, &theBuffer, envState);
+  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theEnvironmentConnection, &theBuffer, &envState);
+  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvMessage);
 
   offset = 0;
