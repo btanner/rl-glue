@@ -218,6 +218,11 @@ static void runAgentEventLoop(int theConnection) {
 int main(int argc, char** argv) {
   int theConnection = 0;
 
+  const char *usage = "The following environment variables are used by the agent to control its function:\n"
+    "RLGLUE_HOST  : If set the agent will use this ip or hostname to connect to rather than %s\n"
+    "RLGLUE_PORT  : If set the agent will use this port to connect on rather than %d\n"
+    "RLGLUE_AUTORECONNECT  : If set the agent will reconnect to the glue after an experiment has finished\n";
+  
   struct hostent *host_ent;
 
   char* host = kLocalHost;
@@ -225,6 +230,11 @@ int main(int argc, char** argv) {
   int autoReconnect = 0;
 
   char* envptr = 0;
+
+  if (argc > 1) {
+    fprintf(stderr, usage, kLocalHost, kDefaultPort);
+    exit(1);
+  }
 
   host = getenv("RLGLUE_HOST");
   if (host == 0) {

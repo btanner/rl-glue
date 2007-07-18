@@ -4,6 +4,19 @@ public class AgentLoader
 {
     public static void main(String [] args) throws Exception
     {
+	String usage = "java AgentLoader <Agent> -classpath <Path To RLGlue>";
+
+	String envVars = "The following environment variables are used by the agent to control its function:\n" + 
+	    "RLGLUE_HOST  : If set the agent will use this ip or hostname to connect to rather than " + Network.kDefaultHost + "\n" + 
+	    "RLGLUE_PORT  : If set the agent will use this port to connect on rather than " + Network.kDefaultPort + "\n" +
+	    "RLGLUE_AUTORECONNECT  : If set the agent will reconnect to the glue after an experiment has finished\n";
+  
+	if (args.length < 2) {
+	    System.out.println(usage);
+	    System.out.println(envVars);
+	    System.exit(1);
+	}
+
 	Agent agent = (Agent)Class.forName(args[0]).newInstance();
 	ClientAgent client = new ClientAgent(agent);
 	int autoReconnect = 0;

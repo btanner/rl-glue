@@ -58,10 +58,28 @@ public class Network
 
     public void connect(String host, int port, int retryTimeout) throws IOException
     {
-	InetSocketAddress address = new InetSocketAddress(host, port);
-	socketChannel = SocketChannel.open();
-	socketChannel.configureBlocking(true);
-	socketChannel.connect(address);
+	final int kNumTries = 30;
+	for (int i = 0; i < kNumTries; ++i) {
+	    try {	
+		InetSocketAddress address = new InetSocketAddress(host, port);
+		socketChannel = SocketChannel.open();
+		socketChannel.configureBlocking(true);
+		socketChannel.connect(address);
+		break;
+	    }
+	    catch (IOException ioException)
+	    {
+		if (i == kNumTries)
+		    throw ioException; // We couldn't connect, give up.
+	    }
+
+	    try {
+		Thread.sleep(retryTimeout); // Wait a bit, then try again.
+	    }
+	    catch (InterruptedException interruptedException)
+	    {
+	    }
+	}
     }
 
     public void close() throws IOException

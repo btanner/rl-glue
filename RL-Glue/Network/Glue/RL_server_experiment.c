@@ -309,6 +309,14 @@ int main(int argc, char** argv) {
   int autoReconnect = 0;
   char* envptr = 0;
 
+  const char *usage = "The following environment variables are used by the glue to control its function:\n"
+    "RLGLUE_AUTORECONNECT  : If set glue will continue to run after an experiment has finished\n";
+
+  if (argc > 1) {
+    fprintf(stderr, usage);
+    exit(1);
+  }
+
   envptr = getenv("RLGLUE_AUTORECONNECT");
   if (envptr != 0) {
     autoReconnect = strtol(envptr, 0, 10);
