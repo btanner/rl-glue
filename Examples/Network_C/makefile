@@ -1,4 +1,4 @@
-all: RL_network.o RL_glue RL_environment RL_experiment RL_agent
+all: RL_glue RL_environment RL_experiment RL_agent
 
 include RL_glue.makefile
 include RL_agent.makefile

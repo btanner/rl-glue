@@ -1,27 +1,29 @@
-RL-GLUE = ../../RL-Glue
-UTILS   = ../../Utils
+AGENT_RL_GLUE = ../../RL-Glue
+AGENT_UTILS   = ../../Utils
 
-BUILD_PATH = Build
-BIN_PATH = bin
-SRC_PATH = src
+AGENT_BUILD_PATH = Build
+AGENT_BIN_PATH = bin
+AGENT_SRC_PATH = src
 
-AGENTCC      = gcc
-CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
-LDFLAGS =
+AGENT_CC      = gcc
+AGENT_CFLAGS  = -I$(AGENT_RL_GLUE)/ -ansi -pedantic -Wall
+AGENT_LDFLAGS =
 
-AGENT_OBJECTS = SarsaAgent.o Glue_utilities.o RL_client_agent.o RL_network.o
+AGENT_OBJECTS = SarsaAgent.o Glue_utilities.o RL_client_agent.o RL_agent_netlib.o
 
 RL_agent: $(AGENT_OBJECTS)
-	$(AGENTCC) -o $(BIN_PATH)/$@ $(addprefix $(BUILD_PATH)/, $(AGENT_OBJECTS))
+	$(AGENT_CC) -o $(AGENT_BIN_PATH)/$@ $(addprefix $(AGENT_BUILD_PATH)/, $(AGENT_OBJECTS)) $(AGENT_LDFLAGS)
 	
-SarsaAgent.o: $(SRC_PATH)/SarsaAgent.c $(SRC_PATH)/SarsaAgent.h
-	$(AGENTCC) -c $(CFLAGS) -I$(UTILS) $< -o $(BUILD_PATH)/$@
+SarsaAgent.o: $(AGENT_SRC_PATH)/SarsaAgent.c $(AGENT_SRC_PATH)/SarsaAgent.h
+	$(AGENT_CC) -c $(AGENT_CFLAGS) -I$(AGENT_UTILS) $< -o $(AGENT_BUILD_PATH)/$@
 
-Glue_utilities.o: $(UTILS)/Glue_utilities.c $(UTILS)/Glue_utilities.h
-	$(AGENTCC) -c $(CFLAGS) $< -o $(BUILD_PATH)/$@
+Glue_utilities.o: $(AGENT_UTILS)/Glue_utilities.c $(UTILS)/Glue_utilities.h
+	$(AGENT_CC) -c $(AGENT_CFLAGS) $< -o $(AGENT_BUILD_PATH)/$@
 
-RL_client_agent.o: $(RL-GLUE)/Network/Agent/RL_client_agent.c
-	$(AGENTCC) -c $(CFLAGS) $< -o $(BUILD_PATH)/$@
+RL_client_agent.o: $(AGENT_RL_GLUE)/Network/Agent/RL_client_agent.c
+	$(AGENT_CC) -c $(AGENT_CFLAGS) $< -o $(AGENT_BUILD_PATH)/$@
 	
-RL_network.o: $(RL-GLUE)/Network/RL_network.c
-	$(AGENTCC) -c $(CFLAGS) $< -o $(BUILD_PATH)/$@
+# Give this a unique name so it doesn't conflict with other RL_network.o rules included by the main makefile 
+# Alernatively we could just build it once.
+RL_agent_netlib.o: $(AGENT_RL_GLUE)/Network/RL_network.c
+	$(AGENT_CC) -c $(AGENT_CFLAGS) $< -o $(AGENT_BUILD_PATH)/$@
