@@ -5,44 +5,45 @@ import java.io.*;
 
 public class RLGlue
 {
-    protected static Network network;
+    protected static Network network = null;
     protected static ByteBuffer headerBuffer;
     protected static ByteBuffer byteBuffer;
 	
-	static {
-	//totally statically call connect when this starts up. This may not be a long term solution
-		connect();
-	}
-	
-	private static void connect(){
-		try
-	{
+    private static void forceConnection()
+    {
+	if (network == null)
+	{   
 	    network = new Network();
-	    
 	    headerBuffer = ByteBuffer.allocateDirect(8);
 	    byteBuffer = ByteBuffer.allocateDirect(65536);
 	    
 	    // Connect
 	    network.connect(Network.kDefaultHost, 
-						Network.kDefaultPort, 
-						Network.kRetryTimeout);
-		
-	    byteBuffer.clear();
+			    Network.kDefaultPort, 
+			    Network.kRetryTimeout);
+      	    
+    	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kExperimentConnection);
 	    byteBuffer.putInt(0);
 	    byteBuffer.flip();
-	    network.send(byteBuffer);	
-	}	catch(IOException ioException)
-	{
-	    ioException.printStackTrace();
-	    System.exit(1);
+
+	    try 
+	    {
+		network.send(byteBuffer);
+	    }
+	    catch(IOException ioException)
+	    {
+		ioException.printStackTrace();
+		System.exit(1);
+	    }
 	}
-		
-	}
+    }
 	
     public static void RL_init()
     {
-		try
+	forceConnection();
+
+	try
 	{
 	    // Call RL_init
 	    byteBuffer.clear();
@@ -61,20 +62,25 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLInit)
 	    {
-			System.err.println("RL_init not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_init not synched with server\n");
+		System.exit(1);
 	    }
 	}
-		catch(IOException ioException)
+	catch(IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
+	    ioException.printStackTrace();
+	    System.exit(1);
 	}
     }
 	
     public static Observation_action RL_start()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_start");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    Observation_action obsact = new Observation_action();
 	    byteBuffer.clear();
@@ -92,8 +98,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLStart)
 	    {
-			System.err.println("RL_start not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_start not synched with server\n");
+		System.exit(1);
 	    }
 		
 	    byteBuffer.clear();
@@ -104,17 +110,22 @@ public class RLGlue
 	    obsact.a = Network.getAction(byteBuffer);
 	    return obsact;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return null; // We will never get here.
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return null; // We will never get here.
 	}
     }
 	
     public static Reward_observation_action_terminal RL_step()
     {
-		try 
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_step");
+	    System.exit(1);
+	}
+
+	try 
 	{
 	    Reward_observation_action_terminal roat = new Reward_observation_action_terminal();
 	    
@@ -133,8 +144,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLStep)
 	    {
-			System.err.println("RL_step not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_step not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -148,17 +159,22 @@ public class RLGlue
 	    
 	    return roat;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return null; // We will never get here.
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return null; // We will never get here.
 	}
     }
 	
     public static void RL_cleanup()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_cleanup");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLCleanup);
@@ -175,29 +191,31 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLCleanup)
 	    {
-			System.err.println("RL_cleanup not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_cleanup not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
 	    network.close();
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
+	    ioException.printStackTrace();
+	    System.exit(1);
 	}
     }
 	
     public static String RL_agent_message(String message)
     {
-		try
+	forceConnection();
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLAgentMessage);
 	    byteBuffer.putInt(message.length()+4);
 	    if (message.length() > 0) {
-			Network.putString(byteBuffer, message);
+		Network.putString(byteBuffer, message);
 	    }
 	    byteBuffer.flip();
 	    network.send(byteBuffer);
@@ -211,8 +229,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLAgentMessage)
 	    {
-			System.err.println("RL_agent_message not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_agent_message not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -222,23 +240,25 @@ public class RLGlue
 	    String response = network.getString(byteBuffer);
 	    return response;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return null; // We will never get here.
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return null; // We will never get here.
 	}
     }
 	
     public static String RL_env_message(String message)
     {
-		try
+	forceConnection();
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLEnvMessage);
 	    byteBuffer.putInt(message.length()+4);
 	    if (message.length() > 0) {
-			Network.putString(byteBuffer, message);
+		Network.putString(byteBuffer, message);
 	    }
 	    byteBuffer.flip();
 	    network.send(byteBuffer);
@@ -252,8 +272,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLEnvMessage)
 	    {
-			System.err.println("RL_env_message not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_env_message not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -263,17 +283,22 @@ public class RLGlue
 	    String response = network.getString(byteBuffer);
 	    return response;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return null;
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return null;
 	}
     }
 	
     public static double RL_return()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_return");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLReturn);
@@ -290,8 +315,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLReturn)
 	    {
-			System.err.println("RL_return not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_return not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -301,17 +326,22 @@ public class RLGlue
 	    double reward = byteBuffer.getDouble();
 	    return reward;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return 0;
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return 0;
 	}
     }
 	
     public static int RL_num_steps()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_num_steps");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLNumSteps);
@@ -328,8 +358,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLNumSteps)
 	    {
-			System.err.println("RL_num_steps not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_num_steps not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -339,17 +369,22 @@ public class RLGlue
 	    int numSteps = byteBuffer.getInt();
 	    return numSteps;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return 0;
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return 0;
 	}
     }
 	
     public static int RL_num_episodes()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_num_episodes");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLNumEpisodes);
@@ -366,8 +401,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLNumEpisodes)
 	    {
-			System.err.println("RL_num_episodes not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_num_episodes not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -377,17 +412,22 @@ public class RLGlue
 	    int numEpisodes = byteBuffer.getInt();
 	    return numEpisodes;	
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return 0;
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return 0;
 	}
     }
 	
     public static void RL_episode(int numSteps)
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_episode");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLEpisode);
@@ -405,20 +445,25 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLEpisode)
 	    {
-			System.err.println("RL_episode not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_episode not synched with server\n");
+		System.exit(1);
 	    }
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
+	    ioException.printStackTrace();
+	    System.exit(1);
 	}
     }
 	
     public static void RL_freeze()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_freeze");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLFreeze);
@@ -435,20 +480,25 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLFreeze)
 	    {
-			System.err.println("RL_freeze not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_freeze not synched with server\n");
+		System.exit(1);
 	    }
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
+	    ioException.printStackTrace();
+	    System.exit(1);
 	}
     }
 	
     public static void RL_set_state(State_key sk)
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_set_state");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    int size = (4 + sk.intArray.length * 4) + (4 + sk.doubleArray.length * 8);
 	    
@@ -468,20 +518,25 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLSetState)
 	    {
-			System.err.println("RL_set_state not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_set_state not synched with server\n");
+		System.exit(1);
 	    }
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
+	    ioException.printStackTrace();
+	    System.exit(1);
 	}
     }
 	
     public static void RL_set_random_seed(Random_seed_key rsk)
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_set_random_seed");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    int size = (4 + rsk.intArray.length * 4) + (4 + rsk.doubleArray.length * 8);
 	    
@@ -501,20 +556,25 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLSetRandomSeed)
 	    {
-			System.err.println("RL_set_random_seed not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_set_random_seed not synched with server\n");
+		System.exit(1);
 	    }
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
+	    ioException.printStackTrace();
+	    System.exit(1);
 	}
     }
 	
     public static State_key RL_get_state()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_get_state");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLGetState);
@@ -531,8 +591,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLGetState)
 	    {
-			System.err.println("RL_get_state not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_get_state not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -542,17 +602,22 @@ public class RLGlue
 	    State_key key = network.getStateKey(byteBuffer);
 	    return key;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return null; // We will never get here.
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return null; // We will never get here.
 	}
     }
 	
     public static Random_seed_key RL_get_random_seed()
     {
-		try
+	if (network == null) {
+	    System.out.println("You must call RL_init before calling RL_get_random_seed");
+	    System.exit(1);
+	}
+
+	try
 	{
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLGetRandomSeed);
@@ -569,8 +634,8 @@ public class RLGlue
 	    
 	    if (glueState != Network.kRLGetRandomSeed)
 	    {
-			System.err.println("RL_get_random_seed not synched with server\n");
-			System.exit(1);
+		System.err.println("RL_get_random_seed not synched with server\n");
+		System.exit(1);
 	    }
 	    
 	    byteBuffer.clear();
@@ -580,11 +645,11 @@ public class RLGlue
 	    Random_seed_key key = network.getRandomSeedKey(byteBuffer);
 	    return key;
 	}
-		catch (IOException ioException)
+	catch (IOException ioException)
 	{
-			ioException.printStackTrace();
-			System.exit(1);
-			return null; // We will never get here.
+	    ioException.printStackTrace();
+	    System.exit(1);
+	    return null; // We will never get here.
 	}
     }
 }

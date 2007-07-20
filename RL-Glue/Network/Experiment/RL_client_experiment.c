@@ -22,41 +22,47 @@ static Task_specification theTaskSpec = 0;
 static char* theMessage = 0;
 static int theMessageCapacity = 0;
 
-void RL_init() {
-  int experimentState = kRLInit;
-
+static void forceConnection()
+{
   struct hostent *host_ent;
 
   char* host = kLocalHost;
   short port = kDefaultPort;
   char* envptr = 0;
 
-  host = getenv("RLGLUE_HOST");
-  if (host == 0) {
-    host = kLocalHost;
-  }
-
-  envptr = getenv("RLGLUE_PORT");  
-  if (envptr != 0) {
-    port = strtol(envptr, 0, 10);
-    if (port == 0) {
-      port = kDefaultPort;
+  if (theExperimentConnection == 0) {
+    host = getenv("RLGLUE_HOST");
+    if (host == 0) {
+      host = kLocalHost;
     }
+
+    envptr = getenv("RLGLUE_PORT");  
+    if (envptr != 0) {
+      port = strtol(envptr, 0, 10);
+      if (port == 0) {
+	port = kDefaultPort;
+      }
+    }
+    
+    if (isalpha(host[0])) {
+      host_ent = gethostbyname(host); 
+      host = inet_ntoa(*(struct in_addr*)host_ent->h_addr);
+    }
+
+    fprintf(stderr, "Connecting to host=%s on port=%d\n", host, port);
+    theExperimentConnection = rlWaitForConnection(host, port, kRetryTimeout);
+
+    /* Send the connection type */
+    rlBufferCreate(&theBuffer, 4096);
+    rlBufferClear(&theBuffer);
+    rlSendBufferData(theExperimentConnection, &theBuffer, kExperimentConnection);
   }
+}
 
-  if (isalpha(host[0])) {
-    host_ent = gethostbyname(host); 
-    host = inet_ntoa(*(struct in_addr*)host_ent->h_addr);
-  }
+void RL_init() {
+  int experimentState = kRLInit;
 
-  fprintf(stderr, "Connecting to host=%s on port=%d\n", host, port);
-
-  theExperimentConnection = rlWaitForConnection(host, port, kRetryTimeout);
-
-  /* Send the connection type */
-  rlBufferCreate(&theBuffer, 4096);
-  rlBufferClear(&theBuffer);
-  rlSendBufferData(theExperimentConnection, &theBuffer, kExperimentConnection);
+  forceConnection();
 
   /* Remote call RL_init */
   rlBufferClear(&theBuffer);
@@ -73,6 +79,8 @@ Observation_action RL_start() {
   int experimentState = kRLStart;
   Observation_action oa = { {0}, {0} };
   unsigned int offset = 0;
+
+  assert(theExperimentConnection != 0);
 
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
@@ -95,6 +103,8 @@ Reward_observation_action_terminal RL_step() {
   Reward_observation_action_terminal roat = {0, {0}, {0}, 0};
   unsigned int offset = 0;
   
+  assert(theExperimentConnection != 0);
+
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
 
@@ -116,6 +126,8 @@ Reward_observation_action_terminal RL_step() {
 
 void RL_cleanup() {
   int experimentState = kRLCleanup;
+
+  assert(theExperimentConnection != 0);
 
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
@@ -156,6 +168,8 @@ Reward RL_return() {
   Reward theReward = 0;
   unsigned int offset = 0;
 
+  assert(theExperimentConnection != 0);
+
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
 
@@ -172,6 +186,8 @@ int RL_num_steps() {
   int experimentState = kRLNumSteps;
   int numSteps = 0;
   unsigned int offset = 0;
+
+  assert(theExperimentConnection != 0);
 
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
@@ -190,6 +206,8 @@ char* RL_agent_message(const char* message) {
   int experimentState = kRLAgentMessage;
   unsigned int messageLength = strlen(message);
   unsigned int offset = 0;
+
+  forceConnection();
 
   rlBufferClear(&theBuffer);
   offset = 0;
@@ -225,6 +243,8 @@ char* RL_env_message(const char* message) {
   unsigned int messageLength = strlen(message);
   unsigned int offset = 0;
 
+  forceConnection();
+
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &messageLength, 1, sizeof(int));
@@ -258,6 +278,8 @@ int RL_num_episodes() {
   int numEpisodes = 0;
   unsigned int offset = 0;
 
+  assert(theExperimentConnection != 0);
+
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
 
@@ -274,6 +296,8 @@ void RL_episode(unsigned int numSteps) {
   unsigned int offset = 0;
   int experimentState = kRLEpisode;
 
+  assert(theExperimentConnection != 0);
+
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlBufferWrite(&theBuffer, offset, &numSteps, 1, sizeof(int));
@@ -288,6 +312,8 @@ void RL_episode(unsigned int numSteps) {
 void RL_freeze() {
   int experimentState = kRLFreeze;
 
+  assert(theExperimentConnection != 0);
+
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
 
@@ -299,6 +325,8 @@ void RL_freeze() {
 void RL_set_state(State_key theStateKey) {
   int experimentState = kRLSetState;
   unsigned int offset = 0;
+
+  assert(theExperimentConnection != 0);
 
   rlBufferClear(&theBuffer);
   offset = rlCopyADTToBuffer(&theStateKey, &theBuffer, offset);
@@ -313,6 +341,8 @@ void RL_set_random_seed(Random_seed_key theRandomSeedKey) {
   int experimentState = kRLSetRandomSeed;
   unsigned int offset = 0;
 
+  assert(theExperimentConnection != 0);
+
   rlBufferClear(&theBuffer);
   offset = rlCopyADTToBuffer(&theRandomSeedKey, &theBuffer, offset);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
@@ -325,6 +355,8 @@ void RL_set_random_seed(Random_seed_key theRandomSeedKey) {
 State_key RL_get_state() {
   int experimentState = kRLGetState;
   unsigned int offset = 0;
+
+  assert(theExperimentConnection != 0);
 
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
@@ -341,6 +373,8 @@ State_key RL_get_state() {
 Random_seed_key RL_get_random_seed() {
   int experimentState = kRLGetRandomSeed;
   unsigned int offset = 0;
+
+  assert(theExperimentConnection != 0);
 
   rlBufferClear(&theBuffer);
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);

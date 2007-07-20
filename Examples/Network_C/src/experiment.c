@@ -22,6 +22,9 @@ int main(int argc, char *argv[]) {
   double avg_steps = 0.0;
   double avg_return = 0.0;
 
+  char* response = RL_agent_message("I need to call you before we call RL_init\n");
+  fprintf(stderr, "%s\n", response);
+
 /*basic main loop*/
   RL_init();
   run(NUM_EPISODES);

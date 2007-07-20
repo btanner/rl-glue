@@ -56,28 +56,30 @@ public class Network
     {
     }
 
-    public void connect(String host, int port, int retryTimeout) throws IOException
+    public void connect(String host, int port, int retryTimeout)
     {
-	final int kNumTries = 30;
-	for (int i = 0; i < kNumTries; ++i) {
-	    try {	
+	boolean didConnect = false;
+	int count = 0;
+	
+	while (!didConnect)
+	{
+	    try 
+	    {	
 		InetSocketAddress address = new InetSocketAddress(host, port);
 		socketChannel = SocketChannel.open();
 		socketChannel.configureBlocking(true);
 		socketChannel.connect(address);
-		break;
+		didConnect = true;
 	    }
 	    catch (IOException ioException)
 	    {
-		if (i == kNumTries)
-		    throw ioException; // We couldn't connect, give up.
-	    }
-
-	    try {
-		Thread.sleep(retryTimeout); // Wait a bit, then try again.
-	    }
-	    catch (InterruptedException interruptedException)
-	    {
+		try
+		{
+		    Thread.sleep(retryTimeout);
+		}
+		catch (InterruptedException ieException)
+		{
+		}
 	    }
 	}
     }
@@ -170,8 +172,7 @@ public class Network
 
     public static void putString(ByteBuffer byteBuffer, String message) throws UnsupportedEncodingException
     {
-	String trimmed = message.trim(); 
-	byte [] byteString = trimmed.getBytes("UTF-8");
+	byte [] byteString = message.getBytes("UTF-8");
 	byteBuffer.putInt(byteString.length);
 
 	if (byteString.length > 0)

@@ -300,7 +300,7 @@ unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
   if (buffer->size > 0) {
     rlRecvData(theSocket, buffer->data, buffer->size);
   }
-  
+
   return buffer->size; /* Returns payload size, not actual data received ! */
 }
 

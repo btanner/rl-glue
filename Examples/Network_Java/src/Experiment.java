@@ -25,6 +25,11 @@ public class Experiment
 	rlNumSteps = new int[Experiment.kNumEpisodes];
 	rlReturn = new double[Experiment.kNumEpisodes];
 
+
+	System.err.println("RLGlue.RL_agent_message");
+	String response = RLGlue.RL_agent_message("pokerbrian\n");
+	System.err.println("Response: " + response);
+
 	/*basic main loop*/
 	RLGlue.RL_init();
 
