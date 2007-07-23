@@ -26,10 +26,12 @@ int main(int argc, char *argv[]) {
   fprintf(stderr, "%s\n", response);
 
 /*basic main loop*/
-  RL_init();
-  run(NUM_EPISODES);
-  RL_cleanup();
-  
+  for (i = 0; i < 2; ++i) {
+    RL_init();
+    run(NUM_EPISODES);
+    RL_cleanup();
+  }
+
   /*add up all the steps and all the returns*/
   for (i = 0; i < NUM_EPISODES; i++) {
     avg_steps += rl_num_steps[i];
