@@ -39,7 +39,7 @@ public class RLGlue
 	}
     }
 	
-    public static void RL_init()
+    public static synchronized void RL_init()
     {
 	forceConnection();
 
@@ -73,7 +73,7 @@ public class RLGlue
 	}
     }
 	
-    public static Observation_action RL_start()
+    public static synchronized Observation_action RL_start()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_start");
@@ -118,7 +118,7 @@ public class RLGlue
 	}
     }
 	
-    public static Reward_observation_action_terminal RL_step()
+    public static synchronized Reward_observation_action_terminal RL_step()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_step");
@@ -167,7 +167,7 @@ public class RLGlue
 	}
     }
 	
-    public static void RL_cleanup()
+    public static synchronized void RL_cleanup()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_cleanup");
@@ -205,7 +205,7 @@ public class RLGlue
 	}
     }
 	
-    public static String RL_agent_message(String message)
+    public static synchronized  String RL_agent_message(String message)
     {
 	forceConnection();
 
@@ -248,7 +248,7 @@ public class RLGlue
 	}
     }
 	
-    public static String RL_env_message(String message)
+    public static synchronized  String RL_env_message(String message)
     {
 	forceConnection();
 
@@ -291,7 +291,7 @@ public class RLGlue
 	}
     }
 	
-    public static double RL_return()
+    public static synchronized double RL_return()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_return");
@@ -334,7 +334,7 @@ public class RLGlue
 	}
     }
 	
-    public static int RL_num_steps()
+    public static synchronized int RL_num_steps()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_num_steps");
@@ -377,7 +377,7 @@ public class RLGlue
 	}
     }
 	
-    public static int RL_num_episodes()
+    public static synchronized int RL_num_episodes()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_num_episodes");
@@ -420,7 +420,7 @@ public class RLGlue
 	}
     }
 	
-    public static void RL_episode(int numSteps)
+    public static synchronized void RL_episode(int numSteps)
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_episode");
@@ -456,7 +456,7 @@ public class RLGlue
 	}
     }
 	
-    public static void RL_freeze()
+    public static synchronized void RL_freeze()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_freeze");
@@ -491,7 +491,7 @@ public class RLGlue
 	}
     }
 	
-    public static void RL_set_state(State_key sk)
+    public static synchronized void RL_set_state(State_key sk)
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_set_state");
@@ -529,7 +529,7 @@ public class RLGlue
 	}
     }
 	
-    public static void RL_set_random_seed(Random_seed_key rsk)
+    public static synchronized void RL_set_random_seed(Random_seed_key rsk)
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_set_random_seed");
@@ -567,7 +567,7 @@ public class RLGlue
 	}
     }
 	
-    public static State_key RL_get_state()
+    public static synchronized  State_key RL_get_state()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_get_state");
@@ -610,7 +610,7 @@ public class RLGlue
 	}
     }
 	
-    public static Random_seed_key RL_get_random_seed()
+    public static synchronized Random_seed_key RL_get_random_seed()
     {
 	if (network == null) {
 	    System.out.println("You must call RL_init before calling RL_get_random_seed");
