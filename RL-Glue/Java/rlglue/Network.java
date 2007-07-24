@@ -97,7 +97,7 @@ public class Network
     }
 
     public int recv(ByteBuffer byteBuffer, int size) throws IOException
-    {
+    {	
 	int recvSize = 0;
 	while (recvSize < size)
 	{
@@ -219,6 +219,14 @@ public class Network
 	    byteBuffer.putInt(key.intArray[i]);
 	for (int i = 0; i < key.doubleArray.length; ++i)
 	    byteBuffer.putDouble(key.doubleArray[i]);
+    }
+
+    public static ByteBuffer cloneWithCapacity(ByteBuffer original, int capacity)
+    {
+	ByteBuffer clone = ByteBuffer.allocateDirect(capacity);
+	clone.put(original);
+	clone.position(original.position());
+	return clone;
     }
 }
 

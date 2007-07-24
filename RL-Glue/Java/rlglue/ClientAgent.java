@@ -132,6 +132,9 @@ public class ClientAgent
 	    agentState = headerBuffer.getInt();
 	    dataSize = headerBuffer.getInt();
 
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();    
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();

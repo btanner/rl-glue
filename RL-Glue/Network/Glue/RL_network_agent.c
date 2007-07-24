@@ -7,6 +7,19 @@ int rlDidAgentConnect()
   return agentConnection != 0;
 }
 
+void rlCloseAgentConnection()
+{
+  rlBuffer theBuffer = {0};
+
+  rlBufferCreate(&theBuffer, 8);
+  rlSendBufferData(agentConnection, &theBuffer, kRLTerm);
+
+  rlClose(agentConnection);
+  agentConnection = 0;
+
+  rlBufferDestroy(&theBuffer);
+}
+
 void rlSetAgentConnection(int connection)
 {
   if (rlDidAgentConnect())
@@ -20,15 +33,3 @@ int rlGetAgentConnection()
   return agentConnection;
 }
 
-void rlCloseAgentConnection()
-{
-  rlBuffer theBuffer = {0};
-
-  rlBufferCreate(&theBuffer, 8);
-  rlSendBufferData(agentConnection, &theBuffer, kRLTerm);
-
-  rlClose(agentConnection);
-  agentConnection = 0;
-
-  rlBufferDestroy(&theBuffer);
-}

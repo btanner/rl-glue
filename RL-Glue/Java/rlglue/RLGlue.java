@@ -21,7 +21,7 @@ public class RLGlue
 	    network.connect(Network.kDefaultHost, 
 			    Network.kDefaultPort, 
 			    Network.kRetryTimeout);
-      	    
+
     	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kExperimentConnection);
 	    byteBuffer.putInt(0);
@@ -95,13 +95,16 @@ public class RLGlue
 	    
 	    int glueState = headerBuffer.getInt();
 	    int dataSize = headerBuffer.getInt();
-	    
+
 	    if (glueState != Network.kRLStart)
 	    {
 		System.err.println("RL_start not synched with server\n");
 		System.exit(1);
 	    }
 		
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
@@ -147,7 +150,10 @@ public class RLGlue
 		System.err.println("RL_step not synched with server\n");
 		System.exit(1);
 	    }
-	    
+
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
@@ -196,7 +202,11 @@ public class RLGlue
 	    }
 	    
 	    byteBuffer.clear();
-	    //network.close();
+	    //network.close(); // Cleanup no longer closes the connection.  
+	    //We need to be able to run multiple RL_init/RL_cleanup's without killing the 
+	    //connection between.  Since this code is running from the user experiment
+	    //the connection never gets explicitly closed.  :(
+	    //The VM/OS will clean this up and close the connection when the program exits.
 	}
 	catch (IOException ioException)
 	{
@@ -205,12 +215,23 @@ public class RLGlue
 	}
     }
 	
-    public static synchronized  String RL_agent_message(String message)
+    public static synchronized String RL_agent_message(String message)
     {
 	forceConnection();
 
 	try
 	{
+	    // 12 bytes + message.length() comes from: 
+	    //   int messageType (4 bytes)
+	    //   int messageLength (4 bytes)
+	    //   int stringLength (4 bytes)
+	    //   String string (variable)
+
+	    if (byteBuffer.capacity() < 12 + message.length()) 
+	    {
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + message.length());
+	    }
+
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLAgentMessage);
 	    byteBuffer.putInt(message.length()+4);
@@ -233,6 +254,9 @@ public class RLGlue
 		System.exit(1);
 	    }
 	    
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
@@ -248,12 +272,17 @@ public class RLGlue
 	}
     }
 	
-    public static synchronized  String RL_env_message(String message)
+    public static synchronized String RL_env_message(String message)
     {
 	forceConnection();
 
 	try
 	{
+	    if (byteBuffer.capacity() < 12 + message.length()) 
+	    {
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + message.length());
+	    }
+
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLEnvMessage);
 	    byteBuffer.putInt(message.length()+4);
@@ -276,6 +305,9 @@ public class RLGlue
 		System.exit(1);
 	    }
 	    
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
@@ -318,6 +350,9 @@ public class RLGlue
 		System.err.println("RL_return not synched with server\n");
 		System.exit(1);
 	    }
+
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
 	    
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
@@ -362,6 +397,9 @@ public class RLGlue
 		System.exit(1);
 	    }
 	    
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
@@ -404,6 +442,9 @@ public class RLGlue
 		System.err.println("RL_num_episodes not synched with server\n");
 		System.exit(1);
 	    }
+
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
 	    
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
@@ -502,6 +543,11 @@ public class RLGlue
 	{
 	    int size = (4 + sk.intArray.length * 4) + (4 + sk.doubleArray.length * 8);
 	    
+	    if (byteBuffer.capacity() < 8 + size)
+	    {
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
+	    }
+
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLSetState);
 	    byteBuffer.putInt(size);
@@ -539,6 +585,11 @@ public class RLGlue
 	try
 	{
 	    int size = (4 + rsk.intArray.length * 4) + (4 + rsk.doubleArray.length * 8);
+
+	    if (byteBuffer.capacity() < 8 + size)
+	    {
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
+	    }
 	    
 	    byteBuffer.clear();
 	    byteBuffer.putInt(Network.kRLSetRandomSeed);
@@ -594,7 +645,10 @@ public class RLGlue
 		System.err.println("RL_get_state not synched with server\n");
 		System.exit(1);
 	    }
-	    
+	
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+    
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();
@@ -638,6 +692,9 @@ public class RLGlue
 		System.exit(1);
 	    }
 	    
+	    if (byteBuffer.capacity() < dataSize)
+		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
+
 	    byteBuffer.clear();
 	    network.recv(byteBuffer, dataSize);
 	    byteBuffer.flip();

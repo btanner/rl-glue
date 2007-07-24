@@ -7,6 +7,18 @@ int rlDidEnvironmentConnect()
   return envConnection != 0;
 }
 
+void rlCloseEnvironmentConnection()
+{
+  rlBuffer theBuffer = {0};
+  rlBufferCreate(&theBuffer, 8);
+  rlSendBufferData(envConnection, &theBuffer, kRLTerm);
+
+  rlClose(envConnection);
+  envConnection = 0;
+
+  rlBufferDestroy(&theBuffer);
+}
+
 void rlSetEnvironmentConnection(int connection)
 {
   if (rlDidEnvironmentConnect())
@@ -18,16 +30,4 @@ void rlSetEnvironmentConnection(int connection)
 int rlGetEnvironmentConnection()
 {
   return envConnection;
-}
-
-void rlCloseEnvironmentConnection()
-{
-  rlBuffer theBuffer = {0};
-  rlBufferCreate(&theBuffer, 8);
-  rlSendBufferData(envConnection, &theBuffer, kRLTerm);
-
-  rlClose(envConnection);
-  envConnection = 0;
-
-  rlBufferDestroy(&theBuffer);
 }
