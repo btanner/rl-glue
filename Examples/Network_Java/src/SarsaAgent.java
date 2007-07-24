@@ -91,7 +91,7 @@ public class SarsaAgent implements Agent
     
     public String agent_message(final String message)
     {
-	return "This agent does not respond to any messages";
+	return "This agent does not respond to any messages.";
     }
     
     public void agent_freeze()

@@ -23,6 +23,9 @@ public class ClientEnvironment
     {
 	String taskSpec = env.env_init();
 	
+	if (byteBuffer.capacity() < 12 + taskSpec.length())
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + taskSpec.length());
+
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvInit);
 	byteBuffer.putInt(taskSpec.length() + 4);
@@ -34,6 +37,9 @@ public class ClientEnvironment
     {
 	Observation obs = env.env_start();
 	int size = (obs.intArray.length * 4 + 4) + (obs.doubleArray.length * 8 + 4);
+
+	if (byteBuffer.capacity() < 8 + size)
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
 
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvStart);
@@ -49,6 +55,9 @@ public class ClientEnvironment
 	    + 8 // reward
 	    + (rewardObservation.o.intArray.length * 4 + 4) // intArray data + size
 	    + (rewardObservation.o.doubleArray.length * 8 + 4); // doubleArray data + size
+
+	if (byteBuffer.capacity() < 8 + sendSize)
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + sendSize);
 
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvStep);
@@ -70,6 +79,9 @@ public class ClientEnvironment
     {
 	String message = Network.getString(byteBuffer);
 	String reply = env.env_message(message);
+
+	if (byteBuffer.capacity() < 12 + reply.length())
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + reply.length());
 
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kEnvMessage);

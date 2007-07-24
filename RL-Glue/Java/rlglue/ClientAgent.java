@@ -38,6 +38,9 @@ public class ClientAgent
 	/* In java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
 	int size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
 
+	if (byteBuffer.capacity() < 8 + size)
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
+
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kAgentStart);
 	byteBuffer.putInt(size);
@@ -53,6 +56,9 @@ public class ClientAgent
 	
 	/* In Java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
 	int size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
+
+	if (byteBuffer.capacity() < 8 + size)
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
 
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kAgentStep);
@@ -95,6 +101,9 @@ public class ClientAgent
     {
 	String message = Network.getString(byteBuffer);
 	String reply = agent.agent_message(message);
+
+	if (byteBuffer.capacity() < 12 + reply.length())
+	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + reply.length());
 
 	byteBuffer.clear();
 	byteBuffer.putInt(Network.kAgentMessage);
