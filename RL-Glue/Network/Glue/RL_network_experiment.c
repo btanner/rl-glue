@@ -9,7 +9,13 @@ int rlDidExperimentConnect()
 
 void rlSetExperimentConnection(int connection)
 {
-  expConnection = connection;
+  /* We can't really send a term signal back to the user benchmark,
+     they won't know what to do with it. */
+
+  if (rlDidExperimentConnect())
+    rlClose(expConnection);
+
+    expConnection = connection;
 }
 
 void rlCloseExperimentConnection()

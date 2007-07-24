@@ -9,6 +9,9 @@ int rlDidAgentConnect()
 
 void rlSetAgentConnection(int connection)
 {
+  if (rlDidAgentConnect())
+    rlCloseAgentConnection();
+
   agentConnection = connection;
 }
 

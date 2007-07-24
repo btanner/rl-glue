@@ -9,6 +9,9 @@ int rlDidEnvironmentConnect()
 
 void rlSetEnvironmentConnection(int connection)
 {
+  if (rlDidEnvironmentConnect())
+    rlCloseEnvironmentConnection();
+
   envConnection = connection;
 }
 
