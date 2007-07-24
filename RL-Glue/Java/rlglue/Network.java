@@ -46,6 +46,8 @@ public class Network
     public static final int kRLAgentMessage  = 33;
     public static final int kRLEnvMessage    = 34;
 
+    public static final int kRLTerm          = 35;
+
     public static final String kDefaultHost = "127.0.0.1";
     public static final int kDefaultPort = 4096;
     public static final int kRetryTimeout = 10;

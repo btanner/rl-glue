@@ -196,7 +196,7 @@ public class RLGlue
 	    }
 	    
 	    byteBuffer.clear();
-	    network.close();
+	    //network.close();
 	}
 	catch (IOException ioException)
 	{

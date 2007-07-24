@@ -131,6 +131,9 @@ public class ClientEnvironment
 	    case Network.kEnvMessage:
 		onEnvMessage();
 		break;
+
+	    case Network.kRLTerm:
+		break;
 		
 	    default:
 		System.err.println(kUnknownMessage + envState);
@@ -141,6 +144,6 @@ public class ClientEnvironment
 	    byteBuffer.flip();
 	    network.send(byteBuffer);
 
-	} while (envState != Network.kEnvCleanup);
+	} while (envState != Network.kRLTerm);
     }
 }

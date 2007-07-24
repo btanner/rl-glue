@@ -31,32 +31,36 @@ public class Experiment
 	System.err.println("Response: " + response);
 
 	/*basic main loop*/
-	RLGlue.RL_init();
 
-	String agentMessage = RLGlue.RL_agent_message("poke");
-	System.out.println(agentMessage);
-
-	String envMessage = RLGlue.RL_env_message("prod");
-	System.out.println(envMessage);
-
-	run(kNumEpisodes);
-	RLGlue.RL_cleanup();
-	
-	/*add up all the steps and all the returns*/
-	for (int i = 0; i < Experiment.kNumEpisodes; ++i) {
-	    avgSteps += rlNumSteps[i];
-	    avgReturn += rlReturn[i];
-	}
-	
-	/*average steps and returns*/
-	avgSteps /= (double)Experiment.kNumEpisodes;
-	avgReturn /= (double)Experiment.kNumEpisodes;
-	
-	/*print out results*/
-	System.out.println("\n-----------------------------------------------\n");
-	System.out.println("Number of episodes: " + Experiment.kNumEpisodes);
-	System.out.println("Average number of steps per episode: " +  avgSteps);
-	System.out.println("Average return per episode: " + avgReturn);
-	System.out.println("-----------------------------------------------\n");
-    }   
+	for (int run = 0; run < 2; ++run)
+	{
+	    RLGlue.RL_init();
+	    
+	    String agentMessage = RLGlue.RL_agent_message("poke");
+	    System.out.println(agentMessage);
+	    
+	    String envMessage = RLGlue.RL_env_message("prod");
+	    System.out.println(envMessage);
+	    
+	    run(kNumEpisodes);
+	    RLGlue.RL_cleanup();
+	    
+	    /*add up all the steps and all the returns*/
+	    for (int i = 0; i < Experiment.kNumEpisodes; ++i) {
+		avgSteps += rlNumSteps[i];
+		avgReturn += rlReturn[i];
+	    }
+	    
+	    /*average steps and returns*/
+	    avgSteps /= (double)Experiment.kNumEpisodes;
+	    avgReturn /= (double)Experiment.kNumEpisodes;
+	    
+	    /*print out results*/
+	    System.out.println("\n-----------------------------------------------\n");
+	    System.out.println("Number of episodes: " + Experiment.kNumEpisodes);
+	    System.out.println("Average number of steps per episode: " +  avgSteps);
+	    System.out.println("Average return per episode: " + avgReturn);
+	    System.out.println("-----------------------------------------------\n");
+	}   
+    }
 }

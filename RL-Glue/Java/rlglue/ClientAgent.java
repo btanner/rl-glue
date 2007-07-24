@@ -164,6 +164,9 @@ public class ClientAgent
 	    case Network.kAgentMessage:
 		onAgentMessage();
 		break;
+
+	    case Network.kRLTerm:
+		break;
 		
 	    default:
 		System.err.println(kUnknownMessage + agentState);
@@ -173,6 +176,6 @@ public class ClientAgent
 
 	    byteBuffer.flip();
 	    network.send(byteBuffer);
-	} while (agentState != Network.kAgentCleanup);
+	} while (agentState != Network.kRLTerm);
     }
 }
