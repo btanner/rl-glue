@@ -145,7 +145,6 @@ void onRLCleanup(int theConnection) {
 
   rlBufferClear(&theBuffer);
   
-
   /* Cleanup the state key */
   if (theStateKey.intArray != 0) {
     free(theStateKey.intArray);
