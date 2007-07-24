@@ -10,6 +10,7 @@
 static Action theAction = {0};
 static rlBuffer theBuffer = {0};
 
+/* These are defined in RL_network_agent and RL_direct_agent */
 extern void rlSetAgentConnection(int);
 extern int rlGetAgentConnection();
 
@@ -27,12 +28,15 @@ void agent_init(const Task_specification theTaskSpec) {
   /* send across agent_init specific data */
   rlBufferClear(&theBuffer);
   offset = 0;
+
+  /* Strings are always preceeded by their length, and do not include their null terminating character */
   offset = rlBufferWrite(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));
   if (theTaskSpecLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
   }
   rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
+  /* Receive the receipt from the Client, to ensure that AgentInit has been completed */
   rlBufferClear(&theBuffer);
   rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentInit);
