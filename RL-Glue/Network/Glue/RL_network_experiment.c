@@ -11,9 +11,8 @@ void rlSetExperimentConnection(int connection)
 {
   /* We can't really send a term signal back to the user benchmark,
      they won't know what to do with it. */
-
   if (rlDidExperimentConnect())
-    rlClose(expConnection);
+    rlCloseExperimentConnection();
 
     expConnection = connection;
 }
@@ -21,4 +20,5 @@ void rlSetExperimentConnection(int connection)
 void rlCloseExperimentConnection()
 {
   rlClose(expConnection);
+  expConnection = 0;
 }
