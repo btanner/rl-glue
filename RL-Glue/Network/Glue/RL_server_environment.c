@@ -7,11 +7,11 @@
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
-static Task_specification theTaskSpec = 0;
+static Task_specification theTaskSpec   = 0;
+static rlBuffer theBuffer               = {0};
 static Observation theObservation       = {0};
 static State_key theStateKey            = {0};
 static Random_seed_key theRandomSeedKey = {0};
-static rlBuffer theBuffer = {0};
 
 extern void rlSetEnvironmentConnection();
 extern int rlGetEnvironmentConnection();
@@ -22,7 +22,7 @@ Task_specification env_init() {
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
 
-  rlBufferCreate(&theBuffer, 4096);
+  rlBufferCreate(&theBuffer, 65536);
 
   /* env init-specific data */
   rlBufferClear(&theBuffer);
@@ -35,6 +35,12 @@ Task_specification env_init() {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &theTaskSpecLength, 1, sizeof(int));  
   if (theTaskSpecLength > 0) {
+
+    if (theTaskSpec != 0) {
+      free(theTaskSpec);
+      theTaskSpec = 0;
+    }
+
     theTaskSpec = (char*)calloc(theTaskSpecLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
     theTaskSpec[theTaskSpecLength] = '\0';
@@ -91,29 +97,48 @@ void env_cleanup() {
   rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvCleanup);
 
-  rlClose(rlGetEnvironmentConnection());
-  rlSetEnvironmentConnection(0);
+  rlBufferDestroy(&theBuffer);
 
-  free(theObservation.intArray);
-  free(theObservation.doubleArray);
-  free(theStateKey.intArray);
-  free(theStateKey.doubleArray);
-  free(theRandomSeedKey.intArray);
-  free(theRandomSeedKey.doubleArray);
+  if (theTaskSpec != 0) {
+    free(theTaskSpec);
+    theTaskSpec = 0;
+  }
 
-  theObservation.intArray = 0;
-  theObservation.doubleArray = 0;
-  theStateKey.intArray = 0;
-  theStateKey.doubleArray = 0;
-  theRandomSeedKey.intArray = 0;
-  theRandomSeedKey.doubleArray = 0;
+  if (theObservation.intArray != 0) {
+    free(theObservation.intArray);
+    theObservation.intArray = 0;
+    theObservation.numInts = 0;
+  }
 
-  theObservation.numInts = 0;
-  theObservation.numDoubles = 0;
-  theStateKey.numInts = 0;
-  theStateKey.numDoubles = 0;
-  theRandomSeedKey.numInts = 0;
-  theRandomSeedKey.numDoubles = 0;
+  if (theObservation.doubleArray != 0) {
+    free(theObservation.doubleArray);
+    theObservation.doubleArray = 0;
+    theObservation.numDoubles = 0;
+  }
+
+  if (theStateKey.intArray != 0) {
+    free(theStateKey.intArray);
+    theStateKey.intArray = 0;
+    theStateKey.numInts = 0;
+  }
+
+  if (theStateKey.doubleArray != 0) {
+    free(theStateKey.doubleArray);
+    theStateKey.doubleArray = 0;
+    theStateKey.numDoubles = 0;
+  }
+
+  if (theRandomSeedKey.intArray != 0) {
+    free(theRandomSeedKey.intArray);
+    theRandomSeedKey.intArray = 0;
+    theRandomSeedKey.numInts = 0;
+  }
+
+  if (theRandomSeedKey.doubleArray != 0) {
+    free(theRandomSeedKey.doubleArray);
+    theRandomSeedKey.doubleArray = 0;
+    theRandomSeedKey.numDoubles = 0;
+  }
 }
 
 void env_set_state(State_key theStateKey) {

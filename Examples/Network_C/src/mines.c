@@ -79,7 +79,8 @@ Task_specification env_init()
   sprintf(temp,"]:1_[i]_[0,");
   strcat(Task_spec,temp);
   sprintf(temp,"%d]",4-1);
-  strcat(Task_spec,temp); 
+  strcat(Task_spec,temp);
+ 
   return Task_spec;
 }
 
@@ -94,8 +95,8 @@ Observation env_start()
   
   while(env_map[r][c] != M.LAND)
   {
-    r =  rand()% M.row;
-    c = rand()% M.col;
+    r = rand() % M.row;
+    c = rand() % M.col;
   }
 
   M.startRow = r;

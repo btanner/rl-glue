@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
   double avg_steps = 0.0;
   double avg_return = 0.0;
 
-  for (trial = 0; trial < 5; ++trial) {
+  for (trial = 0; trial < 2; ++trial) {
 
     RL_init();
     run(NUM_EPISODES);

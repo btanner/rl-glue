@@ -128,7 +128,8 @@ int rlRecvData(int theSocket, void* theData, int theLength) {
 void rlBufferCreate(rlBuffer *buffer, unsigned int capacity) {
   buffer->size     = 0;
   buffer->capacity = 0;
-  
+  buffer->data     = 0;
+
   if (capacity > 0) {
     rlBufferReserve(buffer, capacity);
   }
@@ -137,7 +138,9 @@ void rlBufferCreate(rlBuffer *buffer, unsigned int capacity) {
 
 /* free up the buffer */
 void rlBufferDestroy(rlBuffer *buffer) {
-  free(buffer->data);
+  if (buffer->data != 0) {
+    free(buffer->data);
+  }
   buffer->data = 0;
   buffer->size = 0;
   buffer->capacity = 0;
@@ -158,7 +161,7 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     /* Allocate enough memory for the additional data */
     new_capacity = capacity + (capacity - buffer->capacity) * 2;
     assert(new_capacity > 0);
-    new_data = (unsigned char*)malloc(new_capacity);
+    new_data = (unsigned char*)calloc(new_capacity, sizeof(char));
     assert(new_data != 0);
 
     /* Copy the existing data into the the larger memory allocation */
@@ -167,8 +170,11 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     }
 
     /* Free the original data */
-    free(buffer->data);
-
+    if (buffer->data != 0) {
+      free(buffer->data);
+      buffer->data = 0;
+    }
+   
     /* Set the buffers data to the new data pointer */
     buffer->data = new_data;
 
@@ -264,7 +270,7 @@ unsigned int rlSendBufferData(int theSocket, const rlBuffer* buffer, const int t
     rlSendData(theSocket, buffer->data, buffer->size);
   }
 
-  return buffer->size; /* Returns payload size, not actual data sent ! */
+  return (sizeof(unsigned int) * 2) + buffer->size; /* Returns payload size, not actual data sent ! */
 }
 
 
@@ -276,32 +282,36 @@ unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
   unsigned int recvSize = 0;
   unsigned int header[2] = {0};
 
-  rlRecvData(theSocket, header, sizeof(unsigned int) * 2);
-  recvTarget = (int)header[0];
-  recvSize = header[1];
-  
-  /*
-    rlRecvData(theSocket, &recvTarget, sizeof(int));
-    rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
-  */
-
-  /* recvSize came across in network byte order, swap it if we're little endian */
-  if (rlGetSystemByteOrder() == 1) {
-    rlSwapData(target, &recvTarget, sizeof(int));
-    rlSwapData(&buffer->size, &recvSize, sizeof(unsigned int));
+  if (rlRecvData(theSocket, header, sizeof(unsigned int) * 2) > 0)
+  {
+    recvTarget = (int)header[0];
+    recvSize = header[1];
+    
+    /*
+      rlRecvData(theSocket, &recvTarget, sizeof(int));
+      rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
+    */
+    
+    /* recvSize came across in network byte order, swap it if we're little endian */
+    if (rlGetSystemByteOrder() == 1) {
+      rlSwapData(target, &recvTarget, sizeof(int));
+      rlSwapData(&buffer->size, &recvSize, sizeof(unsigned int));
+    }
+    else {
+      *target = recvTarget;
+      buffer->size = recvSize;
+    }
+    
+    rlBufferReserve(buffer, buffer->size);
+    
+    if (buffer->size > 0) {
+      rlRecvData(theSocket, buffer->data, buffer->size);
+    }
+    
+    return (sizeof(unsigned int) * 2) + buffer->size;
   }
-  else {
-    *target = recvTarget;
-    buffer->size = recvSize;
-  }
-
-  rlBufferReserve(buffer, buffer->size);
-  
-  if (buffer->size > 0) {
-    rlRecvData(theSocket, buffer->data, buffer->size);
-  }
-
-  return buffer->size; /* Returns payload size, not actual data received ! */
+  else 
+    return 0;
 }
 
 /* Utilities */

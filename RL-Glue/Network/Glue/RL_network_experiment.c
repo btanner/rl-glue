@@ -1,4 +1,6 @@
-int expConnection = 0;
+#include <Network/RL_network.h>
+
+static int expConnection = 0;
 
 int rlDidExperimentConnect()
 {
@@ -8,4 +10,9 @@ int rlDidExperimentConnect()
 void rlSetExperimentConnection(int connection)
 {
   expConnection = connection;
+}
+
+void rlCloseExperimentConnection()
+{
+  rlClose(expConnection);
 }

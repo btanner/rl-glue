@@ -136,30 +136,64 @@ void RL_cleanup() {
   rlRecvBufferData(theExperimentConnection, &theBuffer, &experimentState);
   assert(experimentState == kRLCleanup);
 
-  rlClose(theExperimentConnection);
-  theExperimentConnection = 0;
+  if (theObservation.intArray != 0) {
+    free(theObservation.intArray);
+    theObservation.intArray = 0;
+    theObservation.numInts = 0;
+  }
 
-  free(theObservation.intArray);
-  free(theObservation.doubleArray);
-  free(theAction.intArray);
-  free(theAction.doubleArray);
-  free(theStateKey.intArray);
-  free(theStateKey.doubleArray);
-  free(theRandomSeedKey.intArray);
-  free(theRandomSeedKey.doubleArray);
-  free(theTaskSpec);
-  free(theMessage);
+  if (theObservation.doubleArray != 0) {
+    free(theObservation.doubleArray);
+    theObservation.doubleArray = 0;
+    theObservation.numDoubles = 0;
+  }
 
-  theObservation.numInts = 0;
-  theObservation.numDoubles = 0;
-  theAction.numInts = 0;
-  theAction.numDoubles = 0;
-  theStateKey.numInts = 0;
-  theStateKey.numDoubles = 0;
-  theRandomSeedKey.numInts = 0;
-  theRandomSeedKey.numDoubles = 0;
-  theTaskSpec = 0;
-  theMessage = 0;
+  if (theAction.intArray != 0) {
+    free(theAction.intArray);
+    theAction.intArray = 0;
+    theAction.numInts = 0;
+  }
+
+  if (theAction.doubleArray != 0) {
+    free(theAction.doubleArray);
+    theAction.doubleArray = 0;
+    theAction.numDoubles = 0;
+  }
+
+  if (theStateKey.intArray != 0) {
+    free(theStateKey.intArray);
+    theStateKey.intArray = 0;
+    theStateKey.numInts = 0;
+  }
+
+  if (theStateKey.doubleArray != 0) {
+    free(theStateKey.doubleArray);
+    theStateKey.doubleArray = 0;
+    theStateKey.numDoubles = 0;
+  }
+
+  if (theRandomSeedKey.intArray != 0) {
+    free(theRandomSeedKey.intArray);
+    theStateKey.intArray = 0;
+    theStateKey.numInts = 0;
+  }
+
+  if (theRandomSeedKey.doubleArray != 0) {
+    free(theRandomSeedKey.doubleArray);
+    theRandomSeedKey.doubleArray = 0;
+    theRandomSeedKey.numDoubles = 0;
+  }
+
+  if (theTaskSpec != 0) {
+    free(theTaskSpec);
+    theTaskSpec = 0;
+  }
+
+  if (theMessage != 0) {
+    free(theMessage);
+    theMessage = 0;
+  }
+
   theMessageCapacity = 0;
 }
 

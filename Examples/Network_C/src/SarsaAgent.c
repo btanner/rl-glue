@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 #include "Glue_utilities.h"
 #include "SarsaAgent.h"
 
@@ -20,8 +21,9 @@ void agent_init(const Task_specification task_spec)
 {  
   task_spec_struct tss;					/*declare task_spec_struct*/
   srand(0);/*seed the randomness*/
+  
+  assert (task_spec != 0);
   parse_task_spec(task_spec, &tss);		/*Parsing task_specification*/	
-
 
 /*allocating memory for one Action*/
   action.numInts     =  tss.num_discrete_action_dims;

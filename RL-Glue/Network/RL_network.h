@@ -43,6 +43,8 @@
 #define kRLAgentMessage   33
 #define kRLEnvMessage     34
 
+#define kRLTerm           35
+
 #define kLocalHost "127.0.0.1"
 #define kDefaultPort 4096
 #define kRetryTimeout 10

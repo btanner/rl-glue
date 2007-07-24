@@ -4,12 +4,15 @@
 
 extern int rlDidAgentConnect();
 extern void rlSetAgentConnection(int);
+extern void rlCloseAgentConnection();
 
 extern int rlDidEnvironmentConnect();
 extern void rlSetEnvironmentConnection(int);
+extern void rlCloseEnvironmentConnection();
 
 extern int rlDidExperimentConnect();
 extern void rlSetExperimentConnection(int);
+extern void rlCloseExperimentConnection();
 
 int rlOpenServer()
 {
@@ -80,4 +83,11 @@ int rlConnectSystems() {
   }
 
   return theExperimentConnection;
+}
+
+void rlDisconnectSystems()
+{
+  rlCloseAgentConnection();
+  rlCloseEnvironmentConnection();
+  rlCloseExperimentConnection();
 }

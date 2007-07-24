@@ -6,3 +6,7 @@ int rlDidExperimentConnect()
 void rlSetExperimentConnection(int connection)
 {
 }
+
+void rlCloseExperimentConnection()
+{
+}

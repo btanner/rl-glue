@@ -105,16 +105,18 @@ void agent_cleanup() {
   rlBufferClear(&theBuffer);
   rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
   assert(agentState == kAgentCleanup);
- 
-  rlClose(rlGetAgentConnection());
-  rlSetAgentConnection(0);
 
-  free(theAction.intArray);
-  free(theAction.doubleArray);
-  theAction.numInts     = 0;
-  theAction.numDoubles  = 0;
-  theAction.intArray    = 0;
-  theAction.doubleArray = 0;
+  if (theAction.intArray != 0) {
+    free(theAction.intArray);
+    theAction.intArray    = 0;
+    theAction.numInts     = 0;
+  }
+
+  if (theAction.doubleArray != 0) {
+    free(theAction.doubleArray);
+    theAction.doubleArray = 0;
+    theAction.numDoubles  = 0;
+  }
 
   rlBufferDestroy(&theBuffer);
 }

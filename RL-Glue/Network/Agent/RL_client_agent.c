@@ -203,7 +203,10 @@ static void runAgentEventLoop(int theConnection) {
 
     case kAgentMessage:
       onAgentMessage(theConnection);
-	  break;
+      break;
+
+    case kRLTerm:
+      break;
     
     default:
       fprintf(stderr, kUnknownMessage, agentState);
@@ -212,7 +215,7 @@ static void runAgentEventLoop(int theConnection) {
     };
 
     rlSendBufferData(theConnection, &theBuffer, agentState);
-  } while (agentState != kAgentCleanup);
+  } while (agentState != kRLTerm);
 }
 
 int main(int argc, char** argv) {

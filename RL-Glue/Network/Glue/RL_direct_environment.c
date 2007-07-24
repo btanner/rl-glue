@@ -6,3 +6,7 @@ int rlDidEnvironmentConnect()
 void rlSetEnvironmentConnection(int envConnection)
 {
 }
+
+void rlCloseEnvironmentConnection()
+{
+}

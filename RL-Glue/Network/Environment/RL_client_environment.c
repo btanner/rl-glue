@@ -219,6 +219,9 @@ static void runEnvironmentEventLoop(int theConnection) {
       onEnvMessage(theConnection);
       break;
 
+    case kRLTerm:
+      break;
+
     default:
       fprintf(stderr, kUnknownMessage, envState);
       exit(0);
@@ -226,7 +229,7 @@ static void runEnvironmentEventLoop(int theConnection) {
     };
 
     rlSendBufferData(theConnection, &theBuffer, envState);
-  } while (envState != kEnvCleanup);
+  } while (envState != kRLTerm);
 }
 
 int main(int argc, char** argv) {

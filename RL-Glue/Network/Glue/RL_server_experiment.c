@@ -10,6 +10,7 @@
 const char* kUnknownMessage = "Unknown Message: %s\n";
 
 extern int rlConnectSystems();
+extern void rlDisconnectSystems();
 
 extern Task_specification RL_init();
 extern Observation_action RL_start();
@@ -35,6 +36,7 @@ rlBuffer theBuffer = {0};
 int theConnection = 0;
 
 void termination_handler(int signum) {
+  fprintf(stderr, "Signal: %d has killed this process. Cleaning Up And Exiting....\n", signum);
   onRLCleanup(theConnection);
   if (theConnection != 0) {
     rlClose(theConnection);
@@ -143,19 +145,31 @@ void onRLCleanup(int theConnection) {
 
   rlBufferClear(&theBuffer);
   
-  free(theStateKey.intArray);
-  free(theStateKey.doubleArray);
-  free(theRandomSeedKey.intArray);
-  free(theRandomSeedKey.doubleArray);
 
-  theStateKey.intArray = 0;
-  theStateKey.doubleArray = 0;
+  /* Cleanup the state key */
+  if (theStateKey.intArray != 0) {
+    free(theStateKey.intArray);
+    theStateKey.intArray = 0;
+  }
 
-  theRandomSeedKey.intArray = 0;
-  theRandomSeedKey.doubleArray = 0;
-  
+  if (theStateKey.doubleArray != 0) {
+    free(theStateKey.doubleArray);
+    theStateKey.doubleArray = 0;
+  }
+
   theStateKey.numInts = 0;
   theStateKey.numDoubles = 0;
+
+  /* Cleanup the random seed key */
+  if (theRandomSeedKey.intArray != 0) {
+    free(theRandomSeedKey.intArray);
+    theRandomSeedKey.intArray = 0;
+  }
+
+  if (theRandomSeedKey.doubleArray != 0) {
+    free(theRandomSeedKey.doubleArray);
+    theRandomSeedKey.doubleArray = 0;
+  }
 
   theRandomSeedKey.numInts = 0;
   theRandomSeedKey.numDoubles = 0;
@@ -230,10 +244,11 @@ void onRLEnvMessage(int theConnection) {
 
 void runGlueEventLoop(int theConnection) {
   int glueState = 0;
-
+  
   do { 
     rlBufferClear(&theBuffer);
-    rlRecvBufferData(theConnection, &theBuffer, &glueState);
+    if (rlRecvBufferData(theConnection, &theBuffer, &glueState) == 0)
+      break;
 
     switch(glueState) {
     case kRLInit:
@@ -296,13 +311,16 @@ void runGlueEventLoop(int theConnection) {
       onRLEnvMessage(theConnection);
       break;
 
+    case kRLTerm:
+      break;
+
     default:
       fprintf(stderr, kUnknownMessage, glueState);
       break;
     };
 
     rlSendBufferData(theConnection, &theBuffer, glueState);
-  } while (glueState != kRLCleanup);
+  } while (glueState != kRLTerm);
 }
 
 int main(int argc, char** argv) {
@@ -323,13 +341,13 @@ int main(int argc, char** argv) {
   }
   fprintf(stderr, "autoreconnect=%d\n", autoReconnect);
 
-  rlBufferCreate(&theBuffer, 4096);
+  rlBufferCreate(&theBuffer, 65536);
 
   do {
     theConnection = rlConnectSystems();
     assert(rlIsValidSocket(theConnection));
     runGlueEventLoop(theConnection);
-    rlClose(theConnection);
+    rlDisconnectSystems();
   } while (autoReconnect);
 
   rlBufferDestroy(&theBuffer);
