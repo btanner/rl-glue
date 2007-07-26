@@ -1,193 +1,179 @@
 package rlglue;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 
 public class ClientAgent 
 {
-    protected static final String kUnknownMessage = "Unknown Message: ";
-    protected Network network;
-    protected ByteBuffer headerBuffer;
-    protected ByteBuffer byteBuffer;
-    protected Agent agent;
+	protected static final String kUnknownMessage = "Unknown Message: ";
+	protected Network network;
+	protected Agent agent;
 
-    public ClientAgent(Agent agent) 
-    {
-	this.agent = agent;
-	this.network = new Network();
-	this.headerBuffer = ByteBuffer.allocate(8);
-	this.byteBuffer = ByteBuffer.allocate(65536);
-    }
+	public ClientAgent(Agent agent) 
+	{
+		this.agent = agent;
+		this.network = new Network();
+	}
 
-    protected void onAgentInit() throws UnsupportedEncodingException
-    {
-	String taskSpec = Network.getString(byteBuffer);
+	protected void onAgentInit() throws UnsupportedEncodingException
+	{
+		String taskSpec = network.getString();
 
-       	agent.agent_init(taskSpec);
+		agent.agent_init(taskSpec);
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentInit);
-	byteBuffer.putInt(0);
-    }
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentInit);
+		network.putInt(0); // No data following this header
+	}
 
-    protected void onAgentStart()
-    {
-	Observation observation = Network.getObservation(byteBuffer);
-	Action action = agent.agent_start(observation);
+	protected void onAgentStart()
+	{
+		Observation observation = network.getObservation();
+		Action action = agent.agent_start(observation);
 
-	/* In java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
-	int size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
+		int size = Network.sizeOf(action); 
 
-	if (byteBuffer.capacity() < 8 + size)
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentStart);
+		network.putInt(size);
+		network.putAction(action);
+	}
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentStart);
-	byteBuffer.putInt(size);
-	
-	Network.putAction(byteBuffer, action);
-    }
+	protected void onAgentStep()
+	{
+		double reward = network.getDouble();
+		Observation observation = network.getObservation();
+		Action action = agent.agent_step(reward, observation);
 
-    protected void onAgentStep()
-    {
-	double reward = byteBuffer.getDouble();
-	Observation observation = Network.getObservation(byteBuffer);
-	Action action = agent.agent_step(reward, observation);
-	
-	/* In Java ints and doubles are 32 bits (4 bytes) and 64 bits (8 bytes) respectively */
-	int size = (action.intArray.length * 4 + 4) + (action.doubleArray.length * 8 + 4); 
+		int size = Network.sizeOf(action); 
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentStep);
+		network.putInt(size);
+		network.putAction(action);
+	}
 
-	if (byteBuffer.capacity() < 8 + size)
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
+	protected void onAgentEnd()
+	{
+		int size = network.getInt();
+		double reward = network.getDouble();
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentStep);
-	byteBuffer.putInt(size);
-	
-	Network.putAction(byteBuffer, action);
-    }
+		agent.agent_end(reward);
 
-    protected void onAgentEnd()
-    {
-	int size = byteBuffer.getInt();
-	double reward = byteBuffer.getDouble();
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentEnd);
+		network.putInt(0); // No data in this packet
+	}
 
-	agent.agent_end(reward);
-	
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentEnd);
-	byteBuffer.putInt(0);
-    }
+	protected void onAgentCleanup()
+	{
+		agent.agent_cleanup();
 
-    protected void onAgentCleanup()
-    {
-	agent.agent_cleanup();
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentCleanup);
+		network.putInt(0); // No data in this packet
+	}
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentCleanup);
-	byteBuffer.putInt(0);
-    }
+	protected void onAgentFreeze()
+	{
+		agent.agent_freeze();
 
-    protected void onAgentFreeze()
-    {
-	agent.agent_freeze();
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentFreeze);
+		network.putInt(0); // No data in this packet
+	}
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentFreeze);
-	byteBuffer.putInt(0);
-    }
-
-    protected void onAgentMessage() throws UnsupportedEncodingException
-    {
-	String message = Network.getString(byteBuffer);
-	String reply = agent.agent_message(message);
-
-	if (byteBuffer.capacity() < 12 + reply.length())
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + reply.length());
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentMessage);
-	byteBuffer.putInt(reply.length() + 4); // Sizeof int == 4 
-	Network.putString(byteBuffer, reply);  // send the length of the string and the string.
-    }
-
-    public void connect(String host, int port, int timeout) throws Exception
-    {	
-	network.connect(host, port, timeout);
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kAgentConnection);
-	byteBuffer.putInt(0); // No body to this packet
-	byteBuffer.flip();
-	network.send(byteBuffer);
-    }
-
-    public void close() throws IOException
-    {
-	byteBuffer.clear();
-	network.close();
-    }
-
-    public void runAgentEventLoop() throws Exception
-    {
-	int agentState = 0;
-	int dataSize = 0;
-
-	do {
-	    headerBuffer.clear();
-	    network.recv(headerBuffer, 8);
-	    headerBuffer.flip();
-
-	    agentState = headerBuffer.getInt();
-	    dataSize = headerBuffer.getInt();
-
-	    if (byteBuffer.capacity() < dataSize)
-		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
-
-	    byteBuffer.clear();    
-	    network.recv(byteBuffer, dataSize);
-	    byteBuffer.flip();
-	    
-	    switch(agentState) {
-	    case Network.kAgentInit:
-		onAgentInit();
-		break;
+	protected void onAgentMessage() throws UnsupportedEncodingException
+	{
+		String message = network.getString();
+		String reply = agent.agent_message(message);
 		
-	    case Network.kAgentStart:
-		onAgentStart();
-		break;
-		
-	    case Network.kAgentStep:
-		onAgentStep();
-		break;
-		
-	    case Network.kAgentEnd:
-		onAgentEnd();
-		break;
-		
-	    case Network.kAgentCleanup:
-		onAgentCleanup();
-		break;
-		
-	    case Network.kAgentFreeze:
-		onAgentFreeze();
-		break;
-		
-	    case Network.kAgentMessage:
-		onAgentMessage();
-		break;
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentMessage);
+		network.putInt(Network.sizeOf(reply));
+		network.putString(reply);
+	}
 
-	    case Network.kRLTerm:
-		break;
-		
-	    default:
-		System.err.println(kUnknownMessage + agentState);
-		System.exit(1);
-		break;
-	    };
+	public void connect(String host, int port, int timeout) throws Exception
+	{	
+		network.connect(host, port, timeout);
 
-	    byteBuffer.flip();
-	    network.send(byteBuffer);
-	} while (agentState != Network.kRLTerm);
-    }
+		network.clearSendBuffer();
+		network.putInt(Network.kAgentConnection);
+		network.putInt(0); // No body to this packet
+		network.flipSendBuffer();
+		network.send();
+	}
+
+	public void close() throws IOException
+	{
+		network.close();
+	}
+
+	public void runAgentEventLoop() throws Exception
+	{		
+		int agentState = 0;
+		int dataSize = 0;
+		int recvSize = 0;
+		int remaining = 0;
+		
+		do {
+			network.clearRecvBuffer();
+			recvSize = network.recv(8) - 8; // We may have received the header and part of the payload
+											// We need to keep track of how much of the payload was recv'd
+			
+			agentState = network.getInt(0);
+			dataSize = network.getInt(Network.kIntSize);
+			
+			remaining = dataSize - recvSize;
+			if (remaining < 0)
+				remaining = 0;
+			
+			network.recv(remaining);			
+			network.flipRecvBuffer();
+			
+			// We have already received the header, now we need to discard it.
+			network.getInt();
+			network.getInt();
+
+			switch(agentState) {
+			case Network.kAgentInit:
+				onAgentInit();
+				break;
+
+			case Network.kAgentStart:
+				onAgentStart();
+				break;
+
+			case Network.kAgentStep:
+				onAgentStep();
+				break;
+
+			case Network.kAgentEnd:
+				onAgentEnd();
+				break;
+
+			case Network.kAgentCleanup:
+				onAgentCleanup();
+				break;
+
+			case Network.kAgentFreeze:
+				onAgentFreeze();
+				break;
+
+			case Network.kAgentMessage:
+				onAgentMessage();
+				break;
+
+			case Network.kRLTerm:
+				break;
+
+			default:
+				System.err.println(kUnknownMessage + agentState);
+				System.exit(1);
+			break;
+			};
+
+			network.flipSendBuffer();
+			network.send();
+		} while (agentState != Network.kRLTerm);
+	}
 }

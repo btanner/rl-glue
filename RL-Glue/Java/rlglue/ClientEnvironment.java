@@ -1,164 +1,146 @@
 package rlglue;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 
 public class ClientEnvironment
 {
-    protected static final String kUnknownMessage = "Unknown Message: ";
-    protected Network network;
-    protected ByteBuffer headerBuffer;
-    protected ByteBuffer byteBuffer;
-    protected Environment env;
+	protected static final String kUnknownMessage = "Unknown Message: ";
+	protected Network network;
+	protected Environment env;
 
-    public ClientEnvironment(Environment env) 
-    {
-	this.env = env;
-	this.network = new Network();
-	this.headerBuffer = ByteBuffer.allocate(8);
-	this.byteBuffer = ByteBuffer.allocate(65536);
-    }
+	public ClientEnvironment(Environment env) 
+	{
+		this.env = env;
+		this.network = new Network();
+	}
 
-    protected void onEnvInit() throws UnsupportedEncodingException 
-    {
-	String taskSpec = env.env_init();
-	
-	if (byteBuffer.capacity() < 12 + taskSpec.length())
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + taskSpec.length());
+	protected void onEnvInit() throws UnsupportedEncodingException 
+	{
+		String taskSpec = env.env_init();
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kEnvInit);
-	byteBuffer.putInt(taskSpec.length() + 4);
- 
-	Network.putString(byteBuffer, taskSpec);
-    }
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvInit);
+		network.putInt(Network.sizeOf(taskSpec)); // This is different than taskSpec.length(). It also includes
+												  // the four bytes that describe the length of the string
+												  // that is inserted by network.putString()
+		network.putString(taskSpec);
+	}
 
-    protected void onEnvStart()
-    {
-	Observation obs = env.env_start();
-	int size = (obs.intArray.length * 4 + 4) + (obs.doubleArray.length * 8 + 4);
+	protected void onEnvStart()
+	{
+		Observation obs = env.env_start();
 
-	if (byteBuffer.capacity() < 8 + size)
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + size);
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvStart);
+		network.putInt(Network.sizeOf(obs));
+		network.putObservation(obs);
+	}
 
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kEnvStart);
-	byteBuffer.putInt(size);
-	Network.putObservation(byteBuffer, obs);
-    }
-
-    protected void onEnvStep()
-    {
-	Action action = Network.getAction(byteBuffer);
-	Reward_observation rewardObservation = env.env_step(action);	
-	int sendSize = 4 // terminal
-	    + 8 // reward
-	    + (rewardObservation.o.intArray.length * 4 + 4) // intArray data + size
-	    + (rewardObservation.o.doubleArray.length * 8 + 4); // doubleArray data + size
-
-	if (byteBuffer.capacity() < 8 + sendSize)
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 8 + sendSize);
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kEnvStep);
-	byteBuffer.putInt(sendSize);
-
-	byteBuffer.putInt(rewardObservation.terminal);
-	byteBuffer.putDouble(rewardObservation.r);
-	Network.putObservation(byteBuffer, rewardObservation.o);
-    }
-
-    protected void onEnvCleanup()
-    {
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kEnvCleanup);
-	byteBuffer.putInt(0);
-    }
-
-    protected void onEnvMessage() throws UnsupportedEncodingException
-    {
-	String message = Network.getString(byteBuffer);
-	String reply = env.env_message(message);
-
-	if (byteBuffer.capacity() < 12 + reply.length())
-	    byteBuffer = Network.cloneWithCapacity(byteBuffer, 12 + reply.length());
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kEnvMessage);
-	byteBuffer.putInt(reply.length() + 4);
-	Network.putString(byteBuffer, reply);
-    }
-
-    public void connect(String host, int port, int timeout) throws Exception
-    {	
-	network.connect(host, port, timeout);
-
-	byteBuffer.clear();
-	byteBuffer.putInt(Network.kEnvironmentConnection);
-	byteBuffer.putInt(0); // No body to this packet
-	byteBuffer.flip();
-	network.send(byteBuffer);
-    }
-
-    public void close() throws IOException
-    {
-	byteBuffer.clear();
-	network.close();
-    }
-
-    public void runEnvironmentEventLoop() throws Exception
-    {
-	int envState = 0;
-	int dataSize = 0;
-
-	do {
-	    headerBuffer.clear();
-	    network.recv(headerBuffer, 8);
-	    headerBuffer.flip();
-
-	    envState = headerBuffer.getInt();
-	    dataSize = headerBuffer.getInt();
-
-	    if (byteBuffer.capacity() < dataSize)
-		byteBuffer = Network.cloneWithCapacity(byteBuffer, dataSize);
-
-	    byteBuffer.clear();    
-	    network.recv(byteBuffer, dataSize);
-	    byteBuffer.flip();
-	    
-	    switch(envState) {
-	    case Network.kEnvInit:
-		onEnvInit();
-		break;
+	protected void onEnvStep()
+	{
+		Action action = network.getAction();
+		Reward_observation rewardObservation = env.env_step(action);	
 		
-	    case Network.kEnvStart:
-		onEnvStart();
-		break;
-		
-	    case Network.kEnvStep:
-		onEnvStep();
-		break;
-		
-	    case Network.kEnvCleanup:
-		onEnvCleanup();
-		break;
-				
-	    case Network.kEnvMessage:
-		onEnvMessage();
-		break;
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvStep);
+		network.putInt(Network.sizeOf(rewardObservation));
 
-	    case Network.kRLTerm:
-		break;
-		
-	    default:
-		System.err.println(kUnknownMessage + envState);
-		System.exit(1);
-		break;
-	    };
+		network.putRewardObservation(rewardObservation);
+	}
 
-	    byteBuffer.flip();
-	    network.send(byteBuffer);
+	protected void onEnvCleanup()
+	{
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvCleanup);
+		network.putInt(0);
+	}
 
-	} while (envState != Network.kRLTerm);
-    }
+	protected void onEnvMessage() throws UnsupportedEncodingException
+	{
+		String message = network.getString();
+		String reply = env.env_message(message);
+
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvMessage);
+		network.putInt(Network.sizeOf(reply));
+		network.putString(reply);
+	}
+
+	public void connect(String host, int port, int timeout) throws Exception
+	{	
+		network.connect(host, port, timeout);
+
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvironmentConnection);
+		network.putInt(0); // No body to this packet
+		network.flipSendBuffer();
+		network.send();
+	}
+
+	public void close() throws IOException
+	{
+		network.close();
+	}
+
+	public void runEnvironmentEventLoop() throws Exception
+	{
+		int envState = 0;
+		int dataSize = 0;
+		int recvSize = 0;
+		int remaining = 0;
+
+		do {
+			network.clearRecvBuffer();
+			recvSize = network.recv(8) - 8; // We may have received the header and part of the payload
+											// We need to keep track of how much of the payload was recv'd
+
+			envState = network.getInt(0);
+			dataSize = network.getInt(Network.kIntSize);
+
+			remaining = dataSize - recvSize;
+			if (remaining < 0)
+				remaining = 0;
+			
+			network.recv(remaining);			
+			network.flipRecvBuffer();
+			
+			// We have already received the header, now we need to discard it.
+			network.getInt();
+			network.getInt();
+			
+			switch(envState) {
+			case Network.kEnvInit:
+				onEnvInit();
+				break;
+
+			case Network.kEnvStart:
+				onEnvStart();
+				break;
+
+			case Network.kEnvStep:
+				onEnvStep();
+				break;
+
+			case Network.kEnvCleanup:
+				onEnvCleanup();
+				break;
+
+			case Network.kEnvMessage:
+				onEnvMessage();
+				break;
+
+			case Network.kRLTerm:
+				break;
+
+			default:
+				System.err.println(kUnknownMessage + envState);
+			System.exit(1);
+			break;
+			};
+
+			network.flipSendBuffer();
+			network.send();
+
+		} while (envState != Network.kRLTerm);
+	}
 }

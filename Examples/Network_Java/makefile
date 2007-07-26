@@ -5,6 +5,5 @@ include RL_environment.makefile
 include RL_experiment.makefile
 
 clean:
-	rm -f RL_glue
-	rm -f Build/*.o
-	rm -fr Build/rlglue
+	rm -fr Build/*
+	rm -fr bin/*
