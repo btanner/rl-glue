@@ -1,5 +1,4 @@
 package rlglue.environment;
-import rlglue.*;
 import rlglue.network.Network;
 
 public class EnvironmentLoader

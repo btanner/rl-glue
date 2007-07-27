@@ -1,5 +1,4 @@
 package rlglue.agent;
-import rlglue.*;
 import rlglue.network.Network;
 
 public class AgentLoader
