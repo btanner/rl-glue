@@ -90,6 +90,7 @@ public class ClientEnvironment
 		int remaining = 0;
 
 		do {
+			/*
 			network.clearRecvBuffer();
 			recvSize = network.recv(8) - 8; // We may have received the header and part of the payload
 											// We need to keep track of how much of the payload was recv'd
@@ -103,10 +104,10 @@ public class ClientEnvironment
 			
 			network.recv(remaining);			
 			network.flipRecvBuffer();
-			
+			*/
 			// We have already received the header, now we need to discard it.
-			network.getInt();
-			network.getInt();
+			envState = network.getInt();
+			dataSize = network.getInt();
 			
 			switch(envState) {
 			case Network.kEnvInit:

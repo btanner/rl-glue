@@ -59,6 +59,8 @@ public class Network
 	protected SocketChannel socketChannel;
 	protected ByteBuffer recvBuffer;
 	protected ByteBuffer sendBuffer;
+	
+	protected int bytesInRecvBuffer = 0;
 
 	public Network()
 	{
@@ -105,15 +107,65 @@ public class Network
 	}
 
 	public int recv(int size) throws IOException
-	{			
-		this.ensureRecvCapacityRemains(size);
-
+	{
 		int recvSize = 0;
 		while (recvSize < size)
 		{
 			recvSize += socketChannel.read(recvBuffer);
 		}
 		return recvSize;
+	}
+	
+	public int recvBuffered(int requestSize)
+	{			
+		/* When doing a receive, we often get more data than we asked for.
+		 * If there is enough data left in the buffer, we can immediately read it out,
+		 * otherwise we need to do a read, and update our book keeping.
+		 */
+
+		int remaining = requestSize - bytesInRecvBuffer;
+		 		
+		if (remaining > 0)
+		{
+			System.err.println("Buffer Empty. Reading From Socket...")
+			this.ensureRecvCapacityRemains(remaining);
+					
+			bytesInRecvBuffer -= getRecvPosition();
+			compactRecvBuffer();
+			setRecvPosition(bytesInRecvBuffer);
+
+			try 
+			{
+				bytesInRecvBuffer += recv(remaining);
+			}
+			catch (IOException ioException)
+			{
+				ioException.printStackTrace();
+				System.exit(1);
+			}
+			
+			setRecvPosition(0);
+			
+			System.err.println("bytesInRecvBuffer: " + bytesInRecvBuffer + " pos: " + getRecvPosition());
+		}
+		
+//		network.setRecvPosition(0);
+//		
+//		int glueState = network.getInt();
+//		int dataSize = network.getInt();
+//		recvPointer -= network.getRecvPosition();
+//		
+//		network.compactRecvBuffer();
+//		network.setRecvPosition(recvPointer);
+//		int remaining = dataSize - recvSize;
+//		if (remaining < 0)
+//			remaining = 0;
+//		
+//		recvSize = network.recv(remaining);
+//		recvPointer += recvSize;
+//		network.setRecvPosition(0);
+		
+		return remaining;
 	}
 
 	public void clearSendBuffer()
@@ -136,8 +188,24 @@ public class Network
 		recvBuffer.flip();
 	}
 	
-	public int getInt() 
+	public void compactRecvBuffer()
 	{
+		recvBuffer.compact();
+	}
+	
+	public void setRecvPosition(int position)
+	{
+		recvBuffer.position(position);
+	}
+	
+	public int getRecvPosition()
+	{
+		return recvBuffer.position();
+	}
+	
+	public int getInt()
+	{
+		recvBuffered(Network.kIntSize);
 		return recvBuffer.getInt();
 	}
 	
@@ -148,15 +216,22 @@ public class Network
 	
 	public double getDouble()
 	{
+		recvBuffered(Network.kDoubleSize);
 		return recvBuffer.getDouble();
 	}
 	
 	public String getString() throws UnsupportedEncodingException
 	{
 		int recvLength = this.getInt();
+		recvBuffered(recvLength);
+
 		byte [] recvString = new byte[recvLength];
 		recvBuffer.get(recvString);
-		return new String(recvString, "UTF-8");
+	
+		String response = new String(recvString, "UTF-8");
+		System.err.println("length:\t" + response.length() + "\t|" + response + "|");
+		
+		return response;
 	}
 
 	public Observation getObservation()

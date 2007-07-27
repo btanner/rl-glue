@@ -5,6 +5,7 @@ import java.io.*;
 public class RLGlue
 {
 	protected static Network network = null;
+	protected static int recvPointer = 0;
 
 	private static void forceConnection()
 	{
@@ -33,9 +34,44 @@ public class RLGlue
 			}
 		}
 	}
-
+/*
 	private static synchronized void doStandardRecv(int state) throws IOException
-	{
+	{		
+		//network.setRecvPosition(recvPointer);
+		
+		int recvSize = network.recv(8);		
+		recvPointer += recvSize;
+		network.setRecvPosition(0);
+		
+		int glueState = network.getInt();
+		int dataSize = network.getInt();
+		recvPointer -= network.getRecvPosition();
+		
+		network.compactRecvBuffer();
+		network.setRecvPosition(recvPointer);
+		int remaining = dataSize - recvSize;
+		if (remaining < 0)
+			remaining = 0;
+		
+		recvSize = network.recv(remaining);
+		recvPointer += recvSize;
+		network.setRecvPosition(0);
+		
+		
+		//recvPointer = network.getRecvPosition();
+		//network.flipRecvBuffer();	
+		
+		// Discard the header - we should have a more elegant method for doing this.
+		//network.getInt();
+		//network.getInt();
+		
+		if (glueState != state)
+		{
+			System.err.println("Not synched with server. glueState = " + glueState + " but should be " + state);
+			System.exit(1);
+		}
+		*/
+		/*
 		network.clearRecvBuffer();
 		
 		int recvSize = network.recv(8) - 8;
@@ -58,7 +94,8 @@ public class RLGlue
 			System.err.println("Not synched with server. glueState = " + glueState + " but should be " + state);
 			System.exit(1);
 		}
-	}
+		*/
+/*	} */
 	
 	private static synchronized void doCallWithNoParams(int state) throws IOException
 	{		
@@ -76,7 +113,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLInit);
-			doStandardRecv(Network.kRLInit);
+			//doStandardRecv(Network.kRLInit);
 		}
 		catch(IOException ioException)
 		{
@@ -91,7 +128,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLStart);
-			doStandardRecv(Network.kRLStart);
+			//doStandardRecv(Network.kRLStart);
 			
 			obsact = new Observation_action();
 			obsact.o = network.getObservation();
@@ -117,7 +154,7 @@ public class RLGlue
 		try 
 		{
 			doCallWithNoParams(Network.kRLStep);
-			doStandardRecv(Network.kRLStep);
+			//doStandardRecv(Network.kRLStep);
 			
 			roat = new Reward_observation_action_terminal();
 			roat.terminal = network.getInt();
@@ -146,7 +183,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLCleanup);
-			doStandardRecv(Network.kRLCleanup);
+			//doStandardRecv(Network.kRLCleanup);
 
 			//network.close(); // Cleanup no longer closes the connection.  
 			
@@ -182,7 +219,7 @@ public class RLGlue
 			network.flipSendBuffer();
 			network.send();
 
-			doStandardRecv(Network.kRLAgentMessage);
+			//doStandardRecv(Network.kRLAgentMessage);
 			response = network.getString();
 		}
 		catch (IOException ioException)
@@ -207,7 +244,7 @@ public class RLGlue
 			network.flipSendBuffer();
 			network.send();
 
-			doStandardRecv(Network.kRLEnvMessage);
+			//doStandardRecv(Network.kRLEnvMessage);
 			response = network.getString();
 		}
 		catch (IOException ioException)
@@ -225,7 +262,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLReturn);
-			doStandardRecv(Network.kRLReturn);
+			//doStandardRecv(Network.kRLReturn);
 			reward = network.getDouble();
 		}
 		catch (IOException ioException)
@@ -249,7 +286,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLNumSteps);
-			doStandardRecv(Network.kRLNumSteps);
+			//doStandardRecv(Network.kRLNumSteps);
 			
 			numSteps = network.getInt();
 		}
@@ -274,7 +311,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLNumEpisodes);
-			doStandardRecv(Network.kRLNumEpisodes);
+			//doStandardRecv(Network.kRLNumEpisodes);
 			numEpisodes = network.getInt();
 		}
 		catch (IOException ioException)
@@ -302,7 +339,7 @@ public class RLGlue
 			network.flipSendBuffer();
 			network.send();
 
-			doStandardRecv(Network.kRLNumSteps);
+			//doStandardRecv(Network.kRLNumSteps);
 		}
 		catch (IOException ioException)
 		{
@@ -322,7 +359,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLFreeze);
-			doStandardRecv(Network.kRLFreeze);
+			//doStandardRecv(Network.kRLFreeze);
 		}
 		catch (IOException ioException)
 		{
@@ -348,7 +385,7 @@ public class RLGlue
 			network.flipSendBuffer();
 			network.send();
 
-			doStandardRecv(Network.kRLSetState);
+			//doStandardRecv(Network.kRLSetState);
 		}
 		catch (IOException ioException)
 		{
@@ -374,7 +411,7 @@ public class RLGlue
 			network.flipSendBuffer();
 			network.send();
 
-			doStandardRecv(Network.kRLSetRandomSeed);
+			//doStandardRecv(Network.kRLSetRandomSeed);
 		}
 		catch (IOException ioException)
 		{
@@ -396,7 +433,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLGetState);
-			doStandardRecv(Network.kRLGetState);
+			//doStandardRecv(Network.kRLGetState);
 			
 			key = network.getStateKey();
 		}
@@ -421,7 +458,7 @@ public class RLGlue
 		try
 		{
 			doCallWithNoParams(Network.kRLGetRandomSeed);
-			doStandardRecv(Network.kRLGetRandomSeed);
+			//doStandardRecv(Network.kRLGetRandomSeed);
 			
 			key = network.getRandomSeedKey();
 		}
