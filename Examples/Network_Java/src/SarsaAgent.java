@@ -1,6 +1,8 @@
-import java.util.Random;
+import rlglue.agent.Agent;
+import rlglue.types.Action;
+import rlglue.types.Observation;
 
-import rlglue.*;
+import java.util.Random;
 
 public class SarsaAgent implements Agent
 {

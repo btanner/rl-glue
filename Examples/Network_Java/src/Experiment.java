@@ -1,4 +1,4 @@
-import rlglue.*;
+import rlglue.RLGlue;
 import java.io.IOException;
 
 public class Experiment

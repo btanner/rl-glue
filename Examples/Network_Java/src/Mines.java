@@ -1,6 +1,11 @@
-import java.util.Random;
+import rlglue.environment.Environment;
+import rlglue.types.Action;
+import rlglue.types.Observation;
+import rlglue.types.Reward_observation;
+import rlglue.types.State_key;
+import rlglue.types.Random_seed_key;
 
-import rlglue.*;
+import java.util.Random;
 
 class MineEnv
 {
