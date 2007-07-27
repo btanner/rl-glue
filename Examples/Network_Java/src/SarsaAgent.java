@@ -70,7 +70,7 @@ public class SarsaAgent implements Agent
 	    previousObservation = o;
 	}
 	
-	return a;	
+	return a;
     }
     
     public void agent_end(double r)

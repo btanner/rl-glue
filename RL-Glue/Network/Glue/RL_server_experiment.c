@@ -183,28 +183,31 @@ void onRLFreeze(int theConnection) {
 void onRLAgentMessage(int theConnection) {
   char* inMessage = 0;
   char* outMessage = 0;
-  unsigned int messageLength = 0;
+  unsigned int inMessageLength = 0;
+  unsigned int outMessageLength = 0;
   unsigned int offset = 0;
 
   offset = 0;
-  offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
+  offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
 
-  if (messageLength > 0) {
-    inMessage = (char*)calloc(messageLength+1, sizeof(char));
-    offset = rlBufferRead(&theBuffer, offset, inMessage, messageLength, sizeof(char));
-    inMessage[messageLength] = '\0';
+  if (inMessageLength > 0) {
+    inMessage = (char*)calloc(inMessageLength+1, sizeof(char));
+    offset = rlBufferRead(&theBuffer, offset, inMessage, inMessageLength, sizeof(char));
+    inMessage[inMessageLength] = '\0';
   }
   
-  outMessage = RL_agent_message(inMessage);
+  outMessage = RL_agent_message(inMessage);    
+
   if (outMessage != 0) {
-    messageLength = strlen(outMessage);
+    outMessageLength = strlen(outMessage);
   }
 
   offset = 0;
   rlBufferClear(&theBuffer);
-  offset = rlBufferWrite(&theBuffer, offset, &messageLength, 1, sizeof(int));
-  if (messageLength > 0) {
-    offset = rlBufferWrite(&theBuffer, offset, outMessage, messageLength, sizeof(char));
+
+  offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int));
+  if (outMessageLength > 0) {
+    offset = rlBufferWrite(&theBuffer, offset, outMessage, outMessageLength, sizeof(char));
   } 
 
   free(inMessage);
@@ -214,28 +217,29 @@ void onRLAgentMessage(int theConnection) {
 void onRLEnvMessage(int theConnection) {
   char* inMessage = 0;
   char* outMessage = 0;
-  unsigned int messageLength = 0;
+  unsigned int inMessageLength = 0;
+  unsigned int outMessageLength = 0;
   unsigned int offset = 0;
 
   offset = 0;
-  offset = rlBufferRead(&theBuffer, offset, &messageLength, 1, sizeof(int));
+  offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
 
-  if (messageLength > 0) {
-    inMessage = (char*)calloc(messageLength+1, sizeof(char));
-    offset = rlBufferRead(&theBuffer, offset, inMessage, messageLength, sizeof(char));
-    inMessage[messageLength] = '\0';
+  if (inMessageLength > 0) {
+    inMessage = (char*)calloc(inMessageLength+1, sizeof(char));
+    offset = rlBufferRead(&theBuffer, offset, inMessage, inMessageLength, sizeof(char));
+    inMessage[inMessageLength] = '\0';
   }
   
   outMessage = RL_env_message(inMessage);
   if (outMessage != 0) {
-    messageLength = strlen(outMessage);
+    outMessageLength = strlen(outMessage);
   }
 
   rlBufferClear(&theBuffer);
   offset = 0;
-  offset = rlBufferWrite(&theBuffer, offset, &messageLength, 1, sizeof(int));
-  if (messageLength > 0) {
-    offset = rlBufferWrite(&theBuffer, offset, outMessage, messageLength, sizeof(char));
+  offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int));
+  if (outMessageLength > 0) {
+    offset = rlBufferWrite(&theBuffer, offset, outMessage, outMessageLength, sizeof(char));
   }
 
   free(inMessage);

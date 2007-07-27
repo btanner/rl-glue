@@ -90,7 +90,7 @@ void agent_end(Reward theReward) {
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  offset = rlBufferWrite(&theBuffer, offset, &agentState, 1, sizeof(int));
+  /*offset = rlBufferWrite(&theBuffer, offset, &agentState, 1, sizeof(int));*/ /* Removed, shouldn't have been sent. */
   offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
   rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 

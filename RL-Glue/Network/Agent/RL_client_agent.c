@@ -156,13 +156,14 @@ static void onAgentMessage(int theConnection) {
   /* Call RL method on the recv'd data */
   outMessage = agent_message(theInMessage);
   if (outMessage != NULL) {
-   outMessageLength = strlen(outMessage);
+    outMessageLength = strlen(outMessage);
   }
   
   /* Prepare the buffer for sending data back to the server */
   /* we want to start sending, so we're going to reset the offset to 0 so we write to the beginning of the buffer */
   rlBufferClear(&theBuffer);
   offset = 0;
+
   offset = rlBufferWrite(&theBuffer, offset, &outMessageLength, 1, sizeof(int)); 
   if (outMessageLength > 0) {
     offset = rlBufferWrite(&theBuffer, offset, outMessage, outMessageLength, sizeof(char));

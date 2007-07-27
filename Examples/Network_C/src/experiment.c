@@ -23,6 +23,12 @@ int main(int argc, char *argv[]) {
 
   for (trial = 0; trial < 2; ++trial) {
 
+    char* agent_response = RL_agent_message("query_agent");
+    char* env_response = RL_env_message("query_env");
+
+    fprintf(stderr, "agent_response: |%s|\n", agent_response);
+    fprintf(stderr, "env_response: |%s|\n", env_response);
+
     RL_init();
     run(NUM_EPISODES);
     RL_cleanup();

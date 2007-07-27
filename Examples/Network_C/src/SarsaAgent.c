@@ -112,7 +112,6 @@ Action agent_step(Reward r, Observation o)
  return action;	
 }
 
-
 void agent_end(Reward r)
 { 
     const int oldState = previous_observation.intArray[0];
@@ -125,28 +124,6 @@ void agent_end(Reward r)
     if(!freeze) {
       value[oldState][oldAction] = oldQ + sarsa_alpha*(r - oldQ);
     }
-}
-
-
-int egreedy(Observation o){
-  int state = o.intArray[0];
-  int max = 0;
-  int i = 1;
-
-
-/*If NOT frozen, with epsilon = 0.1 probability, act randomly*/
-  if((!freeze) && (rand() % 10 == 1)) {
-    return rand() % 4;
-  }
-/*else choose the greedy action*/
-  max = 0;
-  for(i = 1; i < 4; i++){
-    if(value[state][i] > value[state][max]) {
-      max = i;
-    }
-  }
-
-  return max;
 }
 
 void agent_cleanup(){
@@ -169,10 +146,31 @@ void agent_cleanup(){
 
 Message agent_message(const Message message){
   /*no messages currently implemented*/
-  return "SarsaAgent.c does not respond to any messages.";
+  return "";
 }
 
 void agent_freeze(){
   /*sets the agent to freeze mode*/
   freeze = 1;
+}
+
+int egreedy(Observation o){
+  int state = o.intArray[0];
+  int max = 0;
+  int i = 1;
+
+
+/*If NOT frozen, with epsilon = 0.1 probability, act randomly*/
+  if((!freeze) && (rand() % 10 == 1)) {
+    return rand() % 4;
+  }
+/*else choose the greedy action*/
+  max = 0;
+  for(i = 1; i < 4; i++){
+    if(value[state][i] > value[state][max]) {
+      max = i;
+    }
+  }
+
+  return max;
 }
