@@ -1,4 +1,10 @@
-package rlglue;
+package rlglue.environment;
+
+import rlglue.types.Action;
+import rlglue.types.Observation;
+import rlglue.types.Random_seed_key;
+import rlglue.types.Reward_observation;
+import rlglue.types.State_key;
 
 public interface Environment
 {

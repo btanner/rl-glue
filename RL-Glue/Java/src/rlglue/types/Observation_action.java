@@ -1,4 +1,5 @@
-package rlglue;
+package rlglue.types;
+
 
 public class Observation_action
 {

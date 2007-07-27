@@ -1,10 +1,16 @@
-package rlglue;
+package rlglue.network;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+
+import rlglue.types.Action;
+import rlglue.types.Observation;
+import rlglue.types.Random_seed_key;
+import rlglue.types.Reward_observation;
+import rlglue.types.State_key;
 
 public class Network
 {
@@ -53,7 +59,7 @@ public class Network
 	public static final int kRetryTimeout = 10;
 
 	protected static final int kByteBufferDefaultSize = 65536;
-	protected static final int kIntSize = 4;
+	public static final int kIntSize = 4;
 	protected static final int kDoubleSize = 8;
 	
 	protected SocketChannel socketChannel;
@@ -69,7 +75,6 @@ public class Network
 	public void connect(String host, int port, int retryTimeout)
 	{
 		boolean didConnect = false;
-		int count = 0;
 
 		while (!didConnect)
 		{
@@ -329,50 +334,50 @@ public class Network
 		return clone;
 	}
 	
-	protected static int sizeOf(int value)
+	public static int sizeOf(int value)
 	{
 		return Network.kIntSize;
 	}
 	
-	protected static int sizeOf(double value)
+	public static int sizeOf(double value)
 	{
 		return Network.kDoubleSize;
 	}
 	
-	protected static int sizeOf(String string)
+	public static int sizeOf(String string)
 	{
 		return Network.kIntSize + string.length();
 	}
 	
-	protected static int sizeOf(Action action)
+	public static int sizeOf(Action action)
 	{
 		return Network.kIntSize * 2 + 
 				Network.kIntSize * action.intArray.length + 
 				Network.kDoubleSize * action.doubleArray.length;
 	}
 	
-	protected static int sizeOf(Observation obs)
+	public static int sizeOf(Observation obs)
 	{
 		return Network.kIntSize * 2 + 
 				Network.kIntSize * obs.intArray.length + 
 				Network.kDoubleSize * obs.doubleArray.length;
 	}
 	
-	protected static int sizeOf(State_key key)
+	public static int sizeOf(State_key key)
 	{
 		return Network.kIntSize * 2 + 
 				Network.kIntSize * key.intArray.length + 
 				Network.kDoubleSize * key.doubleArray.length;
 	}
 	
-	protected static int sizeOf(Random_seed_key key)
+	public static int sizeOf(Random_seed_key key)
 	{
 		return Network.kIntSize * 2 + 
 				Network.kIntSize * key.intArray.length + 
 				Network.kDoubleSize * key.doubleArray.length;
 	}
 	
-	protected static int sizeOf(Reward_observation rewardObservation)
+	public static int sizeOf(Reward_observation rewardObservation)
 	{
 		return Network.kIntSize +      // terminal
 				Network.kDoubleSize +  // reward

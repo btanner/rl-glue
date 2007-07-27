@@ -1,6 +1,11 @@
-package rlglue;
+package rlglue.environment;
 
 import java.io.*;
+
+import rlglue.network.Network;
+import rlglue.types.Action;
+import rlglue.types.Observation;
+import rlglue.types.Reward_observation;
 
 public class ClientEnvironment
 {

@@ -1,16 +1,10 @@
-package rlglue;
+package rlglue.types;
 
-public class Observation 
-{
+public class Random_seed_key {
     public int [] intArray;
     public double [] doubleArray;
 
-    public Observation()
-    {
-    }
-
-    public Observation(int numInts, int numDoubles) 
-    {
+    public Random_seed_key(int numInts, int numDoubles) {
 	intArray = new int[numInts];
 	doubleArray = new double[numDoubles];
     }

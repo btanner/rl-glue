@@ -1,4 +1,5 @@
-package rlglue;
+package rlglue.types;
+
 
 public class Reward_observation_action_terminal
 {

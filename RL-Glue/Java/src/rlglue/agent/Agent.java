@@ -1,4 +1,7 @@
-package rlglue;
+package rlglue.agent;
+
+import rlglue.types.Action;
+import rlglue.types.Observation;
 
 public interface Agent
 {

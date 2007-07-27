@@ -2,6 +2,12 @@ package rlglue;
 
 import java.io.*;
 
+import rlglue.network.Network;
+import rlglue.types.Observation_action;
+import rlglue.types.Random_seed_key;
+import rlglue.types.Reward_observation_action_terminal;
+import rlglue.types.State_key;
+
 public class RLGlue
 {
 	protected static Network network = null;

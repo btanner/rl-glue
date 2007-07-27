@@ -1,15 +1,15 @@
-package rlglue;
+package rlglue.types;
 
-public class Action 
+public class Observation 
 {
     public int [] intArray;
     public double [] doubleArray;
 
-    public Action() 
+    public Observation()
     {
     }
 
-    public Action(int numInts, int numDoubles)
+    public Observation(int numInts, int numDoubles) 
     {
 	intArray = new int[numInts];
 	doubleArray = new double[numDoubles];

@@ -1,6 +1,10 @@
-package rlglue;
+package rlglue.agent;
 
 import java.io.*;
+
+import rlglue.network.Network;
+import rlglue.types.Action;
+import rlglue.types.Observation;
 
 public class ClientAgent 
 {
