@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "TestAgent.h"
 
 Action action;
@@ -14,6 +16,7 @@ void agent_init(const Task_specification task_spec)
 Action agent_start(Observation o)
 {	    
   action.intArray[0] = stepCount;
+  fprintf(stderr, "TestAgent.c: %d %d\n", o.intArray[0], action.intArray[1]);
   return action;	
 }
 
@@ -22,6 +25,7 @@ Action agent_step(Reward r, Observation o)
 {
   stepCount += 1;
   action.intArray[0] = stepCount;
+  fprintf(stderr, "TestAgent.c: %d %d\n", o.intArray[0], action.intArray[1]);
   return action;	
 }
 

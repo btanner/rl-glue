@@ -1,5 +1,5 @@
-#ifndef SarsaAgent_h
-#define SarsaAgent_h
+#ifndef TestAgent_h
+#define TestAgent_h
 
 #include <RL_common.h>
 
