@@ -241,12 +241,18 @@ public class Network
 	}
 
 	public void putString(String message) throws UnsupportedEncodingException
-	{
+	{		
+		// We don't want to have to deal null...
+		if (message == null)
+			message = "";
+		
 		this.ensureSendCapacityRemains(Network.kIntSize + message.length());
 		this.putInt(message.length());
 
-		if (message.length() > 0)
+		if (message.length() > 0) 
+		{
 			sendBuffer.put(message.getBytes("UTF-8"));
+		}
 	}
 
 	public void putObservation(Observation obs)
@@ -346,42 +352,65 @@ public class Network
 	
 	public static int sizeOf(String string)
 	{
-		return Network.kIntSize + string.length();
+		int size = Network.kIntSize;
+		if (string != null)
+			size += string.length();
+		return size;
 	}
 	
 	public static int sizeOf(Action action)
 	{
-		return Network.kIntSize * 2 + 
+		int size = 0;
+		if (action != null)
+		{
+			size = Network.kIntSize * 2 + 
 				Network.kIntSize * action.intArray.length + 
 				Network.kDoubleSize * action.doubleArray.length;
+		}
+		return size;
 	}
 	
 	public static int sizeOf(Observation obs)
 	{
-		return Network.kIntSize * 2 + 
+		int size = 0;
+		if (obs != null)
+		{
+			size = Network.kIntSize * 2 + 
 				Network.kIntSize * obs.intArray.length + 
 				Network.kDoubleSize * obs.doubleArray.length;
+		}
+		return size;
 	}
 	
 	public static int sizeOf(State_key key)
 	{
-		return Network.kIntSize * 2 + 
+		int size = 0;
+		if (key != null)
+		{
+			size = Network.kIntSize * 2 + 
 				Network.kIntSize * key.intArray.length + 
 				Network.kDoubleSize * key.doubleArray.length;
+		}
+		return size;
 	}
 	
 	public static int sizeOf(Random_seed_key key)
 	{
-		return Network.kIntSize * 2 + 
+		int size = 0;
+		if (key != null)
+		{
+			size = Network.kIntSize * 2 + 
 				Network.kIntSize * key.intArray.length + 
 				Network.kDoubleSize * key.doubleArray.length;
+		}
+		return size;
 	}
 	
 	public static int sizeOf(Reward_observation rewardObservation)
 	{
-		return Network.kIntSize +      // terminal
-				Network.kDoubleSize +  // reward
-				Network.sizeOf(rewardObservation.o);
+		return Network.kIntSize + // terminal
+			Network.kDoubleSize + // reward
+			Network.sizeOf(rewardObservation.o);
 	}
 }
 

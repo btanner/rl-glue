@@ -57,9 +57,9 @@ public class ClientAgent
 
 	protected void onAgentEnd()
 	{
-		int size = network.getInt();
+		//int size = network.getInt();
 		double reward = network.getDouble();
-
+		
 		agent.agent_end(reward);
 
 		network.clearSendBuffer();
