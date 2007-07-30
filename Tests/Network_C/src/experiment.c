@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <RL_glue.h>
 
-#define NUM_EPISODES 1000
+#define NUM_EPISODES 1
 int rl_num_steps[NUM_EPISODES];
 double rl_return[NUM_EPISODES];
 
@@ -21,10 +21,13 @@ int main(int argc, char *argv[]) {
   double avg_steps = 0.0;
   double avg_return = 0.0;
 
-  for (trial = 0; trial < 2; ++trial) {
+  char* agent_response = 0;
+  char* env_response = 0;
 
-    char* agent_response = RL_agent_message("query_agent");
-    char* env_response = RL_env_message("query_env");
+  for (trial = 0; trial < 1; ++trial) {
+
+    agent_response = RL_agent_message(0);
+    env_response = RL_env_message(0);
 
     fprintf(stderr, "agent_response: |%s|\n", agent_response);
     fprintf(stderr, "env_response: |%s|\n", env_response);

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "mines.h"
+#include "TestEnvironment.h"
 
 Observation o;
 Reward_observation ro;
@@ -21,16 +21,25 @@ Task_specification env_init()
 
 Observation env_start()
 { 
+  stepCount = 0;
   o.intArray[0] = stepCount;
   return o;
 }
 
 Reward_observation env_step(Action a)
 {  
+  stepCount += 1;
   o.intArray[0] = stepCount;
   ro.r = stepCount;
   ro.o = o;
-  a.intArray[0] == 0 ? ro.terminal = 1 : ro.terminal = 0;
+
+  if (a.intArray[0] == 100)
+    ro.terminal = 1;
+  else
+    ro.terminal = 0;
+
+  fprintf(stderr, "TestEnv.c: a=%d o=%d t=%d\n", a.intArray[0], o.intArray[0], ro.terminal);
+
 
   return ro;
 }
@@ -66,5 +75,5 @@ Random_seed_key env_get_random_seed()
 }
 
 Message env_message(const Message inMessage) {
-  return null;
+  return 0;
 }

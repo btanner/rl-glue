@@ -53,7 +53,7 @@ static void forceConnection()
     theExperimentConnection = rlWaitForConnection(host, port, kRetryTimeout);
 
     /* Send the connection type */
-    rlBufferCreate(&theBuffer, 4096);
+    rlBufferCreate(&theBuffer, 65536);
     rlBufferClear(&theBuffer);
     rlSendBufferData(theExperimentConnection, &theBuffer, kExperimentConnection);
   }
@@ -238,8 +238,11 @@ int RL_num_steps() {
 
 char* RL_agent_message(const char* message) {
   int experimentState = kRLAgentMessage;
-  unsigned int messageLength = strlen(message);
+  unsigned int messageLength = 0;
   unsigned int offset = 0;
+
+  if (message != 0)
+    messageLength = strlen(message);
 
   forceConnection();
 
@@ -274,8 +277,11 @@ char* RL_agent_message(const char* message) {
 
 char* RL_env_message(const char* message) {
   int experimentState = kRLEnvMessage;
-  unsigned int messageLength = strlen(message);
+  unsigned int messageLength = 0;
   unsigned int offset = 0;
+
+  if (message != 0)
+    messageLength = strlen(message);
 
   forceConnection();
 
@@ -288,7 +294,7 @@ char* RL_env_message(const char* message) {
   rlSendBufferData(theExperimentConnection, &theBuffer, experimentState);
   
   rlBufferClear(&theBuffer);
-  rlRecvBufferData(theExperimentConnection ,&theBuffer, &experimentState);
+  rlRecvBufferData(theExperimentConnection, &theBuffer, &experimentState);
   assert(experimentState == kRLEnvMessage);
 
   offset = 0;

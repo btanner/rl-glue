@@ -146,7 +146,7 @@ void agent_cleanup(){
 
 Message agent_message(const Message message){
   /*no messages currently implemented*/
-  return "";
+  return "This agent does not respond to any messages.";
 }
 
 void agent_freeze(){

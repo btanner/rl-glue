@@ -14,9 +14,10 @@ void agent_init(const Task_specification task_spec)
 }
 
 Action agent_start(Observation o)
-{	    
+{
+  stepCount = 0;
   action.intArray[0] = stepCount;
-  fprintf(stderr, "TestAgent.c: %d %d\n", o.intArray[0], action.intArray[1]);
+  fprintf(stderr, "TestAgt.c: a=%d o=%d\n", action.intArray[0], o.intArray[0]);
   return action;	
 }
 
@@ -25,7 +26,7 @@ Action agent_step(Reward r, Observation o)
 {
   stepCount += 1;
   action.intArray[0] = stepCount;
-  fprintf(stderr, "TestAgent.c: %d %d\n", o.intArray[0], action.intArray[1]);
+  fprintf(stderr, "TestAgt.c: a=%d o=%d\n", action.intArray[0], o.intArray[0]);
   return action;	
 }
 
