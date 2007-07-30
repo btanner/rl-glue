@@ -1,5 +1,5 @@
-#ifndef mines_h
-#define mines_h
+#ifndef TestEnvironment_h
+#define TestEnvironment_h
 
 #include <RL_common.h>
 
@@ -13,11 +13,5 @@ void env_set_random_seed(Random_seed_key rsk);
 State_key env_get_State();
 Random_seed_key env_get_random_seek();
 Message env_message(const Message inMessage);
-
-/* Mines utility functions */
-void env_print(const char* header, RL_abstract_type* data);
-int getPosition();
-void getNextPosition(Action a);
-Reward getReward();
 
 #endif
