@@ -48,7 +48,7 @@ public class RLGlue
 		int glueState = network.getInt(0);
 		int dataSize = network.getInt(Network.kIntSize);
 		int remaining = dataSize - recvSize;
-		
+				
 		if (remaining < 0)
 			remaining = 0;
 		
@@ -270,6 +270,7 @@ public class RLGlue
 			nullException.printStackTrace();
 			System.exit(1);
 		}
+		
 		return numSteps;
 	}
 
@@ -302,13 +303,13 @@ public class RLGlue
 		try
 		{
 			network.clearSendBuffer();
-			network.putInt(Network.kRLNumSteps);
+			network.putInt(Network.kRLEpisode);
 			network.putInt(Network.kIntSize);
 			network.putInt(numSteps);
 			network.flipSendBuffer();
 			network.send();
 
-			doStandardRecv(Network.kRLNumSteps);
+			doStandardRecv(Network.kRLEpisode);
 		}
 		catch (IOException ioException)
 		{
