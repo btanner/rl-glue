@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import rlglue.RLGlue;
 import rlglue.types.Action;
 import rlglue.types.Observation;
 import rlglue.types.Random_seed_key;
@@ -114,9 +115,20 @@ public class Network
 		this.ensureRecvCapacityRemains(size);
 
 		int recvSize = 0;
+		
 		while (recvSize < size)
 		{
-			recvSize += socketChannel.read(recvBuffer);
+			int thisReadSize=socketChannel.read(recvBuffer);
+			
+			if(thisReadSize<0){
+				Thread.dumpStack();
+				System.exit(1);
+			}else{
+			recvSize += thisReadSize;
+			}
+			
+			if(recvSize<-10)
+				System.exit(1);
 		}
 		return recvSize;
 	}

@@ -10,6 +10,7 @@ import rlglue.types.State_key;
 
 public class RLGlue
 {
+
 	protected static Network network = null;
 
 	private static void forceConnection()
@@ -45,14 +46,16 @@ public class RLGlue
 		network.clearRecvBuffer();
 		
 		int recvSize = network.recv(8) - 8;
+
 		int glueState = network.getInt(0);
 		int dataSize = network.getInt(Network.kIntSize);
 		int remaining = dataSize - recvSize;
-				
+
 		if (remaining < 0)
 			remaining = 0;
 		
-		network.recv(remaining);
+		int remainingReceived=network.recv(remaining);
+
 		network.flipRecvBuffer();	
 		
 		// Discard the header - we should have a more elegant method for doing this.
@@ -96,11 +99,15 @@ public class RLGlue
 		Observation_action obsact = null;
 		try
 		{
+
 			doCallWithNoParams(Network.kRLStart);
+
 			doStandardRecv(Network.kRLStart);
 			
 			obsact = new Observation_action();
+
 			obsact.o = network.getObservation();
+
 			obsact.a = network.getAction();
 		}
 		catch (IOException ioException)
@@ -114,6 +121,8 @@ public class RLGlue
 			nullException.printStackTrace();
 			System.exit(1);
 		}
+
+
 		return obsact;
 	}
 

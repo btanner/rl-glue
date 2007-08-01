@@ -120,18 +120,24 @@ public class ClientAgent
 		int remaining = 0;
 		
 		do {
+			
 			network.clearRecvBuffer();
+
 			recvSize = network.recv(8) - 8; // We may have received the header and part of the payload
 											// We need to keep track of how much of the payload was recv'd
-			
+
 			agentState = network.getInt(0);
 			dataSize = network.getInt(Network.kIntSize);
 			
 			remaining = dataSize - recvSize;
-			if (remaining < 0)
+			if (remaining < 0){
+				System.out.println("Remaining was less than 0!");
 				remaining = 0;
+			}
 			
-			network.recv(remaining);			
+
+			int amountReceived = network.recv(remaining);			
+
 			network.flipRecvBuffer();
 			
 			// We have already received the header, now we need to discard it.
