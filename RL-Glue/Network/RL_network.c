@@ -400,15 +400,16 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abst
   /* fprintf(stderr, "recv 3 offset = %u\n", offset); */
 
   if (numInts > dst->numInts) {
-    intArray = (int*)calloc(dst->numInts, sizeof(int));
+    intArray = (int*)calloc(numInts, sizeof(int));
     memcpy(intArray, dst->intArray, dst->numInts * sizeof(int));
     free(dst->intArray);
     dst->intArray = intArray;
   }
   dst->numInts = numInts;
 
+
   if (numDoubles > dst->numDoubles) {
-    doubleArray = (double*)calloc(dst->numDoubles, sizeof(double));
+    doubleArray = (double*)calloc(numDoubles, sizeof(double));
     memcpy(doubleArray, dst->doubleArray, dst->numDoubles * sizeof(double));
     free(dst->doubleArray);
     dst->doubleArray = doubleArray;
