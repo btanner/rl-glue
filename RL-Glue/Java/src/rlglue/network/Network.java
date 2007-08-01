@@ -221,7 +221,7 @@ public class Network
 
 		for (int i = 0; i < numInts; ++i)
 			key.intArray[i] = this.getInt();
-
+		
 		for (int i = 0; i < numDoubles; ++i)
 			key.doubleArray[i] = this.getDouble();
 
@@ -256,30 +256,56 @@ public class Network
 	}
 
 	public void putObservation(Observation obs)
-	{
+	{	
 		this.ensureSendCapacityRemains(Network.sizeOf(obs));
+
+		int numInts = 0;
+		int numDoubles = 0;
 		
-		this.putInt(obs.intArray.length);
-		this.putInt(obs.doubleArray.length);
+		if (obs != null)
+		{
+			if (obs.intArray != null)
+				numInts = obs.intArray.length;
+			
+			if (obs.doubleArray != null)
+				numDoubles = obs.doubleArray.length;
+		}
 		
-		for (int i = 0; i < obs.intArray.length; ++i)
+
+		this.putInt(numInts);
+		this.putInt(numDoubles);
+		
+		for (int i = 0; i < numInts; ++i)
 			this.putInt(obs.intArray[i]);
 		
-		for (int i = 0; i < obs.doubleArray.length; ++i)
+		for (int i = 0; i < numDoubles; ++i)
 			this.putDouble(obs.doubleArray[i]);
+
 	}
 
 	public void putAction(Action action)
 	{
 		this.ensureSendCapacityRemains(Network.sizeOf(action));
 		
-		this.putInt(action.intArray.length);
-		this.putInt(action.doubleArray.length);
+		int numInts = 0;
+		int numDoubles = 0;
 		
-		for (int i = 0; i < action.intArray.length; ++i)
+		if (action != null)
+		{
+			if (action.intArray != null)
+				numInts = action.intArray.length;
+			
+			if (action.doubleArray != null)
+				numDoubles = action.doubleArray.length;
+		}
+		
+		this.putInt(numInts);
+		this.putInt(numDoubles);
+		
+		for (int i = 0; i < numInts; ++i)
 			this.putInt(action.intArray[i]);
 		
-		for (int i = 0; i < action.doubleArray.length; ++i)
+		for (int i = 0; i < numDoubles; ++i)
 			this.putDouble(action.doubleArray[i]);
 	}
 
@@ -287,13 +313,25 @@ public class Network
 	{
 		this.ensureSendCapacityRemains(Network.sizeOf(key));
 		
-		this.putInt(key.intArray.length);
-		this.putInt(key.doubleArray.length);
+		int numInts = 0;
+		int numDoubles = 0;
 		
-		for (int i = 0; i < key.intArray.length; ++i)
+		if (key != null)
+		{
+			if (key.intArray != null)
+				numInts = key.intArray.length;
+			
+			if (key.doubleArray != null)
+				numDoubles = key.doubleArray.length;
+		}
+		
+		this.putInt(numInts);
+		this.putInt(numDoubles);
+		
+		for (int i = 0; i < numInts; ++i)
 			this.putInt(key.intArray[i]);
 		
-		for (int i = 0; i < key.doubleArray.length; ++i)
+		for (int i = 0; i < numDoubles; ++i)
 			this.putDouble(key.doubleArray[i]);
 	}
 
@@ -301,12 +339,24 @@ public class Network
 	{
 		this.ensureSendCapacityRemains(Network.sizeOf(key));
 		
-		this.putInt(key.intArray.length);
-		this.putInt(key.doubleArray.length);
+		int numInts = 0;
+		int numDoubles = 0;
+		
+		if (key != null)
+		{
+			if (key.intArray != null)
+				numInts = key.intArray.length;
+			
+			if (key.doubleArray != null)
+				numDoubles = key.doubleArray.length;
+		}
+
+		this.putInt(numInts);
+		this.putInt(numDoubles);
 		
 		for (int i = 0; i < key.intArray.length; ++i)
 			this.putInt(key.intArray[i]);
-		
+
 		for (int i = 0; i < key.doubleArray.length; ++i)
 			this.putDouble(key.doubleArray[i]);
 	}
@@ -360,50 +410,70 @@ public class Network
 	
 	public static int sizeOf(Action action)
 	{
-		int size = 0;
+		int size = Network.kIntSize * 2;
+		int intSize = 0;
+		int doubleSize = 0;
+		
 		if (action != null)
 		{
-			size = Network.kIntSize * 2 + 
-				Network.kIntSize * action.intArray.length + 
-				Network.kDoubleSize * action.doubleArray.length;
+			if (action.intArray != null)
+				intSize = Network.kIntSize * action.intArray.length;
+			
+			if (action.doubleArray != null)
+				doubleSize = Network.kDoubleSize * action.doubleArray.length;
 		}
-		return size;
+		return size + intSize + doubleSize;
 	}
 	
 	public static int sizeOf(Observation obs)
 	{
-		int size = 0;
+		int size = Network.kIntSize * 2;
+		int intSize = 0;
+		int doubleSize = 0;
+		
 		if (obs != null)
 		{
-			size = Network.kIntSize * 2 + 
-				Network.kIntSize * obs.intArray.length + 
-				Network.kDoubleSize * obs.doubleArray.length;
+			if (obs.intArray != null)
+				intSize = Network.kIntSize * obs.intArray.length;
+
+			if (obs.doubleArray != null)
+				doubleSize = Network.kDoubleSize * obs.doubleArray.length;
 		}
-		return size;
+		return size + intSize + doubleSize;
 	}
 	
 	public static int sizeOf(State_key key)
 	{
-		int size = 0;
+		int size = Network.kIntSize * 2;
+		int intSize = 0;
+		int doubleSize = 0;
+		
 		if (key != null)
 		{
-			size = Network.kIntSize * 2 + 
-				Network.kIntSize * key.intArray.length + 
-				Network.kDoubleSize * key.doubleArray.length;
+			if (key.intArray != null)
+				intSize = Network.kIntSize * key.intArray.length;
+			
+			if (key.doubleArray != null)
+				doubleSize = Network.kDoubleSize * key.doubleArray.length;
 		}
-		return size;
+		return size + intSize + doubleSize;
 	}
 	
 	public static int sizeOf(Random_seed_key key)
 	{
-		int size = 0;
+		int size = Network.kIntSize * 2;
+		int intSize = 0;
+		int doubleSize = 0;
+		
 		if (key != null)
 		{
-			size = Network.kIntSize * 2 + 
-				Network.kIntSize * key.intArray.length + 
-				Network.kDoubleSize * key.doubleArray.length;
+			if (key.intArray != null)
+				intSize = Network.kIntSize * key.intArray.length;
+			
+			if (key.doubleArray != null)
+				doubleSize = Network.kDoubleSize * key.doubleArray.length;
 		}
-		return size;
+		return size + intSize + doubleSize;
 	}
 	
 	public static int sizeOf(Reward_observation rewardObservation)

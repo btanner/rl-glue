@@ -6,10 +6,12 @@ import rlglue.network.Network;
 import rlglue.types.Action;
 import rlglue.types.Observation;
 import rlglue.types.Reward_observation;
+import rlglue.types.Random_seed_key;
+import rlglue.types.State_key;
 
 public class ClientEnvironment
 {
-	protected static final String kUnknownMessage = "Unknown Message: ";
+	protected static final String kUnknownMessage = "ClientEnvironment.java :: Unknown Message: ";
 	protected Network network;
 	protected Environment env;
 
@@ -60,6 +62,38 @@ public class ClientEnvironment
 		network.putInt(0);
 	}
 
+	protected void onEnvGetRandomSeed()
+	{
+		Random_seed_key key = env.env_get_random_seed();
+		
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvGetRandomSeed);
+		network.putInt(Network.sizeOf(key));
+		network.putRandomSeedKey(key);
+	}
+	
+	protected void onEnvGetState()
+	{
+		State_key key = env.env_get_state();
+		
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvGetState);
+		network.putInt(Network.sizeOf(key));
+		network.putStateKey(key);
+	}
+	
+	protected void onEnvSetRandomSeed()
+	{
+		Random_seed_key key = network.getRandomSeedKey();
+		env.env_set_random_seed(key);
+	}
+	
+	protected void onEnvSetState()
+	{
+		State_key key = network.getStateKey();
+		env.env_set_state(key);
+	}
+	
 	protected void onEnvMessage() throws UnsupportedEncodingException
 	{
 		String message = network.getString();
@@ -130,17 +164,33 @@ public class ClientEnvironment
 				onEnvCleanup();
 				break;
 
+			case Network.kEnvSetState:
+				onEnvSetState();
+				break;
+				
+			case Network.kEnvSetRandomSeed:
+				onEnvSetRandomSeed();
+				break;
+
+			case Network.kEnvGetState:
+				onEnvGetState();
+				break;
+				
+			case Network.kEnvGetRandomSeed:
+				onEnvGetRandomSeed();
+				break;
+				
 			case Network.kEnvMessage:
 				onEnvMessage();
 				break;
-
+				
 			case Network.kRLTerm:
 				break;
 
 			default:
 				System.err.println(kUnknownMessage + envState);
-			System.exit(1);
-			break;
+				System.exit(1);
+				break;
 			};
 
 			network.flipSendBuffer();
