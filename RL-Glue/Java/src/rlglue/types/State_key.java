@@ -5,14 +5,7 @@ public class State_key {
 	public double [] doubleArray;
 
 	public State_key(int numInts, int numDoubles) {
-		if (numInts > 0)
-			intArray = new int[numInts];
-		else
-			intArray = null;
-		
-		if (numDoubles > 0)
-			doubleArray = new double[numDoubles];
-		else
-			doubleArray = null;
+		intArray = new int[numInts];
+		doubleArray = new double[numDoubles];
 	}
 }
