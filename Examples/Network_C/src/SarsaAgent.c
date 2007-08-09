@@ -43,13 +43,13 @@ void agent_init(const Task_specification task_spec)
   previous_observation.numDoubles  = tss.num_continuous_obs_dims;
   previous_observation.doubleArray = 0;
 
-  free(tss->obs_types);
-  free(tss->obs_mins);
-  free(tss->obs_maxs);
+  free(tss.obs_types);
+  free(tss.obs_mins);
+  free(tss.obs_maxs);
 
-  free(tss->action_types);
-  free(tss->action_mins);
-  free(tss->action_maxs);
+  free(tss.action_types);
+  free(tss.action_mins);
+  free(tss.action_maxs);
 
   /*reset the value function*/
   memset(value, 0, sizeof(double)*NUM_STATES*NUM_ACTIONS);
