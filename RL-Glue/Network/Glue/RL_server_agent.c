@@ -24,7 +24,7 @@ void agent_init(const Task_specification theTaskSpec) {
   if (theTaskSpec != NULL)
     theTaskSpecLength = strlen(theTaskSpec);
 
-  rlBufferCreate(&theBuffer, 4096);
+  /* rlBufferCreate(&theBuffer, 4096); */
 
   /* send across agent_init specific data */
   rlBufferClear(&theBuffer);

@@ -23,7 +23,7 @@ Task_specification env_init() {
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
 
-  rlBufferCreate(&theBuffer, 65536);
+  /*  rlBufferCreate(&theBuffer, 65536); */
 
   /* env init-specific data */
   rlBufferClear(&theBuffer);
