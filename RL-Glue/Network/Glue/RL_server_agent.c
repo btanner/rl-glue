@@ -9,6 +9,7 @@
 
 static Action theAction = {0};
 static rlBuffer theBuffer = {0};
+static char* theOutMessage = 0;
 
 /* These are defined in RL_network_agent and RL_direct_agent */
 extern void rlSetAgentConnection(int);
@@ -122,6 +123,11 @@ void agent_cleanup() {
     theAction.numDoubles  = 0;
   }
 
+  if (theOutMessage != 0) {
+    free(theOutMessage);
+    theOutMessage = 0;
+  }
+
   rlBufferDestroy(&theBuffer);
 }
 
@@ -138,8 +144,6 @@ void agent_freeze() {
 
 Message agent_message(const Message inMessage) {
   int agentState = kAgentMessage;
-
-  char * theOutMessage = NULL;
   unsigned int theInMessageLength = 0;
   unsigned int theOutMessageLength = 0;
   unsigned int offset = 0;
@@ -163,6 +167,10 @@ Message agent_message(const Message inMessage) {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &theOutMessageLength, 1, sizeof(int));
   if (theOutMessageLength > 0) {
+    if (theOutMessage != 0) {
+      free(theOutMessage);
+      theOutMessage = 0;
+    }
     theOutMessage = (char*)calloc(theOutMessageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
     theOutMessage[theOutMessageLength] = '\0';
