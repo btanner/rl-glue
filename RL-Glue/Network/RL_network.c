@@ -278,39 +278,33 @@ unsigned int rlSendBufferData(int theSocket, const rlBuffer* buffer, const int t
    then reads "size" data into rlBuffer.  See rlSendBufferData for more */
 
 unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
-  int recvTarget = 0;
+  unsigned int recvTarget = 0;
   unsigned int recvSize = 0;
   unsigned int header[2] = {0};
 
   if (rlRecvData(theSocket, header, sizeof(unsigned int) * 2) > 0)
   {
-    recvTarget = (int)header[0];
-    recvSize = header[1];
-    
-    /*
-      rlRecvData(theSocket, &recvTarget, sizeof(int));
-      rlRecvData(theSocket, &recvSize, sizeof(unsigned int));
-    */
-    
-    /* recvSize came across in network byte order, swap it if we're little endian */
-    if (rlGetSystemByteOrder() == 1) {
-      rlSwapData(target, &recvTarget, sizeof(int));
-      rlSwapData(&buffer->size, &recvSize, sizeof(unsigned int));
+    if (rlGetSystemByteOrder() == 1)  /* Little Endian */
+    {
+      rlSwapData(&recvTarget, &header[0], sizeof(unsigned int));
+      rlSwapData(&recvSize, &header[1], sizeof(unsigned int));
     }
-    else {
-      *target = recvTarget;
-      buffer->size = recvSize;
+    else
+    {
+      recvTarget = header[0];
+      recvSize = header[1];
     }
-    
-    rlBufferReserve(buffer, buffer->size);
-    
-    if (buffer->size > 0) {
-      rlRecvData(theSocket, buffer->data, buffer->size);
+
+    *target = (int)recvTarget;
+    rlBufferReserve(buffer, recvSize);
+
+    if (recvSize > 0) {
+      rlRecvData(theSocket, buffer->data, recvSize);
     }
-    
+
     return (sizeof(unsigned int) * 2) + buffer->size;
   }
-  else 
+  else
     return 0;
 }
 
