@@ -161,7 +161,7 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     /* Allocate enough memory for the additional data */
     new_capacity = capacity + (capacity - buffer->capacity) * 2;
     assert(new_capacity > 0);
-    new_data = (unsigned char*)calloc(new_capacity, sizeof(char));
+    new_data = (unsigned char*)calloc(new_capacity, sizeof(unsigned char));
     assert(new_data != 0);
 
     /* Copy the existing data into the the larger memory allocation */
