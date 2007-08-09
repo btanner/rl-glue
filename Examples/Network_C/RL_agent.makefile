@@ -6,7 +6,7 @@ AGENT_BIN_PATH = bin
 AGENT_SRC_PATH = src
 
 AGENT_CC      = gcc
-AGENT_CFLAGS  = -I$(AGENT_RL_GLUE)/ -ansi -pedantic -Wall
+AGENT_CFLAGS  = -g -I$(AGENT_RL_GLUE)/ -ansi -pedantic -Wall
 AGENT_LDFLAGS =
 
 AGENT_OBJECTS = SarsaAgent.o Glue_utilities.o RL_client_agent.o RL_agent_netlib.o
