@@ -22,6 +22,11 @@ static Task_specification theTaskSpec = 0;
 static char* theMessage = 0;
 static int theMessageCapacity = 0;
 
+void cleanupExperimentAtExit(void)
+{
+  rlBufferDestroy(&theBuffer);
+}
+
 static void forceConnection()
 {
   struct hostent *host_ent;
@@ -53,6 +58,7 @@ static void forceConnection()
     theExperimentConnection = rlWaitForConnection(host, port, kRetryTimeout);
 
     /* Send the connection type */
+    atexit(cleanupExperimentAtExit);
     rlBufferCreate(&theBuffer, 65536);
     rlBufferClear(&theBuffer);
     rlSendBufferData(theExperimentConnection, &theBuffer, kExperimentConnection);
