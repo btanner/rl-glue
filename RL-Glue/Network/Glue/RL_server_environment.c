@@ -100,6 +100,7 @@ void env_cleanup() {
   rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvCleanup);
 
+  fprintf(stderr, "Calling rlBufferDestroy!\n");
   rlBufferDestroy(&theBuffer);
 
   if (theTaskSpec != 0) {
