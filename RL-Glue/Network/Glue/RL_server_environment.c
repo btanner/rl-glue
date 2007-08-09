@@ -23,7 +23,8 @@ Task_specification env_init() {
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
 
-  /*  rlBufferCreate(&theBuffer, 65536); */
+  if (theBuffer.capacity == 0)
+    rlBufferCreate(&theBuffer, 65536);
 
   /* env init-specific data */
   rlBufferClear(&theBuffer);
@@ -214,6 +215,9 @@ Message env_message(const Message inMessage) {
   if (inMessage != NULL) {
     theInMessageLength = strlen(inMessage);
   }
+
+  if (theBuffer.capacity == 0)
+    rlBufferCreate(&theBuffer, 65356);
 
   rlBufferClear(&theBuffer);
   offset = 0;

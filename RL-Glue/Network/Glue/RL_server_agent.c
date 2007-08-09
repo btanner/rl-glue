@@ -24,7 +24,8 @@ void agent_init(const Task_specification theTaskSpec) {
   if (theTaskSpec != NULL)
     theTaskSpecLength = strlen(theTaskSpec);
 
-  /* rlBufferCreate(&theBuffer, 4096); */
+  if (theBuffer.capacity == 0)
+    rlBufferCreate(&theBuffer, 65536);
 
   /* send across agent_init specific data */
   rlBufferClear(&theBuffer);
@@ -151,6 +152,9 @@ Message agent_message(const Message inMessage) {
   if (inMessage != 0) {
     theInMessageLength = strlen(inMessage);
   }
+
+  if (theBuffer.capacity == 0)
+    rlBufferCreate(&theBuffer, 65536);
 
   rlBufferClear(&theBuffer);
   offset = 0;
