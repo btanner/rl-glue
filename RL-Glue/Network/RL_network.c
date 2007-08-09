@@ -175,13 +175,9 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     }
 
     /* Free the original data */
-    if (buffer->data != 0) {
-      free(buffer->data);
-      buffer->data = 0;
-
-      numFrees += 1;
-    }
-
+    free(buffer->data);
+    numFrees += 1;
+ 
     /* Set the buffers data to the new data pointer */
     buffer->data = new_data;
 
