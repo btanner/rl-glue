@@ -281,6 +281,7 @@ unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
   unsigned int recvTarget = 0;
   unsigned int recvSize = 0;
   unsigned int header[2] = {0};
+  unsigned int totalSize = 0;
 
   if (rlRecvData(theSocket, header, sizeof(unsigned int) * 2) > 0)
   {
@@ -302,10 +303,10 @@ unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
       rlRecvData(theSocket, buffer->data, recvSize);
     }
 
-    return (sizeof(unsigned int) * 2) + buffer->size;
+    totalSize = (sizeof(unsigned int) * 2) + buffer->size;
   }
-  else
-    return 0;
+
+  return totalSize;
 }
 
 /* Utilities */
