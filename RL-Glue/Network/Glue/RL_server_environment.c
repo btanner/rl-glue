@@ -7,6 +7,8 @@
 #include <RL_common.h>
 #include <Network/RL_network.h>
 
+#define rlBufferDestroy(x) fprintf(stderr,"__FILE__:%s __LINE__:%d\n",__FILE__,__LINE__);rlBufferDestroy(x); 
+
 static Task_specification theTaskSpec   = 0;
 static rlBuffer theBuffer               = {0};
 static Observation theObservation       = {0};
