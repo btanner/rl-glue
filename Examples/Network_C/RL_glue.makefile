@@ -6,8 +6,7 @@ BIN_PATH = bin
 
 UTILS   = ../../Utils
 
-
-CC      = gcc  
+CC      = gcc
 CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
 LDFLAGS =
 
