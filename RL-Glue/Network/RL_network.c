@@ -155,9 +155,6 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
   unsigned char* new_data = 0;
   unsigned int new_capacity = 0;
 
-  static int numAllocs = 0;
-  static int numFrees  = 0;
-
   /* Ensure the buffer can hold the new data */
   if (capacity > buffer->capacity) {
     /* Allocate enough memory for the additional data */
@@ -166,8 +163,6 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     new_data = (unsigned char*)calloc(new_capacity, sizeof(unsigned char));
     assert(new_data != 0);
 
-    numAllocs += 1;
-
     /* Copy the existing data into the the larger memory allocation */
     if (buffer->size > 0) {
       memcpy(new_data, buffer->data, buffer->size);
@@ -175,7 +170,6 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
 
     /* Free the original data */
     free(buffer->data);
-    numFrees += 1;
  
     /* Set the buffers data to the new data pointer */
     buffer->data = new_data;
@@ -183,8 +177,6 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
     /* Set the new capacity */
     buffer->capacity = new_capacity;
   }
-
-  fprintf(stderr, "numAllocs: %d numFrees: %d\n", numAllocs, numFrees);
 }
 
 /* Write to the buffer in network byte order - will resize the buffer to facilitate a write that is too large for the 

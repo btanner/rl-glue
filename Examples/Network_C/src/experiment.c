@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <RL_glue.h>
 
-#define NUM_EPISODES 0
+#define NUM_EPISODES 1000
 int rl_num_steps[NUM_EPISODES];
 double rl_return[NUM_EPISODES];
 
