@@ -29,7 +29,7 @@ static State_key theStateKey            = {0};
 static Random_seed_key theRandomSeedKey = {0};
 static rlBuffer theBuffer               = {0};
 static Message theInMessage = 0;
-static int theInMessageCapacity = 0;
+static unsigned int theInMessageCapacity = 0;
 
 static void onEnvInit(int theConnection) {
   Task_specification theTaskSpec = 0;

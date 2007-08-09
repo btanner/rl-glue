@@ -20,7 +20,7 @@ static rlBuffer theBuffer               = {0};
 static Task_specification theTaskSpec = 0;
 
 static char* theMessage = 0;
-static int theMessageCapacity = 0;
+static unsigned int theMessageCapacity = 0;
 
 void cleanupExperimentAtExit(void)
 {
@@ -242,7 +242,7 @@ int RL_num_steps() {
 }
 
 
-char* RL_agent_message(const char* message) {
+Message RL_agent_message(const Message message) {
   int experimentState = kRLAgentMessage;
   unsigned int messageLength = 0;
   unsigned int offset = 0;
@@ -281,7 +281,7 @@ char* RL_agent_message(const char* message) {
 }
 
 
-char* RL_env_message(const char* message) {
+Message RL_env_message(const Message message) {
   int experimentState = kRLEnvMessage;
   unsigned int messageLength = 0;
   unsigned int offset = 0;
