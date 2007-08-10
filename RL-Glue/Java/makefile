@@ -1,4 +1,5 @@
 all:
+	mkdir -p bin
 	cd src && javac rlglue/RLGlue.java -d ../bin
 	cd src/rlglue/ && javac -cp ../../bin agent/ClientAgent.java -d ../../bin 
 	cd src/rlglue/ && javac -cp ../../bin environment/ClientEnvironment.java -d ../../bin/	
