@@ -229,6 +229,8 @@ public class RLGlue
 			
 			doStandardRecv(Network.kRLEnvMessage);
 			response = network.getString();
+			
+			System.err.println("Got Response: " + response)
 		}
 		catch (IOException ioException)
 		{
