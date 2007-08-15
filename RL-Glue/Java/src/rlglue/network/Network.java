@@ -403,6 +403,7 @@ public class Network
 		if (recvBuffer.capacity() - recvBuffer.position() < capacity)
 		{
 			recvBuffer = Network.cloneWithCapacity(recvBuffer, recvBuffer.capacity() + capacity);
+			recvBuffer.rewind();
 			System.err.println("ensureRecvCapacityRemains");
 		}
 	}
@@ -411,7 +412,6 @@ public class Network
 	{
 		ByteBuffer clone = ByteBuffer.allocateDirect(capacity);
 		clone.put(original);
-		clone.position(original.position());
 		return clone;
 	}
 	
