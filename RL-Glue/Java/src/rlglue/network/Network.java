@@ -58,7 +58,7 @@ public class Network
 	public static final int kDefaultPort = 4096;
 	public static final int kRetryTimeout = 10;
 
-	protected static final int kByteBufferDefaultSize = 65536*2*2*2;
+	protected static final int kByteBufferDefaultSize = 8388608;
 	public static final int kIntSize = 4;
 	protected static final int kDoubleSize = 8;
 	
