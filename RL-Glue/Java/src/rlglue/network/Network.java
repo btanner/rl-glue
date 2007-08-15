@@ -58,7 +58,7 @@ public class Network
 	public static final int kDefaultPort = 4096;
 	public static final int kRetryTimeout = 10;
 
-	protected static final int kByteBufferDefaultSize = 8388608;
+	protected static final int kByteBufferDefaultSize = 4096;
 	public static final int kIntSize = 4;
 	protected static final int kDoubleSize = 8;
 	
@@ -385,6 +385,7 @@ public class Network
 	protected static ByteBuffer cloneWithCapacity(ByteBuffer original, int capacity)
 	{
 		ByteBuffer clone = ByteBuffer.allocateDirect(capacity);
+		original.flip();
 		clone.put(original);
 		clone.position(original.position());
 		return clone;
