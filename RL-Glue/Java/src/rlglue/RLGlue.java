@@ -215,6 +215,7 @@ public class RLGlue
 				
 		try
 		{
+			System.err.println("Network.sizeOf: " + Network.sizeOf(message));
 			network.clearSendBuffer();
 			network.putInt(Network.kRLEnvMessage);
 			network.putInt(Network.sizeOf(message));
