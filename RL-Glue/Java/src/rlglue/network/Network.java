@@ -411,7 +411,6 @@ public class Network
 	{
 		ByteBuffer clone = ByteBuffer.allocateDirect(capacity);
 		clone.put(original);
-		clone.limit(original.limit());
 		clone.position(original.position());
 		return clone;
 	}
