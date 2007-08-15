@@ -223,7 +223,7 @@ public class RLGlue
 			network.putInt(Network.sizeOf(message));
 			network.putString(message);
 			network.flipSendBuffer();
-			network.send();
+			System.err.println("Sending bytes: " + network.send());
 
 			System.err.println("Sent data, waiting for reply...");
 			
