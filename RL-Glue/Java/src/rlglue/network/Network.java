@@ -6,7 +6,6 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import rlglue.RLGlue;
 import rlglue.types.Action;
 import rlglue.types.Observation;
 import rlglue.types.Random_seed_key;
@@ -115,27 +114,9 @@ public class Network
 		this.ensureRecvCapacityRemains(size);
 
 		int recvSize = 0;
-		
 		while (recvSize < size)
 		{
-			int thisReadSize=socketChannel.read(recvBuffer);
-			
-			// Brian must have added this.... 
-			if(thisReadSize < 0)
-			{
-				Thread.dumpStack();
-				System.exit(1);
-			}
-			else
-			{
-				recvSize += thisReadSize;
-			}
-			
-			// And this...
-			if(recvSize < -10) 
-			{
-				System.exit(1);
-			}
+			recvSize += socketChannel.read(recvBuffer);
 		}
 		return recvSize;
 	}
@@ -390,29 +371,22 @@ public class Network
 	}
 
 	protected void ensureSendCapacityRemains(int capacity)
-	{		
+	{
 		if (sendBuffer.capacity() - sendBuffer.position() < capacity)
-		{
 			sendBuffer = Network.cloneWithCapacity(sendBuffer, sendBuffer.capacity() + capacity);
-			sendBuffer.limit(sendBuffer.position());
-			System.err.println("ensureSendCapacityRemains");
-		}
 	}
 	
 	protected void ensureRecvCapacityRemains(int capacity)
 	{
 		if (recvBuffer.capacity() - recvBuffer.position() < capacity)
-		{
 			recvBuffer = Network.cloneWithCapacity(recvBuffer, recvBuffer.capacity() + capacity);
-			recvBuffer.rewind();
-			System.err.println("ensureRecvCapacityRemains");
-		}
 	}
 	
 	protected static ByteBuffer cloneWithCapacity(ByteBuffer original, int capacity)
 	{
 		ByteBuffer clone = ByteBuffer.allocateDirect(capacity);
 		clone.put(original);
+		clone.position(original.position());
 		return clone;
 	}
 	
