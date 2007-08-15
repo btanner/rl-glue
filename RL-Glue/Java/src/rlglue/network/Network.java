@@ -394,6 +394,7 @@ public class Network
 		if (sendBuffer.capacity() - sendBuffer.position() < capacity)
 		{
 			sendBuffer = Network.cloneWithCapacity(sendBuffer, sendBuffer.capacity() + capacity);
+			sendBuffer.limit(sendBuffer.position());
 			System.err.println("ensureSendCapacityRemains");
 		}
 	}
