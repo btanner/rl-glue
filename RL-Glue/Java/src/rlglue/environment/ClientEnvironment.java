@@ -86,12 +86,20 @@ public class ClientEnvironment
 	{
 		Random_seed_key key = network.getRandomSeedKey();
 		env.env_set_random_seed(key);
+			
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvSetRandomSeed);
+		network.putInt(0);
 	}
 	
 	protected void onEnvSetState()
 	{
 		State_key key = network.getStateKey();
 		env.env_set_state(key);
+
+		network.clearSendBuffer();
+		network.putInt(Network.kEnvSetState);
+		network.putInt(0);
 	}
 	
 	protected void onEnvMessage() throws UnsupportedEncodingException
