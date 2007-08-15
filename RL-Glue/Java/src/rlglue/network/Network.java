@@ -120,15 +120,22 @@ public class Network
 		{
 			int thisReadSize=socketChannel.read(recvBuffer);
 			
-			if(thisReadSize<0){
+			// Brian must have added this.... 
+			if(thisReadSize < 0)
+			{
 				Thread.dumpStack();
 				System.exit(1);
-			}else{
-			recvSize += thisReadSize;
+			}
+			else
+			{
+				recvSize += thisReadSize;
 			}
 			
-			if(recvSize<-10)
+			// And this...
+			if(recvSize < -10) 
+			{
 				System.exit(1);
+			}
 		}
 		return recvSize;
 	}
@@ -384,12 +391,16 @@ public class Network
 
 	protected void ensureSendCapacityRemains(int capacity)
 	{
+		System.err.println("ensureSendCapacityRemains");
+		
 		if (sendBuffer.capacity() - sendBuffer.position() < capacity)
 			sendBuffer = Network.cloneWithCapacity(sendBuffer, sendBuffer.capacity() + capacity);
 	}
 	
 	protected void ensureRecvCapacityRemains(int capacity)
 	{
+		System.err.println("ensureRecvCapacityRemains");
+
 		if (recvBuffer.capacity() - recvBuffer.position() < capacity)
 			recvBuffer = Network.cloneWithCapacity(recvBuffer, recvBuffer.capacity() + capacity);
 	}
