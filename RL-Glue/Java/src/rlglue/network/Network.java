@@ -390,19 +390,21 @@ public class Network
 	}
 
 	protected void ensureSendCapacityRemains(int capacity)
-	{
-		System.err.println("ensureSendCapacityRemains");
-		
+	{		
 		if (sendBuffer.capacity() - sendBuffer.position() < capacity)
+		{
 			sendBuffer = Network.cloneWithCapacity(sendBuffer, sendBuffer.capacity() + capacity);
+			System.err.println("ensureSendCapacityRemains");
+		}
 	}
 	
 	protected void ensureRecvCapacityRemains(int capacity)
 	{
-		System.err.println("ensureRecvCapacityRemains");
-
 		if (recvBuffer.capacity() - recvBuffer.position() < capacity)
+		{
 			recvBuffer = Network.cloneWithCapacity(recvBuffer, recvBuffer.capacity() + capacity);
+			System.err.println("ensureRecvCapacityRemains");
+		}
 	}
 	
 	protected static ByteBuffer cloneWithCapacity(ByteBuffer original, int capacity)
