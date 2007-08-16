@@ -25,6 +25,8 @@ typedef struct
         char *action_types;		
         double *action_mins;		
         double *action_maxs;
+		double reward_min;
+		double reward_max;
 } task_spec_struct;
 
 
