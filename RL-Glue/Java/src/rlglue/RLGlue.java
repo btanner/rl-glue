@@ -215,8 +215,6 @@ public class RLGlue
 				
 		try
 		{
-//			System.err.println("Message Length: " + message.length());
-//			System.err.println("Network.sizeOf: " + Network.sizeOf(message));
 
 			network.clearSendBuffer();
 			network.putInt(Network.kRLEnvMessage);
@@ -224,14 +222,10 @@ public class RLGlue
 			network.putString(message);
 			network.flipSendBuffer();
 			network.send();
-//			System.err.println("Sending bytes: " + network.send());
 
-//			System.err.println("Sent data, waiting for reply...");
-			
 			doStandardRecv(Network.kRLEnvMessage);
 			response = network.getString();
-			
-//			System.err.println("Got Response: " + response);
+
 		}
 		catch (IOException ioException)
 		{
