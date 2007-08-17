@@ -1,12 +1,87 @@
 #include "Glue_utilities.h"
 
-/*NOTE for users unfamiliar with sscanf: %n in sscanf will return the number of characters read in that sscanf call. */ 
+void parse_range(const char** ts, double* min, double* max)
+/* parses a single range in the taskspec, ie. '[min,max]'. ts must start at the '['. Advances taskspec to end of ']' */
+{
+	int characters_read;
+	int scan_args;
+	/*obtain minimum value*/
+	scan_args = sscanf(*ts, " [ %lf , %n", min, &characters_read);
+	if(scan_args == 1)
+	{
+		/*if value is read correctly*/
+		*ts = *ts + characters_read;
+	}
+	else if(scan_args ==0)
+	{
+		scan_args = sscanf(*ts, " [ -inf , %n", &characters_read);
+		if (scan_args == 1)
+		{
+			*min = -GLUE_INFINITY;
+			*ts = *ts + characters_read;
+		}
+		else if (scan_args == 0)
+		{
+			/*if no value is read (ie we are using negative inf as the min)*/
+			*min = GLUE_NAN;
+			sscanf(*ts, " [ , %n", &characters_read);
+			*ts = *ts + characters_read;
+		}
+	}
+	else{
+		printf("\n Error on trying to read the minimum value of a range in the taskspec. Exiting .... \n\n" ); 
+		exit(0);
+	}
+	/*obtain maximum value*/
+	scan_args = sscanf(*ts," %lf ] %n",max,&characters_read);
+	if(scan_args == 1)
+	{
+		/*if value is correctly read*/
+		  *ts = *ts + characters_read;
+	}
+	else if(scan_args ==0){
+		scan_args = sscanf(*ts, " inf ] , %n", &characters_read);
+		if (scan_args == 1)
+		{
+			*max = GLUE_INFINITY;
+			*ts = *ts + characters_read;
+		}
+		else if (scan_args == 0)
+		{
+			/*if no value is read (ie we are using positive inf as the max)*/
+			*max = GLUE_NAN;
+			sscanf(*ts, " ] %n", &characters_read);
+			*ts = *ts + characters_read;
+		}
+	}
+	else{
+		printf("\n Error on trying to read the maximum value a range in the taskspec. Exiting .... \n\n");
+		exit(0);
+	}
+	/* If both min and max are given, make sure range is valid: ie. min < max */
+	if (!isnan(*min) && !isnan(*max) && *min >= *max)
+	{
+		if (*min > *max)
+		{
+			printf("\nError: min(%lf) is greater than max(%lf) in taskspec range. Exiting...\n\n");
+			exit(0);
+		}
+		else /* if they are equal just throw a warning [ML] */
+		{
+			printf("\nWarning: min(%lf) is equal to max(%lf) in taskspec range.\n");
+		}
+	}
+}
+
+/*NOTE for users unfamiliar with sscanf: %n in sscanf will return the number of characters read in that sscanf call. */
+/*parses the observation or action portion of a taskspec (since they both have the same format)*/ 
 void parse_type(const char** ts, int* dim, char** types, double** mins, double** maxs, int* num_discrete_dims, int* num_continuous_dims)
 {
   int characters_read,scan_args,i;
   *num_discrete_dims = 0; 
   *num_continuous_dims =0;
-  scan_args = sscanf(*ts," %d _ [%n",dim,&characters_read); /* get the numer of dimensions to read*/
+  printf("ts = %s\n", *ts);
+  scan_args = sscanf(*ts," : %d _ [%n",dim,&characters_read); /* get the numer of dimensions to read*/
  
    if(scan_args != 1) /*If it fails to read the first arguement, exit*/
   {
@@ -44,205 +119,59 @@ void parse_type(const char** ts, int* dim, char** types, double** mins, double**
   } 
 
   /*get the last type for the last variable*/
-  scan_args = sscanf(*ts," %c ] _ [%n",(&((*types)[i])),&characters_read);
+  scan_args = sscanf(*ts," %c ] %n",(&((*types)[i])),&characters_read);
   if (scan_args != 1)
   {
     printf("\nError8: Incorrect task spec format. cannot read last variable type of observation or action Exiting....\n\n"); 
     exit(0);
   }
-if(strncmp(&((*types)[i]), "i", 1) == 0)
-	(*num_discrete_dims) = (*num_discrete_dims) + 1;
-else if(strncmp(&((*types)[i]), "f", 1) == 0)
-	(*num_continuous_dims) = (*num_continuous_dims) + 1;
-else{
-	printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", (*types)[i]);
-	exit(0);
-}	
+	if(strncmp(&((*types)[i]), "i", 1) == 0)
+		(*num_discrete_dims) = (*num_discrete_dims) + 1;
+	else if(strncmp(&((*types)[i]), "f", 1) == 0)
+		(*num_continuous_dims) = (*num_continuous_dims) + 1;
+	else{
+		printf("\nError: Variable type not of type int or float. GRRR!! Variable of type %c Exiting... \n\n", (*types)[i]);
+		exit(0);
+	}	
   *ts = *ts + characters_read;
   (*types)[++i] = '\0';
   
   
-/*Get the min and max values for all the variables*/  
-  for (i = 0; i < (*dim)-1; i++)
+	/*Get the min and max values for all the variables*/  
+  for (i = 0; i < (*dim); i++)
   {
-	/*obtain minimum value*/
-	scan_args = sscanf(*ts, " %lf , %n", (&((*mins)[i])), &characters_read);
-	if(scan_args == 1)
-	{
-		/*if value is read correctly*/
+		sscanf(*ts, " _ %n", &characters_read);
 		*ts = *ts + characters_read;
-	}
-	else if(scan_args ==0)
-	{
-		scan_args = sscanf(*ts, " -inf , %n", &characters_read);
-		if (scan_args == 1)
-		{
-			((*mins)[i]) = -INFINITY;
-			*ts = *ts + characters_read;
-		}
-		else if (scan_args == 0)
-		{
-			/*if no value is read (ie we are using negative inf as the min)*/
-			((*mins)[i]) = NAN;
-			sscanf(*ts, " , %n", &characters_read);
-			*ts = *ts + characters_read;
-		}
-	}
-	else{
-		printf("\n Error on trying to read the minimum value of the %d observation or action Exiting .... \n\n", i ); 
-		exit(0);
-	}
-	/*obtain maximum value*/
-    scan_args = sscanf(*ts," %lf ] _ [%n",(&((*maxs)[i])),&characters_read);
-	if(scan_args == 1)
-	{
-		/*if value is correctly read*/
-		  *ts = *ts + characters_read;
-	}
-	else if(scan_args ==0){
-		scan_args = sscanf(*ts, " inf , %n", &characters_read);
-		if (scan_args == 1)
-		{
-			((*maxs)[i]) = INFINITY;
-			*ts = *ts + characters_read;
-		}
-		else if (scan_args == 0)
-		{
-			/*if no value is read (ie we are using positive inf as the max)*/
-			((*maxs)[i]) = NAN;
-			sscanf(*ts, " ] _ [%n", &characters_read);
-			*ts = *ts + characters_read;
-		}
-	}
-	else{
-		printf("\n Error on trying to read the maximum value of the %d th observation or action Exiting .... \n\n", i);
-		exit(0);
-	}
+		parse_range(ts,(&((*mins)[i])),(&((*maxs)[i])));
   }/*End of for loop to get values*/
 
-  /*getting the last min max value pair*/
-	/*obtain minimum value*/
-	scan_args = sscanf(*ts, " %lf , %n",  (&((*mins)[i])), &characters_read);
-	if(scan_args == 1)
-	{
-		/*if value is read correctly*/
-		*ts = *ts + characters_read;
-	}
-	else if(scan_args ==0)
-	{
-		scan_args = sscanf(*ts, " -inf , %n", &characters_read);
-		if (scan_args == 1)
-		{
-			((*mins)[i]) = -INFINITY;
-			*ts = *ts + characters_read;
-		}
-		else if (scan_args == 0)
-		{
-			/*if no value is read (ie we are using negative inf as the min)*/
-			((*mins)[i]) = NAN;
-			sscanf(*ts, " , %n", &characters_read);
-			*ts = *ts + characters_read;
-		}
-	}
-	else{
-		printf("\n Error on trying to read the minimum value of the %d th observation or action Exiting .... \n\n", i ); 
-		exit(0);
-	}
-	/*obtain maximum value*/
-    scan_args = sscanf(*ts," %lf ] %n",&((*maxs)[i]),&characters_read);
-	if(scan_args == 1)
-	{
-		/*if value is correctly read*/
-		  *ts = *ts + characters_read;
-	}
-	else if(scan_args ==0){
-		scan_args = sscanf(*ts, " inf , %n", &characters_read);
-		if (scan_args == 1)
-		{
-			((*maxs)[i]) = INFINITY;
-			*ts = *ts + characters_read;
-		}
-		else if (scan_args == 0)
-		{
-			/*if no value is read (ie we are using positive inf as the max)*/
-			(*maxs)[i] = NAN;
-			sscanf(*ts, " ] %n", &characters_read);
-			  *ts = *ts + characters_read;
-		}
-	}
-	else{
-		printf("\n Error on trying to read the maximum value of the %d th observation or action Exiting .... \n\n", i);
-		exit(0);
-	}
 }
 
 void parse_reward(const char** ts, double* min, double* max)
+/*parses the reward section of the taskspec, ie. :[min,max] */
 {
 	/*getting the last min max value pair*/
 	/*obtain minimum value*/
-	scan_args = sscanf(*ts, " : [ %lf , %n",  min, &characters_read);
-	if(scan_args == 1)
-	{
-		/*if value is read correctly*/
-		*ts = *ts + characters_read;
-	}
-	else if(scan_args ==0)
-	{
-		scan_args = sscanf(*ts, " -inf , %n", &characters_read);
-		if (scan_args == 1)
-		{
-			*min = -INFINITY;
-			*ts = *ts + characters_read;
-		}
-		else if (scan_args == 0)
-		{
-			/*if no value is read (ie we are using negative inf as the min)*/
-			*min = NAN;
-			sscanf(*ts, " , %n", &characters_read);
-			*ts = *ts + characters_read;
-		}
-	}
-	else{
-		printf("\n Error on trying to read the minimum value of the %d the reward. Exiting .... \n\n", i ); 
-		exit(0);
-	}
-	/*obtain maximum value*/
-    scan_args = sscanf(*ts," %lf ] :%n",max,&characters_read);
-	if(scan_args == 1)
-	{
-		/*if value is correctly read*/
-		  *ts = *ts + characters_read;
-	}
-	else if(scan_args ==0){
-		scan_args = sscanf(*ts, " inf , %n", &characters_read);
-		if (scan_args == 1)
-		{
-			*max = INFINITY;
-			*ts = *ts + characters_read;
-		}
-		else if (scan_args == 0)
-		{
-			/*if no value is read (ie we are using positive inf as the max)*/
-			*max = NAN;
-			sscanf(*ts, " ] %n", &characters_read);
-			*ts = *ts + characters_read;
-		}
-	}
-	else{
-		printf("\n Error on trying to read the maximum value of the %d the reward. Exiting .... \n\n", i);
-		exit(0);
-	}
+	int characters_read;
+	sscanf(*ts, " : %n", &characters_read);
+	*ts = *ts + characters_read;
+	parse_range(ts,min,max);
 }
 
 void parse_task_spec(const char* ts, task_spec_struct* ps)
 {
   int characters_read;
-  int scan_args = sscanf(ts," %f : %c : %n ",&(ps->version),&(ps->episodic),&characters_read); /* read in version, episodic or continuous, and the number of characters consumed in this call to scanf*/
+  int scan_args = sscanf(ts," %f : %c %n ",&(ps->version),&(ps->episodic),&characters_read); /* read in version, episodic or continuous, and the number of characters consumed in this call to scanf*/
   if(scan_args != 2) 
   {
-    printf("\nError1: Incorrect task spec format. Error near version number, or episodic/continuing task Exiting....\n\n"); 
+    printf("\nError1: Incorrect task spec format. Error near version number, or episodic/continuing task. Exiting....\n\n"); 
     exit(0);
   }
+	if (ps->episodic != 'c' && ps->episodic != 'e')
+	{
+		printf("\nError: Task spec episodic field is not 'e' or 'c'. Exiting...\n\n");
+		exit(0);
+	}
   ts += characters_read; /* increase the pointer to where observations lie. Now the string looks like obsdim_[obtypes]_[obvalues]:actdim_[acttypes]_[actvalues]*/
   parse_type(&ts,&(ps->obs_dim),&(ps->obs_types),&(ps->obs_mins),&(ps->obs_maxs),&(ps->num_discrete_obs_dims), &(ps->num_continuous_obs_dims)); /*parse for observation data*/
   parse_type(&ts,&(ps->action_dim),&(ps->action_types),&(ps->action_mins), &(ps->action_maxs), &(ps->num_discrete_action_dims), &(ps->num_continuous_action_dims)); /*parse for action data*/
@@ -250,45 +179,49 @@ void parse_task_spec(const char* ts, task_spec_struct* ps)
 	parse_reward(&ts,&(ps->reward_min),&(ps->reward_max));
 }
 
-//check if obs_min[index] is negative infinity
-int isObsMinNegInfinity(int index, task_spec_struct* ps)
+/*check if obs_min[index] is negative GLUE_INFINITY*/
+int isObsMinNegINFINITY(int index, task_spec_struct* ps)
 {
 	return isinf(ps->obs_mins[index]);
 }
-//check if action_min[index] is negative infinity
-int isActionMinNegInfinity(int index, task_spec_struct* ps)
+/*check if action_min[index] is negative GLUE_INFINITY*/
+int isActionMinNegINFINITY(int index, task_spec_struct* ps)
 {
 	return isinf(ps->action_mins[index]);
 }
-//check if obs_max[index] is positive infinity
-int isObsMaxPosInfinity(int index, task_spec_struct* ps)
+/*check if obs_max[index] is positive GLUE_INFINITY*/
+int isObsMaxPosINFINITY(int index, task_spec_struct* ps)
 {
 	return isinf(ps->obs_maxs[index]);
 }
-//check if action_max[index] is positive infinity
-int isActionMaxPosInfinity(int index, task_spec_struct* ps)
+/*check if action_max[index] is positive GLUE_INFINITY*/
+int isActionMaxPosINFINITY(int index, task_spec_struct* ps)
 {
 	return isinf(ps->action_maxs[index]);
 }
-//check if the value range for observation[index] is known
+/*check if the value range for observation[index] is known*/
 int isObsUnknown(int index, task_spec_struct* ps)
 {
 	return isnan(ps->obs_mins[index]);
 }
-//check if the value range for action[index] is known
+/*check if the value range for action[index] is known*/
 int isActionUnknown(int index, task_spec_struct* ps)
 {
 	return isnan(ps->action_mins[index]);
 }
-int isRewardMinNegInfinity(task_spec_struct* ps)
+int isRewardMinNegINFINITY(task_spec_struct* ps)
 {
-	return isinf(ps->action_mins[index]);
+	return isinf(ps->reward_min);
 }
-int isRewardMaxPosInfinity(task_spec_struct* ps)
+int isRewardMaxPosINFINITY(task_spec_struct* ps)
 {
-	return isinf(ps->action_maxs[index]);
+	return isinf(ps->reward_max);
 }
-int isRewardUnknown(task_spec_struct* ps)
+int isRewardMinUnknown(task_spec_struct* ps)
 {
-	return isnan(ps->action_mins[index]);
+	return isnan(ps->reward_min);
+}
+int isRewardMaxUnknown(task_spec_struct* ps)
+{
+	return isnan(ps->reward_max);
 }
