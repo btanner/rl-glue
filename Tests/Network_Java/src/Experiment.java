@@ -1,4 +1,5 @@
 import rlglue.RLGlue;
+import rlglue.types.*;
 import java.io.IOException;
 
 public class Experiment
@@ -38,6 +39,14 @@ public class Experiment
 		for (int run = 0; run < 2; ++run)
 		{
 			RLGlue.RL_init();
+
+			Random_seed_key key = new Random_seed_key(2, 2);
+			for (int i = 0; i < 2; ++i)
+			{
+			    key.intArray[i] = i;
+			    key.doubleArray[i] = (double) i;
+			}
+			RLGlue.RL_set_random_seed(key);
 
 			String agentMessage = RLGlue.RL_agent_message("poke");
 			System.out.println(agentMessage);

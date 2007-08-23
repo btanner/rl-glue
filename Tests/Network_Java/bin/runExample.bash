@@ -1,4 +1,5 @@
 ./RL_Glue &
-java -cp ../../../RL-Glue/Java/RL-Glue.jar:./ rlglue.agent.AgentLoader SarsaAgent &
-java -cp ../../../RL-Glue/Java/RL-Glue.jar:./ rlglue.environment.EnvironmentLoader Mines &
-java -cp ../../../RL-Glue/Java/RL-Glue.jar:./ Experiment
+
+java -cp ~/workspace/Java/bin:./ rlglue.agent.AgentLoader SarsaAgent &
+java -cp ~/workspace/Java/bin:./ rlglue.environment.EnvironmentLoader Mines &
+java -cp ~/workspace/Java/bin:./ Experiment

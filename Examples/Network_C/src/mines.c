@@ -152,6 +152,13 @@ void env_set_state(State_key sk)
 void env_set_random_seed(Random_seed_key rsk)
 {
 /* not implemented, one possibility is to have the state_key be the current map and the mine_env struct*/
+  int i = 0;
+  for ( i = 0; i < rsk.numInts; ++i )
+    fprintf(stderr, "%d ", rsk.intArray[i]);
+  fprintf(stderr, "\n");
+  for ( i = 0; i < rsk.numDoubles; ++i )
+    fprintf(stderr, "%f ", rsk.doubleArray[i]);
+  fprintf(stderr, "\n");
 }
 
 State_key env_get_state()

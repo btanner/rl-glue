@@ -8,7 +8,7 @@ UTILS   = ../../Utils
 
 
 CC      = gcc  
-CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall
+CFLAGS  = -I$(RL-GLUE)/ -ansi -pedantic -Wall -g
 LDFLAGS =
 
 GLUE_OBJECTS = RL_glue.o RL_network.o RL_server_experiment.o RL_server_agent.o RL_server_environment.o RL_network_experiment.o RL_network_agent.o RL_network_environment.o RL_network_glue.o 

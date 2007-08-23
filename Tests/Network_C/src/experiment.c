@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <RL_glue.h>
 
 #define NUM_EPISODES 1
@@ -24,6 +25,18 @@ int main(int argc, char *argv[]) {
   char* agent_response = 0;
   char* env_response = 0;
 
+  Random_seed_key key = {0};
+  key.numInts = 2;
+  key.numDoubles = 2;
+  key.intArray = (int*)calloc(key.numInts, sizeof(int));
+  key.doubleArray = (double*)calloc(key.numDoubles, sizeof(double));
+
+  for (i = 0; i < key.numInts; ++i)
+    key.intArray[i] = i;
+
+  for (i = 0; i < key.numDoubles; ++i)
+    key.doubleArray[i] = (double) i;
+
   for (trial = 0; trial < 1; ++trial) {
 
     agent_response = RL_agent_message(0);
@@ -33,6 +46,9 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "env_response: |%s|\n", env_response);
 
     RL_init();
+
+    RL_set_random_seed(key);
+
     run(NUM_EPISODES);
     RL_cleanup();
     for (i = 0; i < NUM_EPISODES; i++) {

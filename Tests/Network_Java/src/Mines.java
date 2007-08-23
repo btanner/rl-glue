@@ -127,6 +127,13 @@ public class Mines implements Environment
 
     public void env_set_random_seed(Random_seed_key rsk)
     {
+	for (int i = 0; i < rsk.intArray.length; ++i)
+	    System.err.print("" + rsk.intArray[i] + " ");
+	System.err.println("");
+
+	for (int i = 0; i < rsk.doubleArray.length; ++i)
+	    System.err.print("" + rsk.doubleArray[i] + " ");
+	System.err.println("");
     }
 
     public void env_set_state(State_key rsk)
