@@ -1,0 +1,1 @@
+This code builds the RL-Glue executable only.  It actually puts the executable 3 directories up and over in the /libraries directory of the competition distribution.
