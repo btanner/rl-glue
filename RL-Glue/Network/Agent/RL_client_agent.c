@@ -195,7 +195,6 @@ static void runAgentEventLoop(int theConnection) {
       break;
 
     case kAgentCleanup:
-	printf("Calling agetnCleanip cause I was told to in agent event loop\n");
       onAgentCleanup(theConnection);
       break;
 
