@@ -80,7 +80,7 @@ void parse_type(const char** ts, int* dim, char** types, double** mins, double**
   int characters_read,scan_args,i;
   *num_discrete_dims = 0; 
   *num_continuous_dims =0;
-  printf("ts = %s\n", *ts);
+
   scan_args = sscanf(*ts," : %d _ [%n",dim,&characters_read); /* get the numer of dimensions to read*/
  
    if(scan_args != 1) /*If it fails to read the first arguement, exit*/
