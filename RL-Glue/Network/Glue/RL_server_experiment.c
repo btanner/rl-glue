@@ -35,9 +35,17 @@ Random_seed_key theRandomSeedKey = {0};
 rlBuffer theBuffer = {0};
 int theConnection = 0;
 
+/* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
+unsigned short initNoCleanUp=0;
+
 void termination_handler(int signum) {
   fprintf(stderr, "Signal: %d has killed this process. Cleaning Up And Exiting....\n", signum);
-  onRLCleanup(theConnection);
+
+/* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
+  if(initNoCleanUp==1){
+  	onRLCleanup(theConnection);
+	initNoCleanUp=0;
+  }
   if (theConnection != 0) {
     rlClose(theConnection);
   }
@@ -48,6 +56,8 @@ void termination_handler(int signum) {
 void onRLInit(int theConnection) {
   RL_init();
   rlBufferClear(&theBuffer);
+/* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
+  initNoCleanUp=1;
 }
 
 void onRLStart(int theConnection) {
@@ -149,6 +159,9 @@ void onRLCleanup(int theConnection) {
   if (theStateKey.intArray != 0) {
     free(theStateKey.intArray);
     theStateKey.intArray = 0;
+
+/* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
+  initNoCleanUp=0;
   }
 
   if (theStateKey.doubleArray != 0) {
