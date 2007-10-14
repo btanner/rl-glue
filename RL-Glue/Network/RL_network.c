@@ -70,7 +70,11 @@ int rlListen(int theSocket, short thePort) {
 		   (struct sockaddr*)&theServer, 
 		   sizeof(struct sockaddr));
 
-  if (theStatus == -1) return -1;
+  if (theStatus == -1)
+	{
+		fprintf(stderr,"Could not open socket\n");
+		exit(1);
+	}
   
   theStatus = listen(theSocket, 10);
   if (theStatus == -1) return -1;
