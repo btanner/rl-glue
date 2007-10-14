@@ -17,7 +17,7 @@ void parse_range(const char** ts, double* min, double* max)
 		scan_args = sscanf(*ts, " [ -inf , %n", &characters_read);
 		if (scan_args == 1)
 		{
-			*min = -GLUE_INFINITY;
+			*min = -INFINITY;
 			*ts = *ts + characters_read;
 		}
 		else if (scan_args == 0)
@@ -43,7 +43,7 @@ void parse_range(const char** ts, double* min, double* max)
 		scan_args = sscanf(*ts, " inf ] , %n", &characters_read);
 		if (scan_args == 1)
 		{
-			*max = GLUE_INFINITY;
+			*max = INFINITY;
 			*ts = *ts + characters_read;
 		}
 		else if (scan_args == 0)
@@ -63,12 +63,12 @@ void parse_range(const char** ts, double* min, double* max)
 	{
 		if (*min > *max)
 		{
-			printf("\nError: min(%lf) is greater than max(%lf) in taskspec range. Exiting...\n\n");
+			printf("\nError: min(%f) is greater than max(%f) in taskspec range. Exiting...\n\n",(float)*min,(float)*max);
 			exit(0);
 		}
 		else /* if they are equal just throw a warning [ML] */
 		{
-			printf("\nWarning: min(%lf) is equal to max(%lf) in taskspec range.\n");
+			printf("\nWarning: min(%f) is equal to max(%f) in taskspec range.\n",(float)*min,(float)*max);
 		}
 	}
 }

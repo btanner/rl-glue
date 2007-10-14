@@ -45,6 +45,8 @@ kRLFreeze         = 32
 kRLAgentMessage   = 33
 kRLEnvMessage     = 34
 
+kRLTerm           = 35
+
 kLocalHost = "127.0.0.1"
 kDefaultPort = 4096
 kRetryTimeout = 10

@@ -85,6 +85,9 @@ $(BUILD_PATH)/RL_client_experiment.o: RL_client_experiment.c
 $(BUILD_PATH)/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+$(BUILD_PATH)/rlVizLib/utilities/TaskSpecObject.class: TaskSpecObject.java
+	javac -d $(BUILD_PATH) $^
+
 RL_network.py: $(RL_GLUE_PATH)/Python/RL_network.py
 	cp $^ $@
 
