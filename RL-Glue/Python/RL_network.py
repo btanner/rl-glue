@@ -95,6 +95,8 @@ class rlSocket:
 	def recvPacket(self):
 		target = self._recvInt()
 		length = self._recvInt()
+		print "recvPacket, target: ",str(target)
+		print "recvPacket, size: ",str(length)
 		s = ''
 		while len(s) < length:
 			s += self.socket.recv(length-len(s))
