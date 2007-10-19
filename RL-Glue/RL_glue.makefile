@@ -29,7 +29,7 @@ ifneq ("$(AGENT_NETWORKED)$(ENV_NETWORKED)$(EXP_NETWORKED)","000")
 endif
 
 $(BIN_PATH)/RL_glue: $(addprefix $(BUILD_PATH)/,$(OBJECTS))
-	$(CC) -o $(BIN_PATH)/RL_glue $(addprefix $(BUILD_PATH)/,$(OBJECTS))
+	$(CC) -o $(BIN_PATH)/RL_glue $(addprefix $(BUILD_PATH)/,$(OBJECTS)) $(LDFLAGS)
 
 
 $(BUILD_PATH)/RL_glue.o: RL_glue.c
