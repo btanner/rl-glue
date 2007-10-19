@@ -17,7 +17,7 @@ void parse_range(const char** ts, double* min, double* max)
 		scan_args = sscanf(*ts, " [ -inf , %n", &characters_read);
 		if (scan_args == 1)
 		{
-			*min = -INFINITY;
+			*min = (double)-INFINITY;
 			*ts = *ts + characters_read;
 		}
 		else if (scan_args == 0)
@@ -43,7 +43,7 @@ void parse_range(const char** ts, double* min, double* max)
 		scan_args = sscanf(*ts, " inf ] , %n", &characters_read);
 		if (scan_args == 1)
 		{
-			*max = INFINITY;
+			*max = (double)INFINITY;
 			*ts = *ts + characters_read;
 		}
 		else if (scan_args == 0)

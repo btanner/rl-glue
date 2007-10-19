@@ -1,5 +1,5 @@
 
-AGENT = SarsaAgent.c
+AGENT = RandomAgent.c
 AGENT_OBJECTS = $(basename $(AGENT)).o Glue_utilities.o
 
 AGENT_SRC_PATH = ../../../Agents

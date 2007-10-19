@@ -1,0 +1,129 @@
+
+import rlglue.network.Network as Network
+from rlglue.types import Action
+from rlglue.types import Observation
+
+class ClientAgent:
+	kUnknownMessage = "Unknown Message: "
+	network = None
+	agent = None
+
+	# (agent) -> void
+	def __init__(self, agent):
+		self.agent = agent
+		self.network = Network.Network()
+
+	# () -> void
+	def onAgentInit(self):
+		taskSpec = self.network.getString()
+		agent.agent_init(taskSpec)
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentInit)
+		self.network.putInt(0) # No data following this header
+
+	# () -> void
+	def onAgentStart(self):
+		observation = self.network.getObservation()
+		action = agent.agent_start(observation)
+		size = Network.sizeOfAction(action)
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentStart)
+		self.network.putInt(size)
+		self.network.putAction(action)
+
+	# () -> void
+	def onAgentStep(self):
+		reward = self.network.getDouble()
+		observation = self.network.getObservation()
+		action = agent.agent_step(reward, observation)
+		size = Network.sizeOfAction(action)
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentStep)
+		self.network.putInt(size)
+		self.network.putAction(action)
+
+	# () -> void
+	def onAgentEnd(self):
+		reward = self.network.getDouble()
+		agent.agent_end(reward)
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentEnd)
+		self.network.putInt(0) # No data in this packet
+
+	# () -> void
+	def onAgentCleanup(self):
+		agent.agent_cleanup()
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentCleanup)
+		self.network.putInt(0) # No data in this packet
+
+	# () -> void
+	def onAgentFreeze(self):
+		agent.agent_freeze()
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentFreeze)
+		self.network.putInt(0) # No data in this packet
+
+	# () -> void
+	def onAgentMessage(self):
+		message = self.network.getString()
+		reply = agent.agent_message(message)
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentMessage)
+		self.network.putInt(len(reply))
+		self.network.putString(reply)
+
+	# (string, int, int) -> void
+	def connect(self, host, port, timeout):
+		self.network.connect(host, port, timeout);
+		self.network.clearSendBuffer()
+		self.network.putInt(Network.kAgentConnection)
+		self.network.putInt(0) # No body to this packet
+		self.network.send()
+
+	# () -> void
+	def close(self):
+		self.network.close()
+
+	# () -> void
+	def runAgentEventLoop(self):
+		agentState = 0
+		dataSize = 0
+		recvSize = 0
+		remaining = 0
+
+		while agentState != Network.kRLTerm:
+			self.network.clearRecvBuffer();
+			recvSize = self.network.recv(8) - 8; # We may have received the header and part of the payload
+											# We need to keep track of how much of the payload was recv'd
+			agentState = self.network.getInt()
+			dataSize = self.network.getInt()
+			
+			remaining = dataSize - recvSize;
+			if (remaining < 0):
+				print("Remaining was less than 0!")
+				remaining = 0
+
+			amountReceived = self.network.recv(remaining)
+			
+			# We have already received the header, now we need to discard it.
+			self.network.getInt()
+			self.network.getInt()
+
+			switch = {
+				Network.kAgentInit: lambda self: self.onAgentInit(),
+				Network.kAgentStart: lambda self: self.onAgentStart(),
+				Network.kAgentStep: lambda self: self.onAgentStep(),
+				Network.kAgentEnd: lambda self: self.onAgentEnd(),
+				Network.kAgentCleanup: lambda self: self.onAgentCleanup(),
+				Network.kAgentFreeze: lambda self: self.onAgentFreeze(),
+				Network.kAgentMessage: lambda self: self.onAgentMessage() }
+			if agentState in switch:
+				switch[agentState](self)
+			elif agentState == Network.kRLTerm:
+				pass
+			else:
+				sys.stderr.write(Network.kUnknownMessage + str(agentState) + '\n')
+				sys.exit(1)
+
+			self.network.send()

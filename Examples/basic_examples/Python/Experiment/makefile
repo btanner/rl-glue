@@ -1,17 +1,17 @@
 # Experiment Source Files
-EXPERIMENT = ../../../Experiments/experiment.py
+EXPERIMENT = Experiment
+EXPERIMENT_PATH = ../../../Experiments
 
 # Path to RL-Glue to find RL_interface and related files.
-RL_GLUE_PATH = ../../../RL-Glue
+RL_GLUE_PATH = ../../../../RL-Glue
 
 all: RL_experiment
 
 include $(RL_GLUE_PATH)/RL_glue.makefile
 
-RL_experiment: $(EXPERIMENT) RL_network.py RL_common.py
-	cp $(EXPERIMENT) $@
-	cp $(RL_GLUE_PATH)/Python/RL_client_experiment.py $@.py
-	chmod u+x $@
+RL_experiment:
+	echo -e "#! /bin/bash\n  PYTHONPATH=$(RL_GLUE_PATH)/Python python $(EXPERIMENT_PATH)/$(EXPERIMENT).py " | cat > RL_experiment
+	chmod u+x RL_experiment
 	
 clean:
-	rm -f RL_experiment RL_experiment.py RL_network.py RL_common.py
+	rm -f RL_experiment

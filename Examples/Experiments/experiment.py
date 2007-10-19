@@ -1,7 +1,7 @@
-#! /usr/local/bin/python
 import sys
-import RL_common
-import RLGlue
+
+import rlglue.RLGlue as RLGlue
+
 
 NUM_EPISODES = 1000
 rl_num_steps = []

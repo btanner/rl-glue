@@ -95,8 +95,6 @@ Observation env_start()
   M.agentRow = M.startRow;
 
   o.intArray[0] = M.startRow * M.col + M.startCol;
-  
-  env_print("env_start observation: ", &o);
 
   return o;
 }
@@ -114,9 +112,6 @@ Reward_observation env_step(Action a)
     ro.terminal = 1;
   else
     ro.terminal = 0;
-
-  env_print("env_step action ", &a);  
-  env_print("env_step observation ", &o);
 
   return ro;
 }

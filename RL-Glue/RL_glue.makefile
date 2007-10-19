@@ -3,41 +3,33 @@
 VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/Network:$(RL_GLUE_PATH)/Network/Glue:$(UTILS_PATH)
 VPATH += :$(RL_GLUE_PATH)/Network/Agent:$(RL_GLUE_PATH)/Network/Environment:$(RL_GLUE_PATH)/Network/Experiment
 
-NETWORK_OBJECTS=RL_network.o
+NETWORK_OBJECTS=RL_network.o RL_network_glue.o
 OBJECTS = RL_glue.o
 
 ifeq ($(AGENT_NETWORKED),1)
 	OBJECTS += RL_server_agent.o RL_network_agent.o
-	PREREQS += RL_agent
 else
 	OBJECTS += RL_direct_agent.o $(AGENT_OBJECTS)
 endif
 
 ifeq ($(ENV_NETWORKED),1)
 	OBJECTS += RL_server_environment.o RL_network_environment.o
-	PREREQS += RL_environment
 else
 	OBJECTS += RL_direct_environment.o $(ENV_OBJECTS)
 endif
 
-
-ifneq ("$(AGENT_NETWORKED)$(ENV_NETWORKED)","00")
-	OBJECTS += RL_server_experiment.o RL_network_experiment.o RL_network_glue.o $(NETWORK_OBJECTS)
-	PREREQS += RL_experiment
+ifeq ($(EXP_NETWORKED),1)
+	OBJECTS += RL_server_experiment.o RL_network_experiment.o
 else
 	OBJECTS += $(EXP_OBJECTS)
 endif
 
-$(BIN_PATH)/RL_glue: $(addprefix $(BIN_PATH)/,$(PREREQS)) $(addprefix $(BUILD_PATH)/,$(OBJECTS))
+ifneq ("$(AGENT_NETWORKED)$(ENV_NETWORKED)$(EXP_NETWORKED)","000")
+	OBJECTS += $(NETWORK_OBJECTS)
+endif
+
+$(BIN_PATH)/RL_glue: $(addprefix $(BUILD_PATH)/,$(OBJECTS))
 	$(CC) -o $(BIN_PATH)/RL_glue $(addprefix $(BUILD_PATH)/,$(OBJECTS))
-
-
-
-$(BIN_PATH)/RL_environment: $(addprefix $(BUILD_PATH)/,$(ENV_OBJECTS)) $(BUILD_PATH)/RL_client_environment.o
-	$(CC) -o $(BIN_PATH)/RL_environment $(addprefix $(BUILD_PATH)/,$(ENV_OBJECTS)) $(BUILD_PATH)/RL_client_environment.o
-
-$(BIN_PATH)/RL_experiment: $(addprefix $(BUILD_PATH)/,$(EXP_OBJECTS)) $(BUILD_PATH)/RL_client_experiment.o
-	$(CC) -o $(BIN_PATH)/RL_experiment $(addprefix $(BUILD_PATH)/, $(EXP_OBJECTS)) $(BUILD_PATH)/RL_client_experiment.o
 
 
 $(BUILD_PATH)/RL_glue.o: RL_glue.c
