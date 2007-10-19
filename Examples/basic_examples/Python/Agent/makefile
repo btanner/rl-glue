@@ -14,4 +14,4 @@ RL_agent:
 	chmod u+x RL_agent
 
 clean:
-	rm -f RL_agent
+	rm -f RL_agent *.pyc

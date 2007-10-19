@@ -1,5 +1,5 @@
 # Experiment Source Files
-EXPERIMENT = Experiment
+EXPERIMENT = experiment
 EXPERIMENT_PATH = ../../../Experiments
 
 # Path to RL-Glue to find RL_interface and related files.
@@ -14,4 +14,4 @@ RL_experiment:
 	chmod u+x RL_experiment
 	
 clean:
-	rm -f RL_experiment
+	rm -f RL_experiment *.pyc

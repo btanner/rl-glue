@@ -21,7 +21,7 @@ include $(RL_GLUE_PATH)/RL_glue.makefile
 AGENT_OBJECTS += RL_client_agent.o RL_network.o
 
 RL_agent: $(addprefix $(BUILD_PATH)/, $(AGENT_OBJECTS))
-	$(CC) -o RL_agent $^
+	$(CC) -o RL_agent $^ -lm
 
 $(BUILD_PATH)/$(basename $(AGENT)).o: $(AGENT_SRC_PATH)/$(AGENT)
 	$(CC) -c $(CFLAGS) $^ -o $@
