@@ -9,7 +9,9 @@
 #ifndef GLUE_UTIL_H
 #define GLUE_UTIL_H
 
-#define GLUE_INFINITY (1.0f/0.0f)
+#ifndef INFINITY
+#define INFINITY (1.0f/0.0f)
+#endif
 #define GLUE_NAN (sqrt(-1.0))
 
 typedef struct 
