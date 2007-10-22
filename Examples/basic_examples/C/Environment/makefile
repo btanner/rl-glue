@@ -8,7 +8,7 @@ RL_GLUE_BASE = ../../../..
 RL_GLUE_PATH = $(RL_GLUE_BASE)/RL-Glue
 UTILS_PATH = $(RL_GLUE_BASE)/Utils
 
-CFLAGS = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(ENV_SRC_PATH) -std=c99 -Wall
+CFLAGS = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(ENV_SRC_PATH) -std=c99
 
 ifeq ($(suffix $(ENVIRONMENT)),.cpp)
 	CC = $(CXX)

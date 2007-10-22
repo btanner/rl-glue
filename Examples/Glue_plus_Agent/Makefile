@@ -18,7 +18,7 @@ ifeq ($(suffix $(AGENT)),.cpp)
 	CC = $(CXX)
 endif
 
-CFLAGS  = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(AGENT_SRC_PATH) -std=c99 -Wall
+CFLAGS  = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(AGENT_SRC_PATH) -std=c99
 LDFLAGS = -lm
 
 all: $(BIN_PATH)/RL_glue

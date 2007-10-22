@@ -26,22 +26,22 @@ cd Examples/Glue_only
 ./RL_glue
 
 Terminal 2:
-cd Examples/C/Agent
+cd Examples/basic_examples/C/Agent
 ./RL_agent
 
 Terminal 3:
-cd Examples/C/Environment
+cd Examples/basic_examples/C/Environment
 ./RL_environment
 
 Terminal 4:
-cd Examples/C/Experiment
+cd Examples/basic_examples/C/Experiment
 ./RL_experiment
 
 This will start an experiment of a random agent on a mines environment. All of the components are networked and written in C. To have some components not networked (compiled in directly with the glue), check out the Examples/Glue_plus_* directories.
 
 There are also examples for Java and Python. To run a Java agent:
 
-cd Examples/Java/Agent
+cd Examples/basic_examples/Java/Agent
 ./RL_agent
 
 And likewise for Environments and Experiments. To use Python, just replace Java with Python above.

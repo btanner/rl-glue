@@ -28,7 +28,7 @@ examples:
 	cd ./Examples/basic_examples/Python/Agent && make
 	cd ./Examples/basic_examples/Python/Environment && make
 	cd ./Examples/basic_examples/Python/Experiment && make
-	cd ./Examples/Glue_only && make
+	cd ./Examples/Glue_Only && make
 	cd ./Examples/Glue_plus_Agent && make
 	cd ./Examples/Glue_plus_Env && make
 	cd ./Examples/Glue_plus_Agent_Env && make
@@ -47,7 +47,7 @@ clean:
 	cd ./Examples/basic_examples/Python/Agent && make clean
 	cd ./Examples/basic_examples/Python/Environment && make clean
 	cd ./Examples/basic_examples/Python/Experiment && make clean
-	cd ./Examples/Glue_only && make clean
+	cd ./Examples/Glue_Only && make clean
 	cd ./Examples/Glue_plus_Agent && make clean
 	cd ./Examples/Glue_plus_Env && make clean
 	cd ./Examples/Glue_plus_Agent_Env && make clean
