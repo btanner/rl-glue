@@ -17,7 +17,7 @@ ifeq ($(suffix $(ENVIRONMENT)),.cpp)
 	CC = $(CXX)
 endif
 
-CFLAGS  = -I$(RL_GLUE_PATH) -I$(ENV_SRC_PATH) -std=c99
+CFLAGS  = -I$(RL_GLUE_PATH) -I$(ENV_SRC_PATH)
 
 all: $(BIN_PATH)/RL_glue
 

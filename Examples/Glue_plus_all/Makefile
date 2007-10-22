@@ -36,7 +36,7 @@ ifeq ($(suffix $(EXPERIMENT)),.cpp)
 	CC = $(CXX)
 endif
 
-CFLAGS  = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(ENV_SRC_PATH) -I$(AGENT_SRC_PATH) -I$(EXP_SRC_PATH) -std=c99
+CFLAGS  = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(ENV_SRC_PATH) -I$(AGENT_SRC_PATH) -I$(EXP_SRC_PATH)
 LDFLAGS = -lm
 
 all: $(BIN_PATH)/RL_glue
