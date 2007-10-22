@@ -21,7 +21,12 @@ import array
 import time
 import sys
 import StringIO
-from RL_common import *
+
+from rlglue.types import Action
+from rlglue.types import Observation
+from rlglue.types import State_key
+from rlglue.types import Random_seed_key
+from rlglue.types import Reward_observation
 
 # RL-Glue needs to know what type of object is trying to connect.
 kExperimentConnection  = 1
@@ -72,45 +77,48 @@ kDefaultBufferSize = 4096
 kIntSize = 4
 kDoubleSize = 8
 
+kUnknownMessage = "Unknown Message: %s\n"
+
 class Network:
 	
 	def __init__(self):
-		self.socket = None
-		recvBuffer = StringIO.StringIO('')
-		sendBuffer = StringIO.StringIO('')
+		self.sock = None
+		self.recvBuffer = StringIO.StringIO('')
+		self.sendBuffer = StringIO.StringIO('')
 	
 	def connect(self, host=kLocalHost, port=kDefaultPort, retryTimeout=kRetryTimeout):
-		while self.socket == None:
+		while self.sock == None:
 			try:
-				self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-				self.socket.connect((host, port))
+				self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+				self.sock.connect((host, port))
 			except socket.error, msg:
-				self.socket = None
+				self.sock = None
 				time.sleep(retryTimeout)
 			else:
 				break
 	
 	def close(self):
-		self.socket.close()
+		self.sock.close()
 		
 	def send(self):
-		self.socket.sendall(sendBuffer.getvalue())
+		self.sock.sendall(self.sendBuffer.getvalue())
 	
 	def recv(self,size):
 		s = ''
 		while len(s) < size:
-			s += self.socket.recv(size - len(s))
-		recvBuffer.write(s)
+			s += self.sock.recv(size - len(s))
+		self.recvBuffer.write(s)
+		self.recvBuffer.seek(0)
 		return len(s)
 	
 	def clearSendBuffer(self):
-		sendBuffer.close()
-		sendBuffer = StringIO.StringIO()
+		self.sendBuffer.close()
+		self.sendBuffer = StringIO.StringIO()
 	
 	def clearRecvBuffer(self):
-		recvBuffer.close()
-		recvBuffer = StringIO.StringIO()
+		self.recvBuffer.close()
+		self.recvBuffer = StringIO.StringIO()
 	
 	def flipSendBuffer(self):
 		self.clearSendBuffer()
@@ -131,50 +139,50 @@ class Network:
 		return self.recvBuffer.read(length)
 	
 	def getObservation(self):
-		numInts = self.readInt()
-		numDoubles = self.readInt()		
+		numInts = self.getInt()
+		numDoubles = self.getInt()		
 		obs = Observation(numInts,numDoubles)
 		if numInts > 0:
-			s = self.data.read(numInts*kIntSize)
+			s = self.recvBuffer.read(numInts*kIntSize)
 			obs.intArray = struct.unpack("!%di" % (numInts),s)
 		if numDoubles > 0:
-			s = self.data.read(numDoubles*kDoubleSize)
+			s = self.recvBuffer.read(numDoubles*kDoubleSize)
 			obs.doubleArray = struct.unpack("!%dd" % (numDoubles),s)
 		return obs
 
 	def getAction(self):
-		numInts = self.readInt()
-		numDoubles = self.readInt()		
+		numInts = self.getInt()
+		numDoubles = self.getInt()		
 		action = Action(numInts,numDoubles)
 		if numInts > 0:
-			s = self.data.read(numInts*kIntSize)
+			s = self.recvBuffer.read(numInts*kIntSize)
 			action.intArray = struct.unpack("!%di" % (numInts),s)
 		if numDoubles > 0:
-			s = self.data.read(numDoubles*kDoubleSize)
+			s = self.recvBuffer.read(numDoubles*kDoubleSize)
 			action.doubleArray = struct.unpack("!%dd" % (numDoubles),s)
 		return action
 
 	def getStateKey(self):
-		numInts = self.readInt()
-		numDoubles = self.readInt()		
+		numInts = self.getInt()
+		numDoubles = self.getInt()		
 		key = State_key(numInts,numDoubles)
 		if numInts > 0:
-			s = self.data.read(numInts*kIntSize)
+			s = self.recvBuffer.read(numInts*kIntSize)
 			key.intArray = struct.unpack("!%di" % (numInts),s)
 		if numDoubles > 0:
-			s = self.data.read(numDoubles*kDoubleSize)
+			s = self.recvBuffer.read(numDoubles*kDoubleSize)
 			key.doubleArray = struct.unpack("!%dd" % (numDoubles),s)
 		return key
 	
 	def getRandomSeedKey(self):
-		numInts = self.readInt()
-		numDoubles = self.readInt()		
+		numInts = self.getInt()
+		numDoubles = self.getInt()		
 		key = Random_seed_key(numInts,numDoubles)
 		if numInts > 0:
-			s = self.data.read(numInts*kIntSize)
+			s = self.recvBuffer.read(numInts*kIntSize)
 			key.intArray = struct.unpack("!%di" % (numInts),s)
 		if numDoubles > 0:
-			s = self.data.read(numDoubles*kDoubleSize)
+			s = self.recvBuffer.read(numDoubles*kDoubleSize)
 			key.doubleArray = struct.unpack("!%dd" % (numDoubles),s)
 		return key
 	
@@ -194,39 +202,39 @@ class Network:
 		self.putInt(len(obs.intArray))
 		self.putInt(len(obs.doubleArray))
 		if len(obs.intArray) > 0:
-			self.data.write(struct.pack("!%di" % (len(obs.intArray)),*(obs.intArray)))
+			self.sendBuffer.write(struct.pack("!%di" % (len(obs.intArray)),*(obs.intArray)))
 		if len(obs.doubleArray) > 0:
-			self.data.write(struct.pack("!%dd" % (len(obs.doubleArray)),*(obs.doubleArray)))
+			self.sendBuffer.write(struct.pack("!%dd" % (len(obs.doubleArray)),*(obs.doubleArray)))
 	
 	def putAction(self,action):
 		self.putInt(len(action.intArray))
 		self.putInt(len(action.doubleArray))
 		if len(action.intArray) > 0:
-			self.data.write(struct.pack("!%di" % (len(action.intArray)),*(action.intArray)))
+			self.sendBuffer.write(struct.pack("!%di" % (len(action.intArray)),*(action.intArray)))
 		if len(action.doubleArray) > 0:
-			self.data.write(struct.pack("!%dd" % (len(action.doubleArray)),*(action.doubleArray)))
+			self.sendBuffer.write(struct.pack("!%dd" % (len(action.doubleArray)),*(action.doubleArray)))
 	
 	def putStateKey(self,key):
 		self.putInt(len(key.intArray))
 		self.putInt(len(key.doubleArray))
 		if len(key.intArray) > 0:
-			self.data.write(struct.pack("!%di" % (len(key.intArray)),*(key.intArray)))
+			self.sendBuffer.write(struct.pack("!%di" % (len(key.intArray)),*(key.intArray)))
 		if len(key.doubleArray) > 0:
-			self.data.write(struct.pack("!%dd" % (len(key.doubleArray)),*(key.doubleArray)))
+			self.sendBuffer.write(struct.pack("!%dd" % (len(key.doubleArray)),*(key.doubleArray)))
 
 	def putRandomSeedKey(self,key):
 		self.putInt(len(key.intArray))
 		self.putInt(len(key.doubleArray))
 		if len(key.intArray) > 0:
-			self.data.write(struct.pack("!%di" % (len(key.intArray)),*(key.intArray)))
+			self.sendBuffer.write(struct.pack("!%di" % (len(key.intArray)),*(key.intArray)))
 		if len(key.doubleArray) > 0:
-			self.data.write(struct.pack("!%dd" % (len(key.doubleArray)),*(key.doubleArray)))
+			self.sendBuffer.write(struct.pack("!%dd" % (len(key.doubleArray)),*(key.doubleArray)))
 	
 	def putRewardObservation(self,rewardObservation):
 		self.putInt(rewardObservation.terminal);
 		self.putDouble(rewardObservation.r);
 		self.putObservation(rewardObservation.o);
-
+	
 	def sizeOfAction(self,action):
 		size = kIntSize * 2
 		intSize = 0

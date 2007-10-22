@@ -97,7 +97,7 @@ class mines(Environment):
 		
 	  # Return task specification
   	
-	  Task_spec = "1:e:1_[i]_[0,%d]:1_[i]_[0,%d]" % (self.M.row*self.M.col-1, 4-1)
+	  Task_spec = "2:e:1_[i]_[0,%d]:1_[i]_[0,%d]:[-10,10]" % (self.M.row*self.M.col-1, 4-1)
 		
 	  return Task_spec;
 	

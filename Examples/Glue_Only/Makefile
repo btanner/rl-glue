@@ -8,7 +8,7 @@ AGENT_NETWORKED=1
 ENV_NETWORKED=1
 EXP_NETWORKED=1
 
-CFLAGS  = -I$(RL_GLUE_PATH) -ansi -pedantic -Wall
+CFLAGS  = -I$(RL_GLUE_PATH) -std=c99 -Wall
 
 all: $(BIN_PATH)/RL_glue
 

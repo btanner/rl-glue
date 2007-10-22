@@ -63,25 +63,35 @@ public class MinesEnvironment implements Environment {
 	{
 		observation = new Observation(numInts, numDoubles);
 
+		TSO = new TaskSpecObject();
 	  /* Return task specification */
 		TSO.version = 2;
 		TSO.episodic = 'e';
 		TSO.obs_dim = 1;
 		TSO.num_discrete_obs_dims = 1;
 		TSO.num_continuous_obs_dims = 0;
+		TSO.obs_types = new char[1];
 		TSO.obs_types[0] = 'i';
+		TSO.obs_mins = new double[1];
 		TSO.obs_mins[0] = 0;
+		TSO.obs_maxs = new double[1];
 		TSO.obs_maxs[0] = row*col-1;
 		TSO.action_dim = 1;
 		TSO.num_discrete_action_dims = 1;
 		TSO.num_continuous_action_dims = 0;
+		TSO.action_types = new char[1];
 		TSO.action_types[0] = 'i';
+		TSO.action_mins = new double[1];
 		TSO.action_mins[0] = 0;
+		TSO.action_maxs = new double[1];
 		TSO.action_maxs[0] = 3;
 		TSO.reward_min = -10;
 		TSO.reward_max = 10;
 
-		return TSO.toString();
+		System.out.println(TSO.toString());
+
+		//return TSO.toString();
+		return "2:e:1_[i]_[0,107]:1_[i]_[0,3]:[-10,10]";
 	}
 
 	public Observation env_start()

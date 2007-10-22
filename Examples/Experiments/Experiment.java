@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class Experiment
 {
-	protected static final int kNumEpisodes = 100;
+	protected static final int kNumEpisodes = 1000;
 	protected static int rlNumSteps[];
 	protected static double rlReturn[];
 

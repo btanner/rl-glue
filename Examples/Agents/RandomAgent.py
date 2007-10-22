@@ -29,12 +29,12 @@ class RandomAgent(Agent):
 		random.seed(0)
 	
 	def agent_start(self,observation):
-		randomify(action)
-		return action
+		self.randomify(self.action)
+		return self.action
 	
 	def agent_step(self,reward, observation):
-		randomify(action)
-		return action
+		self.randomify(self.action)
+		return self.action
 	
 	def agent_end(self,reward):
 		pass
@@ -49,5 +49,5 @@ class RandomAgent(Agent):
 		return None
 	
 	def randomify(self,action):
-		action.intArray[0] = random.randrange(4)
+		action.intArray = [random.randrange(4)]
 	

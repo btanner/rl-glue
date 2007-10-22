@@ -15,6 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import sys
+
 import rlglue.network.Network as Network
 from rlglue.types import Action
 from rlglue.types import Observation
@@ -32,7 +34,7 @@ class ClientAgent:
 	# () -> void
 	def onAgentInit(self):
 		taskSpec = self.network.getString()
-		agent.agent_init(taskSpec)
+		self.agent.agent_init(taskSpec)
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentInit)
 		self.network.putInt(0) # No data following this header
@@ -40,8 +42,8 @@ class ClientAgent:
 	# () -> void
 	def onAgentStart(self):
 		observation = self.network.getObservation()
-		action = agent.agent_start(observation)
-		size = Network.sizeOfAction(action)
+		action = self.agent.agent_start(observation)
+		size = self.network.sizeOfAction(action)
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentStart)
 		self.network.putInt(size)
@@ -51,8 +53,8 @@ class ClientAgent:
 	def onAgentStep(self):
 		reward = self.network.getDouble()
 		observation = self.network.getObservation()
-		action = agent.agent_step(reward, observation)
-		size = Network.sizeOfAction(action)
+		action = self.agent.agent_step(reward, observation)
+		size = self.network.sizeOfAction(action)
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentStep)
 		self.network.putInt(size)
@@ -61,21 +63,21 @@ class ClientAgent:
 	# () -> void
 	def onAgentEnd(self):
 		reward = self.network.getDouble()
-		agent.agent_end(reward)
+		self.agent.agent_end(reward)
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentEnd)
 		self.network.putInt(0) # No data in this packet
 
 	# () -> void
 	def onAgentCleanup(self):
-		agent.agent_cleanup()
+		self.agent.agent_cleanup()
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentCleanup)
 		self.network.putInt(0) # No data in this packet
 
 	# () -> void
 	def onAgentFreeze(self):
-		agent.agent_freeze()
+		self.agent.agent_freeze()
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentFreeze)
 		self.network.putInt(0) # No data in this packet
@@ -83,7 +85,7 @@ class ClientAgent:
 	# () -> void
 	def onAgentMessage(self):
 		message = self.network.getString()
-		reply = agent.agent_message(message)
+		reply = self.agent.agent_message(message)
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentMessage)
 		self.network.putInt(len(reply))
@@ -122,7 +124,7 @@ class ClientAgent:
 
 			amountReceived = self.network.recv(remaining)
 			
-			# We have already received the header, now we need to discard it.
+			# Already read the header, discard it
 			self.network.getInt()
 			self.network.getInt()
 
@@ -139,7 +141,7 @@ class ClientAgent:
 			elif agentState == Network.kRLTerm:
 				pass
 			else:
-				sys.stderr.write(Network.kUnknownMessage + str(agentState) + '\n')
+				sys.stderr.write(Network.kUnknownMessage % (str(agentState)))
 				sys.exit(1)
 
 			self.network.send()

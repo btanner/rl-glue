@@ -38,6 +38,7 @@ def forceConnection():
 
 # (int) -> void
 def doStandardRecv(state):
+	network.clearRecvBuffer()
 	recvSize = network.recv(8) - 8
 	
 	glueState = network.getInt()
@@ -49,7 +50,7 @@ def doStandardRecv(state):
 	
 	remainingReceived = network.recv(remaining)
 	
-	# discard the header
+	# Already read the header, so discard it
 	network.getInt()
 	network.getInt()
 	
@@ -152,7 +153,7 @@ def RL_episode(num_steps):
 	network.clearSendBuffer()
 	network.putInt(Network.kRLEpisode)
 	network.putInt(Network.kIntSize)
-	network.putInt(numSteps)
+	network.putInt(num_steps)
 	network.send()
 	doStandardRecv(Network.kRLEpisode)
 

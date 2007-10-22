@@ -6,6 +6,34 @@ VPATH += :$(RL_GLUE_PATH)/Network/Agent:$(RL_GLUE_PATH)/Network/Environment:$(RL
 NETWORK_OBJECTS=RL_network.o RL_network_glue.o
 OBJECTS = RL_glue.o
 
+ifndef AGENT_NETWORKED
+	AGENT_NETWORKED=1
+endif
+
+ifndef ENV_NETWORKED
+	ENV_NETWORKED=1
+endif
+
+ifndef EXP_NETWORKED
+	EXP_NETWORKED=1
+endif
+
+ifndef BUILD_PATH
+	BUILD_PATH = ./Build
+endif
+
+ifndef BIN_PATH
+	BIN_PATH = ./bin
+endif
+
+ifndef RL_GLUE_PATH
+	RL_GLUE_PATH = .
+endif
+
+ifndef CFLAGS
+	CFLAGS = -I$(RL_GLUE_PATH) -ansi -pedantic -Wall
+endif
+
 ifeq ($(AGENT_NETWORKED),1)
 	OBJECTS += RL_server_agent.o RL_network_agent.o
 else
@@ -29,7 +57,7 @@ ifneq ("$(AGENT_NETWORKED)$(ENV_NETWORKED)$(EXP_NETWORKED)","000")
 endif
 
 $(BIN_PATH)/RL_glue: $(addprefix $(BUILD_PATH)/,$(OBJECTS))
-	$(CC) -o $(BIN_PATH)/RL_glue $(addprefix $(BUILD_PATH)/,$(OBJECTS)) $(LDFLAGS)
+	$(CC) -o $(BIN_PATH)/RL_glue $^ $(LDFLAGS)
 
 
 $(BUILD_PATH)/RL_glue.o: RL_glue.c

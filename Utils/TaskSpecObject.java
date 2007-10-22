@@ -33,6 +33,9 @@ public class TaskSpecObject
 		System.err.println(taskObject);
 			
 	}
+	
+	// Empty constructor is for environment building a task spec
+	public TaskSpecObject() {}
     
     //As we discussed, the TaskSpecObject should parse in its constructor
     public TaskSpecObject(String taskSpecString){
@@ -43,7 +46,6 @@ public class TaskSpecObject
 		 * The action data 
 		 */
     	taskSpecString = this.removeWhiteSpace(taskSpecString);
-    	System.err.println(taskSpecString);
 		StringTokenizer tokenizer = new StringTokenizer(taskSpecString, ":");		
 
 		String versionString = tokenizer.nextToken();

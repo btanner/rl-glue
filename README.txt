@@ -19,11 +19,32 @@ make all
 
 Running your First Experiment
 ----------------------------
+Open four terminal windows and run the following commands (after you have run 'make all' in the base rl-glue directory):
 
-Mark - can you put some simple instructions in here.  Like "open 4 terminal windows, and navigate to blah places, and then run ./agent ./env ./rl-glue ./experiment <-- and this will start an experiment like blah.  Alternatively, try blah. Could you do this so that all of C, Python, Java environemnts, agents and benchmarks are covered?
+Terminal 1:
+cd Examples/Glue_only
+./RL_glue
 
+Terminal 2:
+cd Examples/C/Agent
+./RL_agent
 
+Terminal 3:
+cd Examples/C/Environment
+./RL_environment
 
+Terminal 4:
+cd Examples/C/Experiment
+./RL_experiment
+
+This will start an experiment of a random agent on a mines environment. All of the components are networked and written in C. To have some components not networked (compiled in directly with the glue), check out the Examples/Glue_plus_* directories.
+
+There are also examples for Java and Python. To run a Java agent:
+
+cd Examples/Java/Agent
+./RL_agent
+
+And likewise for Environments and Experiments. To use Python, just replace Java with Python above.
 
 
 Related Information and Documentation

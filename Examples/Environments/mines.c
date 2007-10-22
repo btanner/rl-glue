@@ -56,7 +56,6 @@ int env_map[6][18] =
 Task_specification env_init()
 {    
   static char Task_spec[100] = {0};
-  char temp[50] = {0};
 
   M.START = 0;
   M.GOAL = 1;
@@ -81,13 +80,7 @@ Task_specification env_init()
 
   /* Return task specification */
   
-  strcpy(Task_spec,"1:e:1_[i]_[0,");
-  sprintf(temp,"%d", M.row*M.col-1);
-  strcat(Task_spec,temp);
-  sprintf(temp,"]:1_[i]_[0,");
-  strcat(Task_spec,temp);
-  sprintf(temp,"%d]",4-1);
-  strcat(Task_spec,temp); 
+  sprintf(Task_spec,"2:e:1_[i]_[0,%d]:1_[i]_[0,%d]:[-10,10]",M.row*M.col-1,3);
   return Task_spec;
 }
 

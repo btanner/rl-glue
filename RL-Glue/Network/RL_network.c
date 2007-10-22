@@ -412,7 +412,7 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abst
   /* fprintf(stderr, "recv 3 offset = %u\n", offset); */
 
   if (numInts > dst->numInts) {
-		printf("Needed to allocate more than %d\n",numInts);
+		/* printf("Needed to allocate more than %d\n",numInts); */
     intArray = (int*)calloc(numInts, sizeof(int));
     memcpy(intArray, dst->intArray, dst->numInts * sizeof(int));
     free(dst->intArray);
