@@ -14,4 +14,4 @@ RL_experiment:
 	chmod u+x RL_experiment
 	
 clean:
-	rm -f RL_experiment *.pyc
+	rm -f RL_experiment *.pyc $(EXPERIMENT_PATH)/*.pyc

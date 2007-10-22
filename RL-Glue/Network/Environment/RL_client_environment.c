@@ -293,7 +293,8 @@ int main(int argc, char** argv) {
     host = inet_ntoa(*(struct in_addr*)host_ent->h_addr);
   }
 
-  fprintf(stderr, "Connecting to host=%s on port=%d with autoreconnect=%d\n", host, port, autoReconnect);
+  fprintf(stderr, "Connecting to host=%s on port=%d...", host, port);
+	fflush(stderr);
 
 
   /* Allocate what should be plenty of space for the buffer - it will dynamically resize if it is too small */
@@ -301,6 +302,7 @@ int main(int argc, char** argv) {
   
   do {
     theConnection = rlWaitForConnection(host, port, kRetryTimeout);
+		fprintf(stderr, "Connected\n");
     rlBufferClear(&theBuffer);
     rlSendBufferData(theConnection, &theBuffer, kEnvironmentConnection);
     runEnvironmentEventLoop(theConnection);

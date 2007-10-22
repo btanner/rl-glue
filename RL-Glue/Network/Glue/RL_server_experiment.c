@@ -372,7 +372,6 @@ int main(int argc, char** argv) {
   if (envptr != 0) {
     autoReconnect = strtol(envptr, 0, 10);
   }
-  fprintf(stderr, "autoreconnect=%d\n", autoReconnect);
 
   rlBufferCreate(&theBuffer, 65536);
 

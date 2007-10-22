@@ -38,6 +38,10 @@ examples:
 clean:
 	-rm $(BUILD_PATH)/*
 	-rm $(BIN_PATH)/RL_glue
+	-rm $(RL_GLUE_PATH)/Python/rlglue/*.pyc
+	-rm $(RL_GLUE_PATH)/Python/rlglue/agent/*.pyc
+	-rm $(RL_GLUE_PATH)/Python/rlglue/environment/*.pyc
+	-rm $(RL_GLUE_PATH)/Python/rlglue/network/*.pyc
 	cd ./Examples/basic_examples/C/Agent && make clean
 	cd ./Examples/basic_examples/C/Environment && make clean
 	cd ./Examples/basic_examples/C/Experiment && make clean

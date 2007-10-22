@@ -60,10 +60,12 @@ def main():
 	except TypeError:
 		autoReconnect = 0
 
-	print "Connecting to " + host + " on port " + str(port) + " with autoreconnect=" + str(autoReconnect)
+	print "Connecting to " + host + " on port " + str(port) + "...",
+	sys.stdout.flush()
 
 	while True:
 		client.connect(host, port, Network.kRetryTimeout)
+		print "Connected"
 		client.runAgentEventLoop()
 		client.close()
 		if autoReconnect == 0:

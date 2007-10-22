@@ -14,4 +14,4 @@ RL_environment:
 	chmod u+x RL_environment
 
 clean:
-	rm -f RL_environment *.pyc
+	rm -f RL_environment *.pyc $(ENV_PATH)/*.pyc

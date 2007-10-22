@@ -63,10 +63,11 @@ public class EnvironmentLoader
 			autoReconnect = 0;
 		}
 
-		System.out.println("Connecting to " + host + " on port " + port + " with autoreconnect=" + autoReconnect);
+		System.out.print("Connecting to " + host + " on port " + port + "...");
 
 		do {
 			client.connect(host, port, Network.kRetryTimeout);
+			System.out.println("Connected");
 			client.runEnvironmentEventLoop();
 			client.close();
 		} while (autoReconnect == 1);
