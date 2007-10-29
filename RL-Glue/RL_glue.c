@@ -103,11 +103,11 @@ void RL_freeze() {
   agent_freeze();
 }
 
-void RL_episode(unsigned int num_steps) {
+void RL_episode(unsigned int maxStepsThisEpisode) {
   unsigned int x = 0;
   RL_start();
-
-  for ( x = 0; !is_terminal && (num_steps == 0 ? 1 : x < num_steps); ++x ) {
+/* RL_start sets current step to 1, so we should start x at 1 */
+  for ( x = 1; !is_terminal && (maxStepsThisEpisode == 0 ? 1 : x < num_steps); ++x ) {
     RL_step();
   }
 }
