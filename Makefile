@@ -37,6 +37,7 @@ examples:
 
 clean:
 	-rm $(BUILD_PATH)/*
+	-rm $(BUILD_PATH)_cpp/*
 	-rm $(BIN_PATH)/RL_glue
 	-rm $(RL_GLUE_PATH)/Python/rlglue/*.pyc
 	-rm $(RL_GLUE_PATH)/Python/rlglue/agent/*.pyc
