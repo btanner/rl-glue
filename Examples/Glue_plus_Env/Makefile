@@ -1,6 +1,6 @@
 # Build RL-Glue so that each part will be communicating via network communication
 
-ENVIRONMENT = mines.cpp
+ENVIRONMENT = mines.c
 ENV_OBJECTS = $(basename $(ENVIRONMENT)).o
 
 ENV_SRC_PATH = ../Environments
