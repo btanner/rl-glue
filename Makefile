@@ -7,7 +7,7 @@ AGENT_NETWORKED=1
 ENV_NETWORKED=1
 EXP_NETWORKED=1
 
-CFLAGS = -I$(RL_GLUE_PATH) -std=c99
+CFLAGS = -I$(RL_GLUE_PATH) -std=c99 -O2
 
 all: rl-glue examples
 	@echo "*****************************************************************"
