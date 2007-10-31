@@ -187,15 +187,19 @@ Message agent_message(const Message inMessage) {
 
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &theOutMessageLength, 1, sizeof(int));
-  if (theOutMessageLength > 0) {
+/*Free and point the old message to null */
     if (theOutMessage != 0) {
       free(theOutMessage);
       theOutMessage = 0;
     }
+/* Allocated memory for the new message, maybe just 1 byte for the terminator */
     theOutMessage = (char*)calloc(theOutMessageLength+1, sizeof(char));
-    offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
-    theOutMessage[theOutMessageLength] = '\0';
-  }
 
+/* Fill up the string from the buffer */
+if (theOutMessageLength > 0) {
+    offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
+  }
+/* Set the terminator */
+    theOutMessage[theOutMessageLength] = '\0';
   return theOutMessage;
 }
