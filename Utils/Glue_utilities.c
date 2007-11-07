@@ -6,15 +6,17 @@ void parse_range(const char** ts, double* min, double* max)
 	int characters_read;
 	int scan_args;
 	/*obtain minimum value*/
-	scan_args = sscanf(*ts, " [ %lf , %n", min, &characters_read);
-	if(scan_args == 1)
+	sscanf(*ts, " [ %n",&characters_read);
+	*ts = *ts + characters_read;
+	scan_args = sscanf(*ts, " %lf , %n", min, &characters_read);
+	if(scan_args == 2)
 	{
 		/*if value is read correctly*/
 		*ts = *ts + characters_read;
 	}
-	else if(scan_args ==0)
+	else if(scan_args < 2)
 	{
-		scan_args = sscanf(*ts, " [ -inf , %n", &characters_read);
+		scan_args = sscanf(*ts, " -inf , %n", &characters_read);
 		if (scan_args == 1)
 		{
 			*min = (double)-INFINITY;
@@ -24,7 +26,7 @@ void parse_range(const char** ts, double* min, double* max)
 		{
 			/*if no value is read (ie we are using negative inf as the min)*/
 			*min = GLUE_NAN;
-			sscanf(*ts, " [ , %n", &characters_read);
+			sscanf(*ts, " , %n", &characters_read);
 			*ts = *ts + characters_read;
 		}
 	}
@@ -34,13 +36,13 @@ void parse_range(const char** ts, double* min, double* max)
 	}
 	/*obtain maximum value*/
 	scan_args = sscanf(*ts," %lf ] %n",max,&characters_read);
-	if(scan_args == 1)
+	if(scan_args == 2)
 	{
 		/*if value is correctly read*/
 		  *ts = *ts + characters_read;
 	}
-	else if(scan_args ==0){
-		scan_args = sscanf(*ts, " inf ] , %n", &characters_read);
+	else if(scan_args < 2){
+		scan_args = sscanf(*ts, " inf ] %n", &characters_read);
 		if (scan_args == 1)
 		{
 			*max = (double)INFINITY;
