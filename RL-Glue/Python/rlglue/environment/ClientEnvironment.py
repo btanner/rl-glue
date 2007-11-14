@@ -101,12 +101,13 @@ class ClientEnvironment:
 	def onEnvMessage(self):
 		message = self.network.getString()
 		reply = self.env.env_message(message)
-		if reply == None:
-			reply = ""
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kEnvMessage)
-		self.network.putInt(len(reply))
-		self.network.putString(reply)
+		if reply == None:
+			self.network.putInt(0)
+		else:
+			self.network.putInt(len(reply))
+			self.network.putString(reply)
 
 	# (string, int, int) -> void
 	def connect(self, host, port, timeout):
