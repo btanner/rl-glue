@@ -23,7 +23,7 @@
 	}
 	printf("Reward: [%lf,%lf]\n",tss.reward_min,tss.reward_max);
 	
-	parse_task_spec("2.0:e:7_[f,i,f,f,i,f,i]_[-inf,-3]_[10,inf]_[3,7]_[-inf,inf]_[-10,-8]_[-1,3]_[100,110]:4_[i,f,f,i]_[-5,5]_[-1,1]_[-20,0]_[-30,-28]:[-23,10]", &tss);
+	parse_task_spec("2:e:7_[f,i,f,f,i,f,i,]_[-inf,-3]_[10,inf]_[3,7]_[-inf,inf]_[-10,-8]_[-1,3]_[100,110]:4_[i,f,f,i]_[-5,5]_[-1,1]_[-20,0]_[-30,-28]", &tss);
 	printf("numStateInts = %d\n", tss.num_discrete_obs_dims);
 	printf("numStateDoubles = %d\n", tss.num_continuous_obs_dims);
 	for (i = 0; i < tss.obs_dim; i++)
@@ -161,7 +161,7 @@ void parse_type(const char** ts, int* dim, char** types, double** mins, double**
   } 
 
   /*get the last type for the last variable*/
-  scan_args = sscanf(*ts," %c ] %n",(&((*types)[i])),&characters_read);
+  scan_args = sscanf(*ts," %c %n",(&((*types)[i])),&characters_read);
   if (scan_args != 1)
   {
     printf("\nError8: Incorrect task spec format. cannot read last variable type of observation or action Exiting....\n\n"); 
@@ -178,6 +178,14 @@ void parse_type(const char** ts, int* dim, char** types, double** mins, double**
   *ts = *ts + characters_read;
   (*types)[++i] = '\0';
   
+	char c;
+	scan_args = sscanf(*ts," %c %n",&c,&characters_read);
+	while (c != ']' && scan_args > 0)
+	{
+		*ts = *ts + characters_read;
+		scan_args = sscanf(*ts," %c %n",&c,&characters_read);
+	}
+	*ts = *ts + characters_read;
   
 	/*Get the min and max values for all the variables*/  
   for (i = 0; i < (*dim); i++)
