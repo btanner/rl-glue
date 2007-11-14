@@ -1,5 +1,45 @@
 #include "Glue_utilities.h"
 
+/*int main(void) {
+	task_spec_struct tss;
+	int i;
+	double state_mins[] = {-5.0, 10.0,  3.0, -20.0, -10.0, -1.0, 100.0};
+  double state_maxs[] = {-3.0, 100.0, 7.0,   0.0,  -8.0,  3.0, 110.0};
+  char action_types[] = {'i','f','f','i'};
+  double action_mins[] = {-5.0, -1.0, -20.0, -30.0};
+  double action_maxs[] = { 5.0,  1.0,   0.0, -28.0};
+	parse_task_spec("2.0:e:7_[f,i,f,f,i,f,i]_[-5.0,-3.0]_[10.0,100.0]_[3.0,7.0]_[-20.0,0.0]_[-10.0,-8.0]_[-1.0,3.0]_[100.0,110.0]:4_[i,f,f,i]_[-5.0,5.0]_[-1.0,1.0]_[-20.0,0.0]_[-30.0,-28.0]:[]", &tss);
+	printf("numStateInts = %d\n", tss.num_discrete_obs_dims);
+	printf("numStateDoubles = %d\n", tss.num_continuous_obs_dims);
+	for (i = 0; i < tss.obs_dim; i++)
+	{
+		printf("[%lf,%lf]\n",tss.obs_mins[i],tss.obs_maxs[i]);
+	}
+	printf("numActionInts = %d\n", tss.num_discrete_action_dims);
+	printf("numActionDoubles = %d\n", tss.num_continuous_action_dims);
+	for (i = 0; i < tss.action_dim; i++)
+	{
+		printf("[%lf,%lf]\n",tss.action_mins[i],tss.action_maxs[i]);
+	}
+	printf("Reward: [%lf,%lf]\n",tss.reward_min,tss.reward_max);
+	
+	parse_task_spec("2.0:e:7_[f,i,f,f,i,f,i]_[-inf,-3]_[10,inf]_[3,7]_[-inf,inf]_[-10,-8]_[-1,3]_[100,110]:4_[i,f,f,i]_[-5,5]_[-1,1]_[-20,0]_[-30,-28]:[-23,10]", &tss);
+	printf("numStateInts = %d\n", tss.num_discrete_obs_dims);
+	printf("numStateDoubles = %d\n", tss.num_continuous_obs_dims);
+	for (i = 0; i < tss.obs_dim; i++)
+	{
+		printf("[%lf,%lf]\n",tss.obs_mins[i],tss.obs_maxs[i]);
+	}
+	printf("numActionInts = %d\n", tss.num_discrete_action_dims);
+	printf("numActionDoubles = %d\n", tss.num_continuous_action_dims);
+	for (i = 0; i < tss.action_dim; i++)
+	{
+		printf("[%lf,%lf]\n",tss.action_mins[i],tss.action_maxs[i]);
+	}
+	printf("Reward: [%lf,%lf]\n",tss.reward_min,tss.reward_max);
+	return 0;
+}*/
+
 void parse_range(const char** ts, double* min, double* max)
 /* parses a single range in the taskspec, ie. '[min,max]'. ts must start at the '['. Advances taskspec to end of ']' */
 {
@@ -9,12 +49,12 @@ void parse_range(const char** ts, double* min, double* max)
 	sscanf(*ts, " [ %n",&characters_read);
 	*ts = *ts + characters_read;
 	scan_args = sscanf(*ts, " %lf , %n", min, &characters_read);
-	if(scan_args == 2)
+	if(scan_args == 1)
 	{
 		/*if value is read correctly*/
 		*ts = *ts + characters_read;
 	}
-	else if(scan_args < 2)
+	else if(scan_args < 1)
 	{
 		scan_args = sscanf(*ts, " -inf , %n", &characters_read);
 		if (scan_args == 1)
@@ -36,19 +76,19 @@ void parse_range(const char** ts, double* min, double* max)
 	}
 	/*obtain maximum value*/
 	scan_args = sscanf(*ts," %lf ] %n",max,&characters_read);
-	if(scan_args == 2)
+	if(scan_args == 1)
 	{
 		/*if value is correctly read*/
 		  *ts = *ts + characters_read;
 	}
-	else if(scan_args < 2){
+	else if(scan_args < 1){
 		scan_args = sscanf(*ts, " inf ] %n", &characters_read);
 		if (scan_args == 1)
 		{
 			*max = (double)INFINITY;
 			*ts = *ts + characters_read;
 		}
-		else if (scan_args == 0)
+		else if (scan_args < 1)
 		{
 			/*if no value is read (ie we are using positive inf as the max)*/
 			*max = GLUE_NAN;

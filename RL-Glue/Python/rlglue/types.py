@@ -17,49 +17,43 @@
 
 
 class Action:
-	intArray = []
-	doubleArray = []
 	def __init__(self,numInts=None,numDoubles=None):
 		if numInts != None:
-			intArray = [0]*numInts
+			self.intArray = [0]*numInts
 		if numDoubles != None:
-			doubleArray = [0.0]*numDoubles
+			self.doubleArray = [0.0]*numDoubles
 
 class Observation:
-	intArray = []
-	doubleArray = []
 	def __init__(self,numInts=None,numDoubles=None):
 		if numInts != None:
-			intArray = [0]*numInts
+			self.intArray = [0]*numInts
 		if numDoubles != None:
-			doubleArray = [0.0]*numDoubles
+			self.doubleArray = [0.0]*numDoubles
 
 class Random_seed_key:
-	intArray = []
-	doubleArray = []
 	def __init__(self,numInts=None,numDoubles=None):
 		if numInts != None:
-			intArray = [0]*numInts
+			self.intArray = [0]*numInts
 		if numDoubles != None:
-			doubleArray = [0.0]*numDoubles
+			self.doubleArray = [0.0]*numDoubles
 
 class State_key:
-	intArray = []
-	doubleArray = []
 	def __init__(self,numInts=None,numDoubles=None):
 		if numInts != None:
-			intArray = [0]*numInts
+			self.intArray = [0]*numInts
 		if numDoubles != None:
-			doubleArray = [0.0]*numDoubles
+			self.doubleArray = [0.0]*numDoubles
 
 class Observation_action:
-	o = Observation()
-	a = Action()
 	def __init__(self,theObservation=None,theAction=None):
 		if theObservation != None:
-			this.o = theObservation
+			self.o = theObservation
+		else:
+			self.o = Observation()
 		if theAction != None:
-			this.a = theAction
+			self.a = theAction
+		else:
+			self.a = Action()
 
 class Reward_observation:
 	r = 0.0
@@ -67,11 +61,17 @@ class Reward_observation:
 	terminal = False
 	def __init__(self,reward=None, theObservation=None, terminal=None):
 		if reward != None:
-			r = reward
+			self.r = reward
+		else:
+			self.r = 0.0
 		if theObservation != None:
-			this.o = theObservation
+			self.o = theObservation
+		else:
+			self.o = Observation()
 		if terminal != None:
-			this.terminal = terminal
+			self.terminal = terminal
+		else:
+			self.terminal = False
 
 class Reward_observation_action_terminal:
 	r = 0.0
