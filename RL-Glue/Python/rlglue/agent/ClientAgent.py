@@ -86,6 +86,8 @@ class ClientAgent:
 	def onAgentMessage(self):
 		message = self.network.getString()
 		reply = self.agent.agent_message(message)
+		if reply == None:
+			reply = ""
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kAgentMessage)
 		self.network.putInt(len(reply))

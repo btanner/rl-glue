@@ -101,6 +101,8 @@ class ClientEnvironment:
 	def onEnvMessage(self):
 		message = self.network.getString()
 		reply = self.env.env_message(message)
+		if reply == None:
+			reply = ""
 		self.network.clearSendBuffer()
 		self.network.putInt(Network.kEnvMessage)
 		self.network.putInt(len(reply))
