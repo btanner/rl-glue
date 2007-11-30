@@ -169,6 +169,8 @@ static void onAgentMessage(int theConnection) {
   if (inMessageLength > 0) {
     offset = rlBufferRead(&theBuffer, offset, theInMessage, inMessageLength, sizeof(char));
   }
+/*Make sure to null terminate the string */
+   theInMessage[inMessageLength]='\0';
 
   /* Call RL method on the recv'd data */
   outMessage = agent_message(theInMessage);

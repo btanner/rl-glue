@@ -176,6 +176,8 @@ static void onEnvMessage(int theConnection) {
   if (inMessageLength > 0) {
     offset = rlBufferRead(&theBuffer, offset, theInMessage, inMessageLength, sizeof(char));
   }
+/*Make sure to null terminate the string */
+   theInMessage[inMessageLength]='\0';
 
   outMessage = env_message(theInMessage);
 
