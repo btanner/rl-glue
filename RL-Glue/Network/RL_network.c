@@ -47,7 +47,7 @@ int rlOpen(short thePort) {
 int rlAcceptConnection(int theSocket) {
   int theClient = 0;
   struct sockaddr_in theClientAddress = {0};
-  unsigned int theSocketSize = sizeof(struct sockaddr_in);
+  socklen_t theSocketSize = sizeof(struct sockaddr_in);
   theClient = accept(theSocket, (struct sockaddr*)&theClientAddress, &theSocketSize);
   return theClient;
 }
