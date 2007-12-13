@@ -23,4 +23,4 @@ $(BUILD_PATH)/$(basename $(EXPERIMENT)).o: $(EXP_SRC_PATH)/$(EXPERIMENT)
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 clean:
-	rm -rf RL_experiment $(BUILD_PATH)/*
+	rm -rf RL_experiment RL_experiment.exe $(BUILD_PATH)/*

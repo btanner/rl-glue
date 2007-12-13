@@ -39,6 +39,7 @@ clean:
 	-rm $(BUILD_PATH)/*
 	-rm $(BUILD_PATH)_cpp/*
 	-rm $(BIN_PATH)/RL_glue
+	-rm $(BIN_PATH)/RL_glue.exe
 	-rm $(RL_GLUE_PATH)/Python/rlglue/*.pyc
 	-rm $(RL_GLUE_PATH)/Python/rlglue/agent/*.pyc
 	-rm $(RL_GLUE_PATH)/Python/rlglue/environment/*.pyc

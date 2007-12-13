@@ -33,6 +33,25 @@ So, to get started, just type:
 $>make all
 
 ----------------------------
+Getting Started - Cygwin/Windows
+----------------------------
+You will need to have Java installed in Windows (not within Cygwin).
+Within Cygwin you will need gcc, make, and bash.
+
+To get the Java compiler to work within Cygwin, you will need to include
+it in your path. Edit your ~/.bash_profile:
+
+$ vim ~/.bash_profile  
+
+You will need to install the vim package (or some other editor).
+
+And then add the following line:
+
+export PATH=/cygdrive/c/Program\ Files/Java/jdk1.6.0_03/bin:$PATH
+
+This obviously depends on where Java is installed on your computer and the version of Java you have installed. 
+
+----------------------------
 Running your First Experiment
 ----------------------------
 

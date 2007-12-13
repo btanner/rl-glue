@@ -27,4 +27,4 @@ $(BUILD_PATH)/$(basename $(ENVIRONMENT)).o: $(ENV_SRC_PATH)/$(ENVIRONMENT)
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 clean:
-	rm -rf RL_environment $(BUILD_PATH)/*
+	rm -rf RL_environment RL_environment.exe $(BUILD_PATH)/*

@@ -27,7 +27,7 @@ $(BUILD_PATH)/$(basename $(AGENT)).o: $(AGENT_SRC_PATH)/$(AGENT)
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 clean:
-	rm -rf RL_agent $(BUILD_PATH)/*
+	rm -rf RL_agent RL_agent.exe $(BUILD_PATH)/*
 
 
 

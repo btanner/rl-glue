@@ -53,4 +53,4 @@ $(BUILD_PATH)/$(basename $(EXPERIMENT)).o: $(EXP_SRC_PATH)/$(EXPERIMENT)
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 clean:
-	rm -rf RL_glue $(BUILD_PATH)/*
+	rm -rf RL_glue RL_glue.exe $(BUILD_PATH)/*

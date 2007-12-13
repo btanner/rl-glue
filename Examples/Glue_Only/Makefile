@@ -15,4 +15,4 @@ all: $(BIN_PATH)/RL_glue
 include $(RL_GLUE_PATH)/RL_glue.makefile
 
 clean:
-	rm -rf RL_glue $(BUILD_PATH)/*
+	rm -rf RL_glue RL_glue.exe $(BUILD_PATH)/*
