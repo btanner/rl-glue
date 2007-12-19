@@ -166,7 +166,7 @@ def RL_freeze():
 def RL_set_state(sk):
 	network.clearSendBuffer()
 	network.putInt(Network.kRLSetState)
-	network.putInt(Network.sizeOf(sk))
+	network.putInt(Network.sizeOfStateKey(sk))
 	network.putStateKey(sk)
 	network.send()
 	doStandardRecv(Network.kRLSetState)
@@ -175,7 +175,7 @@ def RL_set_state(sk):
 def RL_set_random_key(rsk):
 	network.clearSendBuffer()
 	network.putInt(Network.kRLSetRandomSeed)
-	network.putInt(Network.sizeOf(rsk))
+	network.putInt(Network.sizeOfRandomSeed(rsk))
 	network.putRandomSeedKey(rsk)
 	network.send()
 	doStandardRecv(Network.kRLSetRandomSeed)

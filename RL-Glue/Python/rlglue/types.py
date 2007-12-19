@@ -18,6 +18,8 @@
 
 class Action:
 	def __init__(self,numInts=None,numDoubles=None):
+		self.intArray = []
+		self.doubleArray = []
 		if numInts != None:
 			self.intArray = [0]*numInts
 		if numDoubles != None:
@@ -25,6 +27,8 @@ class Action:
 
 class Observation:
 	def __init__(self,numInts=None,numDoubles=None):
+		self.intArray = []
+		self.doubleArray = []
 		if numInts != None:
 			self.intArray = [0]*numInts
 		if numDoubles != None:
@@ -32,6 +36,8 @@ class Observation:
 
 class Random_seed_key:
 	def __init__(self,numInts=None,numDoubles=None):
+		self.intArray = []
+		self.doubleArray = []
 		if numInts != None:
 			self.intArray = [0]*numInts
 		if numDoubles != None:
@@ -39,6 +45,8 @@ class Random_seed_key:
 
 class State_key:
 	def __init__(self,numInts=None,numDoubles=None):
+		self.intArray = []
+		self.doubleArray = []
 		if numInts != None:
 			self.intArray = [0]*numInts
 		if numDoubles != None:
@@ -56,9 +64,6 @@ class Observation_action:
 			self.a = Action()
 
 class Reward_observation:
-	r = 0.0
-	o = Observation()
-	terminal = False
 	def __init__(self,reward=None, theObservation=None, terminal=None):
 		if reward != None:
 			self.r = reward
@@ -74,16 +79,22 @@ class Reward_observation:
 			self.terminal = False
 
 class Reward_observation_action_terminal:
-	r = 0.0
-	o = Observation()
-	a = Action()
-	terminal = False
 	def __init__(self,reward=None, theObservation=None, theAction=None, terminal=None):
 		if reward != None:
-			r = reward
+			self.r = reward
+		else:
+			self.r = 0.0
 		if theObservation != None:
-			this.o = theObservation
+			self.o = theObservation
+		else:
+			self.o = Observation()
 		if theAction != None:
-			this.a = theAction
+			self.a = theAction
+		else:
+			self.a = Action()
 		if terminal != None:
-			this.terminal = terminal
+			self.terminal = terminal
+		else:
+			self.terminal = False
+	
+
