@@ -20,7 +20,10 @@
 
 #include <RL_common.h>
 
-extern "C"{
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Agent Interface */
 void agent_init(const Task_specification task_spec);
 Action agent_start(Observation o);
@@ -29,5 +32,9 @@ void agent_end(Reward r);
 void agent_cleanup();
 void agent_freeze();
 Message agent_message(const Message message);
+
+#ifdef __cplusplus
 }
+#endif
+
 #endif

@@ -20,7 +20,10 @@
 
 #include <RL_common.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 	/* Environment Interface */
 	Task_specification env_init();
 	Observation env_start();
@@ -31,6 +34,8 @@ extern "C" {
 	State_key env_get_state();
 	Random_seed_key env_get_random_seed();
 	Message env_message(const Message message);
-}
 
+#ifdef __cplusplus
+}
+#endif
 #endif
