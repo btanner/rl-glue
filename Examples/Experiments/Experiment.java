@@ -42,7 +42,13 @@ public class Experiment
 
 		rlNumSteps = new int[Experiment.kNumEpisodes];
 		rlReturn = new double[Experiment.kNumEpisodes];
-
+		
+		RLGlue.RL_env_message("one");
+		RLGlue.RL_env_message("two longer");
+		RLGlue.RL_env_message("three even more longer");
+		RLGlue.RL_env_message("four shorter");
+		RLGlue.RL_env_message("five");
+		RLGlue.RL_env_message("6");
 		RLGlue.RL_init();
 		
 		run(kNumEpisodes);
