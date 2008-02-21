@@ -156,7 +156,6 @@ Random_seed_key env_get_random_seed()
 }
 
 Message env_message(const Message inMessage) {
-  printf("Message received in mines is %s\n",inMessage);
   return NULL;
 }
 
