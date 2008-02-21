@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Main-Class: rlglue.RLGlueCore
+Built-By: btanner
+
+Name: rlglue/
+Specification-Title: rlglue
+Specification-Version: 1.2
+Specification-Vendor: RLAI
+Implementation-Title: rlglue
+Implementation-Version: 1.2
+Implementation-Vendor: Brian Tanner
+

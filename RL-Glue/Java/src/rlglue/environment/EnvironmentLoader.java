@@ -21,22 +21,14 @@ import rlglue.network.Network;
 
 public class EnvironmentLoader
 {
-	public static void main(String [] args) throws Exception
-	{
-		String usage = "java EnvironmentLoader <Environment> -classpath <Path To RLGlue>";
-
-		String envVars = "The following environment variables are used by the environment to control its function:\n" + 
-		"RLGLUE_HOST  : If set the environment will use this ip or hostname to connect to rather than " + Network.kDefaultHost + "\n" +
-		"RLGLUE_PORT  : If set the environment will use this port to connect on rather than " + Network.kDefaultPort + "\n" +
-		"RLGLUE_AUTORECONNECT  : If set the enviroment will reconnect to the glue after an experiment has finished\n";
-
-		if (args.length < 1) {
-			System.out.println(usage);
-			System.out.println(envVars);
-			System.exit(1);
-		}
-
-		Environment env = (Environment)Class.forName(args[0]).newInstance();
+    
+    /**
+     * Loads the class envClassName as an rl-glue environment.
+     * @param envClassName
+     */
+        public static void loadEnvironment(String envClassName){
+            try{
+            		Environment env = (Environment)Class.forName(envClassName).newInstance();
 		ClientEnvironment client = new ClientEnvironment(env);
 		int autoReconnect = 0;
 
@@ -72,5 +64,24 @@ public class EnvironmentLoader
 			client.runEnvironmentEventLoop();
 			client.close();
 		} while (autoReconnect == 1);
+            }catch(Exception e){
+                System.err.println("loadEnvironment("+envClassName+") threw Exception: "+e);
+            }
+        }
+	public static void main(String [] args) throws Exception
+	{
+		String usage = "java EnvironmentLoader <Environment> -classpath <Path To RLGlue>";
+
+		String envVars = "The following environment variables are used by the environment to control its function:\n" + 
+		"RLGLUE_HOST  : If set the environment will use this ip or hostname to connect to rather than " + Network.kDefaultHost + "\n" +
+		"RLGLUE_PORT  : If set the environment will use this port to connect on rather than " + Network.kDefaultPort + "\n" +
+		"RLGLUE_AUTORECONNECT  : If set the enviroment will reconnect to the glue after an experiment has finished\n";
+
+		if (args.length < 1) {
+			System.out.println(usage);
+			System.out.println(envVars);
+			System.exit(1);
+		}
+                loadEnvironment(args[0]);
 	}
 }
