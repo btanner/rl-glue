@@ -12,16 +12,22 @@ all: RL_agent
 
 include $(RL_GLUE_PATH)/RL_glue.makefile
 
-ifeq ($(shell uname -o),Cygwin)
+ECHOFLAG = -e
+
+ifeq ($(shell uname -s),Darwin)
+	ECHOFLAG = 
+endif
+ifeq ($(shell uname -s),Cygwin)
 	CLASSPATH=`cygpath -wp $(BUILD_PATH):$(RL_GLUE_PATH)/Java/RL-Glue.jar`
 	CLASSPATH2="\`cygpath -wp $(BUILD_PATH):$(RL_GLUE_PATH)/Java/RL-Glue.jar\`"
 else
 	CLASSPATH=$(BUILD_PATH):$(RL_GLUE_PATH)/Java/RL-Glue.jar
+	CLASSPATH2=$(CLASSPATH)
 endif 
 
 RL_agent: $(AGENT) $(BUILD_PATH)/rlVizLib/utilities/TaskSpecObject.class
 	javac -d $(BUILD_PATH) -classpath $(CLASSPATH) $(AGENT)
-	echo -e "#! /bin/bash\njava -Xmx128M -classpath $(CLASSPATH2) rlglue.agent.AgentLoader RandomAgent.RandomAgent" | cat > RL_agent
+	echo $(ECHOFLAG) "#! /bin/bash\njava -Xmx128M -classpath $(CLASSPATH2) rlglue.agent.AgentLoader RandomAgent.RandomAgent" | cat > RL_agent
 	chmod u+x RL_agent
 
 clean:
