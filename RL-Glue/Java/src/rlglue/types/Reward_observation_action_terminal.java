@@ -37,4 +37,16 @@ public class Reward_observation_action_terminal
 		this.a = action;
 		this.terminal = terminal;
 	}
+        
+    public Reward_observation_action_terminal(Reward_observation_action_terminal src) {
+        this.r = src.r;
+        this.o = src.o.duplicate();
+        this.a = src.a.duplicate();
+        this.terminal = src.terminal;
+    }
+
+    public Reward_observation_action_terminal duplicate() {
+        return new Reward_observation_action_terminal(this);
+    }
+
 }

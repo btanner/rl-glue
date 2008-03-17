@@ -18,12 +18,27 @@ http://rl-glue.googlecode.com/
 
 package rlglue.types;
 
-public class Random_seed_key {
-	public int [] intArray;
-	public double [] doubleArray;
+public class Random_seed_key extends RL_abstract_type
+{
 
-	public Random_seed_key(int numInts, int numDoubles) {
-		intArray = new int[numInts];
-		doubleArray = new double[numDoubles];
+	public Random_seed_key() 
+	{
+		this(0,0);
 	}
+
+	public Random_seed_key(int numInts, int numDoubles)
+	{
+		super(numInts,numDoubles);
+	}
+        
+	public Random_seed_key(Random_seed_key src)
+	{
+		super(src);
+	}
+        
+
+        public Random_seed_key duplicate(){
+            return new Random_seed_key(this);
+        }
+
 }

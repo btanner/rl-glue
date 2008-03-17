@@ -18,18 +18,25 @@ http://rl-glue.googlecode.com/
 
 package rlglue.types;
 
-public class Action 
+public class Action extends RL_abstract_type
 {
-	public int [] intArray;
-	public double [] doubleArray;
-
 	public Action() 
 	{
+		this(0,0);
 	}
 
 	public Action(int numInts, int numDoubles)
 	{
-		intArray = new int[numInts];
-		doubleArray = new double[numDoubles];
+		super(numInts,numDoubles);
 	}
+        
+	public Action(Action src)
+	{
+		super(src);
+	}
+        
+
+        public Action duplicate(){
+            return new Action(this);
+        }
 }

@@ -18,12 +18,27 @@ http://rl-glue.googlecode.com/
 
 package rlglue.types;
 
-public class State_key {
-	public int [] intArray;
-	public double [] doubleArray;
+public class State_key extends RL_abstract_type
+{
 
-	public State_key(int numInts, int numDoubles) {
-		intArray = new int[numInts];
-		doubleArray = new double[numDoubles];
+	public State_key() 
+	{
+		this(0,0);
 	}
+
+	public State_key(int numInts, int numDoubles)
+	{
+		super(numInts,numDoubles);
+	}
+        
+	public State_key(State_key src)
+	{
+		super(src);
+	}
+        
+
+        public State_key duplicate(){
+            return new State_key(this);
+        }
+
 }
