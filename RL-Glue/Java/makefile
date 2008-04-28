@@ -1,6 +1,4 @@
 all:
 	mkdir -p bin
-	cd src && javac rlglue/*.java -d ../bin
-	cd src/rlglue/ && javac -cp ../../bin agent/*.java -d ../../bin 
-	cd src/rlglue/ && javac -cp ../../bin environment/*.java -d ../../bin/	
+	javac -d bin src/rlglue/*.java src/rlglue/**/*.java
 	cd bin && jar cmf ../MANIFEST RL-Glue.jar * && mv RL-Glue.jar ../
