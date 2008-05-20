@@ -15,11 +15,11 @@ Copyright 2008 Matt Radkie
 */
 
   
-package rlglue.utils;
+package rlVizLib.utilities;
 
 import java.util.StringTokenizer;
 
-public class TaskSpecV2 extends TaskSpecDelegate
+class TaskSpecV2 extends TaskSpecDelegate
 {
     public double version;			
     public char episodic;			
@@ -453,5 +453,134 @@ public class TaskSpecV2 extends TaskSpecDelegate
     		   "reward_max: " + this.reward_max;
     	
     	return taskSpecObject;
+    }
+    
+        public double getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public char getEpisodic() {
+        return this.episodic;
+    }
+
+    public void setEpisodic(char episodic) {
+        this.episodic = episodic;
+    }
+
+    public int getObsDim() {
+        return this.obs_dim;
+    }
+
+    public void setObsDim(int dim) {
+        this.obs_dim = dim;
+    }
+
+    public int getNumDiscreteObsDims() {
+        return this.num_discrete_obs_dims;
+    }
+
+    public void setNumDiscreteObsDims(int numDisc) {
+        this.num_discrete_obs_dims = numDisc;
+    }
+
+    public int getNumContinuousObsDims() {
+        return this.num_continuous_obs_dims;
+    }
+
+    public void setNumContinuousObsDims(int numCont) {
+        this.num_continuous_obs_dims = numCont;
+    }
+
+    public char[] getObsTypes() {
+        return this.obs_types;
+    }
+
+    public void setObsTypes(char[] types) {
+        this.obs_types = types.clone();
+    }
+
+    public double[] getObsMins() {
+        return this.obs_mins;
+    }
+
+    public void setObsMins(double[] mins) {
+        this.obs_mins = mins.clone();
+    }
+
+    public double[] getObsMaxs() {
+        return this.obs_maxs;
+    }
+
+    public void setObsMaxs(double[] maxs) {
+        this.obs_maxs = maxs.clone();
+    }
+    public int getActionDim() {
+        return this.action_dim;
+    }
+
+    public void setActionDim(int dim) {
+        this.action_dim = dim;
+    }
+
+    public int getNumDiscreteActionDims() {
+        return this.num_discrete_action_dims;
+    }
+
+    public void setNumDiscreteActionDims(int numDisc) {
+        this.num_discrete_action_dims = numDisc;
+    }
+
+    public int getNumContinuousActionDims() {
+        return this.num_continuous_action_dims;
+    }
+
+    public void setNumContinuousActionDims(int numCont) {
+        this.num_continuous_action_dims = numCont;
+    }
+
+    public char[] getActionTypes() {
+        return this.action_types;
+    }
+
+    public void setActionTypes(char[] types) {
+        this.action_types = types.clone();
+    }
+
+    public double[] getActionMins() {
+        return this.action_mins;
+    }
+
+    public void setActionMins(double[] mins) {
+        this.action_mins = mins.clone();
+    }
+
+    public double[] getActionMaxs() {
+        return this.action_maxs;
+    }
+
+    public void setActionMaxs(double[] maxs) {
+        this.action_maxs = maxs.clone();
+    }
+    public double getRewardMax() {
+        return this.reward_max;
+    }
+
+    public void setRewardMax(double max) {
+        this.reward_max = max;
+    }
+
+    public double getRewardMin() {
+        return this.reward_min;
+    }
+
+    public void setRewardMin(double min) {
+        this.reward_min = min;
+    }
+    public int getParserVersion() {
+        return this.parser_version;
     }
 }
