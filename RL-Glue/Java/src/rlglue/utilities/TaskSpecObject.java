@@ -10,7 +10,6 @@ package rlglue.utilities;
 
 import java.util.StringTokenizer;
 /**
- * 
  * @deprecated
  */
 public class TaskSpecObject {
