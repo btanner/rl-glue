@@ -15,7 +15,7 @@ Copyright 2008 Matt Radkie
 */
 
   
-package rlVizLib.utilities;
+package rlglue.utilities;
 
 import java.util.StringTokenizer;
 

@@ -6,7 +6,7 @@
  *
  * @author mradkie
  */
-package rlVizLib.utilities;
+package rlglue.utilities;
 
 import java.util.StringTokenizer;
 /**

@@ -15,7 +15,7 @@ Copyright 2008 Matt Radkie
 */
 
 
-package rlVizLib.utilities;
+package rlglue.utilities;
 
 /**
  * Here's the trick.  We'll write this class to be the go-to class, that the
