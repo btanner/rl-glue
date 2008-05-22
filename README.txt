@@ -55,50 +55,86 @@ This obviously depends on where Java is installed on your computer and the versi
 Running your First Experiment
 ----------------------------
 
-----------------------------
-	C/C++ 
-----------------------------
-The following instructions will start an experiment of a random agent on the "mines" environment. All of the components are networked and written in C. To have some components not networked (compiled in directly with the glue), check out the Examples/Glue_plus_* directories.
+The following instructions will start an experiment of a random agent on the "mines" environment. All of the components are networked and written in C. Open the "Run_networked_example.bash" script in Examples/Run_scripts. There are three sections in this script: agent, environment and experiment program. Make sure that only one each agent, environment and experiment is not commented out. So if we wanted all three components to be C programs, the script would look like the following:
+----------- Verbatim --------------------------------
+# ----------------------------------------------
+# Choose an Agent
+# (uncomment only ONE of the following agents)
+# ----------------------------------------------
+#
+# ---------- Java -----------------
+#cd ../Agent/Java/
+#./RL_agent &
+#cd $CurrentDir
 
-Open four terminal windows and run the following commands (after you have run 'make all' in the base rl-glue directory):
+# ----------  C -----------------
+../Agent/C/RL_agent &
 
-Terminal 1:
-$>cd Examples/Glue_Only
-./RL_glue
+# ---------- Python -----------------
+#cd ../Agent/Python
+#./RL_agent &
+#cd $CurrentDir
 
-Terminal 2:
-$>cd Examples/basic_examples/C/Agent
-./RL_agent
 
-Terminal 3:
-$>cd Examples/basic_examples/C/Environment
-./RL_environment
 
-Terminal 4:
-$>cd Examples/basic_examples/C/Experiment
-./RL_experiment
+# ----------------------------------------------
+# Choose an Environment
+# (uncomment only ONE of the following environments)
+# ----------------------------------------------
+#
+# ---------- Java -----------------
+#cd ../Environment/Java/
+#./RL_environment &
+#cd $CurrentDir
 
-----------------------------
-	Java and Python
-----------------------------
-There are also examples for Java and Python. To run a Java agent:
+# ----------  C -----------------
+../Environment/C/RL_environment &
 
-$>cd Examples/basic_examples/Java/Agent
-$>./RL_agent
+# ---------- Python -----------------
+cd ../Environment/Python/
+./RL_environment &
+cd $CurrentDir
 
-And likewise for Environments and Experiments. To use Python, just replace Java with Python above.
 
-These 'executables' are actually bash scripts which invoke either the Python or Java interpreter and loading mechanisms.
+
+# ----------------------------------------------
+# Choose an Experiment
+# (uncomment only ONE of the following Experiment)
+# ----------------------------------------------
+#
+# ---------- Java -----------------
+cd ../Experiment/Java/
+./RL_experiment &
+cd $CurrentDir
+
+# ----------  C -----------------
+../Experiment/C/RL_experiment &
+
+# ---------- Python -----------------
+#cd ../Experiment/Python/
+#./RL_experiment &
+#cd $CurrentDir
+
+
+# Run the glue ------------------------------------
+../../RL-Glue/bin/RL_glue 
+
+----------- End Verbatim --------------------------------
+
+This will run a C agent, C environment and C experiment program is three separate processes, communicating over sockets. Feel free to mix and match the different languages. Remember you can only run a one component of the same type at a time; you can't start a Java agent and a Python agent.
+
+To run using no networked components (compiled in directly with the glue), run the "Glue_single_C_exe.bash" script.
+
 
 -----------------------------------------
 	Source Code and Build Instructions
 -----------------------------------------
 The source for all of these example agents, environments, and experiments are located in:
-./Examples/Agents
-./Examples/Environments
-./Examples/Experiments
+./Examples/Agents/*/src
+./Examples/Environments/*/src
+./Examples/Experiments/*/src
 
-To look at how each of these components is built, look at the makefiles in the ./Examples/basic_examples/{C/Java/Python}/{Environments/Agent/Experiment}/ directories!
+To look at how each of these components is built, look at the makefiles in each directory
 
 
 -------------------------------------
