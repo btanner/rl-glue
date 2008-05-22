@@ -11,9 +11,8 @@ RL_GLUE_BASE = ../../..
 
 ENV_OBJECTS = $(basename $(ENVIRONMENT)).o
 RL_GLUE_PATH = $(RL_GLUE_BASE)/RL-Glue
-UTILS_PATH = $(RL_GLUE_BASE)/Utils
 
-CFLAGS = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(ENV_SRC_PATH)
+CFLAGS = -I$(RL_GLUE_PATH) -I$(ENV_SRC_PATH)
 
 ifeq ($(suffix $(ENVIRONMENT)),.cpp)
 	CC = $(CXX)
@@ -23,7 +22,7 @@ all: RL_environment
 
 include $(RL_GLUE_PATH)/RL_glue.makefile
 
-ENV_OBJECTS += RL_client_environment.o RL_network.o
+ENV_OBJECTS += RL_client_environment.o RL_network.o 
 
 RL_environment: $(addprefix $(BUILD_PATH)/, $(ENV_OBJECTS))
 	$(CC) -o RL_environment $^

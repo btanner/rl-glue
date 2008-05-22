@@ -8,12 +8,10 @@ BUILD_PATH = ./Build
 RL_GLUE_BASE = ../../..
 # ------------------------------------------------------------------
 
-
-AGENT_OBJECTS = $(basename $(AGENT)).o Glue_utilities.o
+AGENT_OBJECTS = $(basename $(AGENT)).o
 RL_GLUE_PATH = $(RL_GLUE_BASE)/RL-Glue
-UTILS_PATH = $(RL_GLUE_BASE)/Utils
 
-CFLAGS = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(AGENT_SRC_PATH)
+CFLAGS = -I$(RL_GLUE_PATH)  -I$(AGENT_SRC_PATH) -I$(RL_GLUE_PATH)/Utilities
 
 ifeq ($(suffix $(AGENT)),.cpp)
 	CC = $(CXX)
@@ -23,7 +21,7 @@ all: RL_agent
 
 include $(RL_GLUE_PATH)/RL_glue.makefile
 
-AGENT_OBJECTS += RL_client_agent.o RL_network.o
+AGENT_OBJECTS += C_TaskSpec_Parser.o RL_client_agent.o RL_network.o 
 
 RL_agent: $(addprefix $(BUILD_PATH)/, $(AGENT_OBJECTS))
 	$(CC) -o RL_agent $^ -lm

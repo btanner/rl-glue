@@ -1,11 +1,10 @@
 .PHONY: all clean
-
+UTILS_PATH = $(RL_GLUE_PATH)/Utilities
 VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/Network:$(RL_GLUE_PATH)/Network/Glue:$(UTILS_PATH)
 VPATH += :$(RL_GLUE_PATH)/Network/Agent:$(RL_GLUE_PATH)/Network/Environment:$(RL_GLUE_PATH)/Network/Experiment
 
 NETWORK_OBJECTS=RL_network.o RL_network_glue.o
-OBJECTS = RL_glue.o
-
+OBJECTS = RL_glue.o RLStruct_util.o C_TaskSpec_Parser.o
 
 ifndef AGENT_NETWORKED
 	AGENT_NETWORKED=1
@@ -113,9 +112,11 @@ $(BUILD_PATH)/RL_client_agent.o: RL_client_agent.c
 $(BUILD_PATH)/RL_client_experiment.o: RL_client_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/Glue_utilities.o: Glue_utilities.c
+$(BUILD_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+$(BUILD_PATH)/RLStruct_util.o: RLStruct_util.c
+	$(CC) -c $(CFLAGS) $^ -o $@
 
 
 $(RL_GLUE_PATH)/Build_cpp/RL_glue.o: RL_glue.c
@@ -160,7 +161,10 @@ $(RL_GLUE_PATH)/Build_cpp/RL_client_agent.o: RL_client_agent.c
 $(RL_GLUE_PATH)/Build_cpp/RL_client_experiment.o: RL_client_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/Glue_utilities.o: Glue_utilities.c
+$(RL_GLUE_PATH)/Build_cpp/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
+	$(CC) -c $(CFLAGS) $^ -o $@
+
+$(RL_GLUE_PATH)/Build_cpp/RLStruct_util.o: RLStruct_util.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 

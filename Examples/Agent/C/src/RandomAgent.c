@@ -19,8 +19,8 @@
 #include <string.h>
 #include <time.h>
 #include <assert.h>
-#include "Glue_utilities.h"
 #include "RandomAgent.h"
+#include "C_TaskSpec_Parser.h"
 
 Action action;
 
@@ -38,9 +38,9 @@ void agent_init(const Task_specification task_spec)
   parse_task_spec(task_spec, &tss);		/*Parsing task_specification*/	
 
 /*allocating memory for one Action*/
-  action.numInts     =  tss.num_discrete_action_dims;
+  action.numInts     =  1;//tss.num_discrete_action_dims;
   action.intArray    = (int*)malloc(sizeof(int)*action.numInts);
-  action.numDoubles  = tss.num_continuous_action_dims;
+  action.numDoubles  = 0;//tss.num_continuous_action_dims;
   action.doubleArray = 0;
 }
 

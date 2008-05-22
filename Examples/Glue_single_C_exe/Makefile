@@ -20,7 +20,7 @@ BIN_PATH = .
 
 
 
-AGENT_OBJECTS = $(basename $(AGENT)).o Glue_utilities.o
+AGENT_OBJECTS = $(basename $(AGENT)).o C_TaskSpec_Parser.o RLStruct_util.o
 ENV_OBJECTS = $(basename $(ENVIRONMENT)).o
 EXP_OBJECTS = $(basename $(EXPERIMENT)).o
 

@@ -10,12 +10,12 @@ echo
 # ----------------------------------------------
 #
 # ---------- Java -----------------
-cd ../Agent/Java/
-./RL_agent &
-cd $CurrentDir
+#cd ../Agent/Java/
+#./RL_agent &
+#cd $CurrentDir
 
 # ----------  C -----------------
-#../Agent/C/RL_agent &
+../Agent/C/RL_agent &
 
 # ---------- Python -----------------
 #cd ../Agent/Python
@@ -30,17 +30,17 @@ cd $CurrentDir
 # ----------------------------------------------
 #
 # ---------- Java -----------------
-cd ../Environment/Java/
-./RL_environment &
-cd $CurrentDir
-
-# ----------  C -----------------
-#../Environment/C/RL_environment &
-
-# ---------- Python -----------------
-#cd ../Environment/Python/
+#cd ../Environment/Java/
 #./RL_environment &
 #cd $CurrentDir
+
+# ----------  C -----------------
+../Environment/C/RL_environment &
+
+# ---------- Python -----------------
+cd ../Environment/Python/
+./RL_environment &
+cd $CurrentDir
 
 
 
@@ -55,7 +55,7 @@ cd ../Experiment/Java/
 cd $CurrentDir
 
 # ----------  C -----------------
-#../Experiment/C/RL_experiment &
+../Experiment/C/RL_experiment &
 
 # ---------- Python -----------------
 #cd ../Experiment/Python/
