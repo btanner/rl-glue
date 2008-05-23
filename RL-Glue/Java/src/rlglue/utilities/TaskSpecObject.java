@@ -1,18 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author mradkie
- */
 package rlglue.utilities;
 
 import java.util.StringTokenizer;
 /**
- * @deprecated
+ * @author mradkie
+ * @deprecated As of TaskSpec v3, now use {@link rlglue.utilities.TaskSpec TaskSpec}
  */
-public class TaskSpecObject {
+@Deprecated public class TaskSpecObject {
 
     public double version;
     public char episodic;
