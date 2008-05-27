@@ -8,6 +8,7 @@ ENV_NETWORKED=1
 EXP_NETWORKED=1
 
 CFLAGS = -I$(RL_GLUE_PATH) -std=c99 -O2
+LDFLAGS = -lm
 
 all: rl-glue examples
 	@echo "*****************************************************************"
