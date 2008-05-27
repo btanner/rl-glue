@@ -1,10 +1,12 @@
 .PHONY: all clean
 UTILS_PATH = $(RL_GLUE_PATH)/Utilities
-VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/Network:$(RL_GLUE_PATH)/Network/Glue:$(UTILS_PATH):../Utils
+OLD_UTILS_PATH = $(RL_GLUE_PATH)/../Utils
+VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/Network:$(RL_GLUE_PATH)/Network/Glue:$(UTILS_PATH):$(OLD_UTILS_PATH)
 VPATH += :$(RL_GLUE_PATH)/Network/Agent:$(RL_GLUE_PATH)/Network/Environment:$(RL_GLUE_PATH)/Network/Experiment
 
 NETWORK_OBJECTS=RL_network.o RL_network_glue.o
-OBJECTS = RL_glue.o RLStruct_util.o C_TaskSpec_Parser.o
+OBJECTS = RL_glue.o C_TaskSpec_Parser.o 
+
 
 ifndef AGENT_NETWORKED
 	AGENT_NETWORKED=1
@@ -66,7 +68,7 @@ else
 	RL_GLUE_OBJECT_PATH = $(BUILD_PATH)
 endif
 
-$(BIN_PATH)/RL_glue: $(addprefix $(RL_GLUE_OBJECT_PATH)/,$(OBJECTS)) $(addprefix $(BUILD_PATH)/,$(EXTRA_OBJECTS))
+$(BIN_PATH)/RL_glue: $(addprefix $(RL_GLUE_OBJECT_PATH)/,$(OBJECTS)) $(addprefix $(BUILD_PATH)/,$(EXTRA_OBJECTS)) 
 	$(CC) -o $(BIN_PATH)/RL_glue $^ $(LDFLAGS)
 
 

@@ -11,7 +11,7 @@ EXPERIMENT = experiment.c
 EXP_SRC_PATH = ../Experiment/C/src
 
 RL_GLUE_PATH = ../../RL-Glue
-UTILS_PATH = ../../Utils
+UTILS_PATH = ../../RL-Glue/Utilities
 BUILD_PATH = ./Build
 BIN_PATH = .
 # -------------------------------------------------
@@ -20,7 +20,7 @@ BIN_PATH = .
 
 
 
-AGENT_OBJECTS = $(basename $(AGENT)).o C_TaskSpec_Parser.o RLStruct_util.o
+AGENT_OBJECTS = $(basename $(AGENT)).o C_TaskSpec_Parser.o 
 ENV_OBJECTS = $(basename $(ENVIRONMENT)).o
 EXP_OBJECTS = $(basename $(EXPERIMENT)).o
 

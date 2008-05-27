@@ -4,6 +4,10 @@ CurrentDir=$(pwd)
 echo
 echo 'Edit "Run_network_demo.bash" to change which agent, environment or experiment program to execute'
 echo
+
+# Run the glue ------------------------------------
+../../RL-Glue/bin/RL_glue & 
+
 # ----------------------------------------------
 # Choose an Agent
 # (uncomment only ONE of the following agents)
@@ -55,7 +59,7 @@ cd ../Experiment/Java/
 cd $CurrentDir
 
 # ----------  C -----------------
-../Experiment/C/RL_experiment &
+../Experiment/C/RL_experiment 
 
 # ---------- Python -----------------
 #cd ../Experiment/Python/
@@ -63,7 +67,6 @@ cd $CurrentDir
 #cd $CurrentDir
 
 
-# Run the glue ------------------------------------
-../../RL-Glue/bin/RL_glue 
+
 
 
