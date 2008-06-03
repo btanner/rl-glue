@@ -42,9 +42,9 @@ echo
 ../Environment/C/RL_environment &
 
 # ---------- Python -----------------
-cd ../Environment/Python/
-./RL_environment &
-cd $CurrentDir
+#cd ../Environment/Python/
+#./RL_environment &
+#cd $CurrentDir
 
 
 
