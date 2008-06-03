@@ -16,52 +16,81 @@ package rlglue.environment;
 
 import rlglue.network.Network;
 
-public class EnvironmentLoader {
+/**
+ * This class can be called from the command line to load an environment and create
+ * an executable RL environment program.  
+ * 
+ * We've recently refactored it to make it useful if anyone ever wants to create
+ * local instances of network-bound environment from inside a JVM (like Matlab)
+ * @author btanner
+ */
+public class EnvironmentLoader implements Runnable {
+
+    String host = Network.kDefaultHost;
+    int port = Network.kDefaultPort;
+    int autoReconnect = 0;
+    Environment theEnvironment = null;
+    ClientEnvironment theClient = null;
+
+    public EnvironmentLoader(Environment theEnvironment) {
+        this.theEnvironment = theEnvironment;
+    }
+
+    public EnvironmentLoader(String hostString, String portString, String reconnectString, Environment theEnvironment) {
+        if (hostString != null) {
+            host = hostString;
+        }
+
+        try {
+            port = Integer.parseInt(portString);
+        } catch (Exception e) {
+            port = Network.kDefaultPort;
+        }
+
+        try {
+            autoReconnect = Integer.parseInt(reconnectString);
+        } catch (Exception e) {
+            autoReconnect = 0;
+        }
+    }
+
+    public void killProcess() {
+        theClient.killProcess();
+    }
+
+    public void run() {
+        System.out.print("Connecting to " + host + " on port " + port + "...");
+        theClient = new ClientEnvironment(theEnvironment);
+        try {
+            do {
+                theClient.connect(host, port, Network.kRetryTimeout);
+                System.out.println("Connected");
+                theClient.runEnvironmentEventLoop();
+                theClient.close();
+            } while (autoReconnect == 1);
+        } catch (Exception e) {
+            System.err.println("EnvironmentLoader run(" + theEnvironment.getClass() + ") threw Exception: " + e);
+        }
+    }
 
     /**
      * Loads the class envClassName as an rl-glue environment.
      * @param envClassName
      */
-    public static void loadEnvironment(String envClassName) {
+    public static EnvironmentLoader loadEnvironment(String envClassName) {
+        Environment env = null;
+
+        String hostString = System.getenv("RLGLUE_HOST");
+        String portString = System.getenv("RLGLUE_PORT");
+        String reconnectString = System.getenv("RLGLUE_AUTORECONNECT");
+
         try {
-            Environment env = (Environment) Class.forName(envClassName).newInstance();
-            ClientEnvironment client = new ClientEnvironment(env);
-            int autoReconnect = 0;
-
-            String host = Network.kDefaultHost;
-            int port = Network.kDefaultPort;
-
-            String hostString = System.getenv("RLGLUE_HOST");
-            String portString = System.getenv("RLGLUE_PORT");
-            String reconnect = System.getenv("RLGLUE_AUTORECONNECT");
-
-            if (hostString != null) {
-                host = hostString;
-            }
-
-            try {
-                port = Integer.parseInt(portString);
-            } catch (Exception e) {
-                port = Network.kDefaultPort;
-            }
-
-            try {
-                autoReconnect = Integer.parseInt(reconnect);
-            } catch (Exception e) {
-                autoReconnect = 0;
-            }
-
-            System.out.print("Connecting to " + host + " on port " + port + "...");
-
-            do {
-                client.connect(host, port, Network.kRetryTimeout);
-                System.out.println("Connected");
-                client.runEnvironmentEventLoop();
-                client.close();
-            } while (autoReconnect == 1);
+            env = (Environment) Class.forName(envClassName).newInstance();
         } catch (Exception e) {
             System.err.println("loadEnvironment(" + envClassName + ") threw Exception: " + e);
         }
+
+        return new EnvironmentLoader(hostString, portString, reconnectString, env);
     }
 
     public static void main(String[] args) throws Exception {
@@ -77,6 +106,7 @@ public class EnvironmentLoader {
             System.out.println(envVars);
             System.exit(1);
         }
-        loadEnvironment(args[0]);
+        EnvironmentLoader theEnvironmentLoader = loadEnvironment(args[0]);
+        theEnvironmentLoader.run();
     }
 }

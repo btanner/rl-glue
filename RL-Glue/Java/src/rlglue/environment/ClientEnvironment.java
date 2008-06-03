@@ -32,6 +32,7 @@ public class ClientEnvironment
 	protected static final String kUnknownMessage = "ClientEnvironment.java :: Unknown Message: ";
 	protected Network network;
 	protected Environment env;
+        protected volatile boolean killedFromAbove=false;
 
 	public ClientEnvironment(Environment env) 
 	{
@@ -222,6 +223,10 @@ public class ClientEnvironment
 			network.flipSendBuffer();
 			network.send();
 
-		} while (envState != Network.kRLTerm);
+		} while (envState != Network.kRLTerm && !killedFromAbove);
 	}
+
+    void killProcess() {
+       killedFromAbove=true;
+    }
 }

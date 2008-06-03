@@ -14,24 +14,29 @@ limitations under the License.
  */
 package rlglue.agent;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import rlglue.network.Network;
 
+/**
+ * This class can be called from the command line to load an agent and create
+ * an executable RL agent program.  
+ * 
+ * We've recently refactored it to make it useful if anyone ever wants to create
+ * local instances of network-bound agents from inside a JVM (like Matlab)
+ * @author btanner
+ */
 public class AgentLoader implements Runnable {
 
     String host = Network.kDefaultHost;
     int port = Network.kDefaultPort;
     int autoReconnect = 0;
     Agent theAgent = null;
-    
-      ClientAgent  theClient=null;
+    ClientAgent theClient = null;
+
     public AgentLoader(Agent theAgent) {
-        this.theAgent=theAgent;
+        this.theAgent = theAgent;
     }
-    
-    
-        public AgentLoader(String hostString, String portString, String reconnectString, Agent theAgent) {
+
+    public AgentLoader(String hostString, String portString, String reconnectString, Agent theAgent) {
         this.theAgent = theAgent;
 
         if (hostString != null) {
@@ -75,11 +80,10 @@ public class AgentLoader implements Runnable {
         return theLoader;
     }
 
-    
-    public void killProcess(){
+    public void killProcess() {
         theClient.killProcess();
     }
-    
+
     public void run() {
         System.out.print("Connecting to " + host + " on port " + port + "...");
         ClientAgent theClient = new ClientAgent(theAgent);
@@ -111,8 +115,6 @@ public class AgentLoader implements Runnable {
         }
 
         AgentLoader theLoader = loadAgent(args[0]);
-
         theLoader.run();
-
     }
 }
