@@ -14,54 +14,86 @@ limitations under the License.
  */
 package rlglue.agent;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import rlglue.network.Network;
 
-public class AgentLoader {
+public class AgentLoader implements Runnable {
+
+    String host = Network.kDefaultHost;
+    int port = Network.kDefaultPort;
+    int autoReconnect = 0;
+    Agent theAgent = null;
+    
+      ClientAgent  theClient=null;
+    public AgentLoader(Agent theAgent) {
+        this.theAgent=theAgent;
+    }
+    
+    
+        public AgentLoader(String hostString, String portString, String reconnectString, Agent theAgent) {
+        this.theAgent = theAgent;
+
+        if (hostString != null) {
+            host = hostString;
+        }
+
+        try {
+            port = Integer.parseInt(portString);
+        } catch (Exception e) {
+            port = Network.kDefaultPort;
+        }
+
+        try {
+            autoReconnect = Integer.parseInt(reconnectString);
+        } catch (Exception e) {
+            autoReconnect = 0;
+        }
+
+
+
+    }
+
     /**
      * Loads the class agentClassName as an rl-glue agent.
      * @param envClassName
      */
-    public static void loadAgent(String agentClassName) {
+    public static AgentLoader loadAgent(String agentClassName) {
+        Agent agent = null;
+
+
+        String hostString = System.getenv("RLGLUE_HOST");
+        String portString = System.getenv("RLGLUE_PORT");
+        String reconnectString = System.getenv("RLGLUE_AUTORECONNECT");
+
         try {
-            Agent agent = (Agent) Class.forName(agentClassName).newInstance();
-            ClientAgent client = new ClientAgent(agent);
-            int autoReconnect = 0;
+            agent = (Agent) Class.forName(agentClassName).newInstance();
+        } catch (Exception ex) {
+            System.err.println("loadAgent(" + agentClassName + ") threw Exception: " + ex);
+        }
+        AgentLoader theLoader = new AgentLoader(hostString, portString, reconnectString, agent);
+        return theLoader;
+    }
 
-            String host = Network.kDefaultHost;
-            int port = Network.kDefaultPort;
+    
+    public void killProcess(){
+        theClient.killProcess();
+    }
+    
+    public void run() {
+        System.out.print("Connecting to " + host + " on port " + port + "...");
+        ClientAgent theClient = new ClientAgent(theAgent);
 
-            String hostString = System.getenv("RLGLUE_HOST");
-            String portString = System.getenv("RLGLUE_PORT");
-            String reconnect = System.getenv("RLGLUE_AUTORECONNECT");
-
-            if (hostString != null) {
-                host = hostString;
-            }
-
-            try {
-                port = Integer.parseInt(portString);
-            } catch (Exception e) {
-                port = Network.kDefaultPort;
-            }
-
-            try {
-                autoReconnect = Integer.parseInt(reconnect);
-            } catch (Exception e) {
-                autoReconnect = 0;
-            }
-
-            System.out.print("Connecting to " + host + " on port " + port + "...");
-
+        try {
             do {
-                client.connect(host, port, Network.kRetryTimeout);
+                theClient.connect(host, port, Network.kRetryTimeout);
                 System.out.println("Connected");
-                client.runAgentEventLoop();
-                client.close();
+                theClient.runAgentEventLoop();
+                theClient.close();
             } while (autoReconnect == 1);
         } catch (Exception e) {
-            System.err.println("loadAgent(" + agentClassName + ") threw Exception: " + e);
+            System.err.println("AgentLoader run(" + theAgent.getClass() + ") threw Exception: " + e);
         }
-
     }
 
     public static void main(String[] args) throws Exception {
@@ -78,8 +110,9 @@ public class AgentLoader {
             System.exit(1);
         }
 
-        loadAgent(args[0]);
+        AgentLoader theLoader = loadAgent(args[0]);
 
+        theLoader.run();
 
     }
 }

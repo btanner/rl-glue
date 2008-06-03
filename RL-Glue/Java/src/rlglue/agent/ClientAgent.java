@@ -29,6 +29,16 @@ public class ClientAgent
 	protected static final String kUnknownMessage = "Unknown Message: ";
 	protected Network network;
 	protected Agent agent;
+	
+	protected boolean killedFromLocalProcess=false;
+	
+	/**
+	*If you are using ClientAgent in a local context (like from Matlab)
+	* this allows us to kill the agent without quitting matlab 
+	**/
+	public void killProcess(){
+		killedFromLocalProcess=true;
+	}
 
 	public ClientAgent(Agent agent) 
 	{
@@ -202,6 +212,6 @@ public class ClientAgent
 
 			network.flipSendBuffer();
 			network.send();
-		} while (agentState != Network.kRLTerm);
+		} while (agentState != Network.kRLTerm && !killedFromLocalProcess);
 	}
 }
