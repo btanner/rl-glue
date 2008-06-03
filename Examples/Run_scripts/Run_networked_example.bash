@@ -54,9 +54,9 @@ cd $CurrentDir
 # ----------------------------------------------
 #
 # ---------- Java -----------------
-cd ../Experiment/Java/
-./RL_experiment &
-cd $CurrentDir
+#cd ../Experiment/Java/
+#./RL_experiment &
+#cd $CurrentDir
 
 # ----------  C -----------------
 ../Experiment/C/RL_experiment 
