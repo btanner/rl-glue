@@ -34,6 +34,7 @@ public class RL_abstract_type{
 		doubleArray = new double[numDoubles];
 	}
         
+        
         public RL_abstract_type(RL_abstract_type src){
             this(src.intArray.length,src.doubleArray.length);
             RLStructCopy(src, this);
