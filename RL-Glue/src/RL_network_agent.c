@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#include <Network/RL_network.h>
+#include <RL_network.h>
 
 static int agentConnection = 0;
 

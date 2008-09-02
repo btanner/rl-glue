@@ -25,7 +25,7 @@
 #include <arpa/inet.h> /* inet_ntoa */
 
 #include <RL_common.h>
-#include <Network/RL_network.h>
+#include <RL_network.h>
 
 /* Provide forward declaration of agent interface */
 extern void agent_init(const Task_specification task_spec);

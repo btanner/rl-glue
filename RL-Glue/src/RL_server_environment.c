@@ -21,7 +21,7 @@
 #include <stdio.h> /* fprintf: debug only */
 
 #include <RL_common.h>
-#include <Network/RL_network.h>
+#include <RL_network.h>
 
 static Task_specification theTaskSpec   = 0;
 static rlBuffer theBuffer               = {0};

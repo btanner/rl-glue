@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <Network/RL_network.h>
+#include <RL_network.h>
 
 extern int rlDidAgentConnect();
 extern void rlSetAgentConnection(int);

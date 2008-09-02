@@ -1,8 +1,6 @@
 .PHONY: all clean
-UTILITIES_PATH = $(RL_GLUE_PATH)/Utilities
-OLD_UTILS_PATH = $(RL_GLUE_PATH)/../Utils
-VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/Network:$(RL_GLUE_PATH)/Network/Glue:$(UTILITIES_PATH):$(OLD_UTILS_PATH)
-VPATH += :$(RL_GLUE_PATH)/Network/Agent:$(RL_GLUE_PATH)/Network/Environment:$(RL_GLUE_PATH)/Network/Experiment
+RL_GLUE_HEADERS=include
+VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/src:$(RL_GLUE_PATH)/include
 
 NETWORK_OBJECTS=RL_network.o RL_network_glue.o
 OBJECTS = RL_glue.o C_TaskSpec_Parser.o 
@@ -33,7 +31,7 @@ ifndef RL_GLUE_PATH
 endif
 
 ifndef CFLAGS
-	CFLAGS = -I$(RL_GLUE_PATH) -ansi -pedantic -Wall
+	CFLAGS = -I$(RL_GLUE_HEADERS) -ansi -pedantic -Wall
 endif
 
 EXTRA_OBJECTS = 
