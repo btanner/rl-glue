@@ -10,8 +10,8 @@ RL_GLUE_BASE = ../../..
 
 AGENT_OBJECTS = $(basename $(AGENT)).o
 RL_GLUE_PATH = $(RL_GLUE_BASE)/RL-Glue
-
-CFLAGS = -I$(RL_GLUE_PATH)  -I$(AGENT_SRC_PATH) -I$(RL_GLUE_PATH)/Utilities 
+RL_GLUE_HEADERS = $(RL_GLUE_PATH)/include
+CFLAGS = -I$(RL_GLUE_HEADERS)  -I$(AGENT_SRC_PATH)
 
 ifeq ($(suffix $(AGENT)),.cpp)
 	CC = $(CXX)
