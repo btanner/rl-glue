@@ -182,15 +182,7 @@ $(BUILD_CPP_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
 $(BUILD_CPP_PATH)/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_C_PATH)/rlVizLib/utilities/TaskSpecObject.class: TaskSpecObject.java
-	javac -d $(BUILD_C_PATH) $^
 
-RL_network.py: $(RL_GLUE_PATH)/Python/RL_network.py
-	cp $^ $@
-
-RL_common.py: $(RL_GLUE_PATH)/Python/RL_common.py
-	cp $^ $@
-	
 clean : 
 	rm -Rf $(BUILD_CPP_PATH)/*
 	rm -Rf $(BUILD_C_PATH)/*
