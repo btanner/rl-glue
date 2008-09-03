@@ -120,6 +120,7 @@ void parse_range(const char** ts, double* min, double* max)
 void parse_type(const char** ts, int* dim, char** types, double** mins, double** maxs, int* num_discrete_dims, int* num_continuous_dims)
 {
   int characters_read,scan_args,i;
+  char c;
   *num_discrete_dims = 0; 
   *num_continuous_dims =0;
 
@@ -178,7 +179,6 @@ void parse_type(const char** ts, int* dim, char** types, double** mins, double**
   *ts = *ts + characters_read;
   (*types)[++i] = '\0';
   
-	char c;
 	scan_args = sscanf(*ts," %c %n",&c,&characters_read);
 	while (c != ']' && scan_args > 0)
 	{
