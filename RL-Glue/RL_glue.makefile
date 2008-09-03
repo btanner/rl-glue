@@ -176,8 +176,8 @@ $(BUILD_CPP_PATH)/RL_client_experiment.o: RL_client_experiment.c
 $(BUILD_CPP_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-#$(BUILD_CPP_PATH)/RLStruct_util.o: RLStruct_util.c
-#	$(CC) -c $(CFLAGS) $^ -o $@
+# $(BUILD_CPP_PATH)/RLStruct_util.o: RLStruct_util.c
+# 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_CPP_PATH)/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
@@ -194,3 +194,4 @@ RL_common.py: $(RL_GLUE_PATH)/Python/RL_common.py
 clean : 
 	rm -Rf $(BUILD_CPP_PATH)/*
 	rm -Rf $(BUILD_C_PATH)/*
+	rm $(BIN_PATH)/RL_glue
