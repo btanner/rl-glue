@@ -94,16 +94,25 @@ $(BUILD_C_PATH)/RL_server_experiment.o: RL_server_experiment.c
 $(BUILD_C_PATH)/RL_network_experiment.o: RL_network_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+$(BUILD_C_PATH)/RL_client_experiment.o: RL_client_experiment.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
 $(BUILD_C_PATH)/RL_server_agent.o: RL_server_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_C_PATH)/RL_network_agent.o: RL_network_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_C_PATH)/RL_server_environment.o: RL_server_environment.c
+$(BUILD_C_PATH)/RL_client_agent.o: RL_client_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+$(BUILD_C_PATH)/RL_server_environment.o: RL_server_environment.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+	
 $(BUILD_C_PATH)/RL_network_environment.o: RL_network_environment.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
+$(BUILD_C_PATH)/RL_client_environment.o: RL_client_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_C_PATH)/RL_direct_agent.o: RL_direct_agent.c
@@ -112,14 +121,6 @@ $(BUILD_C_PATH)/RL_direct_agent.o: RL_direct_agent.c
 $(BUILD_C_PATH)/RL_direct_environment.o: RL_direct_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_C_PATH)/RL_client_environment.o: RL_client_environment.c
-	$(CC) -c $(CFLAGS) $^ -o $@
-
-$(BUILD_C_PATH)/RL_client_agent.o: RL_client_agent.c
-	$(CC) -c $(CFLAGS) $^ -o $@
-
-$(BUILD_C_PATH)/RL_client_experiment.o: RL_client_experiment.c
-	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_C_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.c
 	$(CC) -c $(CFLAGS) $^ -o $@
@@ -146,10 +147,16 @@ $(BUILD_CPP_PATH)/RL_server_experiment.o: RL_server_experiment.c
 $(BUILD_CPP_PATH)/RL_network_experiment.o: RL_network_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+$(BUILD_CPP_PATH)/RL_client_experiment.o: RL_client_experiment.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
 $(BUILD_CPP_PATH)/RL_server_agent.o: RL_server_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_CPP_PATH)/RL_network_agent.o: RL_network_agent.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
+$(BUILD_CPP_PATH)/RL_client_agent.o: RL_client_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_CPP_PATH)/RL_server_environment.o: RL_server_environment.c
@@ -158,19 +165,13 @@ $(BUILD_CPP_PATH)/RL_server_environment.o: RL_server_environment.c
 $(BUILD_CPP_PATH)/RL_network_environment.o: RL_network_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+$(BUILD_CPP_PATH)/RL_client_environment.o: RL_client_environment.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
 $(BUILD_CPP_PATH)/RL_direct_agent.o: RL_direct_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_CPP_PATH)/RL_direct_environment.o: RL_direct_environment.c
-	$(CC) -c $(CFLAGS) $^ -o $@
-
-$(BUILD_CPP_PATH)/RL_client_environment.o: RL_client_environment.c
-	$(CC) -c $(CFLAGS) $^ -o $@
-
-$(BUILD_CPP_PATH)/RL_client_agent.o: RL_client_agent.c
-	$(CC) -c $(CFLAGS) $^ -o $@
-
-$(BUILD_CPP_PATH)/RL_client_experiment.o: RL_client_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_CPP_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
