@@ -1,6 +1,7 @@
 .PHONY: all clean
-RL_GLUE_HEADERS=include
-VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/src:$(RL_GLUE_PATH)/include
+#Important to put RL_GLUE_PATH in front of stuff in case this file is included in another makefile in a different directory
+RL_GLUE_HEADERS= $(RL_GLUE_PATH)/include
+VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/src
 
 NETWORK_OBJECTS=RL_network.o RL_network_glue.o
 OBJECTS = RL_glue.o C_TaskSpec_Parser.o 
@@ -18,8 +19,14 @@ ifndef EXP_NETWORKED
 	EXP_NETWORKED=1
 endif
 
-ifndef BUILD_PATH
-	BUILD_PATH = ./Build
+ifndef BUILD_BASE_PATH
+	BUILD_BASE_PATH = ./build
+ifndef BUILD_C_PATH
+	BUILD_C_PATH = $(BUILD_BASE_PATH)/C
+endif
+
+ifndef BUILD_CPP_PATH
+	BUILD_CPP_PATH = $(BUILD_BASE_PATH)/CPP
 endif
 
 ifndef BIN_PATH
@@ -63,62 +70,62 @@ endif
 ifeq ($(CC),$(CXX))
 	RL_GLUE_OBJECT_PATH = $(RL_GLUE_PATH)/Build_cpp
 else
-	RL_GLUE_OBJECT_PATH = $(BUILD_PATH)
+	RL_GLUE_OBJECT_PATH = $(BUILD_C_PATH)
 endif
 
-$(BIN_PATH)/RL_glue: $(addprefix $(RL_GLUE_OBJECT_PATH)/,$(OBJECTS)) $(addprefix $(BUILD_PATH)/,$(EXTRA_OBJECTS)) 
+$(BIN_PATH)/RL_glue: $(addprefix $(RL_GLUE_OBJECT_PATH)/,$(OBJECTS)) $(addprefix $(BUILD_C_PATH)/,$(EXTRA_OBJECTS)) 
 	$(CC) -o $(BIN_PATH)/RL_glue $^ $(LDFLAGS)
 
 
-$(BUILD_PATH)/RL_glue.o: RL_glue.c
+$(BUILD_C_PATH)/RL_glue.o: RL_glue.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_network.o: RL_network.c
+$(BUILD_C_PATH)/RL_network.o: RL_network.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_network_glue.o: RL_network_glue.c
+$(BUILD_C_PATH)/RL_network_glue.o: RL_network_glue.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_server_experiment.o: RL_server_experiment.c
+$(BUILD_C_PATH)/RL_server_experiment.o: RL_server_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_network_experiment.o: RL_network_experiment.c
+$(BUILD_C_PATH)/RL_network_experiment.o: RL_network_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_server_agent.o: RL_server_agent.c
+$(BUILD_C_PATH)/RL_server_agent.o: RL_server_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_network_agent.o: RL_network_agent.c
+$(BUILD_C_PATH)/RL_network_agent.o: RL_network_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_server_environment.o: RL_server_environment.c
+$(BUILD_C_PATH)/RL_server_environment.o: RL_server_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_network_environment.o: RL_network_environment.c
+$(BUILD_C_PATH)/RL_network_environment.o: RL_network_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_direct_agent.o: RL_direct_agent.c
+$(BUILD_C_PATH)/RL_direct_agent.o: RL_direct_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_direct_environment.o: RL_direct_environment.c
+$(BUILD_C_PATH)/RL_direct_environment.o: RL_direct_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_client_environment.o: RL_client_environment.c
+$(BUILD_C_PATH)/RL_client_environment.o: RL_client_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_client_agent.o: RL_client_agent.c
+$(BUILD_C_PATH)/RL_client_agent.o: RL_client_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/RL_client_experiment.o: RL_client_experiment.c
+$(BUILD_C_PATH)/RL_client_experiment.o: RL_client_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.c
+$(BUILD_C_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-#$(BUILD_PATH)/RLStruct_util.o: RLStruct_util.c
+#$(BUILD_C_PATH)/RLStruct_util.o: RLStruct_util.c
 #	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/Glue_utilities.o: Glue_utilities.c
+$(BUILD_C_PATH)/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 
@@ -173,11 +180,15 @@ $(RL_GLUE_PATH)/Build_cpp/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
 $(RL_GLUE_PATH)/Build_cpp/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_PATH)/rlVizLib/utilities/TaskSpecObject.class: TaskSpecObject.java
-	javac -d $(BUILD_PATH) $^
+$(BUILD_C_PATH)/rlVizLib/utilities/TaskSpecObject.class: TaskSpecObject.java
+	javac -d $(BUILD_C_PATH) $^
 
 RL_network.py: $(RL_GLUE_PATH)/Python/RL_network.py
 	cp $^ $@
 
 RL_common.py: $(RL_GLUE_PATH)/Python/RL_common.py
 	cp $^ $@
+	
+clean : 
+	rm -f Build/*
+	rm -f bin/*
