@@ -45,7 +45,7 @@ LDFLAGS = -lm
 
 all: $(BIN_PATH)/RL_glue
 
-include $(RL_GLUE_PATH)/RL_glue.makefile
+include $(RL_GLUE_PATH)/Makefile
 
 $(BUILD_PATH)/$(basename $(ENVIRONMENT)).o: $(ENV_SRC_PATH)/$(ENVIRONMENT)
 	$(CC) -c $(CFLAGS) $^ -o $@

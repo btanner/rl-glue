@@ -12,7 +12,7 @@ RL_GLUE_PATH = $(RL_GLUE_BASE)/RL-Glue
 
 all: RL_environment
 
-include $(RL_GLUE_PATH)/RL_glue.makefile
+include $(RL_GLUE_PATH)/Makefile
 
 ECHOFLAG = -e
 

@@ -1,13 +1,15 @@
 .PHONY: all rl-glue examples clean
 BIN_PATH = ./RL-Glue/bin
 RL_GLUE_PATH = ./RL-Glue
-BUILD_PATH = ./RL-Glue/Build
+BUILD_BASE_PATH = ./RL-Glue/build
+BUILD_C_PATH = $(BUILD_BASE_PATH)/C
+BUILD_CPP_PATH = $(BUILD_BASE_PATH)/CPP
 RL_GLUE_HEADERS = $(RL_GLUE_PATH)/include
 AGENT_NETWORKED=1
 ENV_NETWORKED=1
 EXP_NETWORKED=1
 
-CFLAGS = -I$(RL_GLUE_PATH) -std=c99 -O2
+CFLAGS = -I$(RL_GLUE_HEADERS) -std=c99
 LDFLAGS = -lm
 
 all: rl-glue examples
@@ -25,14 +27,10 @@ examples:
 
 
 clean:
-	-rm $(BUILD_PATH)/*
-	-rm $(BUILD_PATH)_cpp/*
+	-rm $(BUILD_C_PATH)/*
+	-rm $(BUILD_CPP_PATH)/*
 	-rm $(BIN_PATH)/RL_glue
-	-rm $(RL_GLUE_PATH)/Python/rlglue/*.pyc
-	-rm $(RL_GLUE_PATH)/Python/rlglue/agent/*.pyc
-	-rm $(RL_GLUE_PATH)/Python/rlglue/environment/*.pyc
-	-rm $(RL_GLUE_PATH)/Python/rlglue/network/*.pyc
 	cd ./Examples && make clean
 
 
-include $(RL_GLUE_PATH)/RL_glue.makefile
+include $(RL_GLUE_PATH)/Makefile

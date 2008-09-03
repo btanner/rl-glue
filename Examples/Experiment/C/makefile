@@ -16,7 +16,7 @@ CFLAGS = -I$(RL_GLUE_PATH) -I$(UTILS_PATH) -I$(EXP_SRC_PATH)
 
 all: RL_experiment
 
-include $(RL_GLUE_PATH)/RL_glue.makefile
+include $(RL_GLUE_PATH)/Makefile
 
 EXP_OBJECTS += RL_client_experiment.o RL_network.o
 

@@ -13,7 +13,7 @@ RL_GLUE_JAR = $(RL_GLUE_PATH)/Java/RL-Glue.jar
 
 all: RL_experiment Make_exp_executable
 
-include $(RL_GLUE_PATH)/RL_glue.makefile
+include $(RL_GLUE_PATH)/Makefile
 
 ECHOFLAG=-e
 

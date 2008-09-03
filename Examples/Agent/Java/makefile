@@ -14,7 +14,7 @@ RL_GLUE_JAR = $(RL_GLUE_PATH)/Java/RL-Glue.jar
 
 all: RL_agent Make_agent_executable
 
-include $(RL_GLUE_PATH)/RL_glue.makefile
+include $(RL_GLUE_PATH)/Makefile
 
 ECHOFLAG = -e
 
