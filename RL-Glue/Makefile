@@ -180,7 +180,7 @@ $(BUILD_CPP_PATH)/RL_direct_agent.o: RL_direct_agent.c
 $(BUILD_CPP_PATH)/RL_direct_environment.o: RL_direct_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(BUILD_CPP_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
+$(BUILD_CPP_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 # $(BUILD_CPP_PATH)/RLStruct_util.o: RLStruct_util.c
