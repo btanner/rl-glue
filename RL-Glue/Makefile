@@ -1,5 +1,5 @@
 .PHONY: all clean
-#Important to put RL_GLUE_PATH in front of stuff in case this file is included in another makefile in a different directory
+#Important to put RL_GLUE_PATH in front of things in case this file is included in another makefile in a different directory
 RL_GLUE_HEADERS= $(RL_GLUE_PATH)/include
 VPATH = $(RL_GLUE_PATH):$(RL_GLUE_PATH)/src
 
