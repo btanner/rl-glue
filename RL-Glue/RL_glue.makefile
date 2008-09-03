@@ -21,6 +21,8 @@ endif
 
 ifndef BUILD_BASE_PATH
 	BUILD_BASE_PATH = ./build
+endif
+
 ifndef BUILD_C_PATH
 	BUILD_C_PATH = $(BUILD_BASE_PATH)/C
 endif
@@ -129,55 +131,55 @@ $(BUILD_C_PATH)/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 
-$(RL_GLUE_PATH)/Build_cpp/RL_glue.o: RL_glue.c
+$(BUILD_CPP_PATH)/RL_glue.o: RL_glue.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_network.o: RL_network.c
+$(BUILD_CPP_PATH)/RL_network.o: RL_network.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_network_glue.o: RL_network_glue.c
+$(BUILD_CPP_PATH)/RL_network_glue.o: RL_network_glue.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_server_experiment.o: RL_server_experiment.c
+$(BUILD_CPP_PATH)/RL_server_experiment.o: RL_server_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_network_experiment.o: RL_network_experiment.c
+$(BUILD_CPP_PATH)/RL_network_experiment.o: RL_network_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_server_agent.o: RL_server_agent.c
+$(BUILD_CPP_PATH)/RL_server_agent.o: RL_server_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_network_agent.o: RL_network_agent.c
+$(BUILD_CPP_PATH)/RL_network_agent.o: RL_network_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_server_environment.o: RL_server_environment.c
+$(BUILD_CPP_PATH)/RL_server_environment.o: RL_server_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_network_environment.o: RL_network_environment.c
+$(BUILD_CPP_PATH)/RL_network_environment.o: RL_network_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_direct_agent.o: RL_direct_agent.c
+$(BUILD_CPP_PATH)/RL_direct_agent.o: RL_direct_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_direct_environment.o: RL_direct_environment.c
+$(BUILD_CPP_PATH)/RL_direct_environment.o: RL_direct_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_client_environment.o: RL_client_environment.c
+$(BUILD_CPP_PATH)/RL_client_environment.o: RL_client_environment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_client_agent.o: RL_client_agent.c
+$(BUILD_CPP_PATH)/RL_client_agent.o: RL_client_agent.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/RL_client_experiment.o: RL_client_experiment.c
+$(BUILD_CPP_PATH)/RL_client_experiment.o: RL_client_experiment.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
+$(BUILD_CPP_PATH)/C_TaskSpec_Parser.o: C_TaskSpec_Parser.cpp
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-#$(RL_GLUE_PATH)/Build_cpp/RLStruct_util.o: RLStruct_util.c
+#$(BUILD_CPP_PATH)/RLStruct_util.o: RLStruct_util.c
 #	$(CC) -c $(CFLAGS) $^ -o $@
 
-$(RL_GLUE_PATH)/Build_cpp/Glue_utilities.o: Glue_utilities.c
+$(BUILD_CPP_PATH)/Glue_utilities.o: Glue_utilities.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(BUILD_C_PATH)/rlVizLib/utilities/TaskSpecObject.class: TaskSpecObject.java
@@ -190,5 +192,5 @@ RL_common.py: $(RL_GLUE_PATH)/Python/RL_common.py
 	cp $^ $@
 	
 clean : 
-	rm -f Build/*
-	rm -f bin/*
+	rm -Rf $(BUILD_CPP_PATH)/*
+	rm -Rf $(BUILD_C_PATH)/*
