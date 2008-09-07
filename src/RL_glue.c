@@ -14,7 +14,9 @@
  limitations under the License.
  */
 
-#include <RL_glue.h>
+#include <rlglue/Experiment_common.h>
+#include <rlglue/Agent_common.h>
+#include <rlglue/Environment_common.h>
 
 static Action last_action     = {0};
 static Observation last_state = {0};

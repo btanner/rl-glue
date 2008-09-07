@@ -20,7 +20,7 @@
 #include <stdlib.h> /* exit */
 #include <string.h> /* strlen, strncmp */
 
-#include <RL_common.h>
+#include <rlglue/RL_common.h>
 #include <RL_network.h>
 
 const char* kUnknownMessage = "Unknown Message: %s\n";

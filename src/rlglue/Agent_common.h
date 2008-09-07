@@ -18,12 +18,11 @@
 #ifndef Agent_common_h
 #define Agent_common_h
 
-#include <RL_common.h>
+#include <rlglue/RL_common.h>
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
-*/
 
 /* Agent Interface */
 void agent_init(const Task_specification task_spec);
@@ -34,8 +33,7 @@ void agent_cleanup();
 void agent_freeze();
 Message agent_message(const Message message);
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
 #endif
-*/
 #endif

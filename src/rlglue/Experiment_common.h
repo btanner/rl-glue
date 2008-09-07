@@ -18,9 +18,12 @@
 #ifndef RL_interface_h
 #define RL_interface_h
 
-#include <RL_common.h>
-#include <Environment_common.h>
-#include <Agent_common.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#include <rlglue/RL_common.h>
 
 /* Glue */
 void RL_init();
@@ -35,11 +38,14 @@ Reward RL_return();
 int RL_num_steps();
 int RL_num_episodes();
 void RL_episode(unsigned int num_steps);
-/* void RL_episode(); */
 void RL_freeze();
 void RL_set_state(State_key sk);
 void RL_set_random_seed(Random_seed_key rsk);
 State_key RL_get_state();
 Random_seed_key RL_get_random_seed();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

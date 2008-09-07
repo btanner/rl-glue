@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2007, Matt Radkie
+* Copyright (C) 2007, Adam White
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -15,29 +15,52 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA. */
 
-#ifndef Environment_common_h
-#define Environment_common_h
+#ifndef RLcommon_h
+#define RLcommon_h
 
-#include <RL_common.h>
-
-/*
 #ifdef __cplusplus
 extern "C" {
 #endif
-*/
-	/* Environment Interface */
-	Task_specification env_init();
-	Observation env_start();
-	Reward_observation env_step(Action a);
-	void env_cleanup();
-	void env_set_state(State_key sk);
-	void env_set_random_seed(Random_seed_key rsk);
-	State_key env_get_state();
-	Random_seed_key env_get_random_seed();
-	Message env_message(const Message message);
-/*
+
+
+typedef char* Task_specification;
+typedef double Reward;
+
+typedef struct RL_abstract_type_t
+{
+  unsigned int numInts;
+  unsigned int numDoubles;
+  int* intArray;
+  double* doubleArray;
+} RL_abstract_type;
+
+typedef RL_abstract_type Observation;
+typedef RL_abstract_type Action;
+typedef RL_abstract_type Random_seed_key;
+typedef RL_abstract_type State_key;
+typedef char* Message;
+
+typedef struct {
+  Observation o;
+  Action a;
+} Observation_action;
+
+typedef struct Reward_observation_t
+{
+  Reward r;
+  Observation o;
+  int terminal;
+} Reward_observation;
+
+typedef struct {
+  Reward r;
+  Observation o;
+  Action a;
+  int terminal;
+} Reward_observation_action_terminal;
+
 #ifdef __cplusplus
 }
 #endif
-*/
+
 #endif

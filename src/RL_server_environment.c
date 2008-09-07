@@ -20,7 +20,7 @@
 
 #include <stdio.h> /* fprintf: debug only */
 
-#include <RL_common.h>
+#include <rlglue/RL_common.h>
 #include <RL_network.h>
 
 static Task_specification theTaskSpec   = 0;

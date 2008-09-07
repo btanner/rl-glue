@@ -29,7 +29,7 @@
 #include <arpa/inet.h>
 
 /* RL_netlib Library Header */
-#include <RL_network.h>
+#include "RL_network.h"
 
 /* Open and configure a socket */
 int rlOpen(short thePort) {

@@ -20,7 +20,7 @@
 
 #include <stdio.h> /* fprintf : debug */
 
-#include <RL_common.h>
+#include <rlglue/RL_common.h>
 #include <RL_network.h>
 
 static Action theAction = {0};
