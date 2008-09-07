@@ -33,6 +33,7 @@ extern "C" {
 #define kAgentStep    6 /* event to respond to                          */
 #define kAgentEnd     7
 #define kAgentCleanup 8
+/*kAgentFreeze is DEPRECATED this code is no longer valid */
 #define kAgentFreeze  9
 #define kAgentMessage 10
 
@@ -58,6 +59,7 @@ extern "C" {
 #define kRLSetRandomSeed  29
 #define kRLGetState       30
 #define kRLGetRandomSeed  31
+/*kRLFreeze is DEPRECATED this code is no longer valid */
 #define kRLFreeze         32
 #define kRLAgentMessage   33
 #define kRLEnvMessage     34

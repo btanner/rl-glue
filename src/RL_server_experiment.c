@@ -40,7 +40,6 @@ extern void RL_set_random_seed(Random_seed_key rsk);
 extern State_key RL_get_state();
 extern Random_seed_key RL_get_random_seed();
 extern void RL_cleanup();
-extern void RL_freeze();
 extern Message RL_agent_message(const Message message);
 extern Message RL_env_message(const Message message);
 
@@ -203,12 +202,6 @@ void onRLCleanup(int theConnection) {
   theRandomSeedKey.numDoubles = 0;
 }
 
-void onRLFreeze(int theConnection) {
-  RL_freeze();
-
-  rlBufferClear(&theBuffer);
-}
-
 void onRLAgentMessage(int theConnection) {
   char* inMessage = 0;
   char* outMessage = 0;
@@ -329,10 +322,6 @@ void runGlueEventLoop(int theConnection) {
       
     case kRLGetRandomSeed:
       onRLGetRandomSeed(theConnection);
-      break;
-      
-    case kRLFreeze:
-      onRLFreeze(theConnection);
       break;
 
     case kRLAgentMessage:

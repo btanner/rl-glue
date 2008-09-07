@@ -148,17 +148,6 @@ void agent_cleanup() {
   rlBufferDestroy(&theBuffer);
 }
 
-void agent_freeze() {
-  int agentState = kAgentFreeze;
-
-  rlBufferClear(&theBuffer);
-  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
-
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
-  assert(agentState == kAgentFreeze);
-}
-
 Message agent_message(const Message inMessage) {
   int agentState = kAgentMessage;
   unsigned int theInMessageLength = 0;

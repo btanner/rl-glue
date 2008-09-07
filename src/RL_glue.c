@@ -100,10 +100,6 @@ Message RL_env_message(const Message message) {
   return env_message(message);
 }
 
-void RL_freeze() {
-  agent_freeze();
-}
-
 void RL_episode(unsigned int maxStepsThisEpisode) {
   unsigned int x = 0;
   RL_start();

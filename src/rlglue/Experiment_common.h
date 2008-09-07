@@ -37,7 +37,6 @@ Reward RL_return();
 int RL_num_steps();
 int RL_num_episodes();
 void RL_episode(unsigned int num_steps);
-void RL_freeze();
 void RL_set_state(State_key sk);
 void RL_set_random_seed(Random_seed_key rsk);
 State_key RL_get_state();
