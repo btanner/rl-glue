@@ -38,7 +38,7 @@ extern Reward_observation_action_terminal RL_step();
 extern Reward RL_return();
 extern int RL_num_steps();
 extern int RL_num_episodes();
-extern void RL_episode(unsigned int num_steps);
+extern Terminal RL_episode(unsigned int num_steps);
 extern void RL_set_state(State_key sk);
 extern void RL_set_random_seed(Random_seed_key rsk);
 extern State_key RL_get_state();
@@ -126,13 +126,16 @@ void onRLNumEpisodes(int theConnection) {
 }
 
 void onRLEpisode(int theConnection) {
-  unsigned int numSteps = 0;
-  unsigned int offset = 0;
-  offset = rlBufferRead(&theBuffer, offset, &numSteps, 1, sizeof(unsigned int));
+	unsigned int numSteps = 0;
+	unsigned int offset = 0;
+	Terminal terminal = 0;
 
-  RL_episode(numSteps);
+	offset = rlBufferRead(&theBuffer, offset, &numSteps, 1, sizeof(unsigned int));
 
-  rlBufferClear(&theBuffer);
+	terminal=RL_episode(numSteps);
+
+	rlBufferClear(&theBuffer);
+	offset = rlBufferWrite(&theBuffer, offset, &terminal, 1, sizeof(Terminal));
 }
 
 void onRLSetState(int theConnection) {
