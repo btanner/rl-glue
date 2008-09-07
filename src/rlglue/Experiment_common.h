@@ -25,7 +25,7 @@ extern "C" {
 #include <rlglue/RL_common.h>
 
 /* Glue */
-void RL_init();
+Task_specification RL_init();
 Observation_action RL_start();
 Reward_observation_action_terminal RL_step();
 void RL_cleanup();

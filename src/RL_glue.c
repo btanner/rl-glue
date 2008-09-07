@@ -18,12 +18,18 @@
 #include <rlglue/Agent_common.h>
 #include <rlglue/Environment_common.h>
 
+/*Brian, Sept 8, 2008 :
+---------------------
+I'm a little worried that some of my changes in this file 
+(using stack variables for structs and returning them)
+ might go terribly wrong*/
+
 static Action last_action  = {0};
 static Reward total_reward = 0;
 static int num_steps       = 0;
 static int num_episodes    = 0;
 
-void RL_init() {
+Task_specification RL_init() {
   Task_specification task_spec;
   task_spec = env_init();
   agent_init(task_spec);
@@ -31,6 +37,8 @@ void RL_init() {
   total_reward=0;
   num_steps=0;
   num_episodes=0;
+/* **WORRYSOME** */
+	return task_spec;
 }
 
 Observation_action RL_start() {
@@ -46,6 +54,7 @@ Observation_action RL_start() {
 	oa.o = last_state;
 	oa.a = last_action;
 
+/* **WORRYSOME** */
 	return oa;
 }
 
@@ -74,6 +83,8 @@ Reward_observation_action_terminal RL_step() {
 	   num_steps += 1; /* increment num_steps if state is not terminal */
 	   roa.a = last_action;
 	 }
+
+/* **WORRYSOME** */
 	 return roa;
 }
 

@@ -73,10 +73,23 @@ void termination_handler(int signum) {
 }
 
 void onRLInit(int theConnection) {
-  RL_init();
+	unsigned int TS_length=0;
+	unsigned int offset=0;
+  Task_specification TS=RL_init();
   rlBufferClear(&theBuffer);
 /* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
   initNoCleanUp=1;
+
+/* Code added by Brian Tanner Sept 8/2008 to solve issue 35, RL_init should return the task spec */
+  if (TS != NULL) {
+   TS_length = strlen(TS);
+  }
+  
+  /* we want to start sending, so we're going to reset the offset to 0 so we write the the beginning of the buffer */
+  offset = rlBufferWrite(&theBuffer, offset, &TS_length, 1, sizeof(unsigned int));
+  if (TS_length > 0) {
+    offset = rlBufferWrite(&theBuffer, offset, TS, TS_length, sizeof(char));
+  }
 }
 
 void onRLStart(int theConnection) {

@@ -148,6 +148,7 @@ void agent_cleanup() {
   rlBufferDestroy(&theBuffer);
 }
 
+
 Message agent_message(const Message inMessage) {
   int agentState = kAgentMessage;
   unsigned int theInMessageLength = 0;
@@ -188,6 +189,6 @@ if (theOutMessageLength > 0) {
     offset = rlBufferRead(&theBuffer, offset, theOutMessage, theOutMessageLength, sizeof(char));
   }
 /* Set the terminator */
-    theOutMessage[theOutMessageLength] = '\0';
+  theOutMessage[theOutMessageLength] = '\0';
   return theOutMessage;
 }
