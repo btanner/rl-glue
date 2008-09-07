@@ -50,10 +50,10 @@ Observation_action RL_start() {
 }
 
 Reward_observation_action_terminal RL_step() {
-	Reward_observation_action_terminal roa;
-	Reward_observation ro;
-  	Reward this_reward;
-	Observation last_state;
+	Reward_observation_action_terminal roa={0};
+	Reward_observation ro={0};
+  	Reward this_reward=0;
+	Observation last_state={0};
 
   	ro = env_step(last_action);
   	this_reward = ro.r;
@@ -90,7 +90,7 @@ Message RL_env_message(const Message message) {
   return env_message(message);
 }
 
-void RL_episode(unsigned int maxStepsThisEpisode) {
+unsigned int RL_episode(unsigned int maxStepsThisEpisode) {
 	Reward_observation_action_terminal rl_step_result;
 	rl_step_result.terminal=0;	
   	unsigned int x = 0;
@@ -99,6 +99,10 @@ void RL_episode(unsigned int maxStepsThisEpisode) {
   	for ( x = 1; !rl_step_result.terminal && (maxStepsThisEpisode == 0 ? 1 : x < maxStepsThisEpisode); ++x ) {
     	rl_step_result=RL_step();
   	}
+
+	/*Return the value of terminal to tell the caller whether the episode ended naturally or was cut off*/
+	
+	return rl_step_result.terminal;
 }
 
 Reward RL_return() {

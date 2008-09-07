@@ -24,6 +24,7 @@ extern "C" {
 
 typedef char* Task_specification;
 typedef double Reward;
+typedef unsigned int Terminal;
 
 typedef struct RL_abstract_type_t
 {
@@ -48,14 +49,14 @@ typedef struct Reward_observation_t
 {
   Reward r;
   Observation o;
-  int terminal;
+  Terminal terminal;
 } Reward_observation;
 
 typedef struct {
   Reward r;
   Observation o;
   Action a;
-  int terminal;
+  Terminal terminal;
 } Reward_observation_action_terminal;
 
 #ifdef __cplusplus
