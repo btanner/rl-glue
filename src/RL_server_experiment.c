@@ -356,30 +356,19 @@ void runGlueEventLoop(int theConnection) {
 }
 
 int main(int argc, char** argv) {
-  int autoReconnect = 0;
-  char* envptr = 0;
-
-  const char *usage = "The following environment variables are used by the glue to control its function:\n"
-    "RLGLUE_AUTORECONNECT  : If set glue will continue to run after an experiment has finished\n";
+  const char *usage = "The usage of RL-Glue needs to be updated\n";
 
   if (argc > 1) {
     fprintf(stderr, usage);
     exit(1);
   }
 
-  envptr = getenv("RLGLUE_AUTORECONNECT");
-  if (envptr != 0) {
-    autoReconnect = strtol(envptr, 0, 10);
-  }
-
   rlBufferCreate(&theBuffer, 65536);
 
-  do {
-    theConnection = rlConnectSystems();
-    assert(rlIsValidSocket(theConnection));
-    runGlueEventLoop(theConnection);
-    rlDisconnectSystems();
-  } while (autoReconnect);
+  theConnection = rlConnectSystems();
+  assert(rlIsValidSocket(theConnection));
+  runGlueEventLoop(theConnection);
+  rlDisconnectSystems();
 
   rlBufferDestroy(&theBuffer);
 
