@@ -95,7 +95,7 @@ void onRLStep(int theConnection) {
 
   rlBufferClear(&theBuffer);
   offset = 0;
-  offset = rlBufferWrite(&theBuffer, offset, &roat.terminal, 1, sizeof(int));
+  offset = rlBufferWrite(&theBuffer, offset, &roat.terminal, 1, sizeof(Terminal));
   offset = rlBufferWrite(&theBuffer, offset, &roat.r, 1, sizeof(Reward));
   offset = rlCopyADTToBuffer(&roat.o, &theBuffer, offset);
   offset = rlCopyADTToBuffer(&roat.a, &theBuffer, offset);
@@ -135,6 +135,8 @@ void onRLEpisode(int theConnection) {
 	terminal=RL_episode(numSteps);
 
 	rlBufferClear(&theBuffer);
+	/*Brian Sept 8 2008 :: Not really sure if I should be resetting offset to 0 here.  Seems to work*/
+	offset=0;
 	offset = rlBufferWrite(&theBuffer, offset, &terminal, 1, sizeof(Terminal));
 }
 

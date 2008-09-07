@@ -90,8 +90,8 @@ Message RL_env_message(const Message message) {
   return env_message(message);
 }
 
-unsigned int RL_episode(unsigned int maxStepsThisEpisode) {
-	Reward_observation_action_terminal rl_step_result;
+Terminal RL_episode(unsigned int maxStepsThisEpisode) {
+	Reward_observation_action_terminal rl_step_result={0};
 	rl_step_result.terminal=0;	
   	unsigned int x = 0;
   	RL_start();

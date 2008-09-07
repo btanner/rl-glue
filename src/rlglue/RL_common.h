@@ -24,7 +24,7 @@ extern "C" {
 
 typedef char* Task_specification;
 typedef double Reward;
-typedef unsigned int Terminal;
+typedef int Terminal;
 
 typedef struct RL_abstract_type_t
 {
