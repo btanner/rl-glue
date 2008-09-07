@@ -36,14 +36,15 @@ int rlOpenServer()
   char* envptr = 0;
   short port = kDefaultPort;
 
+
   envptr = getenv("RLGLUE_PORT");  
   if (envptr != 0) {
     port = strtol(envptr, 0, 10);
     if (port == 0) {
       port = kDefaultPort;
     }
-    fprintf(stderr, "RL-Glue is listening for connections on port=%d\n", port);
   }
+  fprintf(stdout, "RL-Glue is listening for connections on port=%d\n", port);
   
   server = rlOpen(port);
   rlListen(server, port);
@@ -74,17 +75,17 @@ int rlConnectSystems() {
       
       switch(theClientType) {
       case kAgentConnection:
-	fprintf(stderr, "agent connected.\n"); 
+	fprintf(stdout, "\tagent connected.\n"); 
 	rlSetAgentConnection(theClient);
 	break;
 	
       case kEnvironmentConnection:
-	fprintf(stderr, "environment connected.\n");
+	fprintf(stdout, "\tenvironment connected.\n");
 	rlSetEnvironmentConnection(theClient);
 	break;
 	
       case kExperimentConnection:
-	fprintf(stderr, "experiment connected.\n");
+	fprintf(stdout, "\texperiment connected.\n");
 	rlSetExperimentConnection(theClient);
 	theExperimentConnection = theClient;
 	break;

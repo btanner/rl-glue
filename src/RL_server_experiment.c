@@ -345,10 +345,10 @@ void runGlueEventLoop(int theConnection) {
 }
 
 int main(int argc, char** argv) {
-  const char *usage = "The usage of RL-Glue needs to be updated\n";
+  const char *usage = "Usage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n";
 
   if (argc > 1) {
-    fprintf(stderr, usage);
+    fprintf(stdout, usage);
     exit(1);
   }
 
