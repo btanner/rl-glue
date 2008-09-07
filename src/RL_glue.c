@@ -18,73 +18,63 @@
 #include <rlglue/Agent_common.h>
 #include <rlglue/Environment_common.h>
 
-static Action last_action     = {0};
-static Observation last_state = {0};
-
-static Reward last_reward  = 0;
+static Action last_action  = {0};
 static Reward total_reward = 0;
-
-static int is_terminal     = 0;
 static int num_steps       = 0;
-static int total_steps     = 0;
 static int num_episodes    = 0;
 
-static Reward_observation_action_terminal roa;
-static Observation_action oa;
-
 void RL_init() {
-  Task_specification task_spec = 0;
-
+  Task_specification task_spec;
   task_spec = env_init();
   agent_init(task_spec);
 
-  last_reward     = 0;
-  total_reward    = 0;
-
-  num_steps       = 0;
-  is_terminal     = 0;
-  total_steps     = 0;
-  num_episodes    = 0;
+  total_reward=0;
+  num_steps=0;
+  num_episodes=0;
 }
 
 Observation_action RL_start() {
-  num_steps    = 1;
-  is_terminal  = 0;
-  total_reward = 0;
+	Observation last_state;
+	Observation_action oa;
 
-  last_state = env_start();
-  last_action = agent_start(last_state);
-  
-  oa.o = last_state;
-  oa.a = last_action;
-  
-  return oa;
+	total_reward=0;
+	num_steps=1;
+
+	last_state = env_start();
+	last_action = agent_start(last_state);
+
+	oa.o = last_state;
+	oa.a = last_action;
+
+	return oa;
 }
 
 Reward_observation_action_terminal RL_step() {
-  Reward_observation ro;
-  ro = env_step(last_action);
-  last_reward = ro.r;
-  last_state = ro.o;
-  
-  roa.r = ro.r;
-  roa.o = ro.o;
-  roa.terminal = ro.terminal;
-  
-  is_terminal = ro.terminal;
-  total_reward += last_reward;
+	Reward_observation_action_terminal roa;
+	Reward_observation ro;
+  	Reward this_reward;
+	Observation last_state;
 
-  if (ro.terminal == 1) {
-    num_episodes += 1;
-    total_steps  += num_steps;
-    agent_end(last_reward);
-  }
-  else {
-    last_action = agent_step(last_reward,last_state);
-    num_steps += 1; /* increment num_steps if state is not terminal */
-    roa.a = last_action;
-  }
-  return roa;
+  	ro = env_step(last_action);
+  	this_reward = ro.r;
+  	last_state = ro.o;
+  
+  	roa.r = ro.r;
+  	roa.o = ro.o;
+  	roa.terminal = ro.terminal;
+  
+  	total_reward += this_reward;
+
+	 if (ro.terminal == 1) {
+	   num_episodes += 1;
+	   agent_end(this_reward);
+	 }
+	 else {
+	   last_action = agent_step(this_reward,last_state);
+	   num_steps += 1; /* increment num_steps if state is not terminal */
+	   roa.a = last_action;
+	 }
+	 return roa;
 }
 
 void RL_cleanup() {
@@ -101,12 +91,14 @@ Message RL_env_message(const Message message) {
 }
 
 void RL_episode(unsigned int maxStepsThisEpisode) {
-  unsigned int x = 0;
-  RL_start();
+	Reward_observation_action_terminal rl_step_result;
+	rl_step_result.terminal=0;	
+  	unsigned int x = 0;
+  	RL_start();
 /* RL_start sets current step to 1, so we should start x at 1 */
-  for ( x = 1; !is_terminal && (maxStepsThisEpisode == 0 ? 1 : x < maxStepsThisEpisode); ++x ) {
-    RL_step();
-  }
+  	for ( x = 1; !rl_step_result.terminal && (maxStepsThisEpisode == 0 ? 1 : x < maxStepsThisEpisode); ++x ) {
+    	rl_step_result=RL_step();
+  	}
 }
 
 Reward RL_return() {
