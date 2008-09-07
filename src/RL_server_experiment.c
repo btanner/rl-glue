@@ -23,6 +23,10 @@
 #include <rlglue/RL_common.h>
 #include <RL_network.h>
 
+#ifndef VERSION
+#define VERSION "unknown"
+#endif
+
 const char* kUnknownMessage = "Unknown Message: %s\n";
 
 extern int rlConnectSystems();
@@ -345,10 +349,11 @@ void runGlueEventLoop(int theConnection) {
 }
 
 int main(int argc, char** argv) {
-  const char *usage = "Usage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n";
+	char usageBuffer[1024];
+  snprintf(usageBuffer,1024,"\n\trl_glue version:: %s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION);
 
   if (argc > 1) {
-    fprintf(stdout, usage);
+    fprintf(stdout, usageBuffer);
     exit(1);
   }
 
