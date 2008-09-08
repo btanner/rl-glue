@@ -26,12 +26,15 @@ typedef char* task_specification_t;
 typedef double reward_t;
 typedef int terminal_t;
 
+/* Strings are not guaranteed to be null terminated I think */
 typedef struct rl_abstract_t_struct
 {
-  unsigned int numInts;
-  unsigned int numDoubles;
-  int* intArray;
-  double* doubleArray;
+	unsigned int numInts;
+	unsigned int numDoubles;
+	unsigned int numChars;
+	int* intArray;
+	double* doubleArray;
+	char* charArray;
 } rl_abstract_type_t;
 
 typedef rl_abstract_type_t observation_t;
@@ -40,8 +43,7 @@ typedef rl_abstract_type_t random_seed_key_t;
 typedef rl_abstract_type_t state_key_t;
 typedef char* message_t;
 
-/*Why no type name here? */
-typedef struct {
+typedef struct observation_action_struct{
   observation_t o;
   action_t a;
 } observation_action_t;

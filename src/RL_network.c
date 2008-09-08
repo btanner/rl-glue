@@ -338,11 +338,15 @@ int rlGetSystemByteOrder() {
   return endian;
 }
 
-/* Notice that the pointers "in" and "out" are not allowed to be the same.
+/**
+   Brian Tanner Sept 8/2008 :: This function/explanation is Andrew Butcher madness ;)
+
+  Notice that the pointers "in" and "out" are not allowed to be the same.
    When dealing with IEEE floating point numbers, you still need to swap endianness.
    For sanity, we disallow swaping back into the same memory space to discourage 
    swapping a double/float back into its own memory.  Once these have been swapped, they should
-   not be treated as doubles/floats again until they are back into their native endianness. */
+   not be treated as doubles/floats again until they are back into their native endianness.
+*/
 
 void rlSwapData(void* out, const void* in, const unsigned int size) {
   const unsigned char *src = (const unsigned char *)in;
@@ -374,9 +378,17 @@ int rlWaitForConnection(const char *address, const short port, const int retryTi
   return theConnection;
 }
 
+/**
+* Added by Brian Tanner, Sept 8/2008
+* This function write a rl_abstract_type_t from dist to a buffer *dist.
+* It uses offset to know where to start writing, and returns a new offset after 
+* the read.
+**/
 unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, unsigned int offset) {
-  const int headerSize = sizeof(unsigned int) * 2;
-  const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double);
+/* The header is made up of the counts: numInts, numDoubles, and numChars */
+  const int headerSize = sizeof(unsigned int) * 3;
+/* The body is all of the ints, doubles, and chars */
+  const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double) + src->numChars * sizeof(char);
 
   rlBufferReserve(dst, dst->size + headerSize + dataSize);
 
@@ -385,6 +397,7 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
   /* fprintf(stderr, "send 2 offset = %u\n", offset); */
   offset = rlBufferWrite(dst, offset, &src->numDoubles, 1, sizeof(unsigned int));
   /* fprintf(stderr, "send 3 offset = %u\n", offset); */
+  offset = rlBufferWrite(dst, offset, &src->numChars, 1, sizeof(unsigned int));
 
   if (src->numInts > 0) {
     offset = rlBufferWrite(dst, offset, src->intArray, src->numInts, sizeof(int));
@@ -394,22 +407,45 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
     offset = rlBufferWrite(dst, offset, src->doubleArray, src->numDoubles, sizeof(double));  
   }
 
+  if (src->numDoubles > 0) {
+    offset = rlBufferWrite(dst, offset, src->charArray, src->numChars, sizeof(char));  
+  }
+
   return offset;
 }
 
+/**
+* Added by Brian Tanner, Sept 8/2008
+* This function reads a rl_abstract_type_t from the buffer and puts it into *dst.
+* It uses offset to know where to start reading, and returns a new offset after 
+* the read.
+**/
 unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abstract_type_t* dst) {
-  unsigned int numInts    = 0;
-  unsigned int numDoubles = 0;
+	unsigned int numInts    = 0;
+	unsigned int numDoubles = 0;
+	unsigned int numChars   = 0;
+	int* intArray = 0;
+	double * doubleArray = 0;
+	char * charArray = 0;
 
-  int* intArray = 0;
-  double * doubleArray = 0;
+	/* fprintf(stderr, "recv 1 offset = %u\n", offset); */
+	offset = rlBufferRead(src, offset, &numInts, 1, sizeof(unsigned int));
+	/* fprintf(stderr, "recv 2 offset = %u\n", offset); */
+	offset = rlBufferRead(src, offset, &numDoubles, 1, sizeof(unsigned int));
+	/* fprintf(stderr, "recv 3 offset = %u\n", offset); */
+	offset = rlBufferRead(src, offset, &numChars, 1, sizeof(unsigned int));
+	/* fprintf(stderr, "recv 4 offset = %u\n", offset); */
 
-  /* fprintf(stderr, "recv 1 offset = %u\n", offset); */
-  offset = rlBufferRead(src, offset, &numInts, 1, sizeof(unsigned int));
-  /* fprintf(stderr, "recv 2 offset = %u\n", offset); */
-  offset = rlBufferRead(src, offset, &numDoubles, 1, sizeof(unsigned int));
-  /* fprintf(stderr, "recv 3 offset = %u\n", offset); */
-
+/* 	I'll comment this first block and the rest follow similar patterns
+*	- Check if the size of the intArray from the buffer is bigger
+*    than the one allocated in dst
+*
+*	- If dst's array is too small, make a new temporary array of the right size.
+*		- copy dst's array to the new temporary array
+*		- free dst's array
+*       - assign the temporary array to dst->intArray
+*	- If the buffer had any ints, read them into dst->intArray
+*/
   if (numInts > dst->numInts) {
 		/* printf("Needed to allocate more than %d\n",numInts); */
     intArray = (int*)calloc(numInts, sizeof(int));
@@ -419,6 +455,9 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
   }
   dst->numInts = numInts;
 
+  if (dst->numInts > 0) {
+    offset = rlBufferRead(src, offset, dst->intArray, dst->numInts, sizeof(int));
+  }
 
   if (numDoubles > dst->numDoubles) {
     doubleArray = (double*)calloc(numDoubles, sizeof(double));
@@ -428,13 +467,20 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
   }
   dst->numDoubles = numDoubles;
 
-  if (dst->numInts > 0) {
-    offset = rlBufferRead(src, offset, dst->intArray, dst->numInts, sizeof(int));
-  }
-
   if (dst->numDoubles > 0) {
     offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
   }
 
+  if (numChars > dst->numChars) {
+    charArray = (char*)calloc(numChars, sizeof(char));
+    memcpy(charArray, dst->charArray, dst->numChars * sizeof(char));
+    free(dst->charArray);
+    dst->charArray = charArray;
+  }
+  dst->numChars = numChars;
+
+  if (dst->numChars > 0) {
+    offset = rlBufferRead(src, offset, dst->charArray, dst->numChars, sizeof(char));
+  }
   return offset;
 }
