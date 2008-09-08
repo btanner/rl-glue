@@ -407,9 +407,10 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
     offset = rlBufferWrite(dst, offset, src->doubleArray, src->numDoubles, sizeof(double));  
   }
 
-  if (src->numDoubles > 0) {
+  if (src->numChars > 0) {
     offset = rlBufferWrite(dst, offset, src->charArray, src->numChars, sizeof(char));  
   }
+
 
   return offset;
 }
