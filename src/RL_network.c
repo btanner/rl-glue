@@ -374,7 +374,7 @@ int rlWaitForConnection(const char *address, const short port, const int retryTi
   return theConnection;
 }
 
-unsigned int rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst, unsigned int offset) {
+unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, unsigned int offset) {
   const int headerSize = sizeof(unsigned int) * 2;
   const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double);
 
@@ -397,7 +397,7 @@ unsigned int rlCopyADTToBuffer(const RL_abstract_type* src, rlBuffer* dst, unsig
   return offset;
 }
 
-unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, RL_abstract_type* dst) {
+unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abstract_type_t* dst) {
   unsigned int numInts    = 0;
   unsigned int numDoubles = 0;
 

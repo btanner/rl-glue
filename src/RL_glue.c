@@ -24,13 +24,13 @@ I'm a little worried that some of my changes in this file
 (using stack variables for structs and returning them)
  might go terribly wrong*/
 
-static Action last_action  = {0};
-static Reward total_reward = 0;
+static action_t last_action  = {0};
+static reward_t total_reward = 0;
 static int num_steps       = 0;
 static int num_episodes    = 0;
 
-Task_specification RL_init() {
-  Task_specification task_spec;
+task_specification_t RL_init() {
+  task_specification_t task_spec;
   task_spec = env_init();
   agent_init(task_spec);
 
@@ -41,9 +41,9 @@ Task_specification RL_init() {
 	return task_spec;
 }
 
-Observation_action RL_start() {
-	Observation last_state;
-	Observation_action oa;
+observation_action_t RL_start() {
+	observation_t last_state;
+	observation_action_t oa;
 
 	total_reward=0;
 	num_steps=1;
@@ -58,11 +58,11 @@ Observation_action RL_start() {
 	return oa;
 }
 
-Reward_observation_action_terminal RL_step() {
-	Reward_observation_action_terminal roa={0};
-	Reward_observation ro={0};
-  	Reward this_reward=0;
-	Observation last_state={0};
+reward_observation_action_terminal_t RL_step() {
+	reward_observation_action_terminal_t roa={0};
+	reward_observation_t ro={0};
+  	reward_t this_reward=0;
+	observation_t last_state={0};
 
   	ro = env_step(last_action);
   	this_reward = ro.r;
@@ -93,16 +93,16 @@ void RL_cleanup() {
   agent_cleanup();
 }
 
-Message RL_agent_message(const Message message) {
+message_t RL_agent_message(const message_t message) {
   return agent_message(message);
 }
 
-Message RL_env_message(const Message message) {
+message_t RL_env_message(const message_t message) {
   return env_message(message);
 }
 
-Terminal RL_episode(unsigned int maxStepsThisEpisode) {
-	Reward_observation_action_terminal rl_step_result={0};
+terminal_t RL_episode(unsigned int maxStepsThisEpisode) {
+	reward_observation_action_terminal_t rl_step_result={0};
 	rl_step_result.terminal=0;	
   	unsigned int x = 0;
   	RL_start();
@@ -116,7 +116,7 @@ Terminal RL_episode(unsigned int maxStepsThisEpisode) {
 	return rl_step_result.terminal;
 }
 
-Reward RL_return() {
+reward_t RL_return() {
   return total_reward;
 }
 
@@ -129,18 +129,18 @@ int RL_num_episodes() {
   return num_episodes;
 }
 
-State_key RL_get_state() {
+state_key_t RL_get_state() {
   return env_get_state();
 }
 
-void RL_set_state(State_key sk) {
+void RL_set_state(state_key_t sk) {
   env_set_state(sk);
 }
 
-void RL_set_random_seed(Random_seed_key rsk) {
+void RL_set_random_seed(random_seed_key_t rsk) {
   env_set_random_seed(rsk);
 }
 
-Random_seed_key RL_get_random_seed() {
+random_seed_key_t RL_get_random_seed() {
   return env_get_random_seed();
 }

@@ -27,30 +27,30 @@
 #define VERSION "unknown"
 #endif
 
-const char* kUnknownMessage = "Unknown Message: %s\n";
+const char* kUnknownMessage = "Unknown message: %s\n";
 
 extern int rlConnectSystems();
 extern void rlDisconnectSystems();
 
-extern Task_specification RL_init();
-extern Observation_action RL_start();
-extern Reward_observation_action_terminal RL_step();
-extern Reward RL_return();
+extern task_specification_t RL_init();
+extern observation_action_t RL_start();
+extern reward_observation_action_terminal_t RL_step();
+extern reward_t RL_return();
 extern int RL_num_steps();
 extern int RL_num_episodes();
-extern Terminal RL_episode(unsigned int num_steps);
-extern void RL_set_state(State_key sk);
-extern void RL_set_random_seed(Random_seed_key rsk);
-extern State_key RL_get_state();
-extern Random_seed_key RL_get_random_seed();
+extern terminal_t RL_episode(unsigned int num_steps);
+extern void RL_set_state(state_key_t sk);
+extern void RL_set_random_seed(random_seed_key_t rsk);
+extern state_key_t RL_get_state();
+extern random_seed_key_t RL_get_random_seed();
 extern void RL_cleanup();
-extern Message RL_agent_message(const Message message);
-extern Message RL_env_message(const Message message);
+extern message_t RL_agent_message(const message_t message);
+extern message_t RL_env_message(const message_t message);
 
 void onRLCleanup(int theConnection);
 
-State_key theStateKey = {0};
-Random_seed_key theRandomSeedKey = {0};
+state_key_t theStateKey = {0};
+random_seed_key_t theRandomSeedKey = {0};
 rlBuffer theBuffer = {0};
 int theConnection = 0;
 
@@ -75,7 +75,7 @@ void termination_handler(int signum) {
 void onRLInit(int theConnection) {
 	unsigned int TS_length=0;
 	unsigned int offset=0;
-  Task_specification TS=RL_init();
+  task_specification_t TS=RL_init();
   rlBufferClear(&theBuffer);
 /* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
   initNoCleanUp=1;
@@ -94,7 +94,7 @@ void onRLInit(int theConnection) {
 
 void onRLStart(int theConnection) {
   unsigned int offset = 0;
-  Observation_action obsAct = RL_start();
+  observation_action_t obsAct = RL_start();
 
   rlBufferClear(&theBuffer);
   offset = 0;
@@ -103,23 +103,23 @@ void onRLStart(int theConnection) {
 }
 
 void onRLStep(int theConnection) {
-  Reward_observation_action_terminal roat = RL_step();
+  reward_observation_action_terminal_t roat = RL_step();
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
   offset = 0;
-  offset = rlBufferWrite(&theBuffer, offset, &roat.terminal, 1, sizeof(Terminal));
-  offset = rlBufferWrite(&theBuffer, offset, &roat.r, 1, sizeof(Reward));
+  offset = rlBufferWrite(&theBuffer, offset, &roat.terminal, 1, sizeof(terminal_t));
+  offset = rlBufferWrite(&theBuffer, offset, &roat.r, 1, sizeof(reward_t));
   offset = rlCopyADTToBuffer(&roat.o, &theBuffer, offset);
   offset = rlCopyADTToBuffer(&roat.a, &theBuffer, offset);
 }
 
 void onRLReturn(int theConnection) {
-  Reward theReward = RL_return();
+  reward_t theReward = RL_return();
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
-  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
+  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(reward_t));
 }
 
 void onRLNumSteps(int theConnection) {
@@ -141,7 +141,7 @@ void onRLNumEpisodes(int theConnection) {
 void onRLEpisode(int theConnection) {
 	unsigned int numSteps = 0;
 	unsigned int offset = 0;
-	Terminal terminal = 0;
+	terminal_t terminal = 0;
 
 	offset = rlBufferRead(&theBuffer, offset, &numSteps, 1, sizeof(unsigned int));
 
@@ -150,7 +150,7 @@ void onRLEpisode(int theConnection) {
 	rlBufferClear(&theBuffer);
 	/*Brian Sept 8 2008 :: Not really sure if I should be resetting offset to 0 here.  Seems to work*/
 	offset=0;
-	offset = rlBufferWrite(&theBuffer, offset, &terminal, 1, sizeof(Terminal));
+	offset = rlBufferWrite(&theBuffer, offset, &terminal, 1, sizeof(terminal_t));
 }
 
 void onRLSetState(int theConnection) {
@@ -173,7 +173,7 @@ void onRLSetRandomSeed(int theConnection) {
 
 void onRLGetState(int theConnection) {
   unsigned int offset = 0;
-  State_key theStateKey = RL_get_state();
+  state_key_t theStateKey = RL_get_state();
 
   rlBufferClear(&theBuffer);
   offset = rlCopyADTToBuffer(&theStateKey, &theBuffer, offset);
@@ -181,7 +181,7 @@ void onRLGetState(int theConnection) {
 
 void onRLGetRandomSeed(int theConnection) {
   unsigned int offset = 0;
-  Random_seed_key theRandomSeedKey = RL_get_random_seed();
+  random_seed_key_t theRandomSeedKey = RL_get_random_seed();
 
   rlBufferClear(&theBuffer);
   offset = rlCopyADTToBuffer(&theRandomSeedKey, &theBuffer, offset);

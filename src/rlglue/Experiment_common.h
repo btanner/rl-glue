@@ -25,22 +25,22 @@ extern "C" {
 #include <rlglue/RL_common.h>
 
 /* Glue */
-Task_specification RL_init();
-Observation_action RL_start();
-Reward_observation_action_terminal RL_step();
+task_specification_t RL_init();
+observation_action_t RL_start();
+reward_observation_action_terminal_t RL_step();
 void RL_cleanup();
 
-Message RL_agent_message(Message message);
-Message RL_env_message(Message message);
+message_t RL_agent_message(message_t message);
+message_t RL_env_message(message_t message);
 
-Reward RL_return();
+reward_t RL_return();
 int RL_num_steps();
 int RL_num_episodes();
-Terminal RL_episode(unsigned int num_steps);
-void RL_set_state(State_key sk);
-void RL_set_random_seed(Random_seed_key rsk);
-State_key RL_get_state();
-Random_seed_key RL_get_random_seed();
+terminal_t RL_episode(unsigned int num_steps);
+void RL_set_state(state_key_t sk);
+void RL_set_random_seed(random_seed_key_t rsk);
+state_key_t RL_get_state();
+random_seed_key_t RL_get_random_seed();
 
 #ifdef __cplusplus
 }

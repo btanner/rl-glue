@@ -22,42 +22,43 @@ extern "C" {
 #endif
 
 
-typedef char* Task_specification;
-typedef double Reward;
-typedef int Terminal;
+typedef char* task_specification_t;
+typedef double reward_t;
+typedef int terminal_t;
 
-typedef struct RL_abstract_type_t
+typedef struct rl_abstract_t_struct
 {
   unsigned int numInts;
   unsigned int numDoubles;
   int* intArray;
   double* doubleArray;
-} RL_abstract_type;
+} rl_abstract_type_t;
 
-typedef RL_abstract_type Observation;
-typedef RL_abstract_type Action;
-typedef RL_abstract_type Random_seed_key;
-typedef RL_abstract_type State_key;
-typedef char* Message;
+typedef rl_abstract_type_t observation_t;
+typedef rl_abstract_type_t action_t;
+typedef rl_abstract_type_t random_seed_key_t;
+typedef rl_abstract_type_t state_key_t;
+typedef char* message_t;
 
+/*Why no type name here? */
 typedef struct {
-  Observation o;
-  Action a;
-} Observation_action;
+  observation_t o;
+  action_t a;
+} observation_action_t;
 
-typedef struct Reward_observation_t
+typedef struct reward_observation_struct
 {
-  Reward r;
-  Observation o;
-  Terminal terminal;
-} Reward_observation;
+  reward_t r;
+  observation_t o;
+  terminal_t terminal;
+} reward_observation_t;
 
 typedef struct {
-  Reward r;
-  Observation o;
-  Action a;
-  Terminal terminal;
-} Reward_observation_action_terminal;
+  reward_t r;
+  observation_t o;
+  action_t a;
+  terminal_t terminal;
+} reward_observation_action_terminal_t;
 
 #ifdef __cplusplus
 }

@@ -23,17 +23,17 @@
 #include <rlglue/RL_common.h>
 #include <RL_network.h>
 
-static Task_specification theTaskSpec   = 0;
+static task_specification_t theTaskSpec   = 0;
 static rlBuffer theBuffer               = {0};
-static Observation theObservation       = {0};
-static State_key theStateKey            = {0};
-static Random_seed_key theRandomSeedKey = {0};
+static observation_t theObservation = {0};
+static state_key_t theStateKey            = {0};
+static random_seed_key_t theRandomSeedKey = {0};
 static char* theOutMessage = 0;
 
 extern void rlSetEnvironmentConnection();
 extern int rlGetEnvironmentConnection();
 
-Task_specification env_init() {
+task_specification_t env_init() {
   /* Setup the connection */
   int envState = kEnvInit;
   unsigned int theTaskSpecLength = 0;
@@ -67,7 +67,7 @@ Task_specification env_init() {
   return theTaskSpec;
 }
 
-Observation env_start() {
+observation_t env_start() {
   int envState = kEnvStart;
   unsigned int offset = 0;
 
@@ -82,9 +82,9 @@ Observation env_start() {
   return theObservation;
 }
 
-Reward_observation env_step(Action theAction) {
+reward_observation_t env_step(action_t theAction) {
   int envState = kEnvStep;
-  Reward_observation ro = {0};
+  reward_observation_t ro = {0};
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
@@ -98,7 +98,7 @@ Reward_observation env_step(Action theAction) {
 
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &ro.terminal, 1, sizeof(int));
-  offset = rlBufferRead(&theBuffer, offset, &ro.r, 1, sizeof(Reward));
+  offset = rlBufferRead(&theBuffer, offset, &ro.r, 1, sizeof(reward_t));
   offset = rlCopyBufferToADT(&theBuffer, offset, &theObservation);
 
   ro.o = theObservation;
@@ -164,7 +164,7 @@ void env_cleanup() {
   }
 }
 
-void env_set_state(State_key theStateKey) {
+void env_set_state(state_key_t theStateKey) {
   int envState = kEnvSetState;
   unsigned int offset = 0;
 
@@ -177,7 +177,7 @@ void env_set_state(State_key theStateKey) {
   assert(envState == kEnvSetState);
 }
 
-void env_set_random_seed(Random_seed_key theRandomSeedKey) {
+void env_set_random_seed(random_seed_key_t theRandomSeedKey) {
   int envState = kEnvSetRandomSeed;
   unsigned int offset = 0;
 
@@ -190,7 +190,7 @@ void env_set_random_seed(Random_seed_key theRandomSeedKey) {
   assert(envState == kEnvSetRandomSeed);
 }
 
-State_key env_get_state() {
+state_key_t env_get_state() {
   int envState = kEnvGetState;
   unsigned int offset = 0;
 
@@ -206,7 +206,7 @@ State_key env_get_state() {
   return theStateKey;
 }
 
-Random_seed_key env_get_random_seed() {
+random_seed_key_t env_get_random_seed() {
   int envState = kEnvGetRandomSeed;
   unsigned int offset = 0;
 
@@ -222,7 +222,7 @@ Random_seed_key env_get_random_seed() {
   return theRandomSeedKey;
 }
 
-Message env_message(const Message inMessage) {
+message_t env_message(const message_t inMessage) {
   int envState = kEnvMessage;
   unsigned int theInMessageLength = 0;
   unsigned int theOutMessageLength = 0;

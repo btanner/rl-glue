@@ -24,12 +24,12 @@ extern "C" {
 #endif
 
 /* Agent Interface */
-void agent_init(const Task_specification task_spec);
-Action agent_start(Observation o);
-Action agent_step(Reward r, Observation o);
-void agent_end(Reward r);  
+void agent_init(const task_specification_t task_spec);
+action_t agent_start(observation_t o);
+action_t agent_step(reward_t r, observation_t o);
+void agent_end(reward_t r);  
 void agent_cleanup();
-Message agent_message(const Message message);
+message_t agent_message(const message_t message);
 
 #ifdef __cplusplus
 }

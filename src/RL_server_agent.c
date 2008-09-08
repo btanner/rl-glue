@@ -23,7 +23,7 @@
 #include <rlglue/RL_common.h>
 #include <RL_network.h>
 
-static Action theAction = {0};
+static action_t theAction= {0};
 static rlBuffer theBuffer = {0};
 static char* theOutMessage = 0;
 
@@ -32,7 +32,7 @@ extern void rlSetAgentConnection(int);
 extern int rlGetAgentConnection();
 
 /* Send the task spec to the agent */
-void agent_init(const Task_specification theTaskSpec) {
+void agent_init(const task_specification_t theTaskSpec) {
   int agentState = kAgentInit;
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
@@ -61,7 +61,7 @@ void agent_init(const Task_specification theTaskSpec) {
 }
 
 /* Send the observation to the agent, receive the action and return it */
-Action agent_start(Observation theObservation) {
+action_t agent_start(observation_t theObservation) {
   int agentState = kAgentStart;
   unsigned int offset = 0;
 
@@ -81,13 +81,13 @@ Action agent_start(Observation theObservation) {
 }
 
 /* Send the reward and the observation to the agent, receive the action and return it */
-Action agent_step(Reward theReward, Observation theObservation) {
+action_t agent_step(reward_t theReward, observation_t theObservation) {
   int agentState = kAgentStep;
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
   offset = 0;
-  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
+  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(reward_t));
   offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
   rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
@@ -103,13 +103,13 @@ Action agent_step(Reward theReward, Observation theObservation) {
 }
 
 /* Send the final reward to the agent */
-void agent_end(Reward theReward) { 
+void agent_end(reward_t theReward) { 
   int agentState = kAgentEnd;
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
   /*offset = rlBufferWrite(&theBuffer, offset, &agentState, 1, sizeof(int));*/ /* Removed, shouldn't have been sent. */
-  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(Reward));
+  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(reward_t));
   rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
@@ -149,7 +149,7 @@ void agent_cleanup() {
 }
 
 
-Message agent_message(const Message inMessage) {
+message_t agent_message(const message_t inMessage) {
   int agentState = kAgentMessage;
   unsigned int theInMessageLength = 0;
   unsigned int theOutMessageLength = 0;
