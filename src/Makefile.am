@@ -15,4 +15,4 @@ librlglue_la_SOURCES = RL_direct_experiment.c RL_direct_environment.c RL_direct_
 
 librlglue_la_LDFLAGS= -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE)
 librlglue_la_includedir=$(includedir)/rlglue
-librlglue_la_include_HEADERS = rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h  rlglue/Experiment_common.h 
+librlglue_la_include_HEADERS = rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/legacy_types.h  rlglue/Experiment_common.h 
