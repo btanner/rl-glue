@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#include "RL_network.h"
+#include <rlglue/network/RL_network.h>
 
 static int envConnection = 0;
 

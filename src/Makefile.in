@@ -40,7 +40,8 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = rl_glue$(EXEEXT)
 subdir = src
-DIST_COMMON = $(librlglue_la_include_HEADERS) $(srcdir)/Makefile.am \
+DIST_COMMON = $(librlglue_la_include_HEADERS) \
+	$(librlgluenetdev_la_include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -55,7 +56,8 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(librlglue_la_includedir)"
+	"$(DESTDIR)$(librlglue_la_includedir)" \
+	"$(DESTDIR)$(librlgluenetdev_la_includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 librlglue_la_LIBADD =
@@ -63,6 +65,9 @@ am_librlglue_la_OBJECTS = librlglue_la-RL_direct_experiment.lo \
 	librlglue_la-RL_direct_environment.lo \
 	librlglue_la-RL_direct_agent.lo librlglue_la-RL_glue.lo
 librlglue_la_OBJECTS = $(am_librlglue_la_OBJECTS)
+librlgluenetdev_la_LIBADD =
+am_librlgluenetdev_la_OBJECTS = librlgluenetdev_la-RL_network.lo
+librlgluenetdev_la_OBJECTS = $(am_librlgluenetdev_la_OBJECTS)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_rl_glue_OBJECTS = rl_glue-RL_network.$(OBJEXT) \
@@ -87,10 +92,14 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(librlglue_la_SOURCES) $(rl_glue_SOURCES)
-DIST_SOURCES = $(librlglue_la_SOURCES) $(rl_glue_SOURCES)
+SOURCES = $(librlglue_la_SOURCES) $(librlgluenetdev_la_SOURCES) \
+	$(rl_glue_SOURCES)
+DIST_SOURCES = $(librlglue_la_SOURCES) $(librlgluenetdev_la_SOURCES) \
+	$(rl_glue_SOURCES)
 librlglue_la_includeHEADERS_INSTALL = $(INSTALL_HEADER)
-HEADERS = $(librlglue_la_include_HEADERS)
+librlgluenetdev_la_includeHEADERS_INSTALL = $(INSTALL_HEADER)
+HEADERS = $(librlglue_la_include_HEADERS) \
+	$(librlgluenetdev_la_include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -198,17 +207,24 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-rl_glue_SOURCES = RL_network.c RL_network_experiment.c RL_server_environment.c RL_network_agent.c RL_network_glue.c RL_server_experiment.c RL_glue.c RL_network_environment.c RL_server_agent.c rlglue/Agent_common.h rlglue/Environment_common.h rlglue/RL_common.h rlglue/Experiment_common.h RL_network.h
+rl_glue_SOURCES = RL_network.c RL_network_experiment.c RL_server_environment.c RL_network_agent.c RL_network_glue.c RL_server_experiment.c RL_glue.c RL_network_environment.c RL_server_agent.c rlglue/Agent_common.h rlglue/Environment_common.h rlglue/RL_common.h rlglue/Experiment_common.h rlglue/network/RL_network.h
 #This is basically a no-op suggested by: http://www.gnu.org/software/libtool/manual/automake/Libtool-Issues.html to solve a problem where because both targets build rlglue.c
 rl_glue_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 GLUE_RELEASE = 3:0:0
 GLUE_VERSION = 3:0:0
-lib_LTLIBRARIES = librlglue.la
+lib_LTLIBRARIES = librlglue.la librlgluenetdev.la
 librlglue_la_CFLAGS = -Wall -pedantic -std=c99
 librlglue_la_SOURCES = RL_direct_experiment.c RL_direct_environment.c RL_direct_agent.c RL_glue.c rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/Experiment_common.h 
 librlglue_la_LDFLAGS = -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE)
 librlglue_la_includedir = $(includedir)/rlglue
 librlglue_la_include_HEADERS = rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/legacy_types.h  rlglue/Experiment_common.h 
+NETDEV_RELEASE = 1:0:0
+NETDEV_VERSION = 1:0:0
+librlgluenetdev_la_CFLAGS = -Wall -pedantic -std=c99
+librlgluenetdev_la_SOURCES = RL_network.c rlglue/RL_common.h rlglue/network/RL_network.h
+librlgluenetdev_la_LDFLAGS = -version-info $(NETDEV_RELEASE) -release $(NETDEV_VERSION)
+librlgluenetdev_la_includedir = $(includedir)/rlglue
+librlgluenetdev_la_include_HEADERS = rlglue/network/RL_network.h
 all: all-am
 
 .SUFFIXES:
@@ -271,6 +287,8 @@ clean-libLTLIBRARIES:
 	done
 librlglue.la: $(librlglue_la_OBJECTS) $(librlglue_la_DEPENDENCIES) 
 	$(LINK) -rpath $(libdir) $(librlglue_la_LDFLAGS) $(librlglue_la_OBJECTS) $(librlglue_la_LIBADD) $(LIBS)
+librlgluenetdev.la: $(librlgluenetdev_la_OBJECTS) $(librlgluenetdev_la_DEPENDENCIES) 
+	$(LINK) -rpath $(libdir) $(librlgluenetdev_la_LDFLAGS) $(librlgluenetdev_la_OBJECTS) $(librlgluenetdev_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(mkdir_p) "$(DESTDIR)$(bindir)"
@@ -313,6 +331,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlglue_la-RL_direct_environment.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlglue_la-RL_direct_experiment.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlglue_la-RL_glue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlgluenetdev_la-RL_network.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rl_glue-RL_glue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rl_glue-RL_network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rl_glue-RL_network_agent.Po@am__quote@
@@ -371,6 +390,13 @@ librlglue_la-RL_glue.lo: RL_glue.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='RL_glue.c' object='librlglue_la-RL_glue.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librlglue_la_CFLAGS) $(CFLAGS) -c -o librlglue_la-RL_glue.lo `test -f 'RL_glue.c' || echo '$(srcdir)/'`RL_glue.c
+
+librlgluenetdev_la-RL_network.lo: RL_network.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librlgluenetdev_la_CFLAGS) $(CFLAGS) -MT librlgluenetdev_la-RL_network.lo -MD -MP -MF "$(DEPDIR)/librlgluenetdev_la-RL_network.Tpo" -c -o librlgluenetdev_la-RL_network.lo `test -f 'RL_network.c' || echo '$(srcdir)/'`RL_network.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/librlgluenetdev_la-RL_network.Tpo" "$(DEPDIR)/librlgluenetdev_la-RL_network.Plo"; else rm -f "$(DEPDIR)/librlgluenetdev_la-RL_network.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='RL_network.c' object='librlgluenetdev_la-RL_network.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librlgluenetdev_la_CFLAGS) $(CFLAGS) -c -o librlgluenetdev_la-RL_network.lo `test -f 'RL_network.c' || echo '$(srcdir)/'`RL_network.c
 
 rl_glue-RL_network.o: RL_network.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rl_glue_CFLAGS) $(CFLAGS) -MT rl_glue-RL_network.o -MD -MP -MF "$(DEPDIR)/rl_glue-RL_network.Tpo" -c -o rl_glue-RL_network.o `test -f 'RL_network.c' || echo '$(srcdir)/'`RL_network.c; \
@@ -524,6 +550,23 @@ uninstall-librlglue_la_includeHEADERS:
 	  echo " rm -f '$(DESTDIR)$(librlglue_la_includedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(librlglue_la_includedir)/$$f"; \
 	done
+install-librlgluenetdev_la_includeHEADERS: $(librlgluenetdev_la_include_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(librlgluenetdev_la_includedir)" || $(mkdir_p) "$(DESTDIR)$(librlgluenetdev_la_includedir)"
+	@list='$(librlgluenetdev_la_include_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(librlgluenetdev_la_includeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(librlgluenetdev_la_includedir)/$$f'"; \
+	  $(librlgluenetdev_la_includeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(librlgluenetdev_la_includedir)/$$f"; \
+	done
+
+uninstall-librlgluenetdev_la_includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(librlgluenetdev_la_include_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(librlgluenetdev_la_includedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(librlgluenetdev_la_includedir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -574,7 +617,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/rlglue
+	$(mkdir_p) $(distdir)/rlglue $(distdir)/rlglue/network
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -607,7 +650,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS)
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(librlglue_la_includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(librlglue_la_includedir)" "$(DESTDIR)$(librlgluenetdev_la_includedir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -655,7 +698,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-librlglue_la_includeHEADERS
+install-data-am: install-librlglue_la_includeHEADERS \
+	install-librlgluenetdev_la_includeHEADERS
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
@@ -684,7 +728,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
-	uninstall-libLTLIBRARIES uninstall-librlglue_la_includeHEADERS
+	uninstall-libLTLIBRARIES uninstall-librlglue_la_includeHEADERS \
+	uninstall-librlgluenetdev_la_includeHEADERS
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
 	clean-generic clean-libLTLIBRARIES clean-libtool ctags \
@@ -693,13 +738,15 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
 	html-am info info-am install install-am install-binPROGRAMS \
 	install-data install-data-am install-exec install-exec-am \
 	install-info install-info-am install-libLTLIBRARIES \
-	install-librlglue_la_includeHEADERS install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-info-am uninstall-libLTLIBRARIES \
-	uninstall-librlglue_la_includeHEADERS
+	install-librlglue_la_includeHEADERS \
+	install-librlgluenetdev_la_includeHEADERS install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-libLTLIBRARIES uninstall-librlglue_la_includeHEADERS \
+	uninstall-librlgluenetdev_la_includeHEADERS
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

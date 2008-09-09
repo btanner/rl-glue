@@ -102,7 +102,7 @@ unsigned int rlSendBufferData(int theSocket, const rlBuffer* buffer, const int t
 unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int* target);
 
 int rlGetSystemByteOrder();
-void rlSwapData(void* out, const void* in, const unsigned int size);
+void rlSwapEndianForDataOfSize(void* out, const void* in, const unsigned int size);
 int rlWaitForConnection(const char *address, const short port, const int retryTimeout);
 unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, unsigned int offset);
 unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abstract_type_t* dst);

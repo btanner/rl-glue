@@ -20,8 +20,8 @@
 
 #include <stdio.h> /* fprintf : debug */
 
-#include <rlglue/RL_common.h>
-#include <RL_network.h>
+#include <rlglue/Agent_common.h>
+#include <rlglue/network/RL_network.h>
 
 static action_t theAction= {0};
 static rlBuffer theBuffer = {0};

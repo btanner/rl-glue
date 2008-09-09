@@ -20,8 +20,8 @@
 #include <stdlib.h> /* exit */
 #include <string.h> /* strlen, strncmp */
 
-#include <rlglue/RL_common.h>
-#include <RL_network.h>
+#include <rlglue/Experiment_common.h>
+#include <rlglue/network/RL_network.h>
 
 #ifndef VERSION
 #define VERSION "unknown"

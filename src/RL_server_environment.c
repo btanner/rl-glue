@@ -20,8 +20,8 @@
 
 #include <stdio.h> /* fprintf: debug only */
 
-#include <rlglue/RL_common.h>
-#include <RL_network.h>
+#include <rlglue/Environment_common.h>
+#include <rlglue/network/RL_network.h>
 
 static task_specification_t theTaskSpec   = 0;
 static rlBuffer theBuffer               = {0};

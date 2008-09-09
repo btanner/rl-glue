@@ -29,7 +29,7 @@
 #include <arpa/inet.h>
 
 /* RL_netlib Library Header */
-#include "RL_network.h"
+#include <rlglue/network/RL_network.h>
 
 /* Open and configure a socket */
 int rlOpen(short thePort) {
@@ -223,7 +223,7 @@ unsigned int rlBufferWrite(rlBuffer *buffer, unsigned int offset, const void* se
   /* For each of the new data items, swap the endianness and add them to the buffer */
   for (i = 0; i < count; ++i) {
     if (rlGetSystemByteOrder() == 1) {
-      rlSwapData(&data_ptr[i * size], &data[i * size], size);
+      rlSwapEndianForDataOfSize(&data_ptr[i * size], &data[i * size], size);
     }
     else {
       memcpy(&data_ptr[i * size], &data[i * size], size);
@@ -248,7 +248,7 @@ unsigned int rlBufferRead(const rlBuffer *buffer, unsigned int offset, void* rec
   /* For each of the new data items, swap the endianness and read them from the buffer */
   for (i = 0; i < count; ++i) {
     if (rlGetSystemByteOrder() == 1) {
-      rlSwapData(&data[i * size], &buffer->data[(i * size) + offset], size);
+      rlSwapEndianForDataOfSize(&data[i * size], &buffer->data[(i * size) + offset], size);
     }
     else {
       memcpy(&data[i * size], &buffer->data[(i * size) + offset], size);
@@ -270,8 +270,8 @@ unsigned int rlSendBufferData(int theSocket, const rlBuffer* buffer, const int t
   
   /* sendSize needs to go across in network byte order, swap it if we're little endian */
   if (rlGetSystemByteOrder() == 1) {
-    rlSwapData(&sendTarget, &target, sizeof(int));
-    rlSwapData(&sendSize, &buffer->size, sizeof(unsigned int));
+    rlSwapEndianForDataOfSize(&sendTarget, &target, sizeof(int));
+    rlSwapEndianForDataOfSize(&sendSize, &buffer->size, sizeof(unsigned int));
   }
   
   header[0] = (unsigned int)sendTarget;
@@ -303,8 +303,8 @@ unsigned int rlRecvBufferData(int theSocket, rlBuffer* buffer, int *target) {
   {
     if (rlGetSystemByteOrder() == 1)  /* Little Endian */
     {
-      rlSwapData(&recvTarget, &header[0], sizeof(unsigned int));
-      rlSwapData(&recvSize, &header[1], sizeof(unsigned int));
+      rlSwapEndianForDataOfSize(&recvTarget, &header[0], sizeof(unsigned int));
+      rlSwapEndianForDataOfSize(&recvSize, &header[1], sizeof(unsigned int));
     }
     else
     {
@@ -348,7 +348,7 @@ int rlGetSystemByteOrder() {
    not be treated as doubles/floats again until they are back into their native endianness.
 */
 
-void rlSwapData(void* out, const void* in, const unsigned int size) {
+void rlSwapEndianForDataOfSize(void* out, const void* in, const unsigned int size) {
   const unsigned char *src = (const unsigned char *)in;
   unsigned char *dst = (unsigned char *)out;
   unsigned int i = 0;
