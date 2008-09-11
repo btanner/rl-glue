@@ -16,7 +16,7 @@ AC_PATH_PROG(svnversioncommand, svnversion)
 dnl use svnversion to record the current repository revision only if
 dnl subversion is installed and we are in a working copy
 if test "X$svnversioncommand" = "X" || test `$svnversioncommand -n '.'` = "exported"; then
-mysvnversion="cat svn_dist_version"
+mysvnversion="exported"
 else
 mysvnversion="svnversion -n '.'"
 fi
@@ -26,9 +26,6 @@ dnl we have svnversion and if we are in a svn working copy. In all other
 dnl cases the distributed copy of svn_dist_version should be used
 AM_CONDITIONAL(HAVESVNWC, test "X$svnversioncommand" != "X" && test `$svnversioncommand -n '.'` != "exported")
 
-
-
-AM_CONDITIONAL(HAVESVNWC, test "X$svnversioncommand" != "X" && test `$svnversioncommand -n '.'` != "exported")
 
 AC_SUBST(mysvnversion)
 

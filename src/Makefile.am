@@ -1,9 +1,8 @@
 GLUE_RELEASE=3:0:0
 GLUE_VERSION=3:0:0
 
-BUILT_SOURCES=svn_version.c svn_dist_version
-EXTRA_DIST=svn_dist_version
-
+BUILT_SOURCES= svn_dist_version svn_version.c 
+EXTRA_DIST= svn_dist_version
 
 lib_LTLIBRARIES = librlglue.la librlgluenetdev.la
  
@@ -30,15 +29,19 @@ rl_glue_SOURCES = RL_network_experiment.c RL_server_environment.c RL_network_age
 rl_glue_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 rl_glue_LDADD   = librlgluenetdev.la
 
-svn_version.c: FORCE
-	echo 'const char* svn_version(void) { const char* SVN_Version = "\c' > svn_version.c
-	@mysvnversion@                    >> svn_version.c
-	echo '"; return SVN_Version; }\c'   >> svn_version.c
-
 if HAVESVNWC
 svn_dist_version: FORCE
+	MYSVNVERSION=`@mysvnversion@`
 	@mysvnversion@ > svn_dist_version
+else
+	MYSVNVERSION < svn_dist_version
 endif
+
+svn_version.c: svn_dist_version
+	echo 'const char* svn_version(void) { const char* SVN_Version = "\c' > svn_version.c
+	$(MYSVNVERSION)                  >> svn_version.c
+	echo '"; return SVN_Version; }\c'   >> svn_version.c
+
 
 
 

@@ -215,7 +215,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 GLUE_RELEASE = 3:0:0
 GLUE_VERSION = 3:0:0
-BUILT_SOURCES = svn_version.c svn_dist_version
+BUILT_SOURCES = svn_dist_version svn_version.c 
 EXTRA_DIST = svn_dist_version
 lib_LTLIBRARIES = librlglue.la librlgluenetdev.la
 librlglue_la_CFLAGS = -Wall -pedantic -std=c99
@@ -778,13 +778,15 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
 	uninstall-librlgluenetdev_la_includeHEADERS
 
 
-svn_version.c: FORCE
-	echo 'const char* svn_version(void) { const char* SVN_Version = "\c' > svn_version.c
-	@mysvnversion@                    >> svn_version.c
-	echo '"; return SVN_Version; }\c'   >> svn_version.c
-
 @HAVESVNWC_TRUE@svn_dist_version: FORCE
+@HAVESVNWC_TRUE@	MYSVNVERSION=`@mysvnversion@`
 @HAVESVNWC_TRUE@	@mysvnversion@ > svn_dist_version
+@HAVESVNWC_FALSE@	MYSVNVERSION < svn_dist_version
+
+svn_version.c: svn_dist_version
+	echo 'const char* svn_version(void) { const char* SVN_Version = "\c' > svn_version.c
+	$(MYSVNVERSION)                  >> svn_version.c
+	echo '"; return SVN_Version; }\c'   >> svn_version.c
 
 FORCE:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

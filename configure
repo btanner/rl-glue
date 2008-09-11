@@ -20347,7 +20347,7 @@ fi
 
 
 if test "X$svnversioncommand" = "X" || test `$svnversioncommand -n '.'` = "exported"; then
-mysvnversion="cat svn_dist_version"
+mysvnversion="exported"
 else
 mysvnversion="svnversion -n '.'"
 fi
@@ -20362,18 +20362,6 @@ else
   HAVESVNWC_FALSE=
 fi
 
-
-
-
-
-
-if test "X$svnversioncommand" != "X" && test `$svnversioncommand -n '.'` != "exported"; then
-  HAVESVNWC_TRUE=
-  HAVESVNWC_FALSE='#'
-else
-  HAVESVNWC_TRUE='#'
-  HAVESVNWC_FALSE=
-fi
 
 
 
@@ -20524,13 +20512,6 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
-Usually this means the macro was only invoked conditionally." >&2;}
-   { (exit 1); exit 1; }; }
-fi
-if test -z "${HAVESVNWC_TRUE}" && test -z "${HAVESVNWC_FALSE}"; then
-  { { echo "$as_me:$LINENO: error: conditional \"HAVESVNWC\" was never defined.
-Usually this means the macro was only invoked conditionally." >&5
-echo "$as_me: error: conditional \"HAVESVNWC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
