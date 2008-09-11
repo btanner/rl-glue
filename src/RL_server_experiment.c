@@ -368,7 +368,7 @@ void runGlueEventLoop(int theConnection) {
 
 int main(int argc, char** argv) {
 	char usageBuffer[1024];
-  snprintf(usageBuffer,1024,"\n\trl_glue version:: %s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION);
+  snprintf(usageBuffer,1024,"\n\trl_glue version:: %s\n\tSubversion revision:: %s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION,svn_version());
 
   if (argc > 1) {
     fprintf(stdout, usageBuffer);
