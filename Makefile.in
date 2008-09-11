@@ -175,7 +175,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = src
+SUBDIRS = src tests
 all: all-recursive
 
 .SUFFIXES:
