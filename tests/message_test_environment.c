@@ -26,45 +26,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <rlglue/Environment_common.h>
-#include "useful_functions.h"
 
 
 observation_t o={0};
 reward_observation_t ro={0};
 message_t env_responseMessage=0;
-int stepCount=0;
 
 task_specification_t env_init()
 {    
-	return "sample task spec";
+	return "";
 }
 
 observation_t env_start()
 {
-	stepCount=0;
-	clean_abstract_type(&o);
-	makeKInts(&o,1);
 	return o;
 }
 
 reward_observation_t env_step(action_t a)
 {
-	clean_abstract_type(&o);
-	makeKInts(&o,1);
-	o.intArray[0]=stepCount;
-	
-	ro.o=o;
-	ro.r=1.0;
-  
-	stepCount++;
-	
-	ro.terminal=stepCount==5;
   return ro;
 }
 
 void env_cleanup()
 {
-  clean_abstract_type(&o);
+
 }
 
 void env_set_state(state_key_t sk)
@@ -77,27 +62,26 @@ void env_set_random_seed(random_seed_key_t rsk)
 
 state_key_t env_get_state()
 {
-  state_key_t theKey;
-  return theKey;
 }
 
 random_seed_key_t env_get_random_seed()
 {
-  random_seed_key_t theKey;
-  return theKey;
 }
 
 message_t env_message(const message_t inMessage) {
-	int timesToPrint=stepCount%3;
-	int i;
 	char tmpBuffer[1024];
 	
-	sprintf(tmpBuffer,"%s|",inMessage);
-	for(i=0;i<timesToPrint;i++){
-		sprintf(tmpBuffer,"%s%d.", tmpBuffer,stepCount);
-	}
-	sprintf(tmpBuffer,"%s|%s",tmpBuffer,inMessage);
+	if(inMessage==0)
+		return "null";
+	if(strcmp(inMessage,"")==0)
+		return "empty";
+	if(strcmp(inMessage,"null")==0)
+		return 0;
+	if(strcmp(inMessage,"empty")==0)
+		return "";
 	
+	sprintf(tmpBuffer,"%s", inMessage);
+
 	if(env_responseMessage!=0){
 		free(env_responseMessage);
 		env_responseMessage=0;
@@ -106,3 +90,4 @@ message_t env_message(const message_t inMessage) {
 	sprintf(env_responseMessage,"%s",tmpBuffer);
 	return env_responseMessage;
 }
+	

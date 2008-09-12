@@ -23,48 +23,74 @@
 
 
 #include <stdio.h>
-
+#include <string.h>
+#include <assert.h>
 #include <rlglue/Experiment_common.h>
 	
+int tests_failed=0;
+int test_count=0;
 
+void check_fail(int condition){
+	test_count++;
+	if(condition!=0){
+		printf("Failed check: %d\n",test_count);
+		tests_failed++;
+	}
+}
+	
+	
 int main(int argc, char *argv[]) {
-  int failed=0;
   reward_observation_action_terminal_t roat;
   task_specification_t task_spec;
   task_spec=RL_init();
-  printf("Task spec was: %s\n",task_spec);
-
-    failed |= strcmp("sample task spec",task_spec)!=0;
-
-
     RL_start();
 	roat=RL_step();
+	
+	check_fail(roat.o.numInts!=1);
+	check_fail(roat.o.numDoubles!=0);
+	check_fail(roat.o.numChars!=0);
+	check_fail(roat.o.intArray[0]!=0);
+    check_fail(strcmp("one|1.|one",RL_env_message("one"))!=0);
+    check_fail(strcmp("one|1.|one",RL_agent_message("one"))!=0);
+	check_fail(roat.terminal=0);
+	
 
-    failed |= strcmp("one|1.|one",RL_env_message("one"))!=0;
-    failed |= strcmp("one|1.|one",RL_agent_message("one"))!=0;
-	failed |= roat.terminal=0;
+	roat=RL_step();
+
+    check_fail(strcmp("two|2.2.|two",RL_env_message("two"))!=0);
+    check_fail(strcmp("two|2.2.|two",RL_agent_message("two"))!=0);
+	check_fail(roat.terminal=0);
+	check_fail(roat.o.numInts!=1);
+	check_fail(roat.o.numDoubles!=0);
+	check_fail(roat.o.numChars!=0);
+	check_fail(roat.o.intArray[0]!=1);
 
 	roat=RL_step();
 
-    failed |= strcmp("two|2.2.|two",RL_env_message("two"))!=0;
-    failed |= strcmp("two|2.2.|two",RL_agent_message("two"))!=0;
-	failed |= roat.terminal=0;
+    check_fail(strcmp("three||three",RL_env_message("three"))!=0);
+    check_fail(strcmp("three||three",RL_agent_message("three"))!=0);
+	check_fail(roat.terminal=0);
+	check_fail(roat.o.numInts!=1);
+	check_fail(roat.o.numDoubles!=0);
+	check_fail(roat.o.numChars!=0);	
+	check_fail(roat.o.intArray[0]!=2);
 
 	roat=RL_step();
-
-    failed |= strcmp("three||three",RL_env_message("three"))!=0;
-    failed |= strcmp("three||three",RL_agent_message("three"))!=0;
-	failed |= roat.terminal=0;
+    check_fail(strcmp("four|4.|four",RL_env_message("four"))!=0);
+    check_fail(strcmp("four|4.|four",RL_agent_message("four"))!=0);
+	check_fail(roat.terminal=0);
+	check_fail(roat.o.numInts!=1);
+	check_fail(roat.o.numDoubles!=0);
+	check_fail(roat.o.numChars!=0);
+	check_fail(roat.o.intArray[0]!=3);
+	
 
 	roat=RL_step();
-    failed |= strcmp("four|4.|four",RL_env_message("four"))!=0;
-    failed |= strcmp("four|4.|four",RL_agent_message("four"))!=0;
-	failed |= roat.terminal=0;
-
-	roat=RL_step();
-    failed |= strcmp("five|5.5.|five",RL_env_message("five"))!=0;
-    failed |= strcmp("five|4.|five",RL_agent_message("five"))!=0;
-	failed |= roat.terminal=0;
-
-	return failed;
+    check_fail(strcmp("five|5.5.|five",RL_env_message("five"))!=0);
+    check_fail(strcmp("five|4.|five",RL_agent_message("five"))!=0);
+	check_fail(roat.terminal=0);
+	
+	if(tests_failed!=0)
+		printf("Failed %d / %d in generic test 1\n",tests_failed, test_count);
+	return tests_failed;
 }

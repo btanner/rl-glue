@@ -32,11 +32,7 @@ This agent doesn't implement all the methods.. isn't that bad?
 #include <stdlib.h>
 #include <string.h>
 #include <rlglue/Agent_common.h>
-
-#include "useful_functions.h"
-action_t action={0};
 message_t agent_responseMessage=0;
-int agent_stepCount=0;
 
 
 
@@ -44,15 +40,9 @@ void agent_init(const task_specification_t task_spec){
 }
 
 action_t agent_start(observation_t o) {
-	agent_stepCount=0;
-	copy_structure_to_structure(&action,&o);
-	return action;
 }
 
 action_t agent_step(reward_t reward, observation_t o) {
-	agent_stepCount++;
-	copy_structure_to_structure(&action,&o);
-	return action;
 }
 
 void agent_end(reward_t reward) {
@@ -65,15 +55,18 @@ void agent_freeze() {
 }
 
 message_t agent_message(const message_t inMessage) {
-	int timesToPrint=agent_stepCount%3;
-	int i;
 	char tmpBuffer[1024];
 	
-	sprintf(tmpBuffer,"%s|",inMessage);
-	for(i=0;i<timesToPrint;i++){
-		sprintf(tmpBuffer,"%s%d.", tmpBuffer,agent_stepCount);
-	}
-	sprintf(tmpBuffer,"%s|%s",tmpBuffer,inMessage);
+	if(inMessage==0)
+		return "null";
+	if(strcmp(inMessage,"")==0)
+		return "empty";
+	if(strcmp(inMessage,"null")==0)
+		return 0;
+	if(strcmp(inMessage,"empty")==0)
+		return "";
+	
+	sprintf(tmpBuffer,"%s", inMessage);
 
 	if(agent_responseMessage!=0){
 		free(agent_responseMessage);
