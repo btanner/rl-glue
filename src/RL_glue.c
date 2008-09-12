@@ -81,13 +81,13 @@ reward_observation_action_terminal_t RL_step() {
   
   	total_reward += this_reward;
 
+    num_steps += 1; /* increment num_steps if state is not terminal <-- why is that (Sept 11/08 changed to increment always)*/
 	 if (ro.terminal == 1) {
 	   num_episodes += 1;
 	   agent_end(this_reward);
 	 }
 	 else {
 	   last_action = agent_step(this_reward,last_state);
-	   num_steps += 1; /* increment num_steps if state is not terminal */
 	   roa.a = last_action;
 	 }
 
@@ -119,7 +119,6 @@ terminal_t RL_episode(unsigned int maxStepsThisEpisode) {
   	}
 
 	/*Return the value of terminal to tell the caller whether the episode ended naturally or was cut off*/
-	
 	return rl_step_result.terminal;
 }
 

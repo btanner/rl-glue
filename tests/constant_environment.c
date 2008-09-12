@@ -59,7 +59,7 @@ reward_observation_t env_step(action_t a)
 	stepCount++;
 	
 	ro.terminal=stepCount==5;
-  return ro;
+    return ro;
 }
 
 void env_cleanup()
