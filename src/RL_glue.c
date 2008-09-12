@@ -14,11 +14,12 @@
  limitations under the License.
 
 * 
-  $Revision$
-  $Date$
-  $Author$
-  $HeadURL$
- */
+*  $Revision$
+*  $Date$
+*  $Author$
+*  $HeadURL$
+* 
+*/
 
 #include <rlglue/Experiment_common.h>
 #include <rlglue/Agent_common.h>

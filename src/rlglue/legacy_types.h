@@ -12,7 +12,15 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- */
+
+* 
+*  $Revision$
+*  $Date$
+*  $Author$
+*  $HeadURL$
+* 
+*/
+
 #ifndef legacy_types_h
 #define legacy_types_h
 #include <rlglue/RL_common.h>
