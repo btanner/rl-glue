@@ -40,25 +40,52 @@ void set_k_ints_in_abstract_type(rl_abstract_type_t *the_struct, int num_ints){
 	int i;
 	
 	the_struct->numInts=num_ints;
-	the_struct->intArray=(int *)calloc(num_ints,sizeof(int));
-	for(i=0;i<num_ints;i++) the_struct->intArray[i]=i;
+	
+	if(the_struct->intArray!=0){
+		free(the_struct->intArray);
+		the_struct->intArray=0;
+	}	
+	
+	if(num_ints==0){
+		the_struct->intArray=0;
+	}else{
+		the_struct->intArray=(int *)calloc(num_ints,sizeof(int));
+		for(i=0;i<num_ints;i++) the_struct->intArray[i]=i;
+	}
 	
 }
 void set_k_doubles_in_abstract_type(rl_abstract_type_t *the_struct, int num_doubles){
 	int i;
 	
 	the_struct->numDoubles=num_doubles;
-	the_struct->doubleArray=(double *)calloc(num_doubles,sizeof(double));
-	
-	for(i=0;i<num_doubles;i++) the_struct->doubleArray[i]=(double)i/(double)num_doubles;		
+
+	if(the_struct->doubleArray!=0){
+		free(the_struct->doubleArray);
+		the_struct->doubleArray=0;
+	}	
+
+	if(num_doubles==0){
+		the_struct->doubleArray=0;
+	}else{
+		the_struct->doubleArray=(double *)calloc(num_doubles,sizeof(double));
+		for(i=0;i<num_doubles;i++) the_struct->doubleArray[i]=(double)i/(double)num_doubles;		
+	}
 }
 void set_k_chars_in_abstract_type(rl_abstract_type_t *the_struct, int num_chars){
 	int i;
 	
 	the_struct->numChars=num_chars;
-	the_struct->charArray=(char *)calloc(num_chars,sizeof(char));
-	
-	for(i=0;i<num_chars;i++) the_struct->charArray[i]='a';
+	if(the_struct->charArray!=0){
+		free(the_struct->charArray);
+		the_struct->charArray=0;
+	}	
+
+	if(num_chars==0){
+		the_struct->charArray=0;
+	}else{
+		the_struct->charArray=(char *)calloc(num_chars,sizeof(char));
+		for(i=0;i<num_chars;i++) the_struct->charArray[i]='a'+i;
+	}
 }
 
 
