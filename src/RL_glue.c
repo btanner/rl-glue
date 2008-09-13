@@ -154,11 +154,33 @@ void RL_cleanup() {
 }
 
 message_t RL_agent_message(const message_t message) {
-  return agent_message(message);
+	char *theAgentResponse;
+	char *messageToSend=message;
+	
+	/* I think this is safe because nobody will try to free stuff that is sent to them */
+  if(messageToSend==0)
+	 messageToSend="";
+	
+  theAgentResponse=agent_message(messageToSend);
+  if(theAgentResponse==0)
+	theAgentResponse="";
+	
+  return theAgentResponse;
 }
 
 message_t RL_env_message(const message_t message) {
-  return env_message(message);
+	char *theEnvResponse;
+	char *messageToSend=message;
+
+	/* I think this is safe because nobody will try to free stuff that is sent to them */
+  if(messageToSend==0)
+	 messageToSend="";
+
+  theEnvResponse=env_message(messageToSend);
+  if(theEnvResponse==0)
+	theEnvResponse="";
+
+  return theEnvResponse;
 }
 
 terminal_t RL_episode(unsigned int maxStepsThisEpisode) {
