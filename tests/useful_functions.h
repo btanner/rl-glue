@@ -29,4 +29,6 @@
 void copy_structure_to_structure(rl_abstract_type_t *dst, rl_abstract_type_t *src);
 void clean_abstract_type(rl_abstract_type_t *theStruct);
 void makeKInts(rl_abstract_type_t *theStruct, int numInts);
+void makeKDoubles(rl_abstract_type_t *theStruct, int numDoubles);
+void makeKChars(rl_abstract_type_t *theStruct, int numChars);
 #endif

@@ -73,6 +73,7 @@ action_t agent_start(observation_t theObservation) {
   int agentState = kAgentStart;
   unsigned int offset = 0;
 
+__RL_CHECK_STRUCT(&theObservation);
   rlBufferClear(&theBuffer);
   offset = 0;
   offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);

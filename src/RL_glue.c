@@ -25,6 +25,8 @@
 #include <rlglue/Agent_common.h>
 #include <rlglue/Environment_common.h>
 
+#include <assert.h>
+
 /*Brian, Sept 8, 2008 :
 ---------------------
 I'm a little worried that some of my changes in this file 
@@ -35,6 +37,54 @@ static action_t last_action  = {0};
 static reward_t total_reward = 0;
 static int num_steps       = 0;
 static int num_episodes    = 0;
+
+
+int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct){
+	if(theStruct->numInts>1000){printf("abstract type integrity error: numInts = %d\n",theStruct->numInts);return 1;}
+	if(theStruct->numDoubles>1000)return 2;
+	if(theStruct->numChars>1000)return 3;
+
+	if(theStruct->numInts>0 && theStruct->intArray==0)return 4;
+	if(theStruct->numDoubles>0 && theStruct->doubleArray==0)return 5;
+	if(theStruct->numChars>0 && theStruct->charArray==0)return 6;
+
+	if(theStruct->numInts==0 && theStruct->intArray!=0)return 7;
+	if(theStruct->numDoubles==0 && theStruct->doubleArray!=0)return 8;
+	if(theStruct->numChars==0 && theStruct->charArray!=0)return 9;
+	
+	return 0;
+}
+
+/* Take ths out later */
+void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct){
+	int i;
+		printf("Printing Abstract Type\n-----------------\n");
+	printf("\t Ints: %d \t Doubles: %d\t Chars: %d\n",theStruct->numInts, theStruct->numDoubles, theStruct->numChars);
+	if(theStruct->numInts>0)assert(theStruct->intArray!=0);
+	if(theStruct->numDoubles>0)assert(theStruct->doubleArray!=0);
+	if(theStruct->numChars>0)assert(theStruct->charArray!=0);
+	
+	if(theStruct->numInts<100){
+		printf("Ints: ");
+		for(i=0;i<theStruct->numInts;i++)
+			printf("\t%d",theStruct->intArray[i]);
+	}
+	printf("\n");
+	if(theStruct->numDoubles<100){
+		printf("Doubles: ");
+		for(i=0;i<theStruct->numDoubles;i++)
+			printf("\t%f",theStruct->doubleArray[i]);
+	}
+	printf("\n");
+	if(theStruct->numChars<100){
+		printf("Chars: ");
+		for(i=0;i<theStruct->numChars;i++)
+			printf("\t%c",theStruct->charArray[i]);
+	}
+	printf("\n");
+}
+
+
 
 task_specification_t RL_init() {
   task_specification_t task_spec;
@@ -71,7 +121,9 @@ reward_observation_action_terminal_t RL_step() {
   	reward_t this_reward=0;
 	observation_t last_state={0};
 
+	__RL_CHECK_STRUCT(&last_action)
   	ro = env_step(last_action);
+	__RL_CHECK_STRUCT(&ro.o)
   	this_reward = ro.r;
   	last_state = ro.o;
   
@@ -88,6 +140,7 @@ reward_observation_action_terminal_t RL_step() {
 	 }
 	 else {
 	   last_action = agent_step(this_reward,last_state);
+	   __RL_CHECK_STRUCT(&last_action)
 	   roa.a = last_action;
 	 }
 

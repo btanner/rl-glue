@@ -35,27 +35,17 @@
 #define VERSION "unknown"
 #endif
 
+
 const char* kUnknownMessage = "Unknown message: %s\n";
 
-extern int rlConnectSystems();
-extern void rlDisconnectSystems();
-
-extern task_specification_t RL_init();
-extern observation_action_t RL_start();
-extern reward_observation_action_terminal_t RL_step();
-extern reward_t RL_return();
-extern int RL_num_steps();
-extern int RL_num_episodes();
-extern terminal_t RL_episode(unsigned int num_steps);
-extern void RL_set_state(state_key_t sk);
-extern void RL_set_random_seed(random_seed_key_t rsk);
-extern state_key_t RL_get_state();
-extern random_seed_key_t RL_get_random_seed();
-extern void RL_cleanup();
-extern message_t RL_agent_message(const message_t message);
-extern message_t RL_env_message(const message_t message);
 
 void onRLCleanup(int theConnection);
+
+// #ifdef DEBUG_GLUE_NETWORK
+int debug_glue_network=0;
+// #else
+// int debug_glue_network=0;
+// #endif
 
 state_key_t theStateKey = {0};
 random_seed_key_t theRandomSeedKey = {0};
@@ -103,6 +93,8 @@ void onRLInit(int theConnection) {
 void onRLStart(int theConnection) {
   unsigned int offset = 0;
   observation_action_t obsAct = RL_start();
+	__RL_CHECK_STRUCT(&obsAct.o)
+	__RL_CHECK_STRUCT(&obsAct.a)
 
   rlBufferClear(&theBuffer);
   offset = 0;
@@ -110,8 +102,11 @@ void onRLStart(int theConnection) {
   offset = rlCopyADTToBuffer(&obsAct.a, &theBuffer, offset);
 }
 
+
 void onRLStep(int theConnection) {
-  reward_observation_action_terminal_t roat = RL_step();
+   reward_observation_action_terminal_t roat = RL_step();
+	__RL_CHECK_STRUCT(&roat.o)
+	__RL_CHECK_STRUCT(&roat.a)
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
@@ -242,11 +237,12 @@ void onRLAgentMessage(int theConnection) {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
 
+  inMessage = (char*)calloc(inMessageLength+1, sizeof(char));
   if (inMessageLength > 0) {
-    inMessage = (char*)calloc(inMessageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, inMessage, inMessageLength, sizeof(char));
-    inMessage[inMessageLength] = '\0';
   }
+  /* Sept 12 2008 moved out of if to make sure it is null terminated if empty message*/
+  inMessage[inMessageLength] = '\0';
   
   outMessage = RL_agent_message(inMessage);    
 
@@ -276,12 +272,14 @@ void onRLEnvMessage(int theConnection) {
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &inMessageLength, 1, sizeof(int));
 
+  /* make a buffer to handle the message received from the experiment (maybe of size 1 if its an empty message)*/
+  inMessage = (char*)calloc(inMessageLength+1, sizeof(char));
   if (inMessageLength > 0) {
-    inMessage = (char*)calloc(inMessageLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, inMessage, inMessageLength, sizeof(char));
-    inMessage[inMessageLength] = '\0';
   }
-  
+  /* Sept 12 2008 moved out of if to make sure it is null terminated if empty message*/
+  inMessage[inMessageLength] = '\0';
+
   outMessage = RL_env_message(inMessage);
   if (outMessage != 0) {
     outMessageLength = strlen(outMessage);
@@ -307,65 +305,81 @@ void runGlueEventLoop(int theConnection) {
 
     switch(glueState) {
     case kRLInit:
+	if(debug_glue_network)printf("\tDEBUG: kRLInit\n");
       onRLInit(theConnection);
       break;
       
     case kRLStart:
+	if(debug_glue_network)printf("\tDEBUG: kRLStart\n");
       onRLStart(theConnection);
       break;
       
     case kRLStep:
+	if(debug_glue_network)printf("\tDEBUG: kRLStep\n");
       onRLStep(theConnection);
       break;
       
     case kRLReturn:
+	if(debug_glue_network)printf("\tDEBUG: kRLReturn\n");
       onRLReturn(theConnection);
       break;
       
     case kRLCleanup:
+	if(debug_glue_network)printf("\tDEBUG: kRLCleanup\n");
       onRLCleanup(theConnection);
       break;
       
     case kRLNumSteps:
+	if(debug_glue_network)printf("\tDEBUG: kRLNumSteps\n");
       onRLNumSteps(theConnection);
       break;
       
     case kRLNumEpisodes:
+	if(debug_glue_network)printf("\tDEBUG: kRLNumEpisodes\n");
       onRLNumEpisodes(theConnection);
       break;
       
     case kRLEpisode:
+	if(debug_glue_network)printf("\tDEBUG: kRLEpisode\n");
       onRLEpisode(theConnection);
       break;
       
     case kRLSetState:
+	if(debug_glue_network)printf("\tDEBUG: kRLSetState\n");
       onRLSetState(theConnection);
       break;
       
     case kRLSetRandomSeed:
+	if(debug_glue_network)printf("\tDEBUG: kRLSetRandomSeed\n");
       onRLSetRandomSeed(theConnection);
       break;
       
     case kRLGetState:
+	if(debug_glue_network)printf("\tDEBUG: kRLGetState\n");
       onRLGetState(theConnection);
       break;
       
     case kRLGetRandomSeed:
+	if(debug_glue_network)printf("\tDEBUG: kRLGetRandomSeed\n");
       onRLGetRandomSeed(theConnection);
       break;
 
     case kRLAgentMessage:
+	if(debug_glue_network)printf("\tDEBUG: kRLAgentMessage\n");
       onRLAgentMessage(theConnection);
       break;
 
     case kRLEnvMessage:
+	if(debug_glue_network)printf("\tDEBUG: kRLEnvMessage\n");
       onRLEnvMessage(theConnection);
       break;
 
     case kRLTerm:
+	if(debug_glue_network)printf("\tDEBUG: kRLTerm\n");
       break;
 
     default:
+	if(debug_glue_network)printf("\tDEBUG: kUnknownMessage\n");
       fprintf(stderr, kUnknownMessage, glueState);
       break;
     };

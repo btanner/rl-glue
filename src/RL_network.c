@@ -398,6 +398,8 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
 /* The body is all of the ints, doubles, and chars */
   const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double) + src->numChars * sizeof(char);
 
+  __RL_CHECK_STRUCT(src);
+
   rlBufferReserve(dst, dst->size + headerSize + dataSize);
 
   /* fprintf(stderr, "send 1 offset = %u\n", offset); */
@@ -430,19 +432,16 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
 * the read.
 **/
 unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abstract_type_t* dst) {
-	unsigned int numInts    = 0;
-	unsigned int numDoubles = 0;
-	unsigned int numChars   = 0;
-	int* intArray = 0;
-	double * doubleArray = 0;
-	char * charArray = 0;
+	unsigned int numIntsInBuffer    = 0;
+	unsigned int numDoublesInBuffer = 0;
+	unsigned int numCharsInBuffer   = 0;
 
 	/* fprintf(stderr, "recv 1 offset = %u\n", offset); */
-	offset = rlBufferRead(src, offset, &numInts, 1, sizeof(unsigned int));
+	offset = rlBufferRead(src, offset, &numIntsInBuffer, 1, sizeof(unsigned int));
 	/* fprintf(stderr, "recv 2 offset = %u\n", offset); */
-	offset = rlBufferRead(src, offset, &numDoubles, 1, sizeof(unsigned int));
+	offset = rlBufferRead(src, offset, &numDoublesInBuffer, 1, sizeof(unsigned int));
 	/* fprintf(stderr, "recv 3 offset = %u\n", offset); */
-	offset = rlBufferRead(src, offset, &numChars, 1, sizeof(unsigned int));
+	offset = rlBufferRead(src, offset, &numCharsInBuffer, 1, sizeof(unsigned int));
 	/* fprintf(stderr, "recv 4 offset = %u\n", offset); */
 
 /* 	I'll comment this first block and the rest follow similar patterns
@@ -454,42 +453,69 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
 *		- free dst's array
 *       - assign the temporary array to dst->intArray
 *	- If the buffer had any ints, read them into dst->intArray
+
+
+ NEW PLAN, SIMPLIFY THIS CODE
 */
-  if (numInts > dst->numInts) {
-		/* printf("Needed to allocate more than %d\n",numInts); */
-    intArray = (int*)calloc(numInts, sizeof(int));
-    memcpy(intArray, dst->intArray, dst->numInts * sizeof(int));
-    free(dst->intArray);
-    dst->intArray = intArray;
-  }
-  dst->numInts = numInts;
+  if(numIntsInBuffer>1000000 || numDoublesInBuffer>1000000 || numCharsInBuffer > 1000000){
+	fprintf(stderr,"ERROR -- more than a million of ints, doubles, or chars in the buffer (%d %d %d), probably corrupt datastream, exiting\n",numIntsInBuffer,numDoublesInBuffer,numCharsInBuffer);
+	exit(1);
+ }
 
-  if (dst->numInts > 0) {
+/* Simplified Code */
+dst->numInts = numIntsInBuffer;
+if(dst->intArray!=0){
+	free(dst->intArray);
+	dst->intArray=0;
+}
+
+if(numIntsInBuffer>0){
+    dst->intArray = (int*)calloc(numIntsInBuffer, sizeof(int));
     offset = rlBufferRead(src, offset, dst->intArray, dst->numInts, sizeof(int));
-  }
+}
 
-  if (numDoubles > dst->numDoubles) {
-    doubleArray = (double*)calloc(numDoubles, sizeof(double));
-    memcpy(doubleArray, dst->doubleArray, dst->numDoubles * sizeof(double));
+dst->numDoubles = numDoublesInBuffer;
+if(dst->doubleArray!=0){
+	free(dst->doubleArray);
+	dst->doubleArray=0;
+}
+if(numDoublesInBuffer>0){
+    dst->doubleArray = (double*)calloc(numDoublesInBuffer, sizeof(double));
+    offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
+}
+dst->numChars = numCharsInBuffer;
+if(dst->charArray!=0){
+	free(dst->charArray);
+	dst->charArray=0;
+}
+if(numCharsInBuffer>0){
+    dst->charArray = (char*)calloc(numCharsInBuffer, sizeof(char));
+    offset = rlBufferRead(src, offset, dst->charArray, dst->numChars, sizeof(char));
+}
+
+
+/*
+ if (numDoublesInBuffer != dst->numDoubles) {
+    doubleArray = (double*)calloc(numDoublesInBuffer, sizeof(double));
     free(dst->doubleArray);
     dst->doubleArray = doubleArray;
   }
-  dst->numDoubles = numDoubles;
+  dst->numDoubles = numDoublesInBuffer;
 
   if (dst->numDoubles > 0) {
     offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
   }
 
-  if (numChars > dst->numChars) {
-    charArray = (char*)calloc(numChars, sizeof(char));
-    memcpy(charArray, dst->charArray, dst->numChars * sizeof(char));
+  if (numCharsInBuffer != dst->numChars) {
+    charArray = (char*)calloc(numCharsInBuffer, sizeof(char));
     free(dst->charArray);
     dst->charArray = charArray;
   }
-  dst->numChars = numChars;
+  dst->numChars = numCharsInBuffer;
 
   if (dst->numChars > 0) {
     offset = rlBufferRead(src, offset, dst->charArray, dst->numChars, sizeof(char));
   }
+*/
   return offset;
 }

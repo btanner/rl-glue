@@ -67,6 +67,8 @@ task_specification_t env_init() {
       theTaskSpec = 0;
     }
 
+	/*Read the task spec off the wire and then add \0 at the end, to be sure? */
+	/*Are we actually stripping the \0 before we send it or is this just for good measure */
     theTaskSpec = (char*)calloc(theTaskSpecLength+1, sizeof(char));
     offset = rlBufferRead(&theBuffer, offset, theTaskSpec, theTaskSpecLength, sizeof(char));
     theTaskSpec[theTaskSpecLength] = '\0';
@@ -86,6 +88,7 @@ observation_t env_start() {
   rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvStart);
 
+	__RL_CHECK_STRUCT(&theObservation)
   offset = rlCopyBufferToADT(&theBuffer, offset, &theObservation);
   return theObservation;
 }
@@ -95,8 +98,10 @@ reward_observation_t env_step(action_t theAction) {
   reward_observation_t ro = {0};
   unsigned int offset = 0;
 
+  __RL_CHECK_STRUCT(&theAction)
   rlBufferClear(&theBuffer);
   offset = 0;
+  /* Send theAction to the client environment */
   offset = rlCopyADTToBuffer(&theAction, &theBuffer, offset);
   rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
@@ -104,10 +109,12 @@ reward_observation_t env_step(action_t theAction) {
   rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
   assert(envState == kEnvStep);
 
+  /* Receive theObservation from the client environment */
   offset = 0;
   offset = rlBufferRead(&theBuffer, offset, &ro.terminal, 1, sizeof(int));
   offset = rlBufferRead(&theBuffer, offset, &ro.r, 1, sizeof(reward_t));
   offset = rlCopyBufferToADT(&theBuffer, offset, &theObservation);
+  __RL_CHECK_STRUCT(&theObservation)
 
   ro.o = theObservation;
   return ro;

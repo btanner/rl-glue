@@ -1,15 +1,18 @@
-TESTS = test1 message_test rl_episode_test_experiment
+TESTS = test_sanity test_1 test_message test_rl_episode
 
 INCLUDES = -I$(top_srcdir)/src
 LDADD = ../src/librlglue.la
 
-test1_SOURCES = test1_environment.c	test1_agent.c test1_experiment.c useful_functions.c useful_functions.h
-test1_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_sanity_SOURCES = test_1_environment.c	test_1_agent.c test_sanity_experiment.c useful_functions.c useful_functions.h
+test_sanity_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
-message_test_SOURCES = message_test_agent.c	message_test_environment.c message_test_experiment.c useful_functions.c useful_functions.h
-message_test_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_1_SOURCES = test_1_environment.c	test_1_agent.c test_1_experiment.c useful_functions.c useful_functions.h
+test_1_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
-rl_episode_test_experiment_SOURCES = test1_environment.c	test1_agent.c rl_episode_test_experiment.c useful_functions.c useful_functions.h
-rl_episode_test_experiment_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_message_SOURCES = test_message_agent.c	test_message_environment.c test_message_experiment.c useful_functions.c useful_functions.h
+test_message_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+
+test_rl_episode_SOURCES = test_1_environment.c	test_1_agent.c test_rl_episode_experiment.c useful_functions.c useful_functions.h
+test_rl_episode_experiment_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
 noinst_PROGRAMS = $(TESTS)

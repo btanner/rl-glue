@@ -29,6 +29,11 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#define __RL_CHECK_STRUCT(X)  if(__rlglue_check_abstract_type(X)!=0){printf("Struct failed validity check at file %s line %d\n",__FILE__,__LINE__);exit(__rlglue_check_abstract_type(X));}
+
 
 typedef char* task_specification_t;
 typedef double reward_t;
@@ -69,6 +74,9 @@ typedef struct {
   action_t a;
   terminal_t terminal;
 } reward_observation_action_terminal_t;
+
+void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct);
+int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct);
 
 #ifdef __cplusplus
 }
