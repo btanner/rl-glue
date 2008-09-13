@@ -1,5 +1,4 @@
-check_PROGRAMS=test1 message_test rl_episode_test_experiment
-TESTS = $(check_Programs)
+TESTS = test1 message_test rl_episode_test_experiment
 
 INCLUDES = -I$(top_srcdir)/src
 LDADD = ../src/librlglue.la
