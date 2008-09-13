@@ -26,34 +26,45 @@
 #include <stdlib.h>
 
 void makeKInts(rl_abstract_type_t *theStruct, int numInts){
-	int i;
-	
-	theStruct->numInts=numInts;
-	theStruct->intArray=(int *)calloc(numInts,sizeof(int));
-	for(i=0;i<numInts;i++) theStruct->intArray[i]=i;
+	set_k_ints_in_abstract_type(theStruct,numInts);
 }
 
 void makeKDoubles(rl_abstract_type_t *theStruct, int numDoubles){
-	int i;
-	
-	theStruct->numDoubles=numDoubles;
-	theStruct->doubleArray=(double *)calloc(numDoubles,sizeof(double));
-	
-	for(i=0;i<numDoubles;i++) theStruct->doubleArray[i]=(double)i/(double)3;	
+	set_k_doubles_in_abstract_type(theStruct,numDoubles);
 }
 void makeKChars(rl_abstract_type_t *theStruct, int numChars){
+	set_k_chars_in_abstract_type(theStruct,numChars);
+}
+
+void set_k_ints_in_abstract_type(rl_abstract_type_t *the_struct, int num_ints){
 	int i;
 	
-	theStruct->numChars=numChars;
-	theStruct->charArray=(char *)calloc(numChars,sizeof(char));
+	the_struct->numInts=num_ints;
+	the_struct->intArray=(int *)calloc(num_ints,sizeof(int));
+	for(i=0;i<num_ints;i++) the_struct->intArray[i]=i;
 	
-	for(i=0;i<numChars;i++) theStruct->charArray[i]='a';
+}
+void set_k_doubles_in_abstract_type(rl_abstract_type_t *the_struct, int num_doubles){
+	int i;
+	
+	the_struct->numDoubles=num_doubles;
+	the_struct->doubleArray=(double *)calloc(num_doubles,sizeof(double));
+	
+	for(i=0;i<num_doubles;i++) the_struct->doubleArray[i]=(double)i/(double)num_doubles;		
+}
+void set_k_chars_in_abstract_type(rl_abstract_type_t *the_struct, int num_chars){
+	int i;
+	
+	the_struct->numChars=num_chars;
+	the_struct->charArray=(char *)calloc(num_chars,sizeof(char));
+	
+	for(i=0;i<num_chars;i++) the_struct->charArray[i]='a';
 }
 
 
 
 
-void copy_structure_to_structure(rl_abstract_type_t *dst, rl_abstract_type_t *src){
+void copy_structure_to_structure(rl_abstract_type_t *dst, const rl_abstract_type_t *src){
 	int i;
 	clean_abstract_type(dst);
 	/* Now the counts and arrays for ints, doubles, and chars are all 0 */
@@ -61,7 +72,8 @@ void copy_structure_to_structure(rl_abstract_type_t *dst, rl_abstract_type_t *sr
 		dst->numInts=src->numInts;
 		dst->intArray=(int *)calloc(dst->numInts, sizeof(int));
 	}
-	for(i=0;i<dst->numDoubles;i++) dst->doubleArray[i]=src->doubleArray[i];
+	for(i=0;i<dst->numInts;i++) dst->intArray[i]=src->intArray[i];
+
 	if(dst->numDoubles!=src->numDoubles){
 		dst->numDoubles=src->numDoubles;
 		dst->doubleArray=(double *)calloc(dst->numDoubles, sizeof(double));
@@ -75,6 +87,28 @@ void copy_structure_to_structure(rl_abstract_type_t *dst, rl_abstract_type_t *sr
 	}
 	for(i=0;i<dst->numChars;i++) dst->charArray[i]=src->charArray[i];
 }
+
+int compare_abstract_types(const rl_abstract_type_t *struct1,const rl_abstract_type_t *struct2){
+	int i;
+	if(struct1->numInts!=struct2->numInts)return 1;
+	if(struct1->numDoubles!=struct2->numDoubles)return 2;
+	if(struct1->numChars!=struct2->numChars)return 3;
+	
+	for(i=0;i<struct1->numInts;i++)
+		if(struct1->intArray[i]!=struct2->intArray[i]){
+			printf("Index %d, %d != %d\n",i,struct1->intArray[i],struct2->intArray[i]);
+			return 4;
+		}
+	for(i=0;i<struct1->numDoubles;i++)
+		if(struct1->doubleArray[i]!=struct2->doubleArray[i])
+		return 5;
+	for(i=0;i<struct1->numChars;i++)
+		if(struct1->charArray[i]!=struct2->charArray[i])
+		return 6;
+	
+	return 0;
+}
+
 
 void clean_abstract_type(rl_abstract_type_t *the_struct){
 	the_struct->numInts=0;
