@@ -13,7 +13,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -36,7 +35,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = $(am__EXEEXT_1)
+check_PROGRAMS = test_sanity$(EXEEXT) test_1$(EXEEXT) \
+	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
+	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -45,10 +46,6 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
-am__EXEEXT_1 = test_sanity$(EXEEXT) test_1$(EXEEXT) \
-	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
-	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT)
-PROGRAMS = $(noinst_PROGRAMS)
 am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 	test_1-test_1_agent.$(OBJEXT) \
 	test_1-test_1_experiment.$(OBJEXT) \
@@ -215,10 +212,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-
-#check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
-#TESTS = $(check_PROGRAMS)
-TESTS = test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
+TESTS = $(check_PROGRAMS)
 INCLUDES = -I$(top_srcdir)/src
 LDADD = ../src/librlglue.la
 test_sanity_SOURCES = test_1_environment.c	test_1_agent.c test_sanity_experiment.c useful_functions.c useful_functions.h
@@ -267,8 +261,8 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-clean-noinstPROGRAMS:
-	@list='$(noinst_PROGRAMS)'; for p in $$list; do \
+clean-checkPROGRAMS:
+	@list='$(check_PROGRAMS)'; for p in $$list; do \
 	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
@@ -726,9 +720,10 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
+	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(PROGRAMS)
+all-am: Makefile
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -756,7 +751,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstPROGRAMS \
+clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -806,7 +801,7 @@ ps-am:
 uninstall-am: uninstall-info-am
 
 .PHONY: CTAGS GTAGS all all-am check check-TESTS check-am clean \
-	clean-generic clean-libtool clean-noinstPROGRAMS ctags \
+	clean-checkPROGRAMS clean-generic clean-libtool ctags \
 	distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
@@ -817,6 +812,9 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-info-am
 
+
+#IF this is uncommented, then we get errors unless check_Programs is commented
+#noinst_PROGRAMS = $(TESTS)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -1,6 +1,6 @@
-#check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
-#TESTS = $(check_PROGRAMS)
-TESTS=test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
+check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
+TESTS = $(check_PROGRAMS)
+
 INCLUDES = -I$(top_srcdir)/src
 LDADD = ../src/librlglue.la
 
@@ -22,4 +22,5 @@ test_state_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_empty_SOURCES = test_empty_environment.c	test_empty_agent.c test_empty_experiment.c useful_functions.c useful_functions.h
 test_empty_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
-noinst_PROGRAMS = $(TESTS)
+#IF this is uncommented, then we get errors unless check_Programs is commented
+#noinst_PROGRAMS = $(TESTS)
