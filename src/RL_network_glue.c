@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <rlglue/network/RL_network.h>
 
+#include "RL_network_glue.h"
+
 extern int rlDidAgentConnect();
 extern void rlSetAgentConnection(int);
 extern void rlCloseAgentConnection();

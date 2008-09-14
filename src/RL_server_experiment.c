@@ -31,6 +31,8 @@
 #include <rlglue/Experiment_common.h>
 #include <rlglue/network/RL_network.h>
 
+#include "RL_network_glue.h"
+
 #ifndef VERSION
 #define VERSION "unknown"
 #endif
