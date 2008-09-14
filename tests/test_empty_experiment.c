@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
 	int whichStep=0;
 	observation_action_t startTuple={0};
 	reward_observation_action_terminal_t stepTuple={0};
+
 	RL_init();
 	
 	for(whichEpisode=1;whichEpisode<5;whichEpisode++){
