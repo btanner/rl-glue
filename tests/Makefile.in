@@ -47,7 +47,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 am__EXEEXT_1 = test_sanity$(EXEEXT) test_1$(EXEEXT) \
 	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
-	test_state_and_seed_keys$(EXEEXT)
+	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT)
 PROGRAMS = $(noinst_PROGRAMS)
 am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 	test_1-test_1_agent.$(OBJEXT) \
@@ -56,6 +56,12 @@ am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 test_1_OBJECTS = $(am_test_1_OBJECTS)
 test_1_LDADD = $(LDADD)
 test_1_DEPENDENCIES = ../src/librlglue.la
+am_test_empty_OBJECTS = test_empty_environment.$(OBJEXT) \
+	test_empty_agent.$(OBJEXT) test_empty_experiment.$(OBJEXT) \
+	useful_functions.$(OBJEXT)
+test_empty_OBJECTS = $(am_test_empty_OBJECTS)
+test_empty_LDADD = $(LDADD)
+test_empty_DEPENDENCIES = ../src/librlglue.la
 am_test_message_OBJECTS = test_message-test_message_agent.$(OBJEXT) \
 	test_message-test_message_environment.$(OBJEXT) \
 	test_message-test_message_experiment.$(OBJEXT) \
@@ -96,12 +102,12 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(test_1_SOURCES) $(test_message_SOURCES) \
-	$(test_rl_episode_SOURCES) $(test_sanity_SOURCES) \
-	$(test_state_and_seed_keys_SOURCES)
-DIST_SOURCES = $(test_1_SOURCES) $(test_message_SOURCES) \
-	$(test_rl_episode_SOURCES) $(test_sanity_SOURCES) \
-	$(test_state_and_seed_keys_SOURCES)
+SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
+	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
+	$(test_sanity_SOURCES) $(test_state_and_seed_keys_SOURCES)
+DIST_SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
+	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
+	$(test_sanity_SOURCES) $(test_state_and_seed_keys_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -210,9 +216,9 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
-#check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys
+#check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
 #TESTS = $(check_PROGRAMS)
-TESTS = test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys
+TESTS = test_sanity test_1 test_message test_rl_episode test_state_and_seed_keys test_empty
 INCLUDES = -I$(top_srcdir)/src
 LDADD = ../src/librlglue.la
 test_sanity_SOURCES = test_1_environment.c	test_1_agent.c test_sanity_experiment.c useful_functions.c useful_functions.h
@@ -225,6 +231,8 @@ test_rl_episode_SOURCES = test_1_environment.c	test_1_agent.c test_rl_episode_ex
 test_rl_episode_experiment_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_state_and_seed_keys_SOURCES = test_seeds_environment.c	test_1_agent.c test_seeds_experiment.c useful_functions.c useful_functions.h
 test_state_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_empty_SOURCES = test_empty_environment.c	test_empty_agent.c test_empty_experiment.c useful_functions.c useful_functions.h
+test_empty_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 all: all-am
 
 .SUFFIXES:
@@ -268,6 +276,9 @@ clean-noinstPROGRAMS:
 test_1$(EXEEXT): $(test_1_OBJECTS) $(test_1_DEPENDENCIES) 
 	@rm -f test_1$(EXEEXT)
 	$(LINK) $(test_1_LDFLAGS) $(test_1_OBJECTS) $(test_1_LDADD) $(LIBS)
+test_empty$(EXEEXT): $(test_empty_OBJECTS) $(test_empty_DEPENDENCIES) 
+	@rm -f test_empty$(EXEEXT)
+	$(LINK) $(test_empty_LDFLAGS) $(test_empty_OBJECTS) $(test_empty_LDADD) $(LIBS)
 test_message$(EXEEXT): $(test_message_OBJECTS) $(test_message_DEPENDENCIES) 
 	@rm -f test_message$(EXEEXT)
 	$(LINK) $(test_message_LDFLAGS) $(test_message_OBJECTS) $(test_message_LDADD) $(LIBS)
@@ -293,6 +304,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1-useful_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1_environment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty_agent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty_environment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty_experiment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_experiment.Po@am__quote@

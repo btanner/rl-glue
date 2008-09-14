@@ -30,29 +30,56 @@
 #include "useful_functions.h"
 
 message_t env_responseMessage=0;
+observation_t emptyObservation;
+observation_t nonEmptyObservation;
+
+
+env_whichEpisode=0;
+
 
 task_specification_t env_init()
 {    
+	env_whichEpisode=0;
+
+	clean_abstract_type(&emptyObservation);
+	clean_abstract_type(&nonEmptyObservation);
+
+	set_k_ints_in_abstract_type(&nonEmptyObservation,2);
+	set_k_doubles_in_abstract_type(&nonEmptyObservation,4);
+	set_k_chars_in_abstract_type(&nonEmptyObservation,5);
+
 	return "";
 }
 
 observation_t env_start()
 {
-	observation_t o={0};
-	clean_abstract_type(&o);
-	return o;
+	env_whichEpisode++;
+	
+	if(env_whichEpisode%2==0)
+		return emptyObservation;
+
+	return nonEmptyObservation;
 }
 
 reward_observation_t env_step(action_t a)
 {
 	reward_observation_t ro={0};
-	clean_abstract_type(&ro.o);
+
+	if(env_whichEpisode%2==0)
+		ro.o=emptyObservation;
+	else
+		ro.o=nonEmptyObservation;
+		
+	ro.r=0;
+	ro.terminal=0;
+	
 	return ro;
 }
 
 void env_cleanup()
 {
-
+	clean_abstract_type(&emptyObservation);
+	clean_abstract_type(&nonEmptyObservation);
 }
 
 void env_set_state(state_key_t sk)
@@ -78,25 +105,6 @@ random_seed_key_t env_get_random_seed()
 }
 
 message_t env_message(const message_t inMessage) {
-	char tmpBuffer[1024];
-	
-	if(inMessage==0)
-		return "null";
-	if(strcmp(inMessage,"")==0)
-		return "empty";
-	if(strcmp(inMessage,"null")==0)
-		return 0;
-	if(strcmp(inMessage,"empty")==0){
-		return "";
-		}
-	sprintf(tmpBuffer,"%s", inMessage);
-
-	if(env_responseMessage!=0){
-		free(env_responseMessage);
-		env_responseMessage=0;
-	}
-	env_responseMessage=(char *)calloc(strlen(tmpBuffer),sizeof(char));
-	sprintf(env_responseMessage,"%s",tmpBuffer);
-	return env_responseMessage;
+	return "";
 }
 	

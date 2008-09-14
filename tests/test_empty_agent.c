@@ -38,50 +38,47 @@ This agent doesn't implement all the methods.. isn't that bad?
 
 message_t agent_responseMessage=0;
 action_t emptyAction;
-
-
+action_t nonEmptyAction;
+int agent_whichEpisode=0;
 
 void agent_init(const task_specification_t task_spec){
 	clean_abstract_type(&emptyAction);
+	clean_abstract_type(&nonEmptyAction);
+	
+	set_k_ints_in_abstract_type(&nonEmptyAction,7);
+	set_k_doubles_in_abstract_type(&nonEmptyAction,3);
+	set_k_chars_in_abstract_type(&nonEmptyAction,1);
 
+	agent_whichEpisode=0;
 }
 
 action_t agent_start(observation_t o) {
-	return emptyAction;
+	agent_whichEpisode++;
+	
+	if(agent_whichEpisode%2==0)
+		return emptyAction;
+	
+	return nonEmptyAction;
 }
 
 action_t agent_step(reward_t reward, observation_t o) {
-	return emptyAction;
+	if(agent_whichEpisode%2==0)
+		return emptyAction;
+	
+	return nonEmptyAction;
 }
 
 void agent_end(reward_t reward) {
 }
 
 void agent_cleanup() {
+	clean_abstract_type(&emptyAction);
+	clean_abstract_type(&nonEmptyAction);
 }
 
 void agent_freeze() {
 }
 
 message_t agent_message(const message_t inMessage) {
-	char tmpBuffer[1024];
-	
-	if(inMessage==0)
-		return "null";
-	if(strcmp(inMessage,"")==0)
-		return "empty";
-	if(strcmp(inMessage,"null")==0)
-		return 0;
-	if(strcmp(inMessage,"empty")==0)
-		return "";
-	
-	sprintf(tmpBuffer,"%s", inMessage);
-
-	if(agent_responseMessage!=0){
-		free(agent_responseMessage);
-		agent_responseMessage=0;
-	}
-	agent_responseMessage=(char *)calloc(strlen(tmpBuffer),sizeof(char));
-	sprintf(agent_responseMessage,"%s",tmpBuffer);
-	return agent_responseMessage;
+	return "";
 }

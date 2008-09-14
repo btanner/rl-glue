@@ -14,10 +14,10 @@
  limitations under the License.
 
 * 
-*  $Revision: 808 $
-*  $Date: 2008-09-11 19:23:09 -0600 (Thu, 11 Sep 2008) $
-*  $Author: brian@tannerpages.com $
-*  $HeadURL: https://rl-glue.googlecode.com/svn/trunk/tests/useful_functions.c $
+*  $Revision$
+*  $Date$
+*  $Author$
+*  $HeadURL$
 * 
 */
 
