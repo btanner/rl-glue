@@ -34,7 +34,7 @@ observation_t emptyObservation;
 observation_t nonEmptyObservation;
 
 
-env_whichEpisode=0;
+int env_whichEpisode=0;
 
 
 task_specification_t env_init()
