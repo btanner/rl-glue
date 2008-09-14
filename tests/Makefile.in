@@ -45,6 +45,7 @@ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
+CONFIG_HEADER = $(top_builddir)/config/config.h
 CONFIG_CLEAN_FILES =
 am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 	test_1-test_1_agent.$(OBJEXT) \
@@ -88,7 +89,7 @@ test_state_and_seed_keys_OBJECTS =  \
 	$(am_test_state_and_seed_keys_OBJECTS)
 test_state_and_seed_keys_LDADD = $(LDADD)
 test_state_and_seed_keys_DEPENDENCIES = ../src/librlglue.la
-DEFAULT_INCLUDES = -I. -I$(srcdir)
+DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \

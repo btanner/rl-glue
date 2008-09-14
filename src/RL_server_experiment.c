@@ -20,6 +20,9 @@
 *  $HeadURL$
 * 
 */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 
 #include <stdio.h> /* fprintf */
@@ -31,15 +34,27 @@
 #include <rlglue/Experiment_common.h>
 #include <rlglue/network/RL_network.h>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "RL_network_glue.h"
 
+/*This will be something like 3.0-beta or whatever */
 #ifndef VERSION
 #define VERSION "unknown"
 #endif
 
+/*This will be a subversion revision number */
+#ifndef SVN_VERSION
+#define SVN_VERSION "unknown";
+#endif
 
 const char* kUnknownMessage = "Unknown message: %s\n";
 
+char* svn_version(){
+	return SVN_VERSION;
+}
 
 void onRLCleanup(int theConnection);
 
@@ -392,7 +407,7 @@ void runGlueEventLoop(int theConnection) {
 
 int main(int argc, char** argv) {
 	char usageBuffer[1024];
-  snprintf(usageBuffer,1024,"\n\trl_glue version:: %s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION);
+  snprintf(usageBuffer,1024,"\n\trl_glue version\t=\t%s\n\tbuild number\t=\t%s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION,SVN_VERSION);
 
   if (argc > 1) {
     fprintf(stdout, usageBuffer);

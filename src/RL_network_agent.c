@@ -20,6 +20,9 @@
 *  $HeadURL$
 * 
 */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 
 #include <rlglue/network/RL_network.h>
