@@ -20344,7 +20344,7 @@ fi
 if test "X$svnversioncommand" = "X" || test `$svnversioncommand -n '.'` = "exported"; then
 
 cat >>confdefs.h <<_ACEOF
-#define SVN_VERSION "UNKNOWN"
+#define SVN_VERSION "`cat config/saved_svn_version.txt`"
 _ACEOF
 
 else
@@ -20353,6 +20353,7 @@ cat >>confdefs.h <<_ACEOF
 #define SVN_VERSION "`svnversion -n`"
 _ACEOF
 
+`svnversion -n > config/saved_svn_version.txt`
 fi
 
 ac_config_files="$ac_config_files Makefile src/Makefile tests/Makefile"
