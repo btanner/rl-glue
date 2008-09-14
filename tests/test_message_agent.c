@@ -32,17 +32,26 @@ This agent doesn't implement all the methods.. isn't that bad?
 #include <stdlib.h>
 #include <string.h>
 #include <rlglue/Agent_common.h>
+
+#include "useful_functions.h"
+
+
 message_t agent_responseMessage=0;
+action_t emptyAction;
 
 
 
 void agent_init(const task_specification_t task_spec){
+	clean_abstract_type(&emptyAction);
+
 }
 
 action_t agent_start(observation_t o) {
+	return emptyAction;
 }
 
 action_t agent_step(reward_t reward, observation_t o) {
+	return emptyAction;
 }
 
 void agent_end(reward_t reward) {

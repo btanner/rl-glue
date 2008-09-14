@@ -81,14 +81,16 @@ void env_set_random_seed(random_seed_key_t rsk)
 
 state_key_t env_get_state()
 {
-  state_key_t theKey;
-  return theKey;
+	state_key_t theKey;
+	clean_abstract_type(&theKey);
+	return theKey;
 }
 
 random_seed_key_t env_get_random_seed()
 {
-  random_seed_key_t theKey;
-  return theKey;
+	random_seed_key_t theKey;
+	clean_abstract_type(&theKey);
+	return theKey;
 }
 
 message_t env_message(const message_t inMessage) {
