@@ -2219,7 +2219,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=rlglue
- VERSION=3.0-alpha
+ VERSION=3.0-alpha-1
 
 
 cat >>confdefs.h <<_ACEOF
