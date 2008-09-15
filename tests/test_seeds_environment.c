@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <rlglue/Environment_common.h>
-#include "useful_functions.h";
+#include "useful_functions.h"
 
 
 
