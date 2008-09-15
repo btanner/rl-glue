@@ -88,17 +88,17 @@ int rlConnectSystems() {
       
       switch(theClientType) {
       case kAgentConnection:
-	fprintf(stdout, "\tagent connected.\n"); 
+	fprintf(stdout, "\tRL-Glue :: Agent connected.\n"); 
 	rlSetAgentConnection(theClient);
 	break;
 	
       case kEnvironmentConnection:
-	fprintf(stdout, "\tenvironment connected.\n");
+	fprintf(stdout, "\tRL-Glue :: Environment connected.\n");
 	rlSetEnvironmentConnection(theClient);
 	break;
 	
       case kExperimentConnection:
-	fprintf(stdout, "\texperiment connected.\n");
+	fprintf(stdout, "\tRL-Glue :: Experiment connected.\n");
 	rlSetExperimentConnection(theClient);
 	theExperimentConnection = theClient;
 	break;
