@@ -1,0 +1,524 @@
+RL-Glue 3.0-beta
+
+2008-09-02  Brian Tanner <brian@tannerpages.com>
+
+	* [r703] RL-Glue/Java/RL-Glue.jar,
+	  RL-Glue/Java/src/rlglue/types/RL_abstract_type.java,
+	  RL-Glue/Python: Python has been moved to the rl-glue-ext project
+
+	* [r704] RL-Glue/Java: Moving Java Codec to rl-glue-ext project as
+	  per issue 58
+
+	* [r705] RL-Glue/Agent_common.h, RL-Glue/Environment_common.h,
+	  RL-Glue/RL_common.h, RL-Glue/RL_glue.c, RL-Glue/RL_glue.h,
+	  RL-Glue/include, RL-Glue/include/RL_common.h, RL-Glue/src,
+	  RL-Glue/src/Agent_common.h, RL-Glue/src/Environment_common.h,
+	  RL-Glue/src/RL_glue.c, RL-Glue/src/RL_glue.h: committing some
+	  mistake changes so I can move things to the right places
+
+	* [r706] RL-Glue/include/Agent_common.h,
+	  RL-Glue/include/Environment_common.h, RL-Glue/include/RL_glue.h,
+	  RL-Glue/src/Agent_common.h, RL-Glue/src/Environment_common.h,
+	  RL-Glue/src/RL_glue.h: Moved the environment, agent, common, and
+	  RL_glue header files into include
+
+	* [r707] RL-Glue/Utilities/C_TaskSpec_Parser.h,
+	  RL-Glue/Utilities/RLStruct_util.h,
+	  RL-Glue/include/C_TaskSpec_Parser.h,
+	  RL-Glue/include/RLStruct_util.h: Moving headers into include
+
+	* [r708] RL-Glue/Utilities/C_TaskSpec_Parser.c,
+	  RL-Glue/Utilities/RLStruct_util.c,
+	  RL-Glue/src/C_TaskSpec_Parser.c, RL-Glue/src/RLStruct_util.c:
+	  moving the .c files into src
+
+	* [r709] RL-Glue/Network/Agent/RL_client_agent.c,
+	  RL-Glue/Network/Environment/RL_client_environment.c,
+	  RL-Glue/Network/Experiment/RL_client_experiment.c,
+	  RL-Glue/Network/Glue/RL_direct_agent.c,
+	  RL-Glue/Network/Glue/RL_direct_environment.c,
+	  RL-Glue/Network/Glue/RL_direct_experiment.c,
+	  RL-Glue/Network/Glue/RL_network_agent.c,
+	  RL-Glue/Network/Glue/RL_network_environment.c,
+	  RL-Glue/Network/Glue/RL_network_experiment.c,
+	  RL-Glue/Network/Glue/RL_network_glue.c,
+	  RL-Glue/Network/Glue/RL_server_environment.c,
+	  RL-Glue/Network/Glue/RL_server_experiment.c,
+	  RL-Glue/Network/RL_network.c, RL-Glue/Network/RL_network.h,
+	  RL-Glue/Utilities, RL-Glue/src/RL_client_agent.c,
+	  RL-Glue/src/RL_client_environment.c,
+	  RL-Glue/src/RL_client_experiment.c,
+	  RL-Glue/src/RL_direct_agent.c,
+	  RL-Glue/src/RL_direct_environment.c,
+	  RL-Glue/src/RL_direct_experiment.c, RL-Glue/src/RL_network.c,
+	  RL-Glue/src/RL_network.h, RL-Glue/src/RL_network_agent.c,
+	  RL-Glue/src/RL_network_environment.c,
+	  RL-Glue/src/RL_network_experiment.c,
+	  RL-Glue/src/RL_network_glue.c,
+	  RL-Glue/src/RL_server_environment.c,
+	  RL-Glue/src/RL_server_experiment.c: moved all of the .c files
+	  into src
+
+	* [r710] RL-Glue/Network/Agent, RL-Glue/Network/Environment,
+	  RL-Glue/Network/Experiment,
+	  RL-Glue/Network/Glue/RL_server_agent.c,
+	  RL-Glue/src/RL_server_agent.c: removing some empty directories
+	  and moving another source file to src
+
+	* [r711] RL-Glue/Network: removed the network directory
+
+	* [r712] RL-Glue/RL_glue.makefile, RL-Glue/include/RL_network.h,
+	  RL-Glue/src/RL_client_agent.c,
+	  RL-Glue/src/RL_client_environment.c,
+	  RL-Glue/src/RL_client_experiment.c, RL-Glue/src/RL_network.c,
+	  RL-Glue/src/RL_network.h, RL-Glue/src/RL_network_agent.c,
+	  RL-Glue/src/RL_network_environment.c,
+	  RL-Glue/src/RL_network_experiment.c,
+	  RL-Glue/src/RL_network_glue.c, RL-Glue/src/RL_server_agent.c,
+	  RL-Glue/src/RL_server_environment.c,
+	  RL-Glue/src/RL_server_experiment.c: updated the files to
+	  #include<RL_network.h> instead of #include<Network/RL_network.h>.
+	  Took out some extra complications from the makefile to build with
+	  this simpler structure
+
+	* [r713] Examples/Agent/C/makefile, Makefile: RL-Glue is decidedly
+	  broken at this moment
+
+2008-09-03  Brian Tanner <brian@tannerpages.com>
+
+	* [r714] RL-Glue/src/C_TaskSpec_Parser.c: moved a definition of a
+	  variable up to top of function to stop warning
+
+	* [r715] RL-Glue/Build, RL-Glue/Build_cpp,
+	  RL-Glue/RL_glue.makefile: getting rid of old build structure a
+	  bit
+
+	* [r716] RL-Glue/build, RL-Glue/build/C, RL-Glue/build/CPP:
+	  creating new build structure
+
+	* [r717] RL-Glue/RL_glue.makefile: added a clean target and
+	  replaced some hard coded stuff with variables for C vs CPP build
+	  directories
+
+	* [r718] RL-Glue/RL_glue.makefile: updated the clean rule to get
+	  rid of the binary
+
+	* [r719] RL-Glue/Makefile, RL-Glue/RL_glue.makefile: Renamed the
+	  RL_glue.makefile to Makefile. Why require the extra -f
+	  RL_glue.makefile typing?
+
+	* [r720] RL-Glue/Makefile: removed java and python from the
+	  makefile
+
+	* [r721] RL-Glue/Makefile: grammar correction to makefile
+
+	* [r722] RL-Glue/Makefile: simplified RL-Glue makefile by making it
+	  compiled the client files to, so that the agent/env/exp makefiles
+	  won't have to hook into this one
+
+	* [r723] RL-Glue/Makefile: Make all now compiles the RL_glue
+	  executable and the client objects that are needed to make agents
+	  and environments, but only C right now...
+
+	* [r724] RL-Glue/Makefile: making a top level makefile here which
+	  will call the sub makefile twice
+
+	* [r725] RL-Glue/Makefile, RL-Glue/rl-glue.makefile: making a top
+	  level makefile here which will call the sub makefile twice
+
+	* [r726] RL-Glue/Makefile: Actually created the high level makefile
+
+	* [r727] Examples/Agent/C/makefile, Examples/Agent/Java/makefile,
+	  Examples/Agent/Python/makefile, Examples/Environment/C/makefile,
+	  Examples/Environment/Java/makefile,
+	  Examples/Environment/Python/makefile,
+	  Examples/Experiment/C/makefile,
+	  Examples/Experiment/Java/makefile,
+	  Examples/Experiment/Python/makefile,
+	  Examples/Glue_single_C_exe/Makefile, Makefile: updated not all of
+	  the examples... just agent and environment C
+
+2008-09-04  Brian Tanner <brian@tannerpages.com>
+
+	* [r728] RL-Glue/src/RL_client_agent.c,
+	  RL-Glue/src/RL_client_environment.c,
+	  RL-Glue/src/RL_client_experiment.c: Taking the client_{agent,
+	  environment, experiment} out of RL-Glue because they are the
+	  C/C++ codecs
+
+	* [r729] RL-Glue/rl-glue.makefile: Removed all references to the
+	  client_{agent, environment, experiment} out of the makefile
+	  because they are the C/C++ codecs
+
+	* [r730] Examples, tmp, tmp/Agent, tmp/Environment, tmp/Experiment,
+	  tmp/Glue_single_C_exe, tmp/Makefile, tmp/Run_scripts: making
+	  examples lower case, it's a 2 step process
+
+	* [r731] examples, tmp: making examples lower case, it's a 2 step
+	  process
+
+	* [r732] Utils: removing utils, they've been added to rl-glue-ext
+
+	* [r733] examples/Agent/Java, examples/Agent/Python,
+	  examples/Environment/Java, examples/Environment/Python,
+	  examples/Experiment/Java, examples/Experiment/Python: removed all
+	  the java and python examples
+
+	* [r734] examples: removed all examples
+
+	* [r735] RL-Glue/Makefile, RL-Glue/bin, RL-Glue/build,
+	  RL-Glue/include, RL-Glue/rl-glue.makefile, RL-Glue/src, bin,
+	  build, include, rl-glue.makefile, src, sub.makefile: moving stuff
+	  out of subdirectory
+
+	* [r736] Makefile, orig.main.makefile: shuffling the makefiles
+
+	* [r737] Makefile, sub.makefile: shuffling the makefiles
+
+2008-09-07  Brian Tanner <brian@tannerpages.com>
+
+	* [r776] AUTHORS, ChangeLog, INSTALL, Makefile, Makefile.am,
+	  Makefile.in, NEWS, README, README.txt, RL-Glue, aclocal.m4, bin,
+	  bootstrap.sh, build, config, config/compile, config/config.guess,
+	  config/config.sub, config/depcomp, config/install-sh,
+	  config/ltmain.sh, config/missing, configure, configure.ac,
+	  include, orig.main.makefile, rl-glue.makefile, src,
+	  src/Makefile.am, src/Makefile.in, src/RL_glue.c,
+	  src/RL_network.c, src/RL_network.h, src/RL_network_agent.c,
+	  src/RL_network_environment.c, src/RL_network_experiment.c,
+	  src/RL_network_glue.c, src/RL_server_agent.c,
+	  src/RL_server_environment.c, src/RL_server_experiment.c,
+	  src/rlglue, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/Experiment_common.h,
+	  src/rlglue/RL_common.h: merged the automake branch with main
+	  rl-glue
+
+	* [r777] configure, configure.ac: updated the current versions to
+	  be 3.0-beta
+
+	* [r778] rlglue-3.0-beta.tar.gz: added beta to make it easier to
+	  test on other machines
+
+	* [r779] src/C_TaskSpec_Parser.c, src/RLStruct_util.c: removing C
+	  files we don't need
+
+	* [r780] AUTHORS, src/RL_network.h, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/Experiment_common.h,
+	  src/rlglue/RL_common.h: updated the license to Apache from GPL in
+	  some of the header files and added Matt Radkie to the AUTHORS
+	  list.
+
+	* [r781] src/RL_server_experiment.c: Removed AUTO_RECONNECT option
+	  from RL-Glue standalone executable as per issue 59
+
+	* [r782] src/RL_glue.c, src/RL_network.h, src/RL_server_agent.c,
+	  src/RL_server_experiment.c, src/rlglue/Agent_common.h,
+	  src/rlglue/Experiment_common.h: removed Agent_Freeze and
+	  RL_Freeze from the project
+
+	* [r783] src/RL_network_glue.c, src/RL_server_experiment.c: Changed
+	  some of the status messages to print to stdout instead of stderr.
+	  Fixed a bug that only pritned out the startup message when using
+	  a non standard port. Updated the usage message to explain how to
+	  change the default port (issue 8).
+
+	* [r784] src/RL_server_experiment.c: Updated the usage message to
+	  print the current version as well as the usage info
+
+	* [r785] src/RL_glue.c: Cleaned up RL_glue.c as per issue issue 52.
+	  Removed several global static variables and put them inside the
+	  functions they were required for (last_observation, oa, roa,
+	  last_terminal). Removed last_terminal actually, and instead made
+	  RL_episode check the return value of RL_step. Removed
+	  total_steps, it was accumulating numbers but was never returned.
+
+	* [r786] src/Makefile.am, src/Makefile.in, src/RL_glue.c,
+	  src/rlglue/Experiment_common.h, src/rlglue/RL_common.h: added a
+	  new typedef (unsigned int) for terminal. Made RL_episode return a
+	  terminal. Initialized some structs in some functions to {0}.
+
+	* [r787] src/RL_server_experiment.c: As per issue 39, RL_Episode
+	  now returns whether the episode ended because of regular
+	  termination or cutoff
+
+	* [r788] src/RL_glue.c, src/RL_network_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/RL_common.h: I think I
+	  updated the codec to correctly return whether RL_Episode
+	  terminated by timeout or by natural episode completion as per
+	  issue 39
+
+	* [r789] src/RL_glue.c, src/RL_server_agent.c,
+	  src/RL_server_experiment.c, src/rlglue/Experiment_common.h:
+	  Updated the spec and code such that RL_init returns the task spec
+
+2008-09-08  Brian Tanner <brian@tannerpages.com>
+
+	* [r790] rlglue-3.0-beta.tar.gz, src/RL_glue.c, src/RL_network.c,
+	  src/RL_network.h, src/RL_server_agent.c,
+	  src/RL_server_environment.c, src/RL_server_experiment.c,
+	  src/rlglue/Agent_common.h, src/rlglue/Environment_common.h,
+	  src/rlglue/Experiment_common.h, src/rlglue/RL_common.h: Changed
+	  all of the types to lower case and type_t as per issue 76. Not
+	  closign it yet though
+
+	* [r791] src/Makefile.am, src/Makefile.in: updated the makefile to
+	  distribute rlglue/legacy_types.h
+
+	* [r792] src/rlglue/legacy_types.h: oops, forgot to add
+	  legacy_types.h to SVN
+
+	* [r793] rlglue-3.0-beta.tar.gz, src/RL_network.c,
+	  src/rlglue/RL_common.h: svn commit -m "Updated RL_common.h and
+	  RL_network.c to accomodate a charArray addition to
+	  rl_abstract_type_t (string observations) as per issue 74"
+
+	* [r794] src/RL_network.c: Fixed small typo in RL_network.c that
+	  was making string observations not get sent across (issue 74)
+
+2008-09-09  Brian Tanner <brian@tannerpages.com>
+
+	* [r795] Makefile.am, src/Makefile.am, src/Makefile.in,
+	  src/RL_network.c, src/RL_network.h, src/RL_network_agent.c,
+	  src/RL_network_environment.c, src/RL_network_experiment.c,
+	  src/RL_network_glue.c, src/RL_server_agent.c,
+	  src/RL_server_environment.c, src/RL_server_experiment.c,
+	  src/rlglue/network, src/rlglue/network/RL_network.h: Changed
+	  function name rlSwap to rlSwapEndianForDataOfSize, and created
+	  the librlgluenetdev library with network.c in it, also moved
+	  RL_network.h to rlglue/net/RL_network.h and made it distribute
+
+	* [r796] src/Makefile.am, src/Makefile.in: We are now building
+	  RL_network.c as a library, updated the Makefile template to link
+	  against the library instead of recompiling those files
+
+	* [r797] src/RL_direct_agent.c, src/RL_direct_environment.c,
+	  src/RL_direct_experiment.c, src/RL_glue.c, src/RL_network.c,
+	  src/RL_network_agent.c, src/RL_network_environment.c,
+	  src/RL_network_experiment.c, src/RL_network_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/network/RL_network.h:
+	  updated copywrite on all c/h files to reflect best who worked on
+	  them
+
+2008-09-10  Brian Tanner <brian@tannerpages.com>
+
+	* [r798] configure, configure.ac: Updated configure.ac to include
+	  the build number in the version. We'll take this out for major
+	  releases
+
+2008-09-11  Brian Tanner <brian@tannerpages.com>
+
+	* [r799] Makefile.am, Makefile.in, configure, configure.ac, tests,
+	  tests/Makefile.am, tests/Makefile.in,
+	  tests/constant_environment.c, tests/echo_agent.c,
+	  tests/experiment.c, tests/useful_functions.c,
+	  tests/useful_functions.h: Added simple test suite. Make check
+	  works, make distcheck works IF you've installed. Does not work
+	  otherwise. Goign to try linux
+
+	* [r800] Makefile.in, aclocal.m4, configure,
+	  rlglue-3.0-beta.tar.gz, src/Makefile.in, tests/Makefile.in:
+	  Latested updates (removed a distribution file and reran configure
+	  on RLAI)
+
+	* [r801] Makefile.in, aclocal.m4, configure, configure.ac,
+	  src/Makefile.am, src/Makefile.in, src/RL_server_experiment.c,
+	  tests/Makefile.am, tests/Makefile.in: Added some code to do the
+	  subversion revisions even better. Now you can call svn_version()
+	  and it will tell you the version in the code. Updated rl_glue
+	  executable to print that out. Also I think I fixed the make
+	  distcheck.
+
+	* [r802] Makefile.am, configure, configure.ac, src/Makefile.am,
+	  src/Makefile.in, src/RL_glue.c, src/svn_dist_version: Finally get
+	  the SVN stuff working 100% even on dist
+
+2008-09-12  Brian Tanner <brian@tannerpages.com>
+
+	* [r803] configure.ac, src/Makefile.am, src/svn_dist_version:
+	  Couldn't make the SVN thing work no matter how hard I tried, it
+	  fails distcheck because distcheck runs everything from _build so
+	  the paths to svn_dist_version don't work.
+
+	* [r804] src/RL_direct_agent.c, src/RL_direct_environment.c,
+	  src/RL_direct_experiment.c, src/RL_glue.c, src/RL_network.c,
+	  src/RL_network_agent.c, src/RL_network_environment.c,
+	  src/RL_network_experiment.c, src/RL_network_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c: updated revision keyword
+
+	* [r805] src/RL_direct_agent.c, src/RL_direct_environment.c,
+	  src/RL_direct_experiment.c, src/RL_glue.c, src/RL_network.c,
+	  src/RL_network_agent.c, src/RL_network_environment.c,
+	  src/RL_network_experiment.c, src/RL_network_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/Experiment_common.h,
+	  src/rlglue/RL_common.h, src/rlglue/legacy_types.h,
+	  src/rlglue/network/RL_network.h, tests/constant_environment.c,
+	  tests/echo_agent.c, tests/experiment.c, tests/useful_functions.c,
+	  tests/useful_functions.h: added keywords properties on all files
+	  to track changes and versions
+
+	* [r806] src/RL_direct_agent.c, src/RL_direct_environment.c,
+	  src/RL_direct_experiment.c, src/RL_glue.c, src/RL_network.c,
+	  src/RL_network_agent.c, src/RL_network_environment.c,
+	  src/RL_network_experiment.c, src/RL_network_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/Experiment_common.h,
+	  src/rlglue/RL_common.h, src/rlglue/legacy_types.h,
+	  src/rlglue/network/RL_network.h, tests/constant_environment.c,
+	  tests/echo_agent.c, tests/experiment.c, tests/useful_functions.c,
+	  tests/useful_functions.h: added revision, author, etc to all
+	  files
+
+	* [r807] src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/Experiment_common.h,
+	  src/rlglue/RL_common.h, src/rlglue/legacy_types.h,
+	  src/rlglue/network/RL_network.h: added headurl keywoard
+
+	* [r808] src/RL_direct_agent.c, src/RL_direct_environment.c,
+	  src/RL_direct_experiment.c, src/RL_glue.c, src/RL_network.c,
+	  src/RL_network_agent.c, src/RL_network_environment.c,
+	  src/RL_network_experiment.c, src/RL_network_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, tests/constant_environment.c,
+	  tests/echo_agent.c, tests/experiment.c, tests/useful_functions.c,
+	  tests/useful_functions.h: added headurl keywoard
+
+	* [r809] Makefile.in, configure, src/Makefile.am, src/Makefile.in,
+	  src/RL_server_experiment.c, tests/Makefile.am, tests/Makefile.in,
+	  tests/constant_environment.c, tests/echo_agent.c,
+	  tests/experiment.c, tests/message_test_agent.c,
+	  tests/message_test_environment.c,
+	  tests/message_test_experiment.c: fixed up the basic tests and
+	  added some pretty extensive message tests
+
+	* [r810] src/RL_glue.c, tests/Makefile.am, tests/Makefile.in,
+	  tests/constant_environment.c, tests/rl_episode_test_experiment.c:
+	  Added a test to make sure RL_episode is behaving, it is
+
+	* [r812] tests/Makefile.am, tests/Makefile.in,
+	  tests/constant_environment.c, tests/echo_agent.c,
+	  tests/experiment.c, tests/test1_enviroment.c,
+	  tests/test1_environment.c, tests/test1_experiment.c: moving
+	  around some of the test files to make their purpose more clear
+
+2008-09-13  Brian Tanner <brian@tannerpages.com>
+
+	* [r813] tests/Makefile.am, tests/Makefile.in,
+	  tests/message_test_agent.c, tests/message_test_environment.c,
+	  tests/message_test_experiment.c,
+	  tests/rl_episode_test_experiment.c, tests/test1_enviroment.c,
+	  tests/test1_environment.c, tests/test1_experiment.c,
+	  tests/useful_functions.c: Cleaning out the test suite in
+	  preparation for installing a better one that I made for the C
+	  codec
+
+	* [r814] configure, configure.ac, src/Makefile.am, src/Makefile.in,
+	  src/RL_glue.c, src/RL_network.c, src/RL_server_agent.c,
+	  src/RL_server_environment.c, src/RL_server_experiment.c,
+	  src/rlglue/RL_common.h, tests/Makefile.am, tests/Makefile.in,
+	  tests/test_1_agent.c, tests/test_1_environment.c,
+	  tests/test_1_experiment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c,
+	  tests/test_message_experiment.c,
+	  tests/test_rl_episode_experiment.c,
+	  tests/test_sanity_experiment.c, tests/useful_functions.c,
+	  tests/useful_functions.h: Fixed a bunch of network bugs, updated
+	  the test suite to match the C codec. Some of the tests are
+	  broken, for a good reason, I'll make an issue
+
+	* [r815] src/RL_glue.c: Addd some proxying to RL_env_message and
+	  RL_agent_message so that nulls never get passed through, as per
+	  issue 83. Need to do this for all of the functions though.
+
+	* [r816] tests/Makefile.am, tests/Makefile.in,
+	  tests/test_seeds_environment.c, tests/test_seeds_experiment.c,
+	  tests/useful_functions.c, tests/useful_functions.h: Added tests
+	  for testing the state keys and random seeds (reading and writing)
+
+	* [r817] tests/useful_functions.c: fixed a bug in useful_functions.
+
+2008-09-14  Brian Tanner <brian@tannerpages.com>
+
+	* [r818] src/Makefile.am, src/Makefile.in, src/RL_network_glue.c,
+	  src/RL_network_glue.h, src/RL_server_experiment.c: Added
+	  RL_network_glue.h header defining RLconnectsystems and
+	  RLdisconnectsystems to squash warning in RL_server_experiment.c
+
+	* [r819] tests/Makefile.am, tests/Makefile.in,
+	  tests/test_1_environment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c, tests/test_sanity_experiment.c,
+	  tests/test_seeds_environment.c: Fixed some warnings in the tests
+
+	* [r820] tests/Makefile.am, tests/Makefile.in,
+	  tests/test_1_agent.c, tests/test_1_environment.c,
+	  tests/test_1_experiment.c, tests/test_empty_agent.c,
+	  tests/test_empty_environment.c, tests/test_empty_experiment.c,
+	  tests/test_message_agent.c, tests/test_message_environment.c,
+	  tests/test_message_experiment.c,
+	  tests/test_rl_episode_experiment.c,
+	  tests/test_sanity_experiment.c, tests/test_seeds_experiment.c,
+	  tests/useful_functions.c: Added new test for empties and such and
+	  set properties
+
+	* [r821] tests/test_empty_environment.c: int wasn't declared as int
+	  in a test, fixed a warning
+
+	* [r822] tests/Makefile.am, tests/Makefile.in: Fixed issue 87 where
+	  we couldn't only build tests with make check
+
+	* [r823] Makefile.in, bootstrap.sh, configure, configure.ac,
+	  src/Makefile.am, src/Makefile.in, src/RL_direct_agent.c,
+	  src/RL_direct_environment.c, src/RL_direct_experiment.c,
+	  src/RL_glue.c, src/RL_network.c, src/RL_network_agent.c,
+	  src/RL_network_environment.c, src/RL_network_experiment.c,
+	  src/RL_network_glue.c, src/RL_server_agent.c,
+	  src/RL_server_environment.c, src/RL_server_experiment.c,
+	  tests/Makefile.in, tests/test_1_agent.c,
+	  tests/test_1_environment.c, tests/test_1_experiment.c,
+	  tests/test_empty_agent.c, tests/test_empty_environment.c,
+	  tests/test_empty_experiment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c,
+	  tests/test_message_experiment.c,
+	  tests/test_rl_episode_experiment.c,
+	  tests/test_sanity_experiment.c, tests/test_seeds_environment.c,
+	  tests/test_seeds_experiment.c, tests/useful_functions.c: Moved to
+	  autoheader system... everything should #include <config.h> and
+	  defined SVN_VERSION which can be printed by the executable
+
+	* [r824] config/config.h.in, config/stamp-h1: added config files to
+	  change svn number
+
+	* [r825] Makefile.in, config/stamp-h1, configure, configure.ac,
+	  src/Makefile.in, tests/Makefile.in: added code to put the svn
+	  version in and to check if svnversion is installed in case its
+	  not
+
+	* [r826] configure.ac: Added new macro to correctly fetch the build
+	  number and set it as SVN_VERSION
+
+	* [r827] configure: checking how often it updates
+
+	* [r828] Makefile.am, Makefile.in, config/saved_svn_version.txt:
+	  Now have subversion information correctly going into the files
+	  when they are built. yay.
+
+	* [r829] config/saved_svn_version.txt, src/RL_server_experiment.c,
+	  tests/test_1_experiment.c, tests/test_empty_experiment.c: rl_glue
+	  executable now prints out its version
+
+	* [r830] config/saved_svn_version.txt: updating saved_svn_Version
+
+2008-09-15  Brian Tanner <brian@tannerpages.com>
+
+	* [r831] config/saved_svn_version.txt,
+	  src/rlglue/network/RL_network.h: Changed the retry interval from
+	  10 seconds to 2
+
+	* [r832] config/saved_svn_version.txt, src/RL_network_glue.c:
+	  Changed print statements when components connect to glue to be
+	  more verbose
+

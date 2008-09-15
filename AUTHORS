@@ -4,18 +4,22 @@ A great many people have contributed to this project over the years.
 
 Richard Sutton, forever_long_ago-2008
 Conceived of the project and developed it under many different names over the years.
+rich@richsutton.com
 
 Adam White, while graduate student at the University of Alberta, 2005-2008.
 Brought RL-Glue together as his Masters Thesis topic.
+awhite@cs.ualberta.ca
 
 Mark Lee, while programmer at the University of Alberta, 2005-2008.
 Various contributions to the glue and python codecs.
 
 Andrew Butcher, while programmer at the University of Alberta, 2006-2007.
 Overhauled Adam White's code and worked on various codecs.
+andrew.butcher@uleth.ca
 
 Brian Tanner, while Ph.D student at the University of Alberta, 2006 - 2008.
 Various design and code contributions to RL-Glue, ported to GNU autotools build system.
+brian@tannerpages.com
 
 Leah Hackman, summer NSERC student at the University of Alberta, 2007.
 Various contributions to RL-Glue.
