@@ -76,7 +76,7 @@ extern "C" {
 
 #define kLocalHost "127.0.0.1"
 #define kDefaultPort 4096
-#define kRetryTimeout 10
+#define kRetryTimeout 2
 
 /* Data types */
 typedef struct rlBuffer_t {
