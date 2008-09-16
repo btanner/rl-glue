@@ -29,7 +29,11 @@
 extern "C" {
 #endif
 
-
+/*	* Environment Interface 
+	*
+	* This should be included by all C/C++ environments as #include <rlglue/Environment_common.h>
+	* Environments must implement all of these functions.
+*/
 #include <rlglue/RL_common.h>
 
 	/* Environment Interface */

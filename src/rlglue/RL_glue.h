@@ -32,7 +32,12 @@ extern "C" {
 
 #include <rlglue/RL_common.h>
 
-/* Glue */
+/*	* RL-Glue Interface 
+	*
+	* This should be included by all C/C++ experiments as #include <rlglue/RL_glue.h>
+	* Experiments should not implement these functions, rather, these are the functions
+	* that experiments should call.
+*/
 task_specification_t RL_init();
 observation_action_t RL_start();
 reward_observation_action_terminal_t RL_step();

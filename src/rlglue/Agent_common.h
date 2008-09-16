@@ -31,7 +31,11 @@
 extern "C" {
 #endif
 
-/* Agent Interface */
+/*	* Agent Interface 
+	*
+	* This should be included by all C/C++ agents as #include <rlglue/Agent_common.h>
+	* Agents must implement all of these functions.
+*/
 void agent_init(const task_specification_t task_spec);
 action_t agent_start(observation_t o);
 action_t agent_step(reward_t r, observation_t o);
