@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <rlglue/Experiment_common.h>
+#include <rlglue/RL_glue.h>
 	
 int tests_failed=0;
 int test_count=0;

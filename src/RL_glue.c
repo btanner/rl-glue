@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <rlglue/Experiment_common.h>
+#include <rlglue/RL_glue.h>
 #include <rlglue/Agent_common.h>
 #include <rlglue/Environment_common.h>
 

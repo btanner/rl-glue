@@ -27,7 +27,7 @@
 
 #include <stdio.h>
 
-#include <rlglue/Experiment_common.h>
+#include <rlglue/RL_glue.h>
 #include <string.h>
 
 	int tests_failed=0;

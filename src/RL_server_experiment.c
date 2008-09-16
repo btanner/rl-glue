@@ -31,7 +31,7 @@
 #include <stdlib.h> /* exit */
 #include <string.h> /* strlen, strncmp */
 
-#include <rlglue/Experiment_common.h>
+#include <rlglue/RL_glue.h>
 #include <rlglue/network/RL_network.h>
 
 #ifdef HAVE_CONFIG_H
