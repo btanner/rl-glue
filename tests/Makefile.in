@@ -35,6 +35,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+LIBOBJDIR =
 check_PROGRAMS = test_sanity$(EXEEXT) test_1$(EXEEXT) \
 	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
 	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT)
