@@ -98,7 +98,7 @@ message_t env_message(const message_t inMessage) {
 		free(env_responseMessage);
 		env_responseMessage=0;
 	}
-	env_responseMessage=(char *)calloc(strlen(tmpBuffer),sizeof(char));
+	env_responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
 	sprintf(env_responseMessage,"%s",tmpBuffer);
 	return env_responseMessage;
 }
