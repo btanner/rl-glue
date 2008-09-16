@@ -7,7 +7,7 @@ lib_LTLIBRARIES = librlglue.la librlgluenetdev.la
 
 librlglue_la_CFLAGS = -Wall -pedantic -std=c99 $(DEBUG_FLAGS) -DDEBUG_GLUE_NETWORK
 librlglue_la_SOURCES = RL_direct_experiment.c RL_direct_environment.c RL_direct_agent.c RL_glue_debug.c RL_glue.c rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/RL_glue.h
-librlglue_la_LDFLAGS= -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE) -no-undefined
+librlglue_la_LDFLAGS= -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE)
 librlglue_la_includedir=$(includedir)/rlglue
 librlglue_la_include_HEADERS = rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/legacy_types.h  rlglue/RL_glue.h 
 
@@ -18,7 +18,7 @@ librlgluenetdev_la_CFLAGS = -Wall -pedantic -std=c99 $(DEBUG_FLAGS)
 
 librlgluenetdev_la_SOURCES = RL_network.c RL_glue_debug.c rlglue/RL_common.h rlglue/network/RL_network.h 
 
-librlgluenetdev_la_LDFLAGS= -version-info $(NETDEV_RELEASE) -release $(NETDEV_VERSION) -no-undefined
+librlgluenetdev_la_LDFLAGS= -version-info $(NETDEV_RELEASE) -release $(NETDEV_VERSION)
 librlgluenetdev_la_includedir=$(includedir)/rlglue/network
 librlgluenetdev_la_include_HEADERS = rlglue/network/RL_network.h
 
