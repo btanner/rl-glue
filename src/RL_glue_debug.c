@@ -30,9 +30,9 @@
 
 
 int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct){
-	if(theStruct->numInts>1000){printf("abstract type integrity error: numInts = %d\n",theStruct->numInts);return 1;}
-	if(theStruct->numDoubles>1000)return 2;
-	if(theStruct->numChars>1000)return 3;
+	if(theStruct->numInts>1000000){printf("abstract type integrity error: numInts = %d\n",theStruct->numInts);return 1;}
+	if(theStruct->numDoubles>1000000)return 2;
+	if(theStruct->numChars>1000000)return 3;
 
 	if(theStruct->numInts>0 && theStruct->intArray==0)return 4;
 	if(theStruct->numDoubles>0 && theStruct->doubleArray==0)return 5;
