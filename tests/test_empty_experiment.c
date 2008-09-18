@@ -44,10 +44,9 @@
 	
 
 int main(int argc, char *argv[]) {
-	char *theResponse;
 	int whichEpisode=0;
 	int whichStep=0;
-	observation_action_t startTuple={0};
+	observation_action_t startTuple={{0}, {0}};
 	reward_observation_action_terminal_t stepTuple={0};
 
 	RL_init();

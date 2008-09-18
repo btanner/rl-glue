@@ -5,7 +5,12 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_LIBTOOL
 
+
+AC_CHECK_HEADERS([sys/time.h])
+AC_CHECK_FUNCS([gettimeofday])
+
 AC_CONFIG_HEADERS(config/config.h)
+
 
 
 AC_PATH_PROG(svnversioncommand, svnversion)

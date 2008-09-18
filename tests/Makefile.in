@@ -37,7 +37,8 @@ build_triplet = @build@
 host_triplet = @host@
 check_PROGRAMS = test_sanity$(EXEEXT) test_1$(EXEEXT) \
 	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
-	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT)
+	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT) \
+	test_speed$(EXEEXT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -54,9 +55,10 @@ am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 test_1_OBJECTS = $(am_test_1_OBJECTS)
 test_1_LDADD = $(LDADD)
 test_1_DEPENDENCIES = ../src/librlglue.la
-am_test_empty_OBJECTS = test_empty_environment.$(OBJEXT) \
-	test_empty_agent.$(OBJEXT) test_empty_experiment.$(OBJEXT) \
-	useful_functions.$(OBJEXT)
+am_test_empty_OBJECTS = test_empty-test_empty_environment.$(OBJEXT) \
+	test_empty-test_empty_agent.$(OBJEXT) \
+	test_empty-test_empty_experiment.$(OBJEXT) \
+	test_empty-useful_functions.$(OBJEXT)
 test_empty_OBJECTS = $(am_test_empty_OBJECTS)
 test_empty_LDADD = $(LDADD)
 test_empty_DEPENDENCIES = ../src/librlglue.la
@@ -80,6 +82,13 @@ am_test_sanity_OBJECTS = test_sanity-test_1_environment.$(OBJEXT) \
 test_sanity_OBJECTS = $(am_test_sanity_OBJECTS)
 test_sanity_LDADD = $(LDADD)
 test_sanity_DEPENDENCIES = ../src/librlglue.la
+am_test_speed_OBJECTS = test_speed-test_speed_environment.$(OBJEXT) \
+	test_speed-test_1_agent.$(OBJEXT) \
+	test_speed-test_speed_experiment.$(OBJEXT) \
+	test_speed-useful_functions.$(OBJEXT)
+test_speed_OBJECTS = $(am_test_speed_OBJECTS)
+test_speed_LDADD = $(LDADD)
+test_speed_DEPENDENCIES = ../src/librlglue.la
 am_test_state_and_seed_keys_OBJECTS =  \
 	test_state_and_seed_keys-test_seeds_environment.$(OBJEXT) \
 	test_state_and_seed_keys-test_1_agent.$(OBJEXT) \
@@ -102,10 +111,12 @@ LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
 	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
-	$(test_sanity_SOURCES) $(test_state_and_seed_keys_SOURCES)
+	$(test_sanity_SOURCES) $(test_speed_SOURCES) \
+	$(test_state_and_seed_keys_SOURCES)
 DIST_SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
 	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
-	$(test_sanity_SOURCES) $(test_state_and_seed_keys_SOURCES)
+	$(test_sanity_SOURCES) $(test_speed_SOURCES) \
+	$(test_state_and_seed_keys_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -228,7 +239,9 @@ test_rl_episode_experiment_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_state_and_seed_keys_SOURCES = test_seeds_environment.c	test_1_agent.c test_seeds_experiment.c useful_functions.c useful_functions.h
 test_state_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_empty_SOURCES = test_empty_environment.c	test_empty_agent.c test_empty_experiment.c useful_functions.c useful_functions.h
-test_empty_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_empty_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_speed_SOURCES = test_speed_environment.c	test_1_agent.c test_speed_experiment.c useful_functions.c useful_functions.h
+test_speed_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 all: all-am
 
 .SUFFIXES:
@@ -284,6 +297,9 @@ test_rl_episode$(EXEEXT): $(test_rl_episode_OBJECTS) $(test_rl_episode_DEPENDENC
 test_sanity$(EXEEXT): $(test_sanity_OBJECTS) $(test_sanity_DEPENDENCIES) 
 	@rm -f test_sanity$(EXEEXT)
 	$(LINK) $(test_sanity_LDFLAGS) $(test_sanity_OBJECTS) $(test_sanity_LDADD) $(LIBS)
+test_speed$(EXEEXT): $(test_speed_OBJECTS) $(test_speed_DEPENDENCIES) 
+	@rm -f test_speed$(EXEEXT)
+	$(LINK) $(test_speed_LDFLAGS) $(test_speed_OBJECTS) $(test_speed_LDADD) $(LIBS)
 test_state_and_seed_keys$(EXEEXT): $(test_state_and_seed_keys_OBJECTS) $(test_state_and_seed_keys_DEPENDENCIES) 
 	@rm -f test_state_and_seed_keys$(EXEEXT)
 	$(LINK) $(test_state_and_seed_keys_LDFLAGS) $(test_state_and_seed_keys_OBJECTS) $(test_state_and_seed_keys_LDADD) $(LIBS)
@@ -300,9 +316,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1-useful_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1_environment.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty_agent.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty_environment.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty_experiment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_agent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_environment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_experiment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-useful_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_experiment.Po@am__quote@
@@ -312,6 +329,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_sanity-test_1_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_sanity-test_sanity_experiment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_sanity-useful_functions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_speed-test_1_agent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_speed-test_speed_environment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_speed-test_speed_experiment.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_speed-useful_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_state_and_seed_keys-test_1_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_state_and_seed_keys-test_seeds_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_state_and_seed_keys-test_seeds_experiment.Po@am__quote@
@@ -394,6 +415,62 @@ test_1-useful_functions.obj: useful_functions.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_1-useful_functions.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_1_CFLAGS) $(CFLAGS) -c -o test_1-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`
+
+test_empty-test_empty_environment.o: test_empty_environment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_environment.o -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_environment.Tpo" -c -o test_empty-test_empty_environment.o `test -f 'test_empty_environment.c' || echo '$(srcdir)/'`test_empty_environment.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-test_empty_environment.Tpo" "$(DEPDIR)/test_empty-test_empty_environment.Po"; else rm -f "$(DEPDIR)/test_empty-test_empty_environment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_empty_environment.c' object='test_empty-test_empty_environment.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-test_empty_environment.o `test -f 'test_empty_environment.c' || echo '$(srcdir)/'`test_empty_environment.c
+
+test_empty-test_empty_environment.obj: test_empty_environment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_environment.obj -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_environment.Tpo" -c -o test_empty-test_empty_environment.obj `if test -f 'test_empty_environment.c'; then $(CYGPATH_W) 'test_empty_environment.c'; else $(CYGPATH_W) '$(srcdir)/test_empty_environment.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-test_empty_environment.Tpo" "$(DEPDIR)/test_empty-test_empty_environment.Po"; else rm -f "$(DEPDIR)/test_empty-test_empty_environment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_empty_environment.c' object='test_empty-test_empty_environment.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-test_empty_environment.obj `if test -f 'test_empty_environment.c'; then $(CYGPATH_W) 'test_empty_environment.c'; else $(CYGPATH_W) '$(srcdir)/test_empty_environment.c'; fi`
+
+test_empty-test_empty_agent.o: test_empty_agent.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_agent.o -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_agent.Tpo" -c -o test_empty-test_empty_agent.o `test -f 'test_empty_agent.c' || echo '$(srcdir)/'`test_empty_agent.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-test_empty_agent.Tpo" "$(DEPDIR)/test_empty-test_empty_agent.Po"; else rm -f "$(DEPDIR)/test_empty-test_empty_agent.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_empty_agent.c' object='test_empty-test_empty_agent.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-test_empty_agent.o `test -f 'test_empty_agent.c' || echo '$(srcdir)/'`test_empty_agent.c
+
+test_empty-test_empty_agent.obj: test_empty_agent.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_agent.obj -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_agent.Tpo" -c -o test_empty-test_empty_agent.obj `if test -f 'test_empty_agent.c'; then $(CYGPATH_W) 'test_empty_agent.c'; else $(CYGPATH_W) '$(srcdir)/test_empty_agent.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-test_empty_agent.Tpo" "$(DEPDIR)/test_empty-test_empty_agent.Po"; else rm -f "$(DEPDIR)/test_empty-test_empty_agent.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_empty_agent.c' object='test_empty-test_empty_agent.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-test_empty_agent.obj `if test -f 'test_empty_agent.c'; then $(CYGPATH_W) 'test_empty_agent.c'; else $(CYGPATH_W) '$(srcdir)/test_empty_agent.c'; fi`
+
+test_empty-test_empty_experiment.o: test_empty_experiment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_experiment.o -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_experiment.Tpo" -c -o test_empty-test_empty_experiment.o `test -f 'test_empty_experiment.c' || echo '$(srcdir)/'`test_empty_experiment.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-test_empty_experiment.Tpo" "$(DEPDIR)/test_empty-test_empty_experiment.Po"; else rm -f "$(DEPDIR)/test_empty-test_empty_experiment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_empty_experiment.c' object='test_empty-test_empty_experiment.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-test_empty_experiment.o `test -f 'test_empty_experiment.c' || echo '$(srcdir)/'`test_empty_experiment.c
+
+test_empty-test_empty_experiment.obj: test_empty_experiment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_experiment.obj -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_experiment.Tpo" -c -o test_empty-test_empty_experiment.obj `if test -f 'test_empty_experiment.c'; then $(CYGPATH_W) 'test_empty_experiment.c'; else $(CYGPATH_W) '$(srcdir)/test_empty_experiment.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-test_empty_experiment.Tpo" "$(DEPDIR)/test_empty-test_empty_experiment.Po"; else rm -f "$(DEPDIR)/test_empty-test_empty_experiment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_empty_experiment.c' object='test_empty-test_empty_experiment.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-test_empty_experiment.obj `if test -f 'test_empty_experiment.c'; then $(CYGPATH_W) 'test_empty_experiment.c'; else $(CYGPATH_W) '$(srcdir)/test_empty_experiment.c'; fi`
+
+test_empty-useful_functions.o: useful_functions.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-useful_functions.o -MD -MP -MF "$(DEPDIR)/test_empty-useful_functions.Tpo" -c -o test_empty-useful_functions.o `test -f 'useful_functions.c' || echo '$(srcdir)/'`useful_functions.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-useful_functions.Tpo" "$(DEPDIR)/test_empty-useful_functions.Po"; else rm -f "$(DEPDIR)/test_empty-useful_functions.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_empty-useful_functions.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-useful_functions.o `test -f 'useful_functions.c' || echo '$(srcdir)/'`useful_functions.c
+
+test_empty-useful_functions.obj: useful_functions.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-useful_functions.obj -MD -MP -MF "$(DEPDIR)/test_empty-useful_functions.Tpo" -c -o test_empty-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_empty-useful_functions.Tpo" "$(DEPDIR)/test_empty-useful_functions.Po"; else rm -f "$(DEPDIR)/test_empty-useful_functions.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_empty-useful_functions.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`
 
 test_message-test_message_agent.o: test_message_agent.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_message_CFLAGS) $(CFLAGS) -MT test_message-test_message_agent.o -MD -MP -MF "$(DEPDIR)/test_message-test_message_agent.Tpo" -c -o test_message-test_message_agent.o `test -f 'test_message_agent.c' || echo '$(srcdir)/'`test_message_agent.c; \
@@ -506,6 +583,62 @@ test_sanity-useful_functions.obj: useful_functions.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_sanity-useful_functions.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_sanity_CFLAGS) $(CFLAGS) -c -o test_sanity-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`
+
+test_speed-test_speed_environment.o: test_speed_environment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-test_speed_environment.o -MD -MP -MF "$(DEPDIR)/test_speed-test_speed_environment.Tpo" -c -o test_speed-test_speed_environment.o `test -f 'test_speed_environment.c' || echo '$(srcdir)/'`test_speed_environment.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-test_speed_environment.Tpo" "$(DEPDIR)/test_speed-test_speed_environment.Po"; else rm -f "$(DEPDIR)/test_speed-test_speed_environment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_speed_environment.c' object='test_speed-test_speed_environment.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-test_speed_environment.o `test -f 'test_speed_environment.c' || echo '$(srcdir)/'`test_speed_environment.c
+
+test_speed-test_speed_environment.obj: test_speed_environment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-test_speed_environment.obj -MD -MP -MF "$(DEPDIR)/test_speed-test_speed_environment.Tpo" -c -o test_speed-test_speed_environment.obj `if test -f 'test_speed_environment.c'; then $(CYGPATH_W) 'test_speed_environment.c'; else $(CYGPATH_W) '$(srcdir)/test_speed_environment.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-test_speed_environment.Tpo" "$(DEPDIR)/test_speed-test_speed_environment.Po"; else rm -f "$(DEPDIR)/test_speed-test_speed_environment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_speed_environment.c' object='test_speed-test_speed_environment.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-test_speed_environment.obj `if test -f 'test_speed_environment.c'; then $(CYGPATH_W) 'test_speed_environment.c'; else $(CYGPATH_W) '$(srcdir)/test_speed_environment.c'; fi`
+
+test_speed-test_1_agent.o: test_1_agent.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-test_1_agent.o -MD -MP -MF "$(DEPDIR)/test_speed-test_1_agent.Tpo" -c -o test_speed-test_1_agent.o `test -f 'test_1_agent.c' || echo '$(srcdir)/'`test_1_agent.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-test_1_agent.Tpo" "$(DEPDIR)/test_speed-test_1_agent.Po"; else rm -f "$(DEPDIR)/test_speed-test_1_agent.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_1_agent.c' object='test_speed-test_1_agent.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-test_1_agent.o `test -f 'test_1_agent.c' || echo '$(srcdir)/'`test_1_agent.c
+
+test_speed-test_1_agent.obj: test_1_agent.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-test_1_agent.obj -MD -MP -MF "$(DEPDIR)/test_speed-test_1_agent.Tpo" -c -o test_speed-test_1_agent.obj `if test -f 'test_1_agent.c'; then $(CYGPATH_W) 'test_1_agent.c'; else $(CYGPATH_W) '$(srcdir)/test_1_agent.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-test_1_agent.Tpo" "$(DEPDIR)/test_speed-test_1_agent.Po"; else rm -f "$(DEPDIR)/test_speed-test_1_agent.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_1_agent.c' object='test_speed-test_1_agent.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-test_1_agent.obj `if test -f 'test_1_agent.c'; then $(CYGPATH_W) 'test_1_agent.c'; else $(CYGPATH_W) '$(srcdir)/test_1_agent.c'; fi`
+
+test_speed-test_speed_experiment.o: test_speed_experiment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-test_speed_experiment.o -MD -MP -MF "$(DEPDIR)/test_speed-test_speed_experiment.Tpo" -c -o test_speed-test_speed_experiment.o `test -f 'test_speed_experiment.c' || echo '$(srcdir)/'`test_speed_experiment.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-test_speed_experiment.Tpo" "$(DEPDIR)/test_speed-test_speed_experiment.Po"; else rm -f "$(DEPDIR)/test_speed-test_speed_experiment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_speed_experiment.c' object='test_speed-test_speed_experiment.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-test_speed_experiment.o `test -f 'test_speed_experiment.c' || echo '$(srcdir)/'`test_speed_experiment.c
+
+test_speed-test_speed_experiment.obj: test_speed_experiment.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-test_speed_experiment.obj -MD -MP -MF "$(DEPDIR)/test_speed-test_speed_experiment.Tpo" -c -o test_speed-test_speed_experiment.obj `if test -f 'test_speed_experiment.c'; then $(CYGPATH_W) 'test_speed_experiment.c'; else $(CYGPATH_W) '$(srcdir)/test_speed_experiment.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-test_speed_experiment.Tpo" "$(DEPDIR)/test_speed-test_speed_experiment.Po"; else rm -f "$(DEPDIR)/test_speed-test_speed_experiment.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_speed_experiment.c' object='test_speed-test_speed_experiment.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-test_speed_experiment.obj `if test -f 'test_speed_experiment.c'; then $(CYGPATH_W) 'test_speed_experiment.c'; else $(CYGPATH_W) '$(srcdir)/test_speed_experiment.c'; fi`
+
+test_speed-useful_functions.o: useful_functions.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-useful_functions.o -MD -MP -MF "$(DEPDIR)/test_speed-useful_functions.Tpo" -c -o test_speed-useful_functions.o `test -f 'useful_functions.c' || echo '$(srcdir)/'`useful_functions.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-useful_functions.Tpo" "$(DEPDIR)/test_speed-useful_functions.Po"; else rm -f "$(DEPDIR)/test_speed-useful_functions.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_speed-useful_functions.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-useful_functions.o `test -f 'useful_functions.c' || echo '$(srcdir)/'`useful_functions.c
+
+test_speed-useful_functions.obj: useful_functions.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -MT test_speed-useful_functions.obj -MD -MP -MF "$(DEPDIR)/test_speed-useful_functions.Tpo" -c -o test_speed-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_speed-useful_functions.Tpo" "$(DEPDIR)/test_speed-useful_functions.Po"; else rm -f "$(DEPDIR)/test_speed-useful_functions.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_speed-useful_functions.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_speed_CFLAGS) $(CFLAGS) -c -o test_speed-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`
 
 test_state_and_seed_keys-test_seeds_environment.o: test_seeds_environment.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_state_and_seed_keys_CFLAGS) $(CFLAGS) -MT test_state_and_seed_keys-test_seeds_environment.o -MD -MP -MF "$(DEPDIR)/test_state_and_seed_keys-test_seeds_environment.Tpo" -c -o test_state_and_seed_keys-test_seeds_environment.o `test -f 'test_seeds_environment.c' || echo '$(srcdir)/'`test_seeds_environment.c; \
