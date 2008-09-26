@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Task Specification Language</TITLE>
+<META NAME="description" CONTENT="Task Specification Language">
+<META NAME="keywords" CONTENT="Glue-Docs">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="Glue-Docs.css">
+
+<LINK REL="next" HREF="node15.html">
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node15.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html278"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
+<A NAME="tex2html274"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
+<A NAME="tex2html268"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html276"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html279"
+  HREF="node15.html">Example Task_Specification</A>
+<B> Up:</B> <A NAME="tex2html275"
+  HREF="node13.html">Additional Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html269"
+  HREF="node13.html">Additional Components Of A</A>
+ &nbsp; <B>  <A NAME="tex2html277"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00052100000000000000">
+Task Specification Language</A>
+</H3>
+In an effort to provide the agent writer with simple and concise information about the environment a Task_specification is passed from the environment, through the interface, to the agent. The environment's init method (env_init) encodes information about the problem in a ASCII string. The string is then passed to the agent's init method (agent_init).  This information can also be used to check that the agent and environment are suitable for each other. A few example Task_specifications are provided below.
+
+<BR>
+<BR>
+The agent is responsible for parsing any relevant information out of the Task_specification in the init method. A generic Task_specification parsing function is provided with RL-Glue 2.0 for all C/C++ users. This simple parser will return a structure containing the information encoded in the Task_specification, such as the Observation and Action dimensions, arrays of Observation and Action variable ranges, and arrays of Observation and Action variable types. More information about the parser and the parsed task spec struct can be found here.
+
+<BR>
+<BR>
+The Task_specification is stored as a string with the following format:
+
+<P>
+  <IMG
+ WIDTH="13" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.png"
+ ALT="$\lq\lq $">V:E:O:A:R"
+<BR>
+<BR>
+For example, this is a sample task_specification provided as one of the examples below:
+
+<P>
+ <IMG
+ WIDTH="13" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.png"
+ ALT="$\lq\lq $">2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0]"
+<BR>
+<BR>
+The V corresponds to the version number of the task specification language. E corresponds to the type of task being solved. It has a character value of 'e' if the task is episodic and 'c' if the task is continuing. O and A correspond to Observation and Action information respectively. Finally, the R corresponds to the range of rewards for the task. Within each of O, A and R a range can be provided, however if the values are unknown or infinite in magnitude, two special input values have been defined.
+
+<BR>
+<BR>
+The format of O and A are identical. We will describe the form of O only. O contains three components, separated by underscore characters ("_") :
+
+<P>
+  #dimensions_dimensionTypes_dimensionRanges
+
+<BR>
+<BR>#dimensions is an integer value specifying the number of dimensions in the Observation space. dimensionTypes is a list specifying the type of each dimension variable. The dimensionTypes list is composed of #dimensions components separated by comma characters (",") within square brackets ([x1,x2,x3,..., xn] where xi  represents the ith value). Each comma-separated value in the list describes the type of values assigned to each Observation variable in the environment. In general, Observation variables can have one of the following 2 types:
+
+<P>
+  'i' - integer value
+
+<P>
+  'f' - float value
+
+<BR>
+<BR>
+Thus a dimensionTypes list corresponding to an Observation space with 1 dimension has the following form:
+
+<P>
+ [a] where a is an element of [`i',`f']
+
+<BR>
+<BR>
+So a dimensionTypes list with one integer value would be:        
+  [i]
+
+<BR>
+<BR>
+An Observation space with 2 dimensions would have a dimensionTypes with the following form:
+
+<P>
+  [a,b] where a and b are elements of [`i',`f']
+
+<BR>
+<BR>
+indicating the value type of the first (a) and second (b) Observation variables. Thus a three dimensional Observation with one float, integer dimension and another float dimension would have the following dimensionTypes:
+
+<P>
+  <IMG
+ WIDTH="13" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.png"
+ ALT="$\lq\lq $">[f,i,f]"
+
+<BR>
+<BR>
+The dimensionRanges is a list specifying the range of each dimension variable in the Observation space.  The dimensionRanges is composed of #dimensions components separated by underscore characters. Each dimensionRanges component specifies the upper and lower bound of values for each Observation variable. If the bounds are unknown or unspecified, you can leave an empty space in the place of a value. If the bounds are positive or negative infinity, you can use inf or -inf to represent your range. These can be used in combination. For example one valid range could be an unknown lower bound and infinite upper bound, or a lower bound of -inf and an upper bound of 1. You can be as precise (though you must be accurate) as you wish. A dimensionRanges corresponding to an Observation space with a single dimension variable would have the following form:
+
+<P>
+  [O1MIN, O1MAX]
+
+<BR>
+<BR>
+So a dimensionRanges list for binary dimension varaible would be: [0,1]
+A dimensionRanges list for variable with no upper or lower bound unspecified would be: [] or [,] (both are valid).
+A dimensionRanges with one or two unbounded value can take on a value of inf or -inf. Eg [0, inf] or [-inf,1] or [-inf,inf].
+
+<BR>
+<BR>
+An Observation space with 2 dimensions would have a dimensionRanges with the following form:
+
+<P>
+  [O1MIN, O1MAX]_[O2MIN, O2MAX]
+
+<BR>
+<BR>
+indicating the minimal and maximal values of Observation variables O1 and O2 respectively. This definition can be then trivially extended to Observation spaces with N dimensions.
+
+<BR>
+<BR>
+NOTE: the dimensionRanges of an Observation space with 1 or more unbounded values may not be representable in this way. An unbounded value has no minimal or maximal range. Thus, we simply do not specify the range in the dimensionRanges for any Observation variables with unbounded values. For example, consider a problem with 3 Observation dimensions. The first and third Observation variables have interval values and the second has unbounded ratio value. The corresponding dimensionRanges for this problem is encoded as:
+
+<P>
+  [O1MIN, O1MAX]_[,]_[O3MIN, O3MAX]
+
+<BR>
+<BR>
+indicating the minimal and maximal values of Observation variables O1 and O3.
+
+<BR>
+<BR>
+The format of A (Action space information) is identical to that of O (Observation space information) and thus the definitions above hold for Action spaces.
+
+<BR>
+<BR>
+Lastly the R (Reward space information) is merely a range specifier. By the Reward Hypothesis there is only ever one reward signal (which in RL-Glue is always a floating point number) so the #dimensions and dimensionType information becomes meaningless. The reward range can again be specified to be unknown or infinite in the same manner as the Observation ranges.  A rewardRange follows the following form:
+
+<P>
+  [rewardMin, rewardMax]
+
+<BR>
+<BR>
+In the case of a reward with rewards -1 or 0 the rewardRange would appear as such: [-1,0].
+If no lower bound was known and the upper bound was positive infinity, the rewardRange would appear as such: [,-inf]
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html278"
+  HREF="node15.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
+<A NAME="tex2html274"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
+<A NAME="tex2html268"
+  HREF="node13.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html276"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html279"
+  HREF="node15.html">Example Task_Specification</A>
+<B> Up:</B> <A NAME="tex2html275"
+  HREF="node13.html">Additional Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html269"
+  HREF="node13.html">Additional Components Of A</A>
+ &nbsp; <B>  <A NAME="tex2html277"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+Adam White
+2008-09-26
+</ADDRESS>
+</BODY>
+</HTML>

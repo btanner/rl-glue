@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Advanced Experiment Programs</TITLE>
+<META NAME="description" CONTENT="Advanced Experiment Programs">
+<META NAME="keywords" CONTENT="Glue-Docs">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="Glue-Docs.css">
+
+<LINK REL="next" HREF="node40.html">
+<LINK REL="previous" HREF="node38.html">
+<LINK REL="up" HREF="node37.html">
+<LINK REL="next" HREF="node40.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html593"
+  HREF="node40.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
+<A NAME="tex2html589"
+  HREF="node37.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
+<A NAME="tex2html583"
+  HREF="node38.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html591"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html594"
+  HREF="node40.html">Components Of A RL-Glue</A>
+<B> Up:</B> <A NAME="tex2html590"
+  HREF="node37.html">Writing an Experiment</A>
+<B> Previous:</B> <A NAME="tex2html584"
+  HREF="node38.html">Basic Experiment Programs</A>
+ &nbsp; <B>  <A NAME="tex2html592"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00072000000000000000">
+Advanced Experiment Programs</A>
+</H2>
+
+<P>
+As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are access through calls to the RL-Glue interface from an experiment program. For example, to send a message to the agent use RL_agent_message. To get the state key from the environment use RL_get_state. The pattern is simple to follow:
+<BR>
+<BR>
+<P>
+<DIV ALIGN="CENTER">
+RL_set_state() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$\rightarrow$"> env_set_state()
+<BR>
+RL_get_random_seed() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$\rightarrow$"> env_get_random_seed()
+<BR>
+RL_set_random_seed() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$\rightarrow$"> env_set_random_seed()
+<BR>
+RL_env_message() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$\rightarrow$"> env_message
+<BR>
+</DIV>
+We can now produce more advanced experiment programs that would be used in reinforcement learning research:
+<PRE><TT>
+1. RL_init()
+<BR>
+2. numSteps = 0
+<BR>
+3. <B>for</B> 1 = 1:1000
+<BR>
+4. 		 RL_episode(1000)
+<BR>
+5. RL_agent_message("freezeAgentPolicy")
+<BR>
+6. <B>for</B> 1 = 1:100
+<BR>
+7. 		 RL_episode(1000)
+<BR>
+8. 		 numSteps += RL_num_steps()
+<BR>
+9.  <B>Print</B> numSteps/100
+<BR>
+10. RL_cleanup()
+</TT></PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+Adam White
+2008-09-26
+</ADDRESS>
+</BODY>
+</HTML>

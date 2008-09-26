@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Environment Message</TITLE>
+<META NAME="description" CONTENT="Environment Message">
+<META NAME="keywords" CONTENT="Glue-Docs">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="Glue-Docs.css">
+
+<LINK REL="next" HREF="node18.html">
+<LINK REL="previous" HREF="node16.html">
+<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node18.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html314"
+  HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
+<A NAME="tex2html310"
+  HREF="node13.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
+<A NAME="tex2html304"
+  HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html312"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html315"
+  HREF="node18.html">Environment Get and Set</A>
+<B> Up:</B> <A NAME="tex2html311"
+  HREF="node13.html">Additional Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html305"
+  HREF="node16.html">Environment initialization and cleanup</A>
+ &nbsp; <B>  <A NAME="tex2html313"
+  HREF="node1.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00052400000000000000">
+Environment Message</A>
+</H3>
+Once in a while you will find yourself wishing there was an environment function that was part of RL-Glue. The env_message function allows you to exactly this: you can send a string message to the environment and it can respond with a string. For example to disable random starting states:
+<PRE><TT>
+1. env_message(inMessage) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="$\rightarrow$"> outMessage
+<BR>
+2.		 <B>if</B> inMessage == ``turnOffRandomStarts"  
+<BR>
+3. 				 randStarts = false
+<BR>
+4. 		 <B>end</B> 
+<BR>
+5. <B>return</B> ``1"
+</TT></PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+Adam White
+2008-09-26
+</ADDRESS>
+</BODY>
+</HTML>
