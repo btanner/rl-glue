@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 	/* No cutoff */
 	terminal_t isTerminal = RL_episode(0);
 	check_fail(isTerminal!=1);
-	check_fail(RL_num_steps()!=6);
+	check_fail(RL_num_steps()!=5);
 
 	isTerminal = RL_episode(1);
 	check_fail(isTerminal!=0);
@@ -60,17 +60,21 @@ int main(int argc, char *argv[]) {
 	check_fail(isTerminal!=0);
 	check_fail(RL_num_steps()!=2);
 
+	isTerminal = RL_episode(4);
+	check_fail(isTerminal!=0);
+	check_fail(RL_num_steps()!=4);
+
 	isTerminal = RL_episode(5);
 	check_fail(isTerminal!=0);
 	check_fail(RL_num_steps()!=5);
 
 	isTerminal = RL_episode(6);
 	check_fail(isTerminal!=1);
-	check_fail(RL_num_steps()!=6);
+	check_fail(RL_num_steps()!=5);
 
 	isTerminal = RL_episode(7);
 	check_fail(isTerminal!=1);
-	check_fail(RL_num_steps()!=6);
+	check_fail(RL_num_steps()!=5);
 
 	if(tests_failed!=0)
 		printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);

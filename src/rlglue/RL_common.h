@@ -35,12 +35,13 @@ extern "C" {
 #define __RL_CHECK_STRUCT(X)  if(__rlglue_check_abstract_type(X)!=0){printf("Struct failed validity check at file %s line %d\n",__FILE__,__LINE__);exit(__rlglue_check_abstract_type(X));}
 
 
-typedef char* task_specification_t;
 typedef double reward_t;
 typedef int terminal_t;
+typedef char* message_t;
+typedef char* task_specification_t;
 
 /* Strings are not guaranteed to be null terminated I think */
-typedef struct rl_abstract_t_struct
+typedef struct
 {
 	unsigned int numInts;
 	unsigned int numDoubles;
@@ -54,14 +55,13 @@ typedef rl_abstract_type_t observation_t;
 typedef rl_abstract_type_t action_t;
 typedef rl_abstract_type_t random_seed_key_t;
 typedef rl_abstract_type_t state_key_t;
-typedef char* message_t;
 
-typedef struct observation_action_struct{
+typedef struct{
   observation_t o;
   action_t a;
 } observation_action_t;
 
-typedef struct reward_observation_struct
+typedef struct
 {
   reward_t r;
   observation_t o;

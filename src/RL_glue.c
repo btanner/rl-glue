@@ -94,12 +94,14 @@ reward_observation_action_terminal_t RL_step() {
   
   	total_reward += this_reward;
 
-    num_steps += 1; /* increment num_steps if state is not terminal <-- why is that (Sept 11/08 changed to increment always)*/
+	/* Sept 28/08, The reason that we only increment stepcount if we're not terminal is that if an episode ends on 
+	its first env_step, num_step will be 1 from env_start, but we don't want to go to num_step=2.*/
 	 if (ro.terminal == 1) {
 	   num_episodes += 1;
 	   agent_end(this_reward);
 	 }
 	 else {
+		num_steps+=1;
 	   last_action = agent_step(this_reward,last_state);
 	   __RL_CHECK_STRUCT(&last_action)
 	   roa.a = last_action;

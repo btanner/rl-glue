@@ -310,6 +310,7 @@ void runGlueEventLoop(int theConnection) {
     if (rlRecvBufferData(theConnection, &theBuffer, &glueState) == 0)
       break;
 
+
     switch(glueState) {
     case kRLInit:
 	if(debug_glue_network)printf("\tDEBUG: kRLInit\n");

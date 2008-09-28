@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=latex 2008.6.10)  26 SEP 2008 15:19
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=latex 2008.2.22)  26 SEP 2008 15:24
 entering extended mode
 **./images.tex
 (./images.tex
@@ -61,7 +61,7 @@ Package: inputenc 2004/02/05 v1.0d Input encoding file
 )
 \sizebox=\box26
 \lthtmlwrite=\write3
-No file images.aux.
+(./images.aux)
 \openout1 = `images.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 127.
@@ -135,55 +135,14 @@ l2hSize :tex2html_wrap467:170.71652pt::0.0pt::349.0pt.
 
 
 
-]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 170.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 170.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 170.
-l2hSize :tex2html_wrap_inline172:7.07185pt::0.0pt::11.49756pt.
-[2
-
-
-]
-l2hSize :tex2html_wrap_inline176:7.60416pt::0.0pt::6.02254pt.
-[3
-
-
-]
-l2hSize :tex2html_wrap_inline190:7.07185pt::0.0pt::7.59279pt.
-[4
-
-
-]
-l2hSize :tex2html_wrap_inline192:7.57185pt::7.57185pt::6.825pt.
-[5
-
-
-]
-l2hSize :tex2html_wrap_inline194:7.57185pt::7.57185pt::9.06422pt.
-[6
-
-
-]
-l2hSize :tex2html_wrap_inline226:8.10416pt::8.10416pt::9.06422pt.
-[7
-
-
-]
-l2hSize :tex2html_wrap_inline230:7.57185pt::7.57185pt::9.06422pt.
-[8
-
-
 ] (./images.aux) ) 
 Here is how much of TeX's memory you used:
- 865 strings out of 94501
- 11080 string characters out of 1176137
+ 850 strings out of 94501
+ 10910 string characters out of 1176137
  55218 words of memory out of 1500000
- 4077 multiletter control sequences out of 10000+50000
- 6379 words of font info for 23 fonts, out of 1200000 for 2000
+ 4066 multiletter control sequences out of 10000+50000
+ 3940 words of font info for 15 fonts, out of 1200000 for 2000
  580 hyphenation exceptions out of 8191
  23i,5n,19p,185b,198s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on images.dvi (8 pages, 1900 bytes).
+Output written on images.dvi (1 page, 344 bytes).
