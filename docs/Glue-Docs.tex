@@ -1,21 +1,18 @@
 \documentclass[11pt]{article}
-%\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
-%\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
-%\geometry{landscape}                % Activate for for rotated page geometry
-%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
-\usepackage{url}
-
 \usepackage{graphics}
-\usepackage{graphicx}
-\DeclareGraphicsRule{.JPG}{eps}{*}{`jpeg2ps #1} 
-\setlength\parskip{0.15in} 
+\usepackage{graphicx} %So we can include .png and .jpg files
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{fullpage} %Cause it sucks when math runs off the page
+
+%I don't like my paragraphs indented because we have lots of 1-line paragraphs with URLs or code after them
+\setlength{\parindent}{0in} 
+%I like space between my paragraphs
+\setlength{\parskip}{10pt} 
 
 
-%\usepackage{epstopdf}
-%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-
-\title{RL-Glue Docs}
-\author{The Author}
+\title{RL-Glue 3.0 Docs}
+\author{Adam White}
 %\date{}                                           % Activate to display a given date or no date
 
 \begin{document}
@@ -41,7 +38,7 @@ RL-Glue is both a set of ideas and standards, as well as a software implementati
 \begin{figure}
 \begin{center}
 %\htmlimage{scale=0.5}
-\includegraphics[height=60mm]{images/glue_connections_no_shadow.jpg}
+\includegraphics[height=60mm]{images/glue_connections_no_shadow.png}
 %\caption{\small The RL-Glue Standard. Arrows indicate function call direction.}
 \end{center}
 \end{figure}
