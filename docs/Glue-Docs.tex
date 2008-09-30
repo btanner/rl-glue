@@ -95,10 +95,22 @@ When writing an agent , environment or experiment program for RL-Glue it is nece
 \subsection{Essential Components Of A RL-Glue Environment}
 \label{envp1}
 
-Every RL-Glue environment must define and initialize the action and reward types and define the env\_start and env\_step functions.   
+Every RL-Glue environment must define and initialize the action and observation types (rewards are always real-valued scalars) and define the env\_start and env\_step functions.   
 
 \subsubsection{Observation and Action Encoding}
-The representation of the observation and the action must be a integer, double or character scalar or integer, double or character.Although this seems restrictive, in practice is should be easy to represent common observation and action types in this format. Details on how to encode observation and action types for several programming languages will be presented in the following sections.
+The representation of the observation and the action must be one of the following: 
+\begin{itemize}
+\item an integer
+\item a double
+\item a character
+\item array of integers
+\item array of doubles
+\item array of characters
+\end{itemize}
+Although this seems restrictive, in practice it should be easy to represent many observation and action types in this format. In a gridworld, for example, the action can be a single integer with values 0-3 (for N,S,E,W) and the observation can also be an integer for the agent's grid position (which is also the state of the environment, in this case). In Mountain Car, the actions are discrete (0-2) and the observation is the cars position and velocity (both real numbers). The action can be represented with and integer and the observation can be a two dimensional double array. 
+
+
+Details on how to encode observation and action types in C and C++ is described in Section \ref{envp3}.
 
 \subsubsection{Start and Step Functions}
 Writing env\_start is very simple. The function takes no input and simply returns an observation. The env\_start function signifies the beginning of an episode; env\_start chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudo code selects a random start state for a grid world and returns the observation:
