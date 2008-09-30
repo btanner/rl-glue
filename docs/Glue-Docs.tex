@@ -30,17 +30,16 @@ This document has been laid out so that it can be used for:
 \item  {\bf RL-Glue what?} learning about RL-Glue at an abstract level
 \item {\bf Compatibility:} making existing C/C++ agents and environments work with RL-Glue
 \item {\bf Plugging agents and environments together:} how to write an experiment programs
-\item {\bf Coding things up:} implementing C/C++ agents, environments and experiments
-\item {\bf RL-Glue manual:} as a complete reference Guide for RL-Glue  
+\item{\bf What function do I use to:} quick function reference for RL-Glue
 \end{enumerate}
 
-Recently (September 08) the RL-Glue Project has been split into the RL-Glue Project and RL-Glue Extensions Project. The RL-Glue Project now only includes the RL-Glue interface and plugs for C/C++ agents, environments and experiment programs. The RL-Glue Extensions Project contains codecs for Java, Python and Matlab. The Extensions Project contains the multi-language support code that used to be part of RL-Glue. As such, this document only contains technical details for writing C/C++ programs. See the codec documentation for language specific details on how to implement agents, environments and experiment programs in Java, Python and Matlab.
+Recently (September 08) the RL-Glue Project has been split into the RL-Glue Project and RL-Glue Extensions Project. The RL-Glue Project now only includes the RL-Glue interface and plugs for C/C++ agents, environments and experiment programs. The RL-Glue Extensions Project contains codecs for Java, Python and Matlab. The Extensions Project contains the multi-language support code that used to be part of RL-Glue. This document contains {\bf NO} technical details for writing programs: everything is abstracted. See the RL-Glue Technical Documentation distributed with RL-Glue and codec documentation for language specific details on how to implement agents, environments and experiment programs in C/C++, Java, Python and Matlab.
  
 \subsection{How to Use This Document}
 
-This document as been subdivided to reflect the five purposed described above. To learn about the major components of RL-Glue and a description of how those components interact see Section \ref{RL-Glue}. To learn how to make an environment and agent programs compatible with RL-Glue we recommend sections \ref{envp1}, \ref{envp3}, \ref{agentp1} and \ref{agentp3}. Sections \ref{envp1} and \ref{agentp1} describe only the mandatory functions that RL-Glue environments and agents must implement. Sections \ref{envp3} and \ref{agentp3} describe how to implement environments and agents in C and C++. To learn about experiment programs and how they interact with RL-Glue see Section \ref{exp}. For all command reference and advanced queries see advanced environment functions in Section \ref{envp2}, advanced agent functions in Section \ref{agentp2} and the command and function reference in Section \ref{ref}.
+This document as been subdivided to reflect the five purposed described above. To learn about the major components of RL-Glue and a description of how those components interact see Section \ref{RL-Glue}. To learn how to make an environment and agent programs compatible with RL-Glue we recommend sections \ref{envp1} and \ref{agentp1}. Sections \ref{envp1} and \ref{agentp1} describe only the mandatory functions that RL-Glue environments and agents must implement. Sections \ref{envp2} and \ref{agentp2} describe optional environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section \ref{exp}. For quick function reference see Section \ref{ref}.
 
-Error messages, FAQ and glossary can be found in sections 7,9 and 10.
+Frequently asked questions and glossary can be found in sections \ref{faq} and \ref{glos}.
 
 This document and the RL-Glue Project using naming conventions and definitions from Sutton and Barto's ``Reinforcement Learning: An Introduction". We recommend that you review Sutton and Barto to get the most out of the RL-Glue documentation. An online version of Sutton and Barto can be founf here: \url{http://www.cs.ualberta.ca/~sutton/book/the-book.html}.
 
@@ -81,37 +80,7 @@ The experiment program is familiar to anyone who has written code to run an rein
 
 When writing an agent , environment or experiment program for RL-Glue it is necessary to adhere to the interfaces (the RL-Glue Protocol) set out in Section \ref{ref}. 
 
-\section{Procedures}
-So you seemed to have found RL-Glue and managed to download the source code: what next? This section describes how to get you up and running with a very simple demo of RL-Glue. This section also described where to find agents and environments so that you can run more complex demos and how RL-Glue can (some how) allow you to connect agents and environments when they are not written in the same programming language and possibly located in different physical locations.
-
-\subsection{How to Build RL-Glue}
-In most case the following steps result in the RL-Glue source being compiled and installed in usr/local/bin. Warning, RL-Glue is very much a command-line based system. Browse into the RL-Glue directory, then perform the following steps:   
-\begin{itemize}
-\item ./configure
-\item make
-\item make test
-\item make install
-\end{itemize}
-If this all works properly none of the tests will fail and the rl-glue executable will be installed in usr/local/bin. To test this type ``rlglue". If you get ``command not found" something is broken and you should consult the INSTALL file in the RL-Glue source for custom install information. 
-
-\subsection{How to Run Your First Learning Experiment}
-So have successfully installed RL-Glue, now lets run a simple learning experiment. 
-
-
-Given you have a valid C agent, environment and experiment program. What next? What to expect?
-
-\label{quick}
-
-\subsection{Where to get Agent and Environment Programs}
-RL-Glue comes packaged with a sample agent, environment and experiment program. These programs, however, are for illustration and testing purposes. More, research-quality programs can be accessed through RL-Library. RL-Library is a collection of agents, environments and experiment programs compatible with RL-Glue. Feel free to check out programs in the library and add your own. See the RL-Library Project page for more details: \url{http://code.google.com/p/rl-library/}   
-
-\subsection{Using Codecs and Multi-language Support}
-The RL-Glue project contains the RL-Glue interface and code to run a learning experiment with C/C++ agent, environment and experiment programs. More specifically, the RL-Glue interface can be compiled by itself as a stand-alone executable for network communication or the RL-Glue interface and a C/C++ agent, environment and experiment program can be compiled together into a single executable. The Rl-Glue project, by itself, can only be used to run C/C++ based learning experiments. This document describes the RL-Glue interface and how to run C-based learning experiments with RL-Glue. Multi-langauge experiments are discussed in the RL-Glue Extensions documentation.
-
-The RL-Glue Extensions Project, contain codecs for C, Java, Python and Matlab. These codecs allow an agent, environment or experiment to communicate with RL-Glue over a socket connection. The socket communication can be used to mix and match agents and environments of written in C/C++, Java, Python or Matlab. Together, the RL-Glue Project and the RL-Glue Extensions Project can execute learning experiments with components written in different languages and with components communicating over the internet. For example, a C agent can be benchmarked on a Matlab environment running a remote server using a Java experiment program. The RL-Glue Extensions Project source and documentation can be accessed here: 
-{\url {http://code.google.com/p/rl-glue-ext/}}
-
-\section{Writing an Environment}
+\section{RL-Glue Environment Programs}
 \label{env}
 The environment represents everything outside the agents direct control. In a gridworld, the environment is the grid, including obstacles, rewards, start states, termination conditions and transition function. In a robotic task, the environment would also include the robot's body, as the robot as the robot does not have complete, deterministic control over its motors. The environment is basically everything that is not the agent.
 
@@ -136,9 +105,9 @@ The representation of the observation and the action must be one of the followin
 Although this seems restrictive, in practice it should be easy to represent many observation and action types in this format. In a gridworld, for example, the action can be a single integer with values 0-3 (for N,S,E,W) and the observation can also be an integer for the agent's grid position (which is also the state of the environment, in this case). In Mountain Car, the actions are discrete (0-2) and the observation is the cars position and velocity (both real numbers). The action can be represented with and integer and the observation can be a two dimensional double array. 
 
 
-Details on how to encode observation and action types in C and C++ is described in Section \ref{envp3}.
+Details on how to encode observation and action types in C and C++ is described in the ``RL-Glue Technical Documentation" included the project source.
 
-\subsubsection{Start and Step Functions}
+\subsubsection{Environment Start}
 Writing env\_start is very simple. The function takes no input and simply returns an observation. The env\_start function signifies the beginning of an episode; env\_start chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudo code selects a random start state for a grid world and returns the observation:
 \begin{tabbing}
 1. {\bf env\_start}\= $\rightarrow$ observation\\
@@ -146,8 +115,9 @@ Writing env\_start is very simple. The function takes no input and simply return
 3. \>set observation equal to state\\
 4. {\bf return} observation
 \end{tabbing}
-The sections describing the language specific details for environments will explain line 3.
+The RL-Glue Technical Documentation describes how to implement line 3 in C/C++.
 
+\subsubsection{Environment Step}
 The final essential piece of an RL-Glue environment is the env\_step function. The env\_step function must take an action as input and produce a observation, reward and a termination flag as output. In most RL problems the  env\_step function updates the internal state of the environment, tests for end of episode and returns the new observation of state and current reward. In other words, step function encodes the state transition and reward functions. Keeping with the grid world example, the following step function would be a valid env\_step function:
 \begin{tabbing}
 1. {\bf env\_step}\=(Action a) $\rightarrow$ reward, observation, flag \\
@@ -174,71 +144,73 @@ In an effort to provide the agent writer with simple and concise information abo
 The agent is responsible for parsing any relevant information out of the Task\_specification in the init method. A generic Task\_specification parsing function is provided with RL-Glue 2.0 for all C/C++ users. This simple parser will return a structure containing the information encoded in the Task\_specification, such as the Observation and Action dimensions, arrays of Observation and Action variable ranges, and arrays of Observation and Action variable types. More information about the parser and the parsed task spec struct can be found here.
 \\\\
 The Task\_specification is stored as a string with the following format:
-
-\hspace{30 pt} $``$V:E:O:A:R"\\\\
+\begin{verbatim}
+     "V:E:O:A:R"
+\end{verbatim}		
 For example, this is a sample task\_specification provided as one of the examples below:
-
-\hspace{30 pt}$``$2:e:1\_[i]\_[0,N-1]:1\_[i]\_[0,3]:[-1,0]"\\\\
+\begin{verbatim}
+     "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0]"
+\end{verbatim}     
 The V corresponds to the version number of the task specification language. E corresponds to the type of task being solved. It has a character value of 'e' if the task is episodic and 'c' if the task is continuing. O and A correspond to Observation and Action information respectively. Finally, the R corresponds to the range of rewards for the task. Within each of O, A and R a range can be provided, however if the values are unknown or infinite in magnitude, two special input values have been defined.
 \\\\
 The format of O and A are identical. We will describe the form of O only. O contains three components, separated by underscore characters ("\_") :
-        
-\hspace{30 pt} \#dimensions\_dimensionTypes\_dimensionRanges
-\\\\
-\#dimensions is an integer value specifying the number of dimensions in the Observation space. dimensionTypes is a list specifying the type of each dimension variable. The dimensionTypes list is composed of \#dimensions components separated by comma characters (",") within square brackets ([x1,x2,x3,..., xn] where xi  represents the ith value). Each comma-separated value in the list describes the type of values assigned to each Observation variable in the environment. In general, Observation variables can have one of the following 2 types:
-
-\hspace{30 pt} 'i' - integer value
-
-\hspace{30 pt} 'f' - float value
-\\\\
+\begin{verbatim}        
+     #dimensions_dimensionTypes_dimensionRanges
+\end{verbatim}
+\#dimensions is an integer value specifying the number of dimensions in the Observation space. dimensionTypes is a list specifying the type of each dimension variable. The dimensionTypes list is composed of \#dimensions components separated by comma characters (``,") within square brackets ([x1,x2,x3,..., xn] where xi  represents the ith value). Each comma-separated value in the list describes the type of values assigned to each Observation variable in the environment. In general, Observation variables can have one of the following 2 types:
+\begin{verbatim}
+     `i' - integer value
+     `f' - float value
+\end{verbatim}
 Thus a dimensionTypes list corresponding to an Observation space with 1 dimension has the following form:
-
-\hspace{30 pt}[a] where a is an element of [`i',`f']
-\\\\
-So a dimensionTypes list with one integer value would be:        
-\hspace{30 pt} [i]
-\\\\
+\begin{verbatim}
+     [a] where a is an element of [`i',`f']
+\end{verbatim}
+So a dimensionTypes list with one integer value would be:    
+\begin{verbatim}    
+     [i]
+\end{verbatim}     
 An Observation space with 2 dimensions would have a dimensionTypes with the following form:
-
-\hspace{30 pt} [a,b] where a and b are elements of [`i',`f']
-\\\\
+\begin{verbatim}
+     [a,b] where a and b are elements of [`i',`f']
+\end{verbatim}
 indicating the value type of the first (a) and second (b) Observation variables. Thus a three dimensional Observation with one float, integer dimension and another float dimension would have the following dimensionTypes:
-
-\hspace{30 pt} $``$[f,i,f]"
-\\\\
+\begin{verbatim}
+     "[f,i,f]"
+\end{verbatim}
 The dimensionRanges is a list specifying the range of each dimension variable in the Observation space.  The dimensionRanges is composed of \#dimensions components separated by underscore characters. Each dimensionRanges component specifies the upper and lower bound of values for each Observation variable. If the bounds are unknown or unspecified, you can leave an empty space in the place of a value. If the bounds are positive or negative infinity, you can use inf or -inf to represent your range. These can be used in combination. For example one valid range could be an unknown lower bound and infinite upper bound, or a lower bound of -inf and an upper bound of 1. You can be as precise (though you must be accurate) as you wish. A dimensionRanges corresponding to an Observation space with a single dimension variable would have the following form:
-
-\hspace{30 pt} [O1MIN, O1MAX]
-\\\\
+\begin{verbatim}
+     [O1MIN, O1MAX]
+\end{verbatim}
 So a dimensionRanges list for binary dimension varaible would be: [0,1]
 A dimensionRanges list for variable with no upper or lower bound unspecified would be: [] or [,] (both are valid).
 A dimensionRanges with one or two unbounded value can take on a value of inf or -inf. Eg [0, inf] or [-inf,1] or [-inf,inf].
 \\\\
 An Observation space with 2 dimensions would have a dimensionRanges with the following form:
-
-\hspace{30 pt} [O1MIN, O1MAX]\_[O2MIN, O2MAX]
-\\\\
+\begin{verbatim}
+     [O1MIN, O1MAX]_[O2MIN, O2MAX]
+\end{verbatim}
 indicating the minimal and maximal values of Observation variables O1 and O2 respectively. This definition can be then trivially extended to Observation spaces with N dimensions.
 \\\\
 NOTE: the dimensionRanges of an Observation space with 1 or more unbounded values may not be representable in this way. An unbounded value has no minimal or maximal range. Thus, we simply do not specify the range in the dimensionRanges for any Observation variables with unbounded values. For example, consider a problem with 3 Observation dimensions. The first and third Observation variables have interval values and the second has unbounded ratio value. The corresponding dimensionRanges for this problem is encoded as:
-
-\hspace{30 pt} [O1MIN, O1MAX]\_[,]\_[O3MIN, O3MAX]
-\\\\
+\begin{verbatim}
+     [O1MIN, O1MAX]_[,]_[O3MIN, O3MAX]
+\end{verbatim}
 indicating the minimal and maximal values of Observation variables O1 and O3.
 \\\\
 The format of A (Action space information) is identical to that of O (Observation space information) and thus the definitions above hold for Action spaces.
 \\\\
 Lastly the R (Reward space information) is merely a range specifier. By the Reward Hypothesis there is only ever one reward signal (which in RL-Glue is always a floating point number) so the \#dimensions and dimensionType information becomes meaningless. The reward range can again be specified to be unknown or infinite in the same manner as the Observation ranges.  A rewardRange follows the following form:
-
-\hspace{30 pt} [rewardMin, rewardMax]
-\\\\
+\begin{verbatim}
+     [rewardMin, rewardMax]
+\end{verbatim}
 In the case of a reward with rewards -1 or 0 the rewardRange would appear as such: [-1,0].
 If no lower bound was known and the upper bound was positive infinity, the rewardRange would appear as such: [,-inf]
 \subsubsection{Example Task\_Specification}
 Consider a simple gridworld with Actions North, South, East and West and a single dimension Observation of grid position. If we encode actions as 0, 1 ,2 ,3 and position as an integer between 0 and N-1, we get the following Task\_specification:
-
-\hspace{30 pt} $``$2:e:1\_[i]\_[0,N-1]:1\_[i]\_[0,3]:[-1,0] "
-\\\\
+\begin{verbatim}
+     "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0] "
+\end{verbatim}
 This Task\_specification provides the following information:
 \begin{description}
 \setlength{\itemsep}{-1mm}
@@ -255,7 +227,7 @@ This Task\_specification provides the following information:
 
 
         
-\subsubsection{Environment initialization and cleanup}        
+\subsubsection{Environment initialization and Cleanup}        
 Most environments need to store an internal state representation  and therefore many environment programs you write will need to allocate and deallocate data structures before and after a learning experiment. The env\_init function allocates any global data structures and variables that will be accessed by the start and step functions. For example, the env\_init method might initialize the tabular state variable to zero and allocate a {\it numStates X numStates} state transition array. The env\_init function can optionally define a Task Specification string. The env\_init function must return a string, but it can return NULL or an empty string if the Task Specification is not required for your experiment. The Task Specification is described in detail in the previous section (Section \ref{task}).
 
 
@@ -292,14 +264,6 @@ Like the get and set state functions, env\_get\_random\_seed and env\_set\_rando
 
 A compete list of environment functions can be found in Section \ref{Eref}.
 
-\subsection{C/C++ Environments}
-\label{envp3}
-
-\subsubsection{Working with RL-Glue Types}
-
-\subsubsection{Environment Syntax}
-
-\subsubsection{Example C Environments}
 
 
 
@@ -307,9 +271,11 @@ A compete list of environment functions can be found in Section \ref{Eref}.
 
 
 
-\section{Writing an Agent}
+
+
+\section{RL-Glue Agent Programs}
 \label{agent}
-
+An RL-Glue agent can be as simple as a program the returns a random number between one and zero on every step or a more advanced algorithm that learns a model of the reward and transition functions of environment while maximizing reward. The agent program is a decision maker first and foremost: it must return an action when queried by RL-Glue. Many Rl-Glue agents, however, learn the best action to pick by learning from the sequence of observations, actions and rewards during an episode. Agent programs, like environments, are completely defined by a set of functions you must implement. Rl-Glue calls these agent functions during an experiment, as directed by the experiment program. Whether you are writing a random agent or a learning agent you usually need only implement a few functions. This section covers the basic requirements of an RL-Glue agent, describes a number of optional agent functions and describes how to implement these agent functions in C and C++.
 \subsection{Essential Components Of A RL-Glue Agent}
 \label{agentp1}
 
@@ -323,7 +289,7 @@ The agent\_start function selects the first action at the beginning of an episod
 \begin{tabbing}
 1. age\=nt\_start (observation) $\rightarrow$ action\\
 2. \> {\bf for} \= each action {\it i}\\
-3.\>\> {\bf if} highest valued action ( V(observation,{\it i}) )\\ 
+3.\>\> {\bf if} highest valued action ( Q(observation,{\it i}) )\\ 
 4. \>\>{\bf then} store {\it i} as maxAction\\
 5. \> {\bf set} action equal to newAction\\
 6. {\bf return} action
@@ -353,18 +319,15 @@ The agent\_end function does not receive the final observation from the environm
 \subsection{Additional Components Of A RL-Glue Agent}
 \label{agentp2}
 
-\subsubsection{Agent initialization and cleanup}
-Agent programs, like environments, often need to allocate and free various data structures. The agent\_init and agent\_cleanup function do not take any input or return an data and are called at the beginning and end of a learning experiment, respectively.  
+\subsubsection{Agent Initialization and Cleanup}
+Agent programs, like environments, often need to allocate and free various data structures. The agent\_init and agent\_cleanup function do not take any input or return an data and are called at the beginning and end of a learning experiment, respectively. The agent\_init function also receives the Task Specification string as input. The agent\_init function usually parses the Task Specification and stores various information encoded in the string. For example, after parsing the Task Specification, the agent\_init function can then initialize the value function array to the size state space using the number of states from the Task Specification. Remember the Task Specification is not required to contain any information (NULL or empty string).    
 
 \subsubsection{Agent Message}
 The agent\_message function isused to send an arbitrary string message to the agent program. This function can be used to change agent parameters, notify the agent that the exploration phase is over, and request the name of the agent program, for example.
 
-\subsection{C/C++ Agents}
-\label{agentp3}
 
 
-
-\section{Writing an Experiment}
+\section{RL-Glue Experiment Programs}
 \label{exp}
 Usually the shortest and easiest part of writing your first learning experiment is writing the experiment program. The experiment program has no interface to implement and is mostly comprised of calls to the already existing RL-Glue functions. The experiment program has four main duties: a) start the experiment b) specify how many times to run the experiment c) extract data and possibly analyze d) end the experiment and clean up.  One thing to note is that it is only the RL-Glue interface functions available to the experiment program. No agent or environment implemented functions should be directly accessed by the experiment program.
 
@@ -426,20 +389,13 @@ We can now produce more advanced experiment programs that would be used in reinf
 10. RL\_cleanup()
 \end{tabbing}
 
-\subsection{C/C++ Experiments}
-\label{exp3}
 
 
 
 
-
-\section{Error Messages}
-\label{error}
-Under Construction
 \section{Command and Function Reference}
 \label{ref}
-\subsection{Flags, Environment Parameters and Input Arguments}
-Underconstruction
+
 \subsection{Agent Functions}
  
 Every agent must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
@@ -598,6 +554,7 @@ This message passes the input string to the environment and returns the reply st
 
 \section{Frequently Asked Questions}
 \label{faq}
+
 \section{Glossary}
 \label{glos}
 \end{document}  

@@ -2,7 +2,23 @@
 # Associate internals original text with physical files.
 
 
+$key = q/glos/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/agentp1/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/RL-Glue/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/exp/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/faq/;
 $ref_files{$key} = "$dir".q|Glue-Docs.html|; 
 $noresave{$key} = "$nosave";
 
@@ -14,11 +30,43 @@ $key = q/ref/;
 $ref_files{$key} = "$dir".q|Glue-Docs.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/Eref/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/envp1/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig1/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/task/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/envp2/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/expp1/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/agent/;
 $ref_files{$key} = "$dir".q|Glue-Docs.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/expp2/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/quick/;
+$ref_files{$key} = "$dir".q|Glue-Docs.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/agentp2/;
 $ref_files{$key} = "$dir".q|Glue-Docs.html|; 
 $noresave{$key} = "$nosave";
 
