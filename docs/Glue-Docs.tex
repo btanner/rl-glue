@@ -51,7 +51,7 @@ Error messages, FAQ and glossary can be found in sections 7,9 and 10.
 A large part of studying and researching reinforcement learning is experimentation. When writing an agent, ensuring it makes exploratory moves to discover the world is important to achieving an optimal policy. It is similarly important that experimenters are easily able to "explore" new algorithms and ideas without the prohibitive cost of writing the necesary experimentation code. One of the functions of RL-Glue is to simplify and speed up the process of writing an experiment so that every idea can be tested. 
 
 
-Another important part of learning is evaluation and improvement. With agents, learning is often a cycle of policy and representation evaluation and improvement.  An agent will roam the world and gain more information about the states it encounters. The agent then uses this new data to evaluate how accurate the value function was and adjusts its behaviour (policy) based on the new value function. Similiarily, in research and development it is important to look at other work being done in the field, compare your own performance and then improve. One goal for RL-Glue is to provide a consistent tool for running and comparing varied agents and environments from diverse sources. A common problem for reinforcement learning researchers arrises when an experimenter wishes to compare their own work with previously established results. Pre-RL-Glue, the solution was often to reverse engineer code for the experiment based on the results and environment/agent descriptions provided in papers.  When an author provided their own source, there was still the issue of deciphering the original code and piecing in a new agent or environment. With RL-Glue, an author can make the necessary RL-Glue agent/environment/experiment programs  available to the public (or use a public copy of an environment from our library \footnote{\url{http://rlai.cs.ualberta.ca/RLR/index.html}} such that another author can rerun the original experiment and easily plug in their own code to compare performance.  Competitions for agents using RL-Glue have been run at the NIPS conference in recent years, further exemplifying the utility of RL-Glue to the research community.
+Another important part of learning is evaluation and improvement. With agents, learning is often a cycle of policy and representation evaluation and improvement.  An agent will roam the world and gain more information about the states it encounters. The agent then uses this new data to evaluate how accurate the value function was and adjusts its behaviour (policy) based on the new value function. Similiarily, in research and development it is important to look at other work being done in the field, compare your own performance and then improve. One goal for RL-Glue is to provide a consistent tool for running and comparing varied agents and environments from diverse sources. A common problem for reinforcement learning researchers arrises when an experimenter wishes to compare their own work with previously established results. Pre-RL-Glue, the solution was often to reverse engineer code for the experiment based on the results and environment/agent descriptions provided in papers.  When an author provided their own source, there was still the issue of deciphering the original code and piecing in a new agent or environment. With RL-Glue, an author can make the necessary RL-Glue agent/environment/experiment programs  available to the public such that another author can rerun the original experiment and easily plug in their own code to compare performance.  Competitions for agents using RL-Glue have been run at NIPS and ICML in recent years, further exemplifying the utility of RL-Glue to the research community.
  
 \begin{figure}
 \label{fig1}
@@ -66,7 +66,7 @@ RL-Glue is both a set of ideas and standards, as well as a software implementati
 
 
 
-The Experiment Program contains the "main function" which will then make all of it's requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program should never have access to the agent or environment directly, all contact should always go through the RL-Glue interface first.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  With the newest version of RL-Glue, the agent and environment and experiment can even be written in different languages and/or compiled on different computers and be run over the internet. In this case, the arrows can be thought of as the sockets which connect the pieces of RL-Glue over the internet.
+The Experiment Program contains the "main function" which will then make all of it's requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program should never have access to the agent or environment directly, all contact should always go through the RL-Glue interface first.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
 
 
 
@@ -81,7 +81,10 @@ When writing an agent , environment or experiment program for RL-Glue it is nece
 
 \section{Procedures}
 \subsection{How to Build RL-Glue}
+Copy of INSTALL??
 \subsection{How to Run a Learning Experiment}
+Given you have a valid C agent, environment and experiment program. What next? What to expect?
+
 \label{quick}
 
 \subsection{Getting Agent and Environment Programs}
@@ -142,7 +145,7 @@ The final essential piece of an RL-Glue environment is the env\_step function. T
 \end{tabbing}
 Here we assume the existence of a state update function and an isTerminal function that checks if the current state is a terminal state.
 
-So thats it. Just define the types of actions and observations and write two functions and you have a valid RL-Glue compatible environment. In later sections we will go over advanced environment functions and describe the syntactic details of actually coding an environment in several different programming languages. 
+So thats it. Just define the types of actions and observations and write two functions and you have a valid RL-Glue compatible environment. In later sections we will go over advanced environment functions and describe the syntactic details of actually coding an environment in C and C++. 
 
 \subsection{Additional Components Of A RL-Glue Environment}
 \label{envp2}
@@ -150,6 +153,7 @@ So thats it. Just define the types of actions and observations and write two fun
 So far we have only scratched the surface of what kinds of environments you can write in RL-Glue. Additional environment function can be written to initialize data structures, get and set the state of the environment, get and set the random seed and send generic string messages to the environment. Before we go on describing these functions it is useful to understand the task specification language that is used in RL-Glue to encode basic information about environments. 
 
 \subsubsection{Task Specification Language}
+\label{task}
 In an effort to provide the agent writer with simple and concise information about the environment a Task\_specification is passed from the environment, through the interface, to the agent. The environment's init method (env\_init) encodes information about the problem in a ASCII string. The string is then passed to the agent's init method (agent\_init).  This information can also be used to check that the agent and environment are suitable for each other. A few example Task\_specifications are provided below.
 \\\\
 The agent is responsible for parsing any relevant information out of the Task\_specification in the init method. A generic Task\_specification parsing function is provided with RL-Glue 2.0 for all C/C++ users. This simple parser will return a structure containing the information encoded in the Task\_specification, such as the Observation and Action dimensions, arrays of Observation and Action variable ranges, and arrays of Observation and Action variable types. More information about the parser and the parsed task spec struct can be found here.
@@ -237,7 +241,10 @@ This Task\_specification provides the following information:
 
         
 \subsubsection{Environment initialization and cleanup}        
-Most environments need to store an internal state representation  and therefore many environment programs you write will need to allocate and deallocate data structures before and after a learning experiment. The env\_init function allocates any global data structures and variables that will be accessed by the start and step functions. For example, the env\_init method might initialize the tabular state variable to zero and allocate a {\it numStates X numStates} state transition array. The env\_cleanup function usually deallocates or frees anything allocated in env\_init.
+Most environments need to store an internal state representation  and therefore many environment programs you write will need to allocate and deallocate data structures before and after a learning experiment. The env\_init function allocates any global data structures and variables that will be accessed by the start and step functions. For example, the env\_init method might initialize the tabular state variable to zero and allocate a {\it numStates X numStates} state transition array. The env\_init function can optionally define a Task Specification string. The env\_init function must return a string, but it can return NULL or an empty string if the Task Specification is not required for your experiment. The Task Specification is described in detail in the previous section (Section \ref{task}).
+
+
+The env\_cleanup function usually deallocates or frees anything allocated in env\_init.
 
 \subsubsection{Environment Message}
 Once in a while you will find yourself wishing there was an environment function that was part of RL-Glue. The env\_message function allows you to exactly this: you can send a string message to the environment and it can respond with a string. For example to disable random starting states:
@@ -268,17 +275,21 @@ It can be useful to record and set the seed of the random number generator. Alth
 
 Like the get and set state functions, env\_get\_random\_seed and env\_set\_random\_seed functions should not be used to store and set the random seed between distinct runs of RL-Glue.
 
+A compete list of environment functions can be found in Section \ref{Eref}.
+
 \subsection{C/C++ Environments}
 \label{envp3}
 
-what files to include\\
-declaring, initializing and using the obs and action types\\
-special considerations\\
-sample environment\\
+\subsubsection{Working with RL-Glue Types}
+
+\subsubsection{Environment Syntax}
+
+\subsubsection{Example C Environments}
 
 
-\subsection{Java, Python and Matlab Environments}
-get the codec and its docs
+
+
+
 
 
 \section{Writing an Agent}
@@ -336,8 +347,7 @@ The agent\_message function isused to send an arbitrary string message to the ag
 \subsection{C/C++ Agents}
 \label{agentp3}
 
-\subsection{Java, Python, and Matlab Agents}
-get the right codec
+
 
 \section{Writing an Experiment}
 \label{exp}
@@ -405,14 +415,16 @@ We can now produce more advanced experiment programs that would be used in reinf
 \label{exp3}
 
 
-\subsection{Java, Python, Matlab and Experiments}
+
 
 
 \section{Error Messages}
 \label{error}
+Under Construction
 \section{Command and Function Reference}
 \label{ref}
 \subsection{Flags, Environment Parameters and Input Arguments}
+Underconstruction
 \subsection{Agent Functions}
  
 Every agent must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
@@ -439,7 +451,7 @@ agent\_message:agent\_message(input\_message) $\rightarrow$ output\_message\\
 The agent\_message function is a jack of all trades and master of none. Having no particular functionality, it is up to the user to determine what agent\_message should implement. If there is any information which needs to be passed in or out of the agent, this message should do it. For example, if it is desirable that an agent's learning parameters be tweaked mid experiment, the author could establish an input string that triggers this action. Likewise, if the author wished to extract a representation of the value function, they could establish an input string which would cause agent\_message to return the desired information.
                           
 \subsection{Environment Functions}
-                
+\label{Eref}
 Every environment must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
 \\\\
 env\_start: env\_start() $\rightarrow$ first\_observation\\
