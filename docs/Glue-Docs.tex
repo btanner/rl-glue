@@ -85,11 +85,19 @@ When writing an agent , environment or experiment program for RL-Glue it is nece
 \label{quick}
 
 \subsection{Getting Agent and Environment Programs}
-\subsection{Using Codecs and Multi-language Support}
+RL-Glue comes packaged with a sample agent, environment and experiment program. These programs, however, are for illustration and testing purposes. More, research-quality programs can be accessed through RL-Library. RL-Library is a collection of agents, environments and experiment programs compatible with RL-Glue. Feel free to check out programs in the library and add your own. See the RL-Library Project page for more details: \url{http://code.google.com/p/rl-library/}   
 
+\subsection{Using Codecs and Multi-language Support}
+The RL-Glue project contains the RL-Glue interface and code to run a learning experiment with C/C++ agent, environment and experiment programs. More specifically, the RL-Glue interface can be compiled by itself as a stand-alone executable for network communication or the RL-Glue interface and a C/C++ agent, environment and experiment program can be compiled together into a single executable. The Rl-Glue project, by itself, can only be used to run C/C++ based learning experiments. This document describes the RL-Glue interface and how to run C-based learning experiments with RL-Glue. Multi-langauge experiments are discussed in the RL-Glue Extensions documentation.
+
+The RL-Glue Extensions Project, contain codecs for C, Java, Python and Matlab. These codecs allow an agent, environment or experiment to communicate with RL-Glue over a socket connection. The socket communication can be used to mix and match agents and environments of written in C/C++, Java, Python or Matlab. Together, the RL-Glue Project and the RL-Glue Extensions Project can execute learning experiments with components written in different languages and with components communicating over the internet. For example, a C agent can be benchmarked on a Matlab environment running a remote server using a Java experiment program. The RL-Glue Extensions Project source and documentation can be accessed here: 
+{\url {http://code.google.com/p/rl-glue-ext/}}
 
 \section{Writing an Environment}
 \label{env}
+The environment represents everything outside the agents direct control. In a gridworld, the environment is the grid, including obstacles, rewards, start states, termination conditions and transition function. In a robotic task, the environment would also include the robot's body, as the robot as the robot does not have complete, deterministic control over its motors. The environment is basically everything that is not the agent.
+
+In RL-Glue, the environment is defined by a set of parameterized functions that the RL-Glue interface queries on behalf of the experiment program. These functions define what the environment does before an experiment begins, at the beginning of an episode, on every remaining step of an episode and after the experiment is completed. The following sections describe the basic requirements of an RL-Glue environment, a complete list of all environment functions and specific details on how to implement the environment functions in C and C++.
 
 
 \subsection{Essential Components Of A RL-Glue Environment}
