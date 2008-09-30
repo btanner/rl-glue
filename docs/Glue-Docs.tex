@@ -42,6 +42,8 @@ This document as been subdivided to reflect the five purposed described above. T
 
 Error messages, FAQ and glossary can be found in sections 7,9 and 10.
 
+This document and the RL-Glue Project using naming conventions and definitions from Sutton and Barto's ``Reinforcement Learning: An Introduction". We recommend that you review Sutton and Barto to get the most out of the RL-Glue documentation. An online version of Sutton and Barto can be founf here: \url{http://www.cs.ualberta.ca/~sutton/book/the-book.html}.
+
 
 
  
@@ -80,14 +82,27 @@ The experiment program is familiar to anyone who has written code to run an rein
 When writing an agent , environment or experiment program for RL-Glue it is necessary to adhere to the interfaces (the RL-Glue Protocol) set out in Section \ref{ref}. 
 
 \section{Procedures}
+So you seemed to have found RL-Glue and managed to download the source code: what next? This section describes how to get you up and running with a very simple demo of RL-Glue. This section also described where to find agents and environments so that you can run more complex demos and how RL-Glue can (some how) allow you to connect agents and environments when they are not written in the same programming language and possibly located in different physical locations.
+
 \subsection{How to Build RL-Glue}
-Copy of INSTALL??
-\subsection{How to Run a Learning Experiment}
+In most case the following steps result in the RL-Glue source being compiled and installed in usr/local/bin. Warning, RL-Glue is very much a command-line based system. Browse into the RL-Glue directory, then perform the following steps:   
+\begin{itemize}
+\item ./configure
+\item make
+\item make test
+\item make install
+\end{itemize}
+If this all works properly none of the tests will fail and the rl-glue executable will be installed in usr/local/bin. To test this type ``rlglue". If you get ``command not found" something is broken and you should consult the INSTALL file in the RL-Glue source for custom install information. 
+
+\subsection{How to Run Your First Learning Experiment}
+So have successfully installed RL-Glue, now lets run a simple learning experiment. 
+
+
 Given you have a valid C agent, environment and experiment program. What next? What to expect?
 
 \label{quick}
 
-\subsection{Getting Agent and Environment Programs}
+\subsection{Where to get Agent and Environment Programs}
 RL-Glue comes packaged with a sample agent, environment and experiment program. These programs, however, are for illustration and testing purposes. More, research-quality programs can be accessed through RL-Library. RL-Library is a collection of agents, environments and experiment programs compatible with RL-Glue. Feel free to check out programs in the library and add your own. See the RL-Library Project page for more details: \url{http://code.google.com/p/rl-library/}   
 
 \subsection{Using Codecs and Multi-language Support}
