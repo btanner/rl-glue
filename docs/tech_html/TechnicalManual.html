@@ -188,7 +188,7 @@ Provided everything goes well, the headers have now been installed to <TT>/usr/l
 Install  To Custom Location (without <I>root</I> access)</A>
 </H3>
 If you don't have <I>sudo</I> or <I>root</I> access on the target machine, you can install RL-Glue in your home directory (or other directory you have access to).
-If you install to a custom location, you will need set your <TT>CFLAGS</TT> and <TT>LDFLAGS</TT> variables appropriately when compiling your projects. See Section <A HREF="#sec:custom-flags"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for more information.
+If you install to a custom location, you will need set your <TT>CFLAGS</TT> and <TT>LDFLAGS</TT> variables appropriately when compiling your projects. See Section <A HREF="#sec:custom-flags">2.2</A> for more information.
 
 <P>
 For example, maybe we want to install RL-Glue to <TT>/Users/btanner/tmp/rlglue</TT>.  The commands are:
@@ -248,7 +248,7 @@ It might be useful to break this down a little bit:
 <DD>Link to the RLGlue library.  This is where the <I>glue</I> that connects the three components is defined.
 </DD>
 <DT><STRONG>-lrlutils</STRONG></DT>
-<DD>Link to the RLUtils library, which comes with RL-Glue.  This library contains convenience functions for allocating and cleaning up the structure types (Section <A HREF="#sec:util-functions"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).  If you 
+<DD>Link to the RLUtils library, which comes with RL-Glue.  This library contains convenience functions for allocating and cleaning up the structure types (Section <A HREF="#sec:util-functions">4.2.4</A>).  If you 
 don't use these convenience functions, you don't need this library.
 </DD>
 </DL>
@@ -323,7 +323,7 @@ or set an environment variable.  If you are using the bash shell you can <TT>exp
 </PRE>
 
 <P>
-In some cases, you may be able to compile and link your programs without incident, but you receive shared library loading errors when you try to execute them, as mentioned in Gotchas! (Section <A HREF="#sec:gotchas-shared-libs"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+In some cases, you may be able to compile and link your programs without incident, but you receive shared library loading errors when you try to execute them, as mentioned in Gotchas! (Section <A HREF="#sec:gotchas-shared-libs">2.6.2</A>).
 
 <P>
 In these cases, you may also have to set <TT>LD_LIBRARY_PATH</TT> (Linux) or <TT>DYLD_LIBRARY_PATH</TT> (OS X) environment variables, like:
@@ -403,7 +403,7 @@ or just that it should do some fancier things, let us know and we'll be happy to
 Experiments</A>
 </H2>
 The Skeleton experiment implements all the required functions and provides a good example of how to create a simple experiment.  This section will follow the same 
-pattern as the agent version (Section <A HREF="#sec:agent"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).  This section will be less detailed because many ideas are similar or identical.
+pattern as the agent version (Section <A HREF="#sec:agent">2.3</A>).  This section will be less detailed because many ideas are similar or identical.
 
 <P>
 The pertinent files are:
@@ -453,7 +453,7 @@ You can troubleshoot this problem by doing:
 <PRE>
 	&gt;$ LD_DEBUG=libs ./SkeletonExperiment
 </PRE>
-If you see that <TT>/usr/local/lib</TT> is not in the search path, you may want to add it to your library search path using <TT>LDFLAGS</TT> or <TT>LD_LIBRARY_PATH</TT>.  See Section <A HREF="#sec:custom-flags"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for more information.  
+If you see that <TT>/usr/local/lib</TT> is not in the search path, you may want to add it to your library search path using <TT>LDFLAGS</TT> or <TT>LD_LIBRARY_PATH</TT>.  See Section <A HREF="#sec:custom-flags">2.2</A> for more information.  
 
 <P>
 
