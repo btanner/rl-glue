@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Additional Components Of A RL-Glue Agent</TITLE>
-<META NAME="description" CONTENT="Additional Components Of A RL-Glue Agent">
+<TITLE>Advanced Experiment Programs</TITLE>
+<META NAME="description" CONTENT="Advanced Experiment Programs">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,61 +18,103 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="next" HREF="node33.html">
-<LINK REL="previous" HREF="node25.html">
-<LINK REL="up" HREF="node24.html">
+<LINK REL="previous" HREF="node29.html">
+<LINK REL="up" HREF="node28.html">
 <LINK REL="next" HREF="node31.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html480"
+<A NAME="tex2html442"
   HREF="node31.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html476"
-  HREF="node24.html">
+<A NAME="tex2html438"
+  HREF="node28.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html470"
+<A NAME="tex2html434"
   HREF="node29.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html478"
+<A NAME="tex2html440"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html481"
-  HREF="node31.html">Agent initialization and cleanup</A>
-<B> Up:</B> <A NAME="tex2html477"
-  HREF="node24.html">Writing an Agent</A>
-<B> Previous:</B> <A NAME="tex2html471"
-  HREF="node29.html">Agent End</A>
- &nbsp; <B>  <A NAME="tex2html479"
+<B> Next:</B> <A NAME="tex2html443"
+  HREF="node31.html">Command and Function Reference</A>
+<B> Up:</B> <A NAME="tex2html439"
+  HREF="node28.html">RL-Glue Experiment Programs</A>
+<B> Previous:</B> <A NAME="tex2html435"
+  HREF="node29.html">Basic Experiment Programs</A>
+ &nbsp; <B>  <A NAME="tex2html441"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION00062000000000000000">
-Additional Components Of A RL-Glue Agent</A>
+<H2><A NAME="SECTION00062000000000000000"></A>
+<A NAME="expp2"></A>
+<BR>
+Advanced Experiment Programs
 </H2>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<P>
+As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are access through calls to the RL-Glue interface from an experiment program. For example, to send a message to the agent use RL_agent_message. To get the state key from the environment use RL_get_state. The pattern is simple to follow:
 
 <UL>
-<LI><A NAME="tex2html482"
-  HREF="node31.html">Agent initialization and cleanup</A>
-<LI><A NAME="tex2html483"
-  HREF="node32.html">Agent Message</A>
+<LI>RL_set_state() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> env_set_state()
+</LI>
+<LI>RL_get_random_seed() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> env_get_random_seed()
+</LI>
+<LI>RL_set_random_seed() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> env_set_random_seed()
+</LI>
+<LI>RL_env_message() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> env_message
+
+<P>
+</LI>
 </UL>
-<!--End of Table of Child-Links-->
+We can now produce more advanced experiment programs that would be used in reinforcement learning research:
+<PRE><TT>
+1. RL_init()
+<BR>
+2. numSteps = 0
+<BR>
+3. <B>for</B> 1 = 1:1000
+<BR>
+4. 		 RL_episode(1000)
+<BR>
+5. RL_agent_message("freezeAgentPolicy")
+<BR>
+6. <B>for</B> 1 = 1:100
+<BR>
+7. 		 RL_episode(1000)
+<BR>
+8. 		 numSteps += RL_num_steps()
+<BR>
+9.  <B>Print</B> numSteps/100
+<BR>
+10. RL_cleanup()
+</TT></PRE>
+
+<P>
 <BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

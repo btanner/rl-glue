@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>C/C++ Agents</TITLE>
-<META NAME="description" CONTENT="C/C++ Agents">
+<TITLE>Environment Functions</TITLE>
+<META NAME="description" CONTENT="Environment Functions">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,49 +19,153 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
 <LINK REL="next" HREF="node34.html">
-<LINK REL="previous" HREF="node30.html">
-<LINK REL="up" HREF="node24.html">
+<LINK REL="previous" HREF="node32.html">
+<LINK REL="up" HREF="node31.html">
 <LINK REL="next" HREF="node34.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html516"
+<A NAME="tex2html481"
   HREF="node34.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html512"
-  HREF="node24.html">
+<A NAME="tex2html477"
+  HREF="node31.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html506"
+<A NAME="tex2html471"
   HREF="node32.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html514"
+<A NAME="tex2html479"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html517"
-  HREF="node34.html">Java Agents</A>
-<B> Up:</B> <A NAME="tex2html513"
-  HREF="node24.html">Writing an Agent</A>
-<B> Previous:</B> <A NAME="tex2html507"
-  HREF="node32.html">Agent Message</A>
- &nbsp; <B>  <A NAME="tex2html515"
+<B> Next:</B> <A NAME="tex2html482"
+  HREF="node34.html">Interface Routines Provided by</A>
+<B> Up:</B> <A NAME="tex2html478"
+  HREF="node31.html">Command and Function Reference</A>
+<B> Previous:</B> <A NAME="tex2html472"
+  HREF="node32.html">Agent Functions</A>
+ &nbsp; <B>  <A NAME="tex2html480"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION00063000000000000000">
-C/C++ Agents</A>
+<H2><A NAME="SECTION00072000000000000000"></A>
+<A NAME="Eref"></A>
+<BR>
+Environment Functions
 </H2>
-<BR><HR>
+Every environment must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
+
+<BR>
+<BR>
+env_start: env_start() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> first_observation
+<BR>
+For a continuing task this is done once. For an episodic task, this is done at the beginning of each episode. Env_start assembles a first_observation given the agent is in the start state. Note the start state cannot also be a terminal state.
+
+<BR>
+<BR>
+env_step: env_step(action) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> reward, observation, terminal
+<BR>
+Complete one step in the environment. Take the action passed in and determine what the reward and next state are for that transition.
+
+<BR>
+<BR>
+env_init: env_init() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> task_specification
+<BR>
+This routine will be called exactly once for each trial/run. This function is an ideal place to initialize all environment information and allocate any resources required to represent the environment. It must return a task_specification which adheres to the task specification language. A task_specification stores information regarding the observation and action space, as well as whether the task is episodic or continuous.
+
+<BR>
+<BR>
+env_get_state: env_get_state() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> state_key
+<BR>
+The state_key is a compact representation of the current state of the environment such that at any point in the future, provided with the state_key, the environment could return to thatstate. Note that this does not include the agent's value function, it is merely restoring the details of the environment. For example, in a static grid world this would be as simple as the position of the agent.
+
+<BR>
+<BR>
+env_set_state: env_set_state(state_key)
+<BR>
+Given the state_key, the environment should return to it's exact formation when the state_key was obtained. 
+
+<BR>
+<BR>
+env_get_random_seed: env_get_random_seed() <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> random_seed_key
+<BR>
+Saves the random seed object used by the environment such that it can be restored upon presentation of random_seed_key.
+
+<BR>
+<BR>
+env_set_random_seed: env_set_random_seed(random_seed_key)
+<BR>
+Sets the random seed used by the environment. Typically it is advantageous for the experiment program to control the randomness of the environment. Env_set_random_seed can be used in conjunction with env_set state to save and restore a random_seed such that the environment will behave exactly the same way it has previously when it was in this state and given the same actions.
+
+<BR>
+<BR>
+env_cleanup: env_cleanup()
+<BR>
+This can be used to release any allocated resources. It will be called once for every call to env_init.
+
+<BR>
+<BR>
+env_message:env_message(input_string) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> output_string
+<BR>
+Similar to agent_message, this function allows for any message passing to the environment required by the experiment program. This may be used to modify the environment mid experiment. Any information that needs to passed in or out of the environment can be handled by this function.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html481"
+  HREF="node34.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
+<A NAME="tex2html477"
+  HREF="node31.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
+<A NAME="tex2html471"
+  HREF="node32.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html479"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html482"
+  HREF="node34.html">Interface Routines Provided by</A>
+<B> Up:</B> <A NAME="tex2html478"
+  HREF="node31.html">Command and Function Reference</A>
+<B> Previous:</B> <A NAME="tex2html472"
+  HREF="node32.html">Agent Functions</A>
+ &nbsp; <B>  <A NAME="tex2html480"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

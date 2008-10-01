@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Writing an Agent</TITLE>
-<META NAME="description" CONTENT="Writing an Agent">
+<TITLE>Agent End</TITLE>
+<META NAME="description" CONTENT="Agent End">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,89 +18,55 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="next" HREF="node37.html">
-<LINK REL="previous" HREF="node9.html">
-<LINK REL="up" HREF="Glue-Docs.html">
+<LINK REL="previous" HREF="node23.html">
+<LINK REL="up" HREF="node20.html">
 <LINK REL="next" HREF="node25.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html394"
+<A NAME="tex2html372"
   HREF="node25.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html390"
-  HREF="Glue-Docs.html">
+<A NAME="tex2html368"
+  HREF="node20.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html384"
+<A NAME="tex2html364"
   HREF="node23.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html392"
+<A NAME="tex2html370"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html395"
-  HREF="node25.html">Essential Components Of A</A>
-<B> Up:</B> <A NAME="tex2html391"
-  HREF="Glue-Docs.html">RL-Glue Docs</A>
-<B> Previous:</B> <A NAME="tex2html385"
-  HREF="node23.html">Matlab Environments</A>
- &nbsp; <B>  <A NAME="tex2html393"
+<B> Next:</B> <A NAME="tex2html373"
+  HREF="node25.html">Additional Components Of A</A>
+<B> Up:</B> <A NAME="tex2html369"
+  HREF="node20.html">Essential Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html365"
+  HREF="node23.html">Agent Step</A>
+ &nbsp; <B>  <A NAME="tex2html371"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION00060000000000000000"></A>
-<A NAME="agent"></A>
-<BR>
-Writing an Agent
-</H1>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+<H3><A NAME="SECTION00051400000000000000">
+Agent End</A>
+</H3>
+In episode task the environment enters a terminal state that ends the episode. RL-Glue responds to the end of an episode by calling the agent_end function; passing the reward produced on the last transition to the agent and signaling the end of the current episode. The agent_end function usually performs a final learning update based on the last transition and any other end-of-episode routines, such as clearing eligibility traces. If the environment is non-episodic RL-Glue will not query agent_end.
 
-<UL>
-<LI><A NAME="tex2html396"
-  HREF="node25.html">Essential Components Of A RL-Glue Agent</A>
-<UL>
-<LI><A NAME="tex2html397"
-  HREF="node26.html">Action Types</A>
-<LI><A NAME="tex2html398"
-  HREF="node27.html">Agent Start</A>
-<LI><A NAME="tex2html399"
-  HREF="node28.html">Agent Step</A>
-<LI><A NAME="tex2html400"
-  HREF="node29.html">Agent End</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html401"
-  HREF="node30.html">Additional Components Of A RL-Glue Agent</A>
-<UL>
-<LI><A NAME="tex2html402"
-  HREF="node31.html">Agent initialization and cleanup</A>
-<LI><A NAME="tex2html403"
-  HREF="node32.html">Agent Message</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html404"
-  HREF="node33.html">C/C++ Agents</A>
-<LI><A NAME="tex2html405"
-  HREF="node34.html">Java Agents</A>
-<LI><A NAME="tex2html406"
-  HREF="node35.html">Python Agents</A>
-<LI><A NAME="tex2html407"
-  HREF="node36.html">Matlab Agents</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+The agent_end function does not receive the final observation from the environment. In many learning problems this is of no consequence because the agent does not make a decision in the terminal state. If, however, the agent were learning a model of the environment, information about the final transition would be important. In this case, it is recommended that the environment be augmented with a terminal state that has a reward of zero on the transition into it. This choice was made to keep the RL-Glue interface as minimal and light-weight as possible. 
+
+<P>
 <BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

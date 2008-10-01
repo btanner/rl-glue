@@ -26,60 +26,67 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html152"
+<A NAME="tex2html121"
   HREF="node6.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html148"
+<A NAME="tex2html117"
   HREF="Glue-Docs.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html142"
+<A NAME="tex2html111"
   HREF="node4.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html150"
+<A NAME="tex2html119"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html153"
+<B> Next:</B> <A NAME="tex2html122"
   HREF="node6.html">Agents, Environments and Experiment</A>
-<B> Up:</B> <A NAME="tex2html149"
-  HREF="Glue-Docs.html">RL-Glue Docs</A>
-<B> Previous:</B> <A NAME="tex2html143"
+<B> Up:</B> <A NAME="tex2html118"
+  HREF="Glue-Docs.html">RL-Glue 3.0 Docs</A>
+<B> Previous:</B> <A NAME="tex2html112"
   HREF="node4.html">How to Use This</A>
- &nbsp; <B>  <A NAME="tex2html151"
+ &nbsp; <B>  <A NAME="tex2html120"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION00030000000000000000">
-RL-Glue Concepts</A>
+<H1><A NAME="SECTION00030000000000000000"></A>
+<A NAME="RL-Glue"></A>
+<BR>
+RL-Glue Concepts
 </H1>
-
-<P>
 A large part of studying and researching reinforcement learning is experimentation. When writing an agent, ensuring it makes exploratory moves to discover the world is important to achieving an optimal policy. It is similarly important that experimenters are easily able to "explore" new algorithms and ideas without the prohibitive cost of writing the necesary experimentation code. One of the functions of RL-Glue is to simplify and speed up the process of writing an experiment so that every idea can be tested. 
 
 <P>
-Another important part of learning is evaluation and improvement. With agents, learning is a cycle of policy and value function evaluation and improvement.  An agent will roam the world and gain more information about the states it encounters. The agent then uses this new data to evaluate how accurate the value function was and adjusts its behaviour (policy) based on the new value function. Similiarily, in research and development it is important to look at other work being done in the field, compare your own performance and then improve. One goal for RL-Glue is to provide a consistent tool for running and comparing varied agents and environments from diverse sources. One common problem for the current RL researcher arrises when an experimenter wishes to compare their own work with previously established results. Pre-RL-Glue, the solution was often to reverse engineer code for the experiment based on the results and environment/agent descriptions provided in papers.  When an author provided their own source, there was still the issue of deciphering the original code and piecing in a new agent or environment. With RL-Glue, an author could make the necessary RL-Glue agent/environment/experiment programs  available to the public (or use a public copy of an environment from our library <A NAME="tex2html1"
-  HREF="footnode.html#foot171"><SUP>1</SUP></A> such that another author can rerun the original experiment and easily plug in their own code to compare performance.  Competitions for agents using RL-Glue have been run at the NIPS conference in recent years, further exemplifying the utility of RL-Glue to the research community.
-
-<P>
-RL-Glue is both a set of ideas and standards, as well as a software implementation provided through this site. In theory, RL-Glue is a protocol for all RL researchers to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to "plug in" agents, environments and experiment programs (previously titled benchmarks) without having to continually rewrite the connecting code for these pieces. An experiment program is some very simple code stating how many times to run an agent in an environment and what data should be extracted from the agent and environment. Provided the agent, environment, and experiment program follow the RL-Glue protocol by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. The following is a diagram which shows how function calls work in RL-Glue.
+Another important part of learning is evaluation and improvement. With agents, learning is often a cycle of policy and representation evaluation and improvement.  An agent will roam the world and gain more information about the states it encounters. The agent then uses this new data to evaluate how accurate the value function was and adjusts its behaviour (policy) based on the new value function. Similiarily, in research and development it is important to look at other work being done in the field, compare your own performance and then improve. One goal for RL-Glue is to provide a consistent tool for running and comparing varied agents and environments from diverse sources. A common problem for reinforcement learning researchers arrises when an experimenter wishes to compare their own work with previously established results. Pre-RL-Glue, the solution was often to reverse engineer code for the experiment based on the results and environment/agent descriptions provided in papers.  When an author provided their own source, there was still the issue of deciphering the original code and piecing in a new agent or environment. With RL-Glue, an author can make the necessary RL-Glue agent/environment/experiment programs  available to the public such that another author can rerun the original experiment and easily plug in their own code to compare performance.  Competitions for agents using RL-Glue have been run at NIPS and ICML in recent years, further exemplifying the utility of RL-Glue to the research community.
 
 <P>
 
+<DIV ALIGN="CENTER"><A NAME="fig1"></A><A NAME="43"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+The RL-Glue Standard. Arrows indicate function call direction.</CAPTION>
+<TR><TD>
 <DIV ALIGN="CENTER">
-<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="427" HEIGHT="237" ALIGN="BOTTOM" BORDER="0"
+ SRC="./glue_connections_no_shadow.png"
+ ALT="Image glue_connections_no_shadow">
 
-
-</DIV>
+</DIV></TD></TR>
+</TABLE>
 </DIV>
 
 <P>
-The Experiment Program contains the "main function" which will then make all of it's requests for information through the RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gather data about the agent's performance. The experiment program should never have access to the agent or environment directly, all contact should always go through the RL-Glue interface first.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through the Glue to the module which needs it.  With the newest version of RL-Glue, the agent and environment and experiment can even be written in different languages and/or compiled on different computers and be run over the internet. In this case, the arrows can be thought of as the sockets which connect the pieces of RL-Glue over the internet.
+RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for all RL researchers to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to "plug in" agents, environments and experiment programs (previously titled benchmarks) without having to continually rewrite the connecting code for these pieces. An experiment program is some very simple code stating how many times to run an agent in an environment and what data should be extracted from the agent and environment. Provided the agent, environment, and experiment program follow the RL-Glue protocol by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure <A HREF="#fig1">2</A> is a diagram which shows how function calls work in RL-Glue.
+
+<P>
+The Experiment Program contains the "main function" which will then make all of it's requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program should never have access to the agent or environment directly, all contact should always go through the RL-Glue interface first.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
 
 <P>
 <BR><HR>
@@ -87,41 +94,41 @@ The Experiment Program contains the "main function" which will then make all of 
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html154"
+<LI><A NAME="tex2html123"
   HREF="node6.html">Agents, Environments and Experiment Programs</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html152"
+<A NAME="tex2html121"
   HREF="node6.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html148"
+<A NAME="tex2html117"
   HREF="Glue-Docs.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html142"
+<A NAME="tex2html111"
   HREF="node4.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html150"
+<A NAME="tex2html119"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html153"
+<B> Next:</B> <A NAME="tex2html122"
   HREF="node6.html">Agents, Environments and Experiment</A>
-<B> Up:</B> <A NAME="tex2html149"
-  HREF="Glue-Docs.html">RL-Glue Docs</A>
-<B> Previous:</B> <A NAME="tex2html143"
+<B> Up:</B> <A NAME="tex2html118"
+  HREF="Glue-Docs.html">RL-Glue 3.0 Docs</A>
+<B> Previous:</B> <A NAME="tex2html112"
   HREF="node4.html">How to Use This</A>
- &nbsp; <B>  <A NAME="tex2html151"
+ &nbsp; <B>  <A NAME="tex2html120"
   HREF="node1.html">Contents</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

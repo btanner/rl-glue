@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Python Environments</TITLE>
-<META NAME="description" CONTENT="Python Environments">
+<TITLE>Agent Start</TITLE>
+<META NAME="description" CONTENT="Agent Start">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,56 +20,68 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node23.html">
 <LINK REL="previous" HREF="node21.html">
-<LINK REL="up" HREF="node9.html">
+<LINK REL="up" HREF="node20.html">
 <LINK REL="next" HREF="node23.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html372"
+<A NAME="tex2html350"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html368"
-  HREF="node9.html">
+<A NAME="tex2html346"
+  HREF="node20.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html362"
+<A NAME="tex2html340"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html370"
+<A NAME="tex2html348"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html373"
-  HREF="node23.html">Matlab Environments</A>
-<B> Up:</B> <A NAME="tex2html369"
-  HREF="node9.html">Writing an Environment</A>
-<B> Previous:</B> <A NAME="tex2html363"
-  HREF="node21.html">Java Environments</A>
- &nbsp; <B>  <A NAME="tex2html371"
+<B> Next:</B> <A NAME="tex2html351"
+  HREF="node23.html">Agent Step</A>
+<B> Up:</B> <A NAME="tex2html347"
+  HREF="node20.html">Essential Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html341"
+  HREF="node21.html">Action Types</A>
+ &nbsp; <B>  <A NAME="tex2html349"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION00055000000000000000">
-Python Environments</A>
-</H2>
-what files to include
+<H3><A NAME="SECTION00051200000000000000">
+Agent Start</A>
+</H3>
+The agent_start function selects the first action at the beginning of an episode based on the first observation of the environment. The agent_start function does not receive a reward as input; agent_start usually contains no learning update code. For example, the following function selects the first action based on the current value function estimate:
+<PRE><TT>
+1. agent_start (observation) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> action
 <BR>
-declaring, initializing and using the obs and action types
+2. 		 <B>for</B> each action <I>i</I>
 <BR>
-special considerations
+3.				 <B>if</B> highest valued action ( Q(observation,<I>i</I>) )
 <BR>
-sample environment
+4. 				<B>then</B> store <I>i</I> as maxAction
 <BR>
+5. 		 <B>set</B> action equal to newAction
+<BR>
+6. <B>return</B> action
+</TT></PRE>
+The following sections will describe how to perform step 5 in several different programming languages.
+
+<P>
 <BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

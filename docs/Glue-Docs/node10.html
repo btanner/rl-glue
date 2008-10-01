@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Essential Components Of A RL-Glue Environment</TITLE>
-<META NAME="description" CONTENT="Essential Components Of A RL-Glue Environment">
+<TITLE>Environment Start</TITLE>
+<META NAME="description" CONTENT="Environment Start">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,66 +18,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="next" HREF="node13.html">
+<LINK REL="next" HREF="node11.html">
 <LINK REL="previous" HREF="node9.html">
-<LINK REL="up" HREF="node9.html">
+<LINK REL="up" HREF="node8.html">
 <LINK REL="next" HREF="node11.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html224"
+<A NAME="tex2html194"
   HREF="node11.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html220"
-  HREF="node9.html">
+<A NAME="tex2html190"
+  HREF="node8.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html214"
+<A NAME="tex2html184"
   HREF="node9.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html222"
+<A NAME="tex2html192"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html225"
-  HREF="node11.html">Observation and Action Encoding</A>
-<B> Up:</B> <A NAME="tex2html221"
-  HREF="node9.html">Writing an Environment</A>
-<B> Previous:</B> <A NAME="tex2html215"
-  HREF="node9.html">Writing an Environment</A>
- &nbsp; <B>  <A NAME="tex2html223"
+<B> Next:</B> <A NAME="tex2html195"
+  HREF="node11.html">Environment Step</A>
+<B> Up:</B> <A NAME="tex2html191"
+  HREF="node8.html">Essential Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html185"
+  HREF="node9.html">Observation and Action Encoding</A>
+ &nbsp; <B>  <A NAME="tex2html193"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION00051000000000000000">
-Essential Components Of A RL-Glue Environment</A>
-</H2>
+<H3><A NAME="SECTION00041200000000000000">
+Environment Start</A>
+</H3>
+Writing env_start is very simple. The function takes no input and simply returns an observation. The env_start function signifies the beginning of an episode; env_start chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudo code selects a random start state for a grid world and returns the observation:
+<PRE><TT>
+1. <B>env_start</B><IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> observation
+<BR>
+2. 		state = rand()*num_states
+<BR>
+3. 		set observation equal to state
+<BR>
+4. <B>return</B> observation
+</TT></PRE>
+The RL-Glue Technical Documentation describes how to implement line 3 in C/C++.
 
 <P>
-Every RL-Glue environment must define and initialize the action and reward types and define the env_start and env_step functions.   
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
-
-<UL>
-<LI><A NAME="tex2html226"
-  HREF="node11.html">Observation and Action Encoding</A>
-<LI><A NAME="tex2html227"
-  HREF="node12.html">Start and Step Functions</A>
-</UL>
-<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Procedures</TITLE>
-<META NAME="description" CONTENT="Procedures">
+<TITLE>RL-Glue Environment Programs</TITLE>
+<META NAME="description" CONTENT="RL-Glue Environment Programs">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,7 +18,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="next" HREF="node9.html">
+<LINK REL="next" HREF="node19.html">
 <LINK REL="previous" HREF="node5.html">
 <LINK REL="up" HREF="Glue-Docs.html">
 <LINK REL="next" HREF="node8.html">
@@ -26,51 +26,83 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html175"
+<A NAME="tex2html144"
   HREF="node8.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html171"
+<A NAME="tex2html140"
   HREF="Glue-Docs.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html165"
+<A NAME="tex2html134"
   HREF="node6.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html173"
+<A NAME="tex2html142"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html176"
-  HREF="node8.html">How to Build and</A>
-<B> Up:</B> <A NAME="tex2html172"
-  HREF="Glue-Docs.html">RL-Glue Docs</A>
-<B> Previous:</B> <A NAME="tex2html166"
+<B> Next:</B> <A NAME="tex2html145"
+  HREF="node8.html">Essential Components Of A</A>
+<B> Up:</B> <A NAME="tex2html141"
+  HREF="Glue-Docs.html">RL-Glue 3.0 Docs</A>
+<B> Previous:</B> <A NAME="tex2html135"
   HREF="node6.html">Agents, Environments and Experiment</A>
- &nbsp; <B>  <A NAME="tex2html174"
+ &nbsp; <B>  <A NAME="tex2html143"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION00040000000000000000">
-Procedures</A>
+<H1><A NAME="SECTION00040000000000000000"></A>
+<A NAME="env"></A>
+<BR>
+RL-Glue Environment Programs
 </H1>
+The environment represents everything outside the agents direct control. In a gridworld, the environment is the grid, including obstacles, rewards, start states, termination conditions and transition function. In a robotic task, the environment would also include the robot's body, as the robot as the robot does not have complete, deterministic control over its motors. The environment is basically everything that is not the agent.
+
+<P>
+In RL-Glue, the environment is defined by a set of parameterized functions that the RL-Glue interface queries on behalf of the experiment program. These functions define what the environment does before an experiment begins, at the beginning of an episode, on every remaining step of an episode and after the experiment is completed. The following sections describe the basic requirements of an RL-Glue environment, a complete list of all environment functions and specific details on how to implement the environment functions in C and C++.
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html177"
-  HREF="node8.html">How to Build and Run Your First Learning Experiment</A>
+<LI><A NAME="tex2html146"
+  HREF="node8.html">Essential Components Of A RL-Glue Environment</A>
+<UL>
+<LI><A NAME="tex2html147"
+  HREF="node9.html">Observation and Action Encoding</A>
+<LI><A NAME="tex2html148"
+  HREF="node10.html">Environment Start</A>
+<LI><A NAME="tex2html149"
+  HREF="node11.html">Environment Step</A>
 </UL>
+<BR>
+<LI><A NAME="tex2html150"
+  HREF="node12.html">Additional Components Of A RL-Glue Environment</A>
+<UL>
+<LI><A NAME="tex2html151"
+  HREF="node13.html">Task Specification Language</A>
+<LI><A NAME="tex2html152"
+  HREF="node14.html">Example Task_Specification</A>
+<LI><A NAME="tex2html153"
+  HREF="node15.html">Environment initialization and Cleanup</A>
+<LI><A NAME="tex2html154"
+  HREF="node16.html">Environment Message</A>
+<LI><A NAME="tex2html155"
+  HREF="node17.html">Environment Get and Set Sate</A>
+<LI><A NAME="tex2html156"
+  HREF="node18.html">Environment Get and Set Random Seed</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

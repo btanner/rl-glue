@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Environment Get and Set Random Seed</TITLE>
-<META NAME="description" CONTENT="Environment Get and Set Random Seed">
+<TITLE>RL-Glue Agent Programs</TITLE>
+<META NAME="description" CONTENT="RL-Glue Agent Programs">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,55 +18,80 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="previous" HREF="node18.html">
-<LINK REL="up" HREF="node13.html">
+<LINK REL="next" HREF="node28.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="Glue-Docs.html">
 <LINK REL="next" HREF="node20.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html336"
+<A NAME="tex2html302"
   HREF="node20.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html332"
-  HREF="node13.html">
+<A NAME="tex2html298"
+  HREF="Glue-Docs.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html328"
+<A NAME="tex2html292"
   HREF="node18.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html334"
+<A NAME="tex2html300"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html337"
-  HREF="node20.html">C/C++ Environments</A>
-<B> Up:</B> <A NAME="tex2html333"
-  HREF="node13.html">Additional Components Of A</A>
-<B> Previous:</B> <A NAME="tex2html329"
+<B> Next:</B> <A NAME="tex2html303"
+  HREF="node20.html">Essential Components Of A</A>
+<B> Up:</B> <A NAME="tex2html299"
+  HREF="Glue-Docs.html">RL-Glue 3.0 Docs</A>
+<B> Previous:</B> <A NAME="tex2html293"
   HREF="node18.html">Environment Get and Set</A>
- &nbsp; <B>  <A NAME="tex2html335"
+ &nbsp; <B>  <A NAME="tex2html301"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H3><A NAME="SECTION00052600000000000000">
-Environment Get and Set Random Seed</A>
-</H3>
-It can be useful to record and set the seed of the random number generator. Although the random seed can be well thought of as part of the state of the environment there may be times when it is more convenient access the random seed only with env_get_random_seed and env_set_random_seed functions. The environment get and set random functions return and take as input a random_seed_key, like the state_key for setting states. 
+<H1><A NAME="SECTION00050000000000000000"></A>
+<A NAME="agent"></A>
+<BR>
+RL-Glue Agent Programs
+</H1>
+An RL-Glue agent can be as simple as a program the returns a random number between one and zero on every step or a more advanced algorithm that learns a model of the reward and transition functions of environment while maximizing reward. The agent program is a decision maker first and foremost: it must return an action when queried by RL-Glue. Many Rl-Glue agents, however, learn the best action to pick by learning from the sequence of observations, actions and rewards during an episode. Agent programs, like environments, are completely defined by a set of functions you must implement. Rl-Glue calls these agent functions during an experiment, as directed by the experiment program. Whether you are writing a random agent or a learning agent you usually need only implement a few functions. This section covers the basic requirements of an RL-Glue agent, describes a number of optional agent functions and describes how to implement these agent functions in C and C++.
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-<P>
-Like the get and set state functions, env_get_random_seed and env_set_random_seed functions should not be used to store and set the random seed between distinct runs of RL-Glue.
-
-<P>
+<UL>
+<LI><A NAME="tex2html304"
+  HREF="node20.html">Essential Components Of A RL-Glue Agent</A>
+<UL>
+<LI><A NAME="tex2html305"
+  HREF="node21.html">Action Types</A>
+<LI><A NAME="tex2html306"
+  HREF="node22.html">Agent Start</A>
+<LI><A NAME="tex2html307"
+  HREF="node23.html">Agent Step</A>
+<LI><A NAME="tex2html308"
+  HREF="node24.html">Agent End</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html309"
+  HREF="node25.html">Additional Components Of A RL-Glue Agent</A>
+<UL>
+<LI><A NAME="tex2html310"
+  HREF="node26.html">Agent Initialization and Cleanup</A>
+<LI><A NAME="tex2html311"
+  HREF="node27.html">Agent Message</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

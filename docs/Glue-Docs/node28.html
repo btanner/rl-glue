@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Agent Step</TITLE>
-<META NAME="description" CONTENT="Agent Step">
+<TITLE>RL-Glue Experiment Programs</TITLE>
+<META NAME="description" CONTENT="RL-Glue Experiment Programs">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,82 +18,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="next" HREF="node29.html">
-<LINK REL="previous" HREF="node27.html">
-<LINK REL="up" HREF="node25.html">
+<LINK REL="next" HREF="node31.html">
+<LINK REL="previous" HREF="node19.html">
+<LINK REL="up" HREF="Glue-Docs.html">
 <LINK REL="next" HREF="node29.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html458"
+<A NAME="tex2html418"
   HREF="node29.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html454"
-  HREF="node25.html">
+<A NAME="tex2html414"
+  HREF="Glue-Docs.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html448"
+<A NAME="tex2html408"
   HREF="node27.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html456"
+<A NAME="tex2html416"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html459"
-  HREF="node29.html">Agent End</A>
-<B> Up:</B> <A NAME="tex2html455"
-  HREF="node25.html">Essential Components Of A</A>
-<B> Previous:</B> <A NAME="tex2html449"
-  HREF="node27.html">Agent Start</A>
- &nbsp; <B>  <A NAME="tex2html457"
+<B> Next:</B> <A NAME="tex2html419"
+  HREF="node29.html">Basic Experiment Programs</A>
+<B> Up:</B> <A NAME="tex2html415"
+  HREF="Glue-Docs.html">RL-Glue 3.0 Docs</A>
+<B> Previous:</B> <A NAME="tex2html409"
+  HREF="node27.html">Agent Message</A>
+ &nbsp; <B>  <A NAME="tex2html417"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H3><A NAME="SECTION00061300000000000000">
-Agent Step</A>
-</H3>
-The agent_step function encodes the heart of the agents' learning algorithm and action selection mechanism. At a minimum the step function must return an action every time it is called. In most learning agents, the step function queries the agent programs action selection function and performs a learning update based on the input observation and reward. The following agent_step function does a SARSA update on a tabular value function Q:
-<PRE><TT>
-1. agent_step(reward, observation) <IMG
- WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
- SRC="img2.png"
- ALT="$\rightarrow$"> action
+<H1><A NAME="SECTION00060000000000000000"></A>
+<A NAME="exp"></A>
 <BR>
-2. 		newAction = egreedy(observation)
-<BR>
-3. 		 QofOld = Q(oldState,oldAction)
-<BR>
-4. 		 QofNew = Q(observation,newAction) 
-<BR>
-5. 		 V(oldState,oldAction) = VofOld + <IMG
- WIDTH="15" HEIGHT="14" ALIGN="BOTTOM" BORDER="0"
- SRC="img4.png"
- ALT="$\alpha$">[reward + <IMG
- WIDTH="14" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="img5.png"
- ALT="$\gamma$">VofNew - VofOld]
-<BR>
-6. 		 oldState = observation
-<BR>
-7.		 oldAction = newAction
-<BR>
-8. 		 <B>set</B> action equal to newAction
-<BR>
-9. <B>return</B> action
-</TT></PRE>  
-Notice that the agent program must explicitly store the observation and action from the previous time step. RL-Glue does not make the history of actions, observations and rewards available to the agent or environment.
+RL-Glue Experiment Programs
+</H1>
+Usually the shortest and easiest part of writing your first learning experiment is writing the experiment program. The experiment program has no interface to implement and is mostly comprised of calls to the already existing RL-Glue functions. The experiment program has four main duties: a) start the experiment b) specify how many times to run the experiment c) extract data and possibly analyze d) end the experiment and clean up.  One thing to note is that it is only the RL-Glue interface functions available to the experiment program. No agent or environment implemented functions should be directly accessed by the experiment program.
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html420"
+  HREF="node29.html">Basic Experiment Programs</A>
+<LI><A NAME="tex2html421"
+  HREF="node30.html">Advanced Experiment Programs</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

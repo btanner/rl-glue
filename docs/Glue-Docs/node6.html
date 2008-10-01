@@ -25,30 +25,30 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html163"
+<A NAME="tex2html132"
   HREF="node7.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html159"
+<A NAME="tex2html128"
   HREF="node5.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html155"
+<A NAME="tex2html124"
   HREF="node5.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html161"
+<A NAME="tex2html130"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html164"
-  HREF="node7.html">Procedures</A>
-<B> Up:</B> <A NAME="tex2html160"
+<B> Next:</B> <A NAME="tex2html133"
+  HREF="node7.html">RL-Glue Environment Programs</A>
+<B> Up:</B> <A NAME="tex2html129"
   HREF="node5.html">RL-Glue Concepts</A>
-<B> Previous:</B> <A NAME="tex2html156"
+<B> Previous:</B> <A NAME="tex2html125"
   HREF="node5.html">RL-Glue Concepts</A>
- &nbsp; <B>  <A NAME="tex2html162"
+ &nbsp; <B>  <A NAME="tex2html131"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
@@ -57,50 +57,46 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <H2><A NAME="SECTION00031000000000000000">
 Agents, Environments and Experiment Programs</A>
 </H2>
-Understanding agents and environments is a fundamental part of understanding RL. A more detailed explanation of Reinforcement Learning, and its definitions for agents and environments, can be obtained from Reinforcement Learning: An Introduction (Sutton, Barto. 1998).  The agent, when distilled to basics, is both the learning algorithm and the policy maker. For RL-Glue's purpose, the agent only needs to decide which action to take at every step. The environment should store all the relevant details of the world of your experiment. This should include knowledge of the current state representation (the observation) as well as some method for determining state transitions and transition rewards. When writing code for an experiment, RL-Glue has been structured to place separation between the agent and environment.  This division  of the agent and environment both helps create modularized code and is theoretically desirable.
+Understanding agents and environments is a fundamental part of understanding reinforcement learning. A more detailed explanation of reinforcement learning, and its definitions for agents and environments, can be obtained from Reinforcement Learning: An Introduction (Sutton, Barto. 1998).  The agent, when distilled to basics, is both the learning algorithm and the decision maker. For RL-Glue's purpose, the agent only needs to decide which action to take at every step. The environment should store all the relevant details of the world of your experiment. This should include knowledge of the current state representation (the observation) as well as some method for determining state transitions and rewards. When writing code for an experiment, RL-Glue has been structured to place separation between the agent and environment. This division of the agent and environment both helps create modularized code and is theoretically desirable.
 
 <P>
-The experiment program is familiar to anyone who has written code to run an RL experiment on their own. Akin to the typical main function in many RL experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment x number of times, perhaps doing y trials of these x episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section <A HREF="node49.html#ref"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="file:/sw/share/lib/latex2html/icons/crossref.png"></A>) to assist in writing an experiment program.
+The experiment program is familiar to anyone who has written code to run an reinforcement learning experiment on their own. Akin to the typical main function in many reinforcement learning experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment <B>x</B> number of times, perhaps doing <B>y</B> trials of these <B>x</B> episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section <A HREF="node31.html#ref">6</A>) to assist in writing an experiment program.
 
 <P>
-When writing an agent , environment or experiment program for RL-Glue it is necessary to adhere to the interfaces (the RL-Glue Protocol) set out in (Section <A HREF="node49.html#ref"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="file:/sw/share/lib/latex2html/icons/crossref.png"></A>). For a more detailed explanation of how to write agents, environments and experiments see Sections <A HREF="node24.html#agent"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="file:/sw/share/lib/latex2html/icons/crossref.png"></A>, <A HREF="node9.html#env"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="file:/sw/share/lib/latex2html/icons/crossref.png"></A> and <A HREF="node37.html#exp"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="file:/sw/share/lib/latex2html/icons/crossref.png"></A>. For a quick intro guide goto Section <A HREF="node8.html#quick"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="file:/sw/share/lib/latex2html/icons/crossref.png"></A>.
+When writing an agent , environment or experiment program for RL-Glue it is necessary to adhere to the interfaces (the RL-Glue Protocol) set out in Section <A HREF="node31.html#ref">6</A>. 
+
+<P>
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html163"
+<A NAME="tex2html132"
   HREF="node7.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html159"
+<A NAME="tex2html128"
   HREF="node5.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html155"
+<A NAME="tex2html124"
   HREF="node5.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html161"
+<A NAME="tex2html130"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html164"
-  HREF="node7.html">Procedures</A>
-<B> Up:</B> <A NAME="tex2html160"
+<B> Next:</B> <A NAME="tex2html133"
+  HREF="node7.html">RL-Glue Environment Programs</A>
+<B> Up:</B> <A NAME="tex2html129"
   HREF="node5.html">RL-Glue Concepts</A>
-<B> Previous:</B> <A NAME="tex2html156"
+<B> Previous:</B> <A NAME="tex2html125"
   HREF="node5.html">RL-Glue Concepts</A>
- &nbsp; <B>  <A NAME="tex2html162"
+ &nbsp; <B>  <A NAME="tex2html131"
   HREF="node1.html">Contents</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

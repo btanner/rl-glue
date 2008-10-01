@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Agent Message</TITLE>
-<META NAME="description" CONTENT="Agent Message">
+<TITLE>Agent Functions</TITLE>
+<META NAME="description" CONTENT="Agent Functions">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,52 +18,133 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
+<LINK REL="next" HREF="node33.html">
 <LINK REL="previous" HREF="node31.html">
-<LINK REL="up" HREF="node30.html">
+<LINK REL="up" HREF="node31.html">
 <LINK REL="next" HREF="node33.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html504"
+<A NAME="tex2html469"
   HREF="node33.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html500"
-  HREF="node30.html">
+<A NAME="tex2html465"
+  HREF="node31.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html496"
+<A NAME="tex2html459"
   HREF="node31.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html502"
+<A NAME="tex2html467"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html505"
-  HREF="node33.html">C/C++ Agents</A>
-<B> Up:</B> <A NAME="tex2html501"
-  HREF="node30.html">Additional Components Of A</A>
-<B> Previous:</B> <A NAME="tex2html497"
-  HREF="node31.html">Agent initialization and cleanup</A>
- &nbsp; <B>  <A NAME="tex2html503"
+<B> Next:</B> <A NAME="tex2html470"
+  HREF="node33.html">Environment Functions</A>
+<B> Up:</B> <A NAME="tex2html466"
+  HREF="node31.html">Command and Function Reference</A>
+<B> Previous:</B> <A NAME="tex2html460"
+  HREF="node31.html">Command and Function Reference</A>
+ &nbsp; <B>  <A NAME="tex2html468"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H3><A NAME="SECTION00062200000000000000">
-Agent Message</A>
-</H3>
-The agent_message function isused to send an arbitrary string message to the agent program. This function can be used to change agent parameters, notify the agent that the exploration phase is over, and request the name of the agent program, for example.
+<H2><A NAME="SECTION00071000000000000000">
+Agent Functions</A>
+</H2>
 
 <P>
-<BR><HR>
+Every agent must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
+
+<BR>
+<BR>
+agent_start:  agent_start(first_observation) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> first_action
+<BR>
+Given the first_observation (the observation of the agent in the start state) the agent must then return the action it wishes to perform. This is called once if the task is continuing, else it happens at the beginning of each episode.
+
+<BR>
+<BR>
+agent_step: agent_step( reward, observation) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> action
+<BR>
+This is the most important function of the agent. Given the reward garnered by the agent's previous action, and the resulting observation, choose the next action to take. Any learning (policy improvement) should be done through this function.
+
+<BR>
+<BR>
+agent_end: agent_end(reward)
+<BR>
+If the agent is in an episodic environment, this function will be called after the terminal state is entered. This allows for any final learning updates. If the episode is terminated prematurely (ie a benchmark cutoff before entering a terminal state) agent_end is NOT called.
+
+<BR>
+<BR>
+agent_init: agent_init(task_specification)
+<BR>
+This function will be called first, even before agent_start. The task_specification is a description of important experiment information, including but not exclusive to a description of the state and action space. The RL-Glue standard for writing task_specification strings is found here.  In agent_init, information about the environment is extracted from the task_specification and then used to set up any necessary resources (for example, initialize the value function to a prelearning state).
+
+<BR>
+<BR>
+agent_cleanup: agent_cleanup()
+<BR>
+This function is called at the end of a run/trial and can be used to free any resources which may have allocated in agent_init. Calls to agent_cleanup should be in a one to one ratio with the calls to agent_init.
+
+<BR>
+<BR>
+agent_freeze: agent_freeze()
+<BR>
+Signals to the agent that training has ended. Requests that the agent freeze its current policy and value function (ie: stops learning and exploration).
+
+<BR>
+<BR>
+agent_message:agent_message(input_message) <IMG
+ WIDTH="22" HEIGHT="16" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$\rightarrow$"> output_message
+<BR>
+The agent_message function is a jack of all trades and master of none. Having no particular functionality, it is up to the user to determine what agent_message should implement. If there is any information which needs to be passed in or out of the agent, this message should do it. For example, if it is desirable that an agent's learning parameters be tweaked mid experiment, the author could establish an input string that triggers this action. Likewise, if the author wished to extract a representation of the value function, they could establish an input string which would cause agent_message to return the desired information.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html469"
+  HREF="node33.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
+<A NAME="tex2html465"
+  HREF="node31.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
+<A NAME="tex2html459"
+  HREF="node31.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
+<A NAME="tex2html467"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
+ SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html470"
+  HREF="node33.html">Environment Functions</A>
+<B> Up:</B> <A NAME="tex2html466"
+  HREF="node31.html">Command and Function Reference</A>
+<B> Previous:</B> <A NAME="tex2html460"
+  HREF="node31.html">Command and Function Reference</A>
+ &nbsp; <B>  <A NAME="tex2html468"
+  HREF="node1.html">Contents</A></B> 
+<!--End of Navigation Panel-->
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>

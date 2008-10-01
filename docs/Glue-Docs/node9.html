@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Writing an Environment</TITLE>
-<META NAME="description" CONTENT="Writing an Environment">
+<TITLE>Observation and Action Encoding</TITLE>
+<META NAME="description" CONTENT="Observation and Action Encoding">
 <META NAME="keywords" CONTENT="Glue-Docs">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,95 +18,72 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="Glue-Docs.css">
 
-<LINK REL="next" HREF="node24.html">
-<LINK REL="previous" HREF="node7.html">
-<LINK REL="up" HREF="Glue-Docs.html">
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node8.html">
+<LINK REL="up" HREF="node8.html">
 <LINK REL="next" HREF="node10.html">
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
-<A NAME="tex2html198"
+<A NAME="tex2html182"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
  SRC="file:/sw/share/lib/latex2html/icons/next.png"></A> 
-<A NAME="tex2html194"
-  HREF="Glue-Docs.html">
+<A NAME="tex2html178"
+  HREF="node8.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
  SRC="file:/sw/share/lib/latex2html/icons/up.png"></A> 
-<A NAME="tex2html188"
+<A NAME="tex2html172"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
  SRC="file:/sw/share/lib/latex2html/icons/prev.png"></A> 
-<A NAME="tex2html196"
+<A NAME="tex2html180"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents"
  SRC="file:/sw/share/lib/latex2html/icons/contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html199"
-  HREF="node10.html">Essential Components Of A</A>
-<B> Up:</B> <A NAME="tex2html195"
-  HREF="Glue-Docs.html">RL-Glue Docs</A>
-<B> Previous:</B> <A NAME="tex2html189"
-  HREF="node8.html">How to Build and</A>
- &nbsp; <B>  <A NAME="tex2html197"
+<B> Next:</B> <A NAME="tex2html183"
+  HREF="node10.html">Environment Start</A>
+<B> Up:</B> <A NAME="tex2html179"
+  HREF="node8.html">Essential Components Of A</A>
+<B> Previous:</B> <A NAME="tex2html173"
+  HREF="node8.html">Essential Components Of A</A>
+ &nbsp; <B>  <A NAME="tex2html181"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION00050000000000000000"></A>
-<A NAME="env"></A>
-<BR>
-Writing an Environment
-</H1>
+<H3><A NAME="SECTION00041100000000000000">
+Observation and Action Encoding</A>
+</H3>
+The representation of the observation and the action must be one of the following: 
+
+<UL>
+<LI>an integer
+</LI>
+<LI>a double
+</LI>
+<LI>a character
+</LI>
+<LI>array of integers
+</LI>
+<LI>array of doubles
+</LI>
+<LI>array of characters
+</LI>
+</UL>
+Although this seems restrictive, in practice it should be easy to represent many observation and action types in this format. In a gridworld, for example, the action can be a single integer with values 0-3 (for N,S,E,W) and the observation can also be an integer for the agent's grid position (which is also the state of the environment, in this case). In Mountain Car, the actions are discrete (0-2) and the observation is the cars position and velocity (both real numbers). The action can be represented with and integer and the observation can be a two dimensional double array. 
+
+<P>
+Details on how to encode observation and action types in C and C++ is described in the ``RL-Glue Technical Documentation" included the project source.
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
-
-<UL>
-<LI><A NAME="tex2html200"
-  HREF="node10.html">Essential Components Of A RL-Glue Environment</A>
-<UL>
-<LI><A NAME="tex2html201"
-  HREF="node11.html">Observation and Action Encoding</A>
-<LI><A NAME="tex2html202"
-  HREF="node12.html">Start and Step Functions</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html203"
-  HREF="node13.html">Additional Components Of A RL-Glue Environment</A>
-<UL>
-<LI><A NAME="tex2html204"
-  HREF="node14.html">Task Specification Language</A>
-<LI><A NAME="tex2html205"
-  HREF="node15.html">Example Task_Specification</A>
-<LI><A NAME="tex2html206"
-  HREF="node16.html">Environment initialization and cleanup</A>
-<LI><A NAME="tex2html207"
-  HREF="node17.html">Environment Message</A>
-<LI><A NAME="tex2html208"
-  HREF="node18.html">Environment Get and Set Sate</A>
-<LI><A NAME="tex2html209"
-  HREF="node19.html">Environment Get and Set Random Seed</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html210"
-  HREF="node20.html">C/C++ Environments</A>
-<LI><A NAME="tex2html211"
-  HREF="node21.html">Java Environments</A>
-<LI><A NAME="tex2html212"
-  HREF="node22.html">Python Environments</A>
-<LI><A NAME="tex2html213"
-  HREF="node23.html">Matlab Environments</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
-Brian Tanner
-2008-09-26
+Adam White
+2008-09-30
 </ADDRESS>
 </BODY>
 </HTML>
