@@ -77,6 +77,7 @@ typedef struct {
 
 void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct);
 int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct);
+char * __rlglue_get_svn_version();
 
 #ifdef __cplusplus
 }

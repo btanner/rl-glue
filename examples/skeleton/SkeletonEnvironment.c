@@ -37,7 +37,7 @@ int current_state=0;
 
 task_specification_t env_init()
 {    
-	task_specification_t task_spec="2:e:1_[i]_[0,5]:1_[i]_[0,1]:[-1,1]";
+	task_specification_t task_spec="2:e:1_[i]_[0,20]:1_[i]_[0,1]:[-1,1]";
 
 	/* Allocate the observation variable */
 	allocateRLStruct(&this_observation,1,0,0);

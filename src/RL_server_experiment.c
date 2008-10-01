@@ -42,14 +42,6 @@
 
 const char* kUnknownMessage = "Unknown message: %s\n";
 
-/*This is an easier trick to get the version */
-char[1024] svnVersionString;
-char* svn_version(){
-	char *theVersion="$Revision$"
-	(void)strncpy(svnVersionString, theVersion+11, strlen(theVersion+11 - 2);
-    svnVersionString[sizeof(svnVersionString) - 1] = '\0';
-	return svnVersionString;
-}
 
 void onRLCleanup(int theConnection);
 
@@ -404,7 +396,7 @@ void runGlueEventLoop(int theConnection) {
 int main(int argc, char** argv) {
 	char usageBuffer[1024];
 	
-	fprintf(stdout, "RL-Glue Version %s, Build %s\n", VERSION,SVN_VERSION);
+	fprintf(stdout, "RL-Glue Version %s, Build %s\n", VERSION,__rlglue_get_svn_version());
 	fflush(stdout);
   
   sprintf(usageBuffer,"\n\trl_glue version\t=\t%s\n\tbuild number\t=\t%s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION,SVN_VERSION);

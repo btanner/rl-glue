@@ -222,7 +222,6 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
-svnversioncommand = @svnversioncommand@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 TESTS = $(check_PROGRAMS)

@@ -175,11 +175,10 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
-svnversioncommand = @svnversioncommand@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 SUBDIRS = src tests
-EXTRA_DIST = config/saved_svn_version.txt docs AUTHORS ChangeLog README INSTALL LICENSE-2.0.txt
+EXTRA_DIST = docs AUTHORS ChangeLog README INSTALL LICENSE-2.0.txt
 all: all-recursive
 
 .SUFFIXES:
