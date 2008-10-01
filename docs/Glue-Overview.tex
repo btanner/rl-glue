@@ -38,7 +38,7 @@ Recently (September 08) the RL-Glue Project has been split into the RL-Glue Proj
 
 This document as been subdivided to reflect the five purposed described above. To learn about the major components of RL-Glue and a description of how those components interact see Section \ref{RL-Glue}. To learn how to make an environment and agent programs compatible with RL-Glue we recommend sections \ref{envp1} and \ref{agentp1}. Sections \ref{envp1} and \ref{agentp1} describe only the mandatory functions that RL-Glue environments and agents must implement. Sections \ref{envp2} and \ref{agentp2} describe optional environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section \ref{exp}. For quick function reference see Section \ref{ref}.
 
-Frequently asked questions can be found in Section \ref{faq}.
+Frequently asked questions can be found in Section \ref{faq}. A summary of and explanations for all changes from RL-Glue 2.X to Rl-Glue 3.0 can be found in Section \ref{change}.
 
 This document and the RL-Glue Project using naming conventions and definitions from Sutton and Barto's ``Reinforcement Learning: An Introduction". We recommend that you review Sutton and Barto to get the most out of the RL-Glue documentation. An online version of Sutton and Barto can be founf here: \url{http://www.cs.ualberta.ca/~sutton/book/the-book.html}.
 
@@ -108,25 +108,25 @@ Details on how to encode observation and action types in C and C++ is described 
 
 \subsubsection{Environment Start}
 Writing env\_start is very simple. The function takes no input and simply returns an observation. The env\_start function signifies the beginning of an episode; env\_start chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudo code selects a random start state for a grid world and returns the observation:
-\begin{tabbing}
-1. {\bf env\_start}\= $\rightarrow$ observation\\
-2. \>state = rand()*num\_states\\
-3. \>set observation equal to state\\
-4. {\bf return} observation
-\end{tabbing}
+\begin{verbatim}
+1. env_start -> observation
+2.      state = rand()*num_states
+3.      set observation equal to state
+4. return observation
+\end{verbatim}
 The RL-Glue Technical Documentation describes how to implement line 3 in C/C++.
 
 \subsubsection{Environment Step}
 The final essential piece of an RL-Glue environment is the env\_step function. The env\_step function must take an action as input and produce a observation, reward and a termination flag as output. In most RL problems the  env\_step function updates the internal state of the environment, tests for end of episode and returns the new observation of state and current reward. In other words, step function encodes the state transition and reward functions. Keeping with the grid world example, the following step function would be a valid env\_step function:
-\begin{tabbing}
-1. {\bf env\_step}\=(Action a) $\rightarrow$ reward, observation, flag \\
-2. \>newState = updateState(a, oldState)\\
-3. \> flag = isTerminal()\\
-3. \> reward = -1\\
-4. \>set observation equal to newState\\
-5. \>oldState = newState\\
-6. {\bf return} reward, observation, flag
-\end{tabbing}
+\begin{verbatim}
+1. env_step(action) -> reward, observation, flag 
+2.      newState = updateState(a, oldState)
+3.      flag = isTerminal()
+3.      reward = -1
+4.      set observation equal to newState
+5.      oldState = newState
+6. return reward, observation, flag
+\end{verbatim}
 Here we assume the existence of a state update function and an isTerminal function that checks if the current state is a terminal state.
 
 So thats it. Just define the types of actions and observations and write two functions and you have a valid RL-Glue compatible environment. In later sections we will go over advanced environment functions and describe the syntactic details of actually coding an environment in C and C++. 
@@ -211,18 +211,19 @@ Consider a simple gridworld with Actions North, South, East and West and a singl
      "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0] "
 \end{verbatim}
 This Task\_specification provides the following information:
-\begin{description}
-\setlength{\itemsep}{-1mm}
-\item[-] RL-Glue version 2.0 supported
-\item[-] the task is episodic
-\item[-] Observation space has one dimension
-\item[-] the Observation variable has integer values (discrete state)
-\item[-] range of Observation variable is 0 to N-1
-\item[-] Action space has one dimension
-\item[-] the Action variable has integer values (discrete actions: tabular)
-\item[-] range of Action variable is 0 to 3
-\item[-] range of the rewards is -1 to 0
-\end{description}
+\begin{itemize}
+
+\item Task Specification version 2.0 supported
+\item the task is episodic
+\item Observation space has one dimension
+\item the Observation variable has integer values (discrete state)
+\item range of Observation variable is 0 to N-1
+\item Action space has one dimension
+\item the Action variable has integer values (discrete actions: tabular)
+\item range of Action variable is 0 to 3
+\item range of the rewards is -1 to 0
+\end{itemize}
+
 
 
         
@@ -234,26 +235,26 @@ The env\_cleanup function usually deallocates or frees anything allocated in env
 
 \subsubsection{Environment Message}
 Once in a while you will find yourself wishing there was an environment function that was part of RL-Glue. The env\_message function allows you to exactly this: you can send a string message to the environment and it can respond with a string. For example to disable random starting states:
-\begin{tabbing}
-1. env\_\=message(inMessage) $\rightarrow$ outMessage\\
-2.\> {\bf if} in\=Message == ``turnOffRandomStarts"  \\
-3. \>\> randStarts = false\\
-4. \> {\bf end} \\
-5. {\bf return} ``1"
-\end{tabbing}
+\begin{verbatim}
+1. env_message(inMessage) -> outMessage
+2.      if inMessage == "turnOffRandomStarts"  
+3.           randStarts = false
+4.      end 
+5. return "1"
+\end{verbatim}
 
 \subsubsection{Environment Get and Set Sate}
 It is often necessary to record the state of the environment and then reset the environment to a particular state to evaluate learning performance. For example, one might want to repeatedly evaluate the performance of a stochastic policy starting from a finite set of interesting states. The env\_get\_state\_key function returns a state\_key that can be used to restore the environment to the current state when the key was created. The state\_key is the same data type as the observations and actions; the state\_key must be an int, double, character, int array, double array or character array. The env\_set\_state takes a state\_key as input and simply restores the environment to the state encoded in the key. The state\_key can be as simple as a integer state label, in the case of a gridworld, or a some function of an array, in the case of a simulated robot navigation task. 
 
 The get and set state functions are meant to be used during a single learning experiments not across runs. For example, the following experiment is valid:
-\begin{tabbing}
-1. initialize RL-Glue\\
-2. {\bf until} observation ``cliff" {\bf do} next step of episode\\
-3. get state key form environment and store in stateKey\\
-4. {\bf for} \=100 steps\\
-5. \> set environment state to stateKey\\
-6. \> run an episode
-\end{tabbing}
+\begin{verbatim}
+1. initialize RL-Glue
+2. until observation "cliff" do next step of episode
+3. get state key form environment and store in stateKey
+4. for 100 steps
+5. set environment state to stateKey
+6. run an episode
+\end{verbatim}
 Storing a state key in a file and then using that state key in a different experiment program or later time is outside the intended usage of the env\_get\_state and env\_set\_state functions. It might work with some RL-Glue environments and not others.
         
 \subsubsection{Environment Get and Set Random Seed}
@@ -285,29 +286,29 @@ The three agent functions take observations and rewards as input and return acti
 
 \subsubsection{Agent Start}
 The agent\_start function selects the first action at the beginning of an episode based on the first observation of the environment. The agent\_start function does not receive a reward as input; agent\_start usually contains no learning update code. For example, the following function selects the first action based on the current value function estimate:
-\begin{tabbing}
-1. age\=nt\_start (observation) $\rightarrow$ action\\
-2. \> {\bf for} \= each action {\it i}\\
-3.\>\> {\bf if} highest valued action ( Q(observation,{\it i}) )\\ 
-4. \>\>{\bf then} store {\it i} as maxAction\\
-5. \> {\bf set} action equal to newAction\\
-6. {\bf return} action
-\end{tabbing}
+\begin{verbatim}
+1. agent_start (observation) -> action
+2.      for each action i
+3.           if highest valued action (Q(observation,i))
+4.           then store i as maxAction
+5.      set action equal to newAction
+6. return action
+\end{verbatim}
 The following sections will describe how to perform step 5 in several different programming languages.
 
 \subsubsection{Agent Step}
 The agent\_step function encodes the heart of the agents' learning algorithm and action selection mechanism. At a minimum the step function must return an action every time it is called. In most learning agents, the step function queries the agent programs action selection function and performs a learning update based on the input observation and reward. The following agent\_step function does a SARSA update on a tabular value function Q:
-\begin{tabbing}
-1. age\=nt\_step(reward, observation) $\rightarrow$ action\\
-2. \>newAction = egreedy(observation)\\
-3. \> QofOld = Q(oldState,oldAction)\\
-4. \> QofNew = Q(observation,newAction) \\
-5. \> Q(oldState,oldAction) = QofOld + $\alpha$[reward + $\gamma$QofNew - QofOld]\\
-6. \> oldState = observation\\
-7.\> oldAction = newAction\\
-8. \> {\bf set} action equal to newAction\\
-9. {\bf return} action
-\end{tabbing}  
+\begin{verbatim}
+1. agent_step(reward, observation)-> action
+2.      newAction = egreedy(observation)
+3.      QofOld = Q(oldState,oldAction)
+4.      QofNew = Q(observation,newAction) 
+5.      Q(oldState,oldAction) = QofOld + alpha*[reward + gamma*QofNew - QofOld]
+6.      oldState = observation
+7.     oldAction = newAction
+8.      set action equal to newAction
+9. return action
+\end{verbatim}  
 Notice that the agent program must explicitly store the observation and action from the previous time step. RL-Glue does not make the history of actions, observations and rewards available to the agent or environment.
 
 \subsubsection{Agent End}
@@ -334,15 +335,15 @@ Usually the shortest and easiest part of writing your first learning experiment 
 \label{expp1}
 
 At a minimum the experiment program must call RL\_init and RL\_cleanup and execute several time steps of agent-environment interaction. The following pseudo code represents a simple experiment program.
-\begin{tabbing}
-1. RL\_init()\\
-2. RL\_start()\\
-3. steps=0\\  
-4. terminal=false \\
-5. {\bf while} \=steps $<$ 100 {\bf and not} terminal\\
-6.\> terminal,reward,observation,action = RL\_step()\\
-7. RL\_cleanup()
-\end{tabbing}
+\begin{verbatim}
+1. RL_init()
+2. RL_start()
+3. steps=0
+4. terminal=false 
+5. while steps < 100 and not terminal
+6.     terminal,reward,observation,action = RL_step()
+7. RL_cleanup()
+\end{verbatim}
 This experiment program initializes the agent and environment (RL\_init), calls the start functions of the agent and environment (RL\_start) and then executes a 100 or less step episode. 
 
 The RL\_step function calls the env\_step function passing it the most recent agent action (in this case from agent\_start). The env\_step function returns the new observation, reward and terminal flag. If the flag {\bf is not} set the agent\_step function is called with the new observation and reward as input arguments. The action returned by agent\_step is stored by RL-Glue until the next call to RL\_step. If the flag {\bf is} set, the agent\_end function is called with the reward as input. This process continues until either the flag is set or 100 steps are completed. 
@@ -352,41 +353,40 @@ Using the RL\_step function gives the experiment program designer access to all 
 The RL\_step function allows the experiment program to record/sum/average the reward, but the RL\_episode function returns no values. The RL\_return and RL\_num\_steps functions allow the experiment program to obtain reward and number of steps taken. Specifically, RL\_return returns the sum of rewards accumulated during the current or most recently completed episode. The RL\_num\_steps returns the number of steps elapsed during the current or most recently completed episode. 
 
 Putting these new functions together we can write a more useful experiment program:
-\begin{tabbing}
-1. RL\_init()\\
-2. theReturn = 0\\
-3. {\bf for} \= 1 = 1:100\\
-4. \> RL\_episode(1000)\\
-5. \> theReturn += RL\_return()\\
-6.  {\bf Print} theReturn/100\\
-7. RL\_cleanup()
-\end{tabbing}
+\begin{verbatim}
+1. RL_init()
+2. theReturn = 0
+3. for 1 = 1:100
+4.      RL_episode(1000)
+5.      theReturn += RL_return()
+6.  Print theReturn/100
+7. RL_cleanup()
+\end{verbatim}
 The above experiment program runs 100 episodes, each with max length 1000, and computes the average cumulative reward per episode.
 \subsection{Advanced Experiment Programs}
 \label{expp2}
 
 
 As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are access through calls to the RL-Glue interface from an experiment program. For example, to send a message to the agent use RL\_agent\_message. To get the state key from the environment use RL\_get\_state. The pattern is simple to follow:
-\begin{itemize}
-\item RL\_set\_state() $\rightarrow$ env\_set\_state()
-\item RL\_get\_random\_seed() $\rightarrow$ env\_get\_random\_seed()
-\item RL\_set\_random\_seed() $\rightarrow$ env\_set\_random\_seed()
-\item RL\_env\_message() $\rightarrow$ env\_message
-
-\end{itemize}
+\begin{verbatim}
+     RL_set_state() -> env_set_state()
+     RL_get_random_seed() -> env_get_random_seed()
+     RL_set_random_seed() -> env_set_random_seed()
+     RL_env_message() -> env_message
+\end{verbatim}
 We can now produce more advanced experiment programs that would be used in reinforcement learning research:
-\begin{tabbing}
-1. RL\_init()\\
-2. numSteps = 0\\
-3. {\bf for} \= 1 = 1:1000\\
-4. \> RL\_episode(1000)\\
-5. RL\_agent\_message("freezeAgentPolicy")\\
-6. {\bf for} \= 1 = 1:100\\
-7. \> RL\_episode(1000)\\
-8. \> numSteps += RL\_num\_steps()\\
-9.  {\bf Print} numSteps/100\\
-10. RL\_cleanup()
-\end{tabbing}
+\begin{verbatim}
+1. RL_init()
+2. numSteps = 0
+3. for 1 = 1:1000
+4.      RL_episode(1000)
+5. RL_agent_message("freezeAgentPolicy")
+6. for 1 = 1:100
+7.      RL_episode(1000)
+8.      numSteps += RL_num_steps()
+9.  Print numSteps/100
+10. RL_cleanup()
+\end{verbatim}
 
 
 
@@ -398,57 +398,65 @@ Once your comfortable with the basics and you have written a few agents and envi
 \subsection{Agent Functions}
  
 Every agent must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
-\\\\
-agent\_start:  agent\_start(first\_observation) $\rightarrow$ first\_action\\
+\begin{verbatim}
+     agent_start(first_observation) -> first_action
+\end{verbatim}
 Given the first\_observation (the observation of the agent in the start state) the agent must then return the action it wishes to perform. This is called once if the task is continuing, else it happens at the beginning of each episode.
-\\\\
-agent\_step: agent\_step( reward, observation) $\rightarrow$ action\\
+\begin{verbatim}
+     agent_step( reward, observation) -> action
+\end{verbatim}
 This is the most important function of the agent. Given the reward garnered by the agent's previous action, and the resulting observation, choose the next action to take. Any learning (policy improvement) should be done through this function.
-\\\\
-agent\_end: agent\_end(reward)\\
+\begin{verbatim}
+     agent_end(reward)
+\end{verbatim}     
 If the agent is in an episodic environment, this function will be called after the terminal state is entered. This allows for any final learning updates. If the episode is terminated prematurely (ie a benchmark cutoff before entering a terminal state) agent\_end is NOT called.
-\\\\
-agent\_init: agent\_init(task\_specification)\\
+\begin{verbatim}
+     agent_init(task_specification)
+\end{verbatim}     
 This function will be called first, even before agent\_start. The task\_specification is a description of important experiment information, including but not exclusive to a description of the state and action space. The RL-Glue standard for writing task\_specification strings is found here.  In agent\_init, information about the environment is extracted from the task\_specification and then used to set up any necessary resources (for example, initialize the value function to a prelearning state).
-\\\\
-agent\_cleanup: agent\_cleanup()\\
+\begin{verbatim}
+     agent_cleanup()
+\end{verbatim}     
 This function is called at the end of a run/trial and can be used to free any resources which may have allocated in agent\_init. Calls to agent\_cleanup should be in a one to one ratio with the calls to agent\_init.
-\\\\
-agent\_freeze: agent\_freeze()\\
+\begin{verbatim}
+     agent_freeze()
+\end{verbatim}
 Signals to the agent that training has ended. Requests that the agent freeze its current policy and value function (ie: stops learning and exploration).
-\\\\
-agent\_message:agent\_message(input\_message) $\rightarrow$ output\_message\\
+\begin{verbatim}
+     agent_message(input_message) -> output_message
+\end{verbatim}     
 The agent\_message function is a jack of all trades and master of none. Having no particular functionality, it is up to the user to determine what agent\_message should implement. If there is any information which needs to be passed in or out of the agent, this message should do it. For example, if it is desirable that an agent's learning parameters be tweaked mid experiment, the author could establish an input string that triggers this action. Likewise, if the author wished to extract a representation of the value function, they could establish an input string which would cause agent\_message to return the desired information.
                           
 \subsection{Environment Functions}
 \label{Eref}
 Every environment must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
-\\\\
-env\_start: env\_start() $\rightarrow$ first\_observation\\
+\begin{verbatim}
+     env_start() -> first_observation\end{verbatim}
 For a continuing task this is done once. For an episodic task, this is done at the beginning of each episode. Env\_start assembles a first\_observation given the agent is in the start state. Note the start state cannot also be a terminal state.
-\\\\
-env\_step: env\_step(action) $\rightarrow$ reward, observation, terminal\\
+\begin{verbatim}
+     env_step(action) -> reward, observation, terminal\end{verbatim}
 Complete one step in the environment. Take the action passed in and determine what the reward and next state are for that transition.
-\\\\
-env\_init: env\_init() $\rightarrow$ task\_specification\\
+\begin{verbatim}
+     env_init() -> task_specification\end{verbatim}
 This routine will be called exactly once for each trial/run. This function is an ideal place to initialize all environment information and allocate any resources required to represent the environment. It must return a task\_specification which adheres to the task specification language. A task\_specification stores information regarding the observation and action space, as well as whether the task is episodic or continuous.
-\\\\   
-env\_get\_state: env\_get\_state() $\rightarrow$ state\_key\\
+\begin{verbatim}
+     env_get_state() -> state_key\end{verbatim}
 The state\_key is a compact representation of the current state of the environment such that at any point in the future, provided with the state\_key, the environment could return to thatstate. Note that this does not include the agent's value function, it is merely restoring the details of the environment. For example, in a static grid world this would be as simple as the position of the agent.
-\\\\
-env\_set\_state: env\_set\_state(state\_key)\\
+\begin{verbatim}
+     env_set_state(state_key)\end{verbatim}
 Given the state\_key, the environment should return to it's exact formation when the state\_key was obtained. 
-\\\\
-env\_get\_random\_seed: env\_get\_random\_seed() $\rightarrow$ random\_seed\_key\\
+\begin{verbatim}
+     env_get_random_seed() -> random_seed_key\end{verbatim}
 Saves the random seed object used by the environment such that it can be restored upon presentation of random\_seed\_key.
-\\\\
-env\_set\_random\_seed: env\_set\_random\_seed(random\_seed\_key)\\
+\begin{verbatim}
+     env_set_random_seed(random_seed_key)\end{verbatim}
 Sets the random seed used by the environment. Typically it is advantageous for the experiment program to control the randomness of the environment. Env\_set\_random\_seed can be used in conjunction with env\_set state to save and restore a random\_seed such that the environment will behave exactly the same way it has previously when it was in this state and given the same actions.
-\\\\                       
-env\_cleanup: env\_cleanup()\\
+\begin{verbatim}                 
+     env_cleanup()\end{verbatim}
 This can be used to release any allocated resources. It will be called once for every call to env\_init.
-\\\\
-env\_message:env\_message(input\_string) $\rightarrow$ output\_string\\
+\begin{verbatim}
+     env_message(input_string) -> output_string
+\end{verbatim}
 Similar to agent\_message, this function allows for any message passing to the environment required by the experiment program. This may be used to modify the environment mid experiment. Any information that needs to passed in or out of the environment can be handled by this function.
 
 
@@ -457,100 +465,102 @@ Similar to agent\_message, this function allows for any message passing to the e
 The following built in RL-Glue functions are provided primarily for the use of the experiment program writers. Using these functions, the experiment program gains access to the corresponding environment and agent functions. The implementation of these routines are to be standard across all RL-Glue users. To ensure agents/environments/experiment programs can be exchanged between authors with no changes necessary, users should not change the RL-Glue interface code provided.
 \\\\      
 To understand the following, it is helpful to think of an episode as consisting of sequences of observations, actions, and rewards that are indexed by time-step as follows:
-
-o0, a0,  r1, o1, a1,  r2, o2, a2, ..., rT, terminal\_observation
-\\\\
+\begin{verbatim}
+     o0, a0,  r1, o1, a1,  r2, o2, a2, ..., rT, terminal_observation
+\end{verbatim}
 where the episode lasts T time steps (T may be infinite) and terminal\_observation is a special, designated observation signaling the end of the episode.
-\begin{tabbing}
-RL\_\=init() \\
-\>agent\_init(env\_init())
-\end{tabbing}
-This initializes everything, passing the environment's task\_specification to the agent. This should be called at the beginning of every trial.
-\begin{tabbing}
-RL\_\=start() $\rightarrow$ o0, a0\\
-\>global upcoming\_action\\
-\>o = env\_start()\\
-\>a = agent\_start(o)\\
-\>upcoming\_action = a\\
-return o,a
-\end{tabbing}
 
+\begin{verbatim}
+RL_init()
+     agent_init(env_init())
+\end{verbatim}
+This initializes everything, passing the environment's task\_specification to the agent. This should be called at the beginning of every trial.
+\begin{verbatim}
+RL_start() --> o0, a0
+     global upcoming_action
+     o = env_start()
+     a = agent_start(o)
+     upcoming_action = a
+return o,a
+\end{verbatim}
 Do the first step of a run or episode.  The action is saved in upcoming\_action so that it can be used on the next step.
-\begin{tabbing}
-RL\_\=step() $\rightarrow$ rt, ot, terminal, at\\
-\>global upcoming\_action\\
-\>r,o,terminal = env\_step(upcoming\_action)\\
-\>if ter\=minal == true\\
-\>\>    agent\_end(r)\\
-\>\>    return r, o,terminal\\
-\>else\=\\
-\>\>    a = agent\_step(r, o)\\
-\>\>    upcoming\_action = a\\
-\>return r, o, terminal, a
-\end{tabbing}
+\begin{verbatim}
+RL_step() --> rt, ot, terminal, at
+     global upcoming_action
+     r,o,terminal = env_step(upcoming_action)
+     if terminal == true
+           agent_end(r)
+           return r, o,terminal
+     else
+           a = agent_step(r, o)
+           upcoming_action = a
+     return r, o, terminal, a 
+\end{verbatim}
 Take one step.  RL\_step uses the saved action and saves the returned action for the next step.  The action returned from one call must be used in the next, so it is better to handle this implicitly so that the user doesn't have to keep track of the action.  If the end-of-episode observation occurs, then no action is returned.
-\begin{tabbing}     
-RL\_\=episode(steps)\\
-\>num\_steps = 0\\
-\>o, a = RL\_start()\\
-\>num\_steps = num\_steps + 1\\
-\>list = [o, a]\\
-\>while\=  \ o $\neq$ terminal\_observation\\
-\>\>    if(st\=eps $\neq$ 0 and num\_steps $\geq$ steps)\\
-\>\>\>    end\\
-\>\>    els\=e\\
-\>\>\>    r, o, a = RL\_step()\\
-\>\>\>    list = list + [r, o, a]\\
-\>\>\>    num\_steps = num\_steps + 1\\
-\>                agent\_end(r)\\
-\end{tabbing}
+\begin{verbatim}
+RL_episode(steps)
+     num_steps = 0
+     o, a = RL_start()
+     num_steps = num_steps + 1
+     list = [o, a]
+     while o != terminal_observation
+           if(steps !=0 and num_steps >= steps)
+                end
+           else
+                r, o, a = RL_step()
+                list = list + [r, o, a]
+                num_steps = num_steps + 1
+           
+     agent_end(r)
+\end{verbatim}
 Do one episode until a termination observation occurs or until steps steps have elapsed, whichever comes first.  As you might imagine, this is done by calling RL\_start, then RL\_step until the terminal observation occurs.  If steps is set to 0, it is taken to be the case where there is no limitation on the number of steps taken and RL\_episode will continue until a termination observation occurs. If no terminal observation is reached before num\_steps is reached, the agent does not call agent\_end, it simply stops.
-\\\\
-RL\_return() $\rightarrow$ return
-\\\\
+\begin{verbatim}
+     RL_return() -> return
+\end{verbatim}
 Return the cumulative total reward of the current or just completed episode.  The collection of all the rewards received in an episode (the return) is done within RL\_return however, any discounting of rewards must be done inside the environment or agent.
-\\\\
-RL\_num\_steps() $\rightarrow$ num\_steps
-\\\\
+\begin{verbatim}
+     RL_num_steps() -> num_steps
+\end{verbatim}
 Return the number of steps elapsed in the current or just completed episode.
-\begin{tabbing}
-RL\_\=cleanup()\\
-\>env\_cleanup()\\
-\>agent\_cleanup()
-\end{tabbing}
+\begin{verbatim}
+     RL_cleanup()
+          env_cleanup()
+          agent_cleanup()
+\end{verbatim}
 Provides an opportunity to reclaim resources allocated by RL\_init.
-\begin{tabbing}
-RL\_\=set\_state(State\_key)\\
-\>env\_set\_state(State\_key)    
-\end{tabbing}
+\begin{verbatim}
+     RL_set_state(State_key)
+          env_set_state(State_key)    
+\end{verbatim}
 Provides an opportunity to reset the state (see env\_set\_state for details).
-\begin{tabbing}
-RL\_\=set\_random\_seed(Random\_seed\_key)\\
-\>env\_set\_random\_seed(Random\_seed\_key)
-\end{tabbing}
+\begin{verbatim}
+     RL_set_random_seed(Random_seed_key)
+          env_set_random_seed(Random_seed_key)
+\end{verbatim}
 Provides an opportunity to reset the random seed key (see env\_set\_random\_seed for details).
-\begin{tabbing}
-RL\_\=get\_state() $\rightarrow$ State\_key\\
-\>return env\_get\_state()  
-\end{tabbing}
+\begin{verbatim}
+     RL_get_state() -> State_key
+          return env_get_state()  
+\end{verbatim}
 Provides an opportunity to extract the state key from the environment (see env\_get\_state for details).
-\begin{tabbing}
-RL\_\=get\_random\_seed() $\rightarrow$ Random\_seed\_key\\
-\>return env\_get\_random\_seed()   
-\end{tabbing}
+\begin{verbatim}
+     RL_get_random_seed() -> Random_seed_key
+          return env_get_random_seed()   
+\end{verbatim}
 Provides an opportunity to extract the random seed key from the environment (see env\_get\_random\_seed for details).               
-\begin{tabbing}
-RL\_\=agent\_message(input\_message\_string) $\rightarrow$ output\_message\_string\\
-\>return agent\_message(input\_message\_string)
-\end{tabbing}
+\begin{verbatim}
+     RL_agent_message(input_message_string) -> output_message_string
+          return agent_message(input_message_string)
+\end{verbatim}
 This message passes the input string to the agent and returns the reply string given by the agent. See agent\_message for more details.                
-\begin{tabbing}
-RL\_\=env\_message(input\_message\_string) $\rightarrow$ output\_message\_string\\
-\>return env\_message(input\_message\_string)
-\end{tabbing}
+\begin{verbatim}
+     RL_env_message(input_message_string) -> output_message_string
+          return env_message(input_message_string)
+\end{verbatim}
 This message passes the input string to the environment and returns the reply string given by the environment. See env\_message for more details. 
 
 \section{Changes from RL-Glue 2.x}
+\label{change}
 Version 3.0 of RL-Glue represents a large series of updates with the intention of bringing RL-Glue from a University of Alberta side project to an open source project generally useful to the global
 reinforcement learning community.  As part of that process, we made some pretty big changes.
 
