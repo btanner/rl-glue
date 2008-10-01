@@ -4,13 +4,14 @@
 \usepackage{url}
 \usepackage{verbatim}
 \usepackage{fullpage}
+\usepackage{html}
 %I don't like my paragraphs indented because we have lots of 1-line paragraphs with URLs or code after them
 \setlength{\parindent}{0in} 
 %I like space between my paragraphs
 \setlength{\parskip}{10pt} 
 
 \title{RL-Glue 3.0 Technical Manual }
-\author{Brian Tanner}
+\author{Brian Tanner \\\\brian@tannerpages.com \\\\http://research.tannerpages.com}
 \date{}                                        
 
 \begin{document}
@@ -20,17 +21,17 @@
 \section{Introduction}
 
 This document describes how to use RL-Glue when each of the agent, environment, and experiment program is written in C/C++.  This scenario is also known as the \textit{direct-compile} scenario, because all of the
-components can be compiled together into a single executable.  This contrasts with the more flexible way to use RL-Glue, where the \texttt{rl\_glue} executable server acts as a bridge for agents, environments, and experiment 
+components can be compiled together into a single executable program.  This contrasts with the more flexible way to use RL-Glue, where the \texttt{rl\_glue} executable server acts as a bridge for agents, environments, and experiment 
 programs written in any of: Python, Lisp, Matlab, Java, or C/C++.  
 
-For general information and motivation about RL-Glue, please read the RL-Glue overview documentation.  This technical manual is about explaining the finer details of installing RL-Glue and creating direct-compile projects, 
+For general information and motivation about RL-Glue, please read the \htmladdnormallink{RL-Glue overview documentation}{http://rl-glue.googlecode.com/svn/trunk/docs/html/index.html}.  This technical manual is about explaining the finer details of installing RL-Glue and creating direct-compile projects, 
 so we won't rehash all of the high level RL-Glue ideas.
 
 This software project is licensed under the Apache-2.0\footnote{\url{http://www.apache.org/licenses/LICENSE-2.0.html}} license. We're not lawyers, but our intention is that this code 
 should be used however it is useful.  We'd appreciate to hear what you're using it for, and to get credit if appropriate.
 
 This project has a home here:\\
-\url{http://rl-glue.googlecode.com}
+\url{http://glue.rl-community.org}
 
 
 
@@ -69,21 +70,21 @@ Provided everything goes well, the headers have now been installed to \texttt{/u
 If you don't have \textit{sudo} or \textit{root} access on the target machine, you can install RL-Glue in your home directory (or other directory you have access to).
 If you install to a custom location, you will need set your \texttt{CFLAGS} and \texttt{LDFLAGS} variables appropriately when compiling your projects. See Section \ref{sec:custom-flags} for more information.
 
-For example, maybe we want to install RL-Glue to \texttt{/Users/btanner/tmp/rlglue}.  The commands are:
+For example, maybe we want to install RL-Glue to \texttt{/Users/joe/glue}.  The commands are:
 \begin{verbatim}
-	>$ ./configure --prefix=/Users/btanner/tmp/rlglue
+	>$ ./configure --prefix=/Users/joe/glue
 	>$ make
 	>$ make install
 \end{verbatim}
 
 Provided everything goes well, the headers, libraries, and binaries have been respectively installed to\newline
-\texttt{/Users/btanner/tmp/rlglue/include}\newline
-\texttt{/Users/btanner/tmp/rlglue/lib}\newline
-\texttt{/Users/btanner/tmp/rlglue/bin}
+\texttt{/Users/joe/glue/include}\newline
+\texttt{/Users/joe/glue/lib}\newline
+\texttt{/Users/joe/glue/bin}
 
 
 \subsection{Uninstall}
-If you decide that you don't want  RL-Glue on your machine anymore, you can easily uninstall it.  The procedures varies a tiny bit depending on if you installed it to the default location, or somewhere custom.
+If you decide that you don't want  RL-Glue on your machine anymore, you can easily uninstall it.  The procedures varies a tiny bit depending on if you installed it to the default location, or to a custom location.
 
 \subsubsection{RL-Glue Installed To Default Location}
 \begin{verbatim}
@@ -96,15 +97,15 @@ This will remove all of the headers, libraries, and binaries from \texttt{/usr/l
 \subsubsection{RL-Glue Installed To Custom Location}
 You'll need to make sure that either you haven't reconfigured the directory you downloaded from, or, if you removed/changed that already, you have to run configure again the exact same way as when you installed it.  For example:
 \begin{verbatim}
-	>$ ./configure --prefix=/Users/btanner/tmp/rlglue
+	>$ ./configure --prefix=/Users/joe/glue
 	>$ make uninstall
 \end{verbatim}
 
-That's it!  This will remove all of the headers, libraries, and binaries from \texttt{/Users/btanner/tmp/rlglue}.
+That's it!  This will remove all of the headers, libraries, and binaries from \texttt{/Users/joe/glue}.
 
 \section{Agent, Environments, and Experiments}
 We have provided a skeleton agent, environment, and experiment program that can be compiled together and run as an experiment.
-This is a good starting point for projects that you may write in the future.  We'll start by explaining how to run compile and
+This is a good starting point for projects that you may write in the future.  We'll start by explaining how to compile and
 run the experiment, then we'll talk in more detail about each part.
 
 \subsection{Compiling and Running Skeleton}
@@ -145,10 +146,12 @@ You should see output like the following if it worked:
 
 	----------Sending some sample messages----------
 	Agent responded to "what is your name?" with: my name is skeleton_agent!
-	Agent responded to "who is your daddy and what does he do?" with: I don't know how to respond to your message
+	Agent responded to "If at first you don't succeed; call it version 1.0"
+	 with: I don't know how to respond to your message
 
 	Environment responded to "what is your name?" with: my name is skeleton_environment!
-	Environment responded to "who is your daddy and what does he do?" with: I don't know how to respond to your message
+	Environment responded to "If at first you don't succeed;
+	 call it version 1.0" with: I don't know how to respond to your message
 
 
 	----------Running a few episodes----------
@@ -183,7 +186,7 @@ To do it on the command line:
 >$ CFLAGS=-I/Users/joe/glue/include LDFLAGS=-L/Users/joe/glue/lib make
 \end{verbatim}
 
-That might turn out to be quite a hassle while you are developing.  In that case, you can either update the \texttt{Makefile} to include these flags, 
+That might turn out to be quite a hassle to type those flags all the time while you are developing.  In that case, you can either update the \texttt{Makefile} to include these flags, 
 or set an environment variable.  If you are using the bash shell you can \texttt{export} the environment variables:
 \begin{verbatim}
 >$ export CFLAGS=-I/Users/joe/glue/include
@@ -210,7 +213,7 @@ When you open a new terminal window, all of these environment variables will be 
 
 \subsection{Agents}
 \label{sec:agent}
-This agent implements all the required functions and provides a good example of how to create a simple agent.
+Th Skeleton agent implements all the required functions and provides a good example of how to create a simple agent.
 
 The pertinent files are:
 \begin{verbatim}
@@ -228,7 +231,7 @@ or just that it should do some fancier things, let us know and we'll be happy to
 
 
 \subsection{Environments}
-The Skeleton experiment implements all the required functions and provides a good example of how to create a simple environment. 
+The Skeleton experiment provides a good example of how to create a simple environment. 
 
 The pertinent files are:
 \begin{verbatim}
@@ -286,7 +289,7 @@ If you see that \texttt{/usr/local/lib} is not in the search path, you may want 
 
 \section{Who creates and frees memory?}
 Memory management can be confusing in C/C++.  It might seem especially mysterious when using RL-Glue, because sometimes the structures are passed directly 
-from function to function (in direct-call RL-Glue), but other times they are written and read through a network socket (with the C/C++ network codec).
+from function to function (in direct-compile RL-Glue), but other times they are written and read through a network socket (with the C/C++ network codec).
 
 \subsection{Copy-On-Keep}
 The rule of thumb to follow in RL-Glue is what we call \textit{copy-on-keep}.  Copy-on-keep means that when you are passed a dynamically allocated structure, you should
@@ -329,7 +332,7 @@ void agent_init(const task_specification_t task_spec){
 action_t agent_start(observation_t this_observation) {
         /*
             This is fine, because even if 
-            the task_spec was deleted, we have a copy.
+            the task_spec was freed, we have a copy.
         */
     printf("Task spec we saved is: %s\n",task_spec_copy);
     ...
@@ -599,8 +602,7 @@ rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts,
 
 
 \section{Changes and 2.x Backward Compatibility}
-There were many changes from RL-Glue 2.x to RL-Glue 3.x.  Most of them are at the level of the API and project organization, and are addressed in the RL-Glue 
-project documentation, not this technical manual.
+There were many changes from RL-Glue 2.x to RL-Glue 3.x.  Most of them are at the level of the API and project organization, and are addressed in the \htmladdnormallink{RL-Glue overview documentation}{http://rl-glue.googlecode.com/svn/trunk/docs/html/index.html}, not this technical manual.
 
 \subsection{Types}
 All of the types that existed in the RL-Glue 2.x  (ex: \texttt{Observation} instead of \texttt{observation\_t}) are still supported through a definition file called 
@@ -615,7 +617,7 @@ All of the types that existed in the RL-Glue 2.x  (ex: \texttt{Observation} inst
 We're waiting to hear your questions!
 
 \section{Credits and Acknowledgements}
-Andrew Butcher originally wrote the RL-Glue library and network library .  Thanks Andrew.
+Andrew Butcher originally wrote the RL-Glue library and network library.  Thanks Andrew.
 
 Brian Tanner has since grabbed the torch and has continued to develop RL-Glue and the codecs.
 
