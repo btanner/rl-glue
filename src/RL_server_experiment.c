@@ -42,8 +42,13 @@
 
 const char* kUnknownMessage = "Unknown message: %s\n";
 
+/*This is an easier trick to get the version */
+char[1024] svnVersionString;
 char* svn_version(){
-	return SVN_VERSION;
+	char *theVersion="$Revision$"
+	(void)strncpy(svnVersionString, theVersion+11, strlen(theVersion+11 - 2);
+    svnVersionString[sizeof(svnVersionString) - 1] = '\0';
+	return svnVersionString;
 }
 
 void onRLCleanup(int theConnection);
