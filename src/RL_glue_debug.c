@@ -76,7 +76,6 @@ void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct){
 }
 /*This is an easier trick to get the version */
 char svnVersionString[1024];
-
 char* __rlglue_get_svn_version(){
 	int howMuchToCopy=0;
 	char *theVersion="$Revision$";
