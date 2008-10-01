@@ -399,7 +399,7 @@ int main(int argc, char** argv) {
 	fprintf(stdout, "RL-Glue Version %s, Build %s\n", VERSION,__rlglue_get_svn_version());
 	fflush(stdout);
   
-  sprintf(usageBuffer,"\n\trl_glue version\t=\t%s\n\tbuild number\t=\t%s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION,SVN_VERSION);
+  sprintf(usageBuffer,"\n\trl_glue version\t=\t%s\n\tbuild number\t=\t%s\n\nUsage: $:>rl_glue\n\n  By default rl_glue listens on port 4096.\n  To choose a different port, set environment variable RLGLUE_PORT.\n\n",VERSION,__rlglue_get_svn_version());
 
   if (argc > 1) {
     fprintf(stdout, usageBuffer);
