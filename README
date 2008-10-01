@@ -6,10 +6,14 @@ This project is licensed under the Apache 2 license. Check LICENSE-2.0.txt for m
 ----------------------------
 Documentation
 ----------------------------
+
+You should probably look at the overview and technical manuals for this project. They are in:
+docs/Glue-Overview.pdf
+docs/TechnicalManual.pdf
+
+
 For the full RL-Glue Documentation, please visit RL-Glue's public home:
 http://glue.rl-community.org
-
-
 
 ----------------------------
 Super short introduction to RL-Glue
@@ -37,22 +41,6 @@ If you don't have sudo priviledges or you would like to install them somewhere e
 	$>./configure --prefix=/path/to/your/home/directory         EG: /home/Users/btanner
 	$>make
 	$>make install
-
-
--------------------------------------
-Related Information and Documentation
--------------------------------------
-You may also want to check out the developer website:
-http://glue.rl-community.org
-
-You may also be interested in the related (and possibly outdated) RL-Library site, which hosts a variety of agents and environments:
-http://rlai.cs.ualberta.ca/RLR/index.html
-
-Or the disjoint developer website for the rl-library:
-http://rl-library.googlecode.com/
-
-
-
 
 
 

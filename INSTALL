@@ -1,3 +1,17 @@
+NOTE: These are the autotools generated install instructions.
+
+Probably not what you actually want, unless you are really getting down
+and dirty with autotools.
+
+Probably you want to check out:
+docs/TechnicalManual.pdf
+
+or
+
+docs/Glue-Overview.pdf
+
+
+
 Installation Instructions
 *************************
 
