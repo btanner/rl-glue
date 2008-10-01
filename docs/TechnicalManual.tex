@@ -81,6 +81,27 @@ Provided everything goes well, the headers, libraries, and binaries have been re
 \texttt{/Users/btanner/tmp/rlglue/lib}\newline
 \texttt{/Users/btanner/tmp/rlglue/bin}
 
+
+\subsection{Uninstall}
+If you decide that you don't want  RL-Glue on your machine anymore, you can easily uninstall it.  The procedures varies a tiny bit depending on if you installed it to the default location, or somewhere custom.
+
+\subsubsection{RL-Glue Installed To Default Location}
+\begin{verbatim}
+	>$ ./configure
+	>$ sudo make uninstall
+\end{verbatim}
+
+This will remove all of the headers, libraries, and binaries from \texttt{/usr/local}.
+
+\subsubsection{RL-Glue Installed To Custom Location}
+You'll need to make sure that either you haven't reconfigured the directory you downloaded from, or, if you removed/changed that already, you have to run configure again the exact same way as when you installed it.  For example:
+\begin{verbatim}
+	>$ ./configure --prefix=/Users/btanner/tmp/rlglue
+	>$ make uninstall
+\end{verbatim}
+
+That's it!  This will remove all of the headers, libraries, and binaries from \texttt{/Users/btanner/tmp/rlglue}.
+
 \section{Agent, Environments, and Experiments}
 We have provided a skeleton agent, environment, and experiment program that can be compiled together and run as an experiment.
 This is a good starting point for projects that you may write in the future.  We'll start by explaining how to run compile and

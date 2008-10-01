@@ -42,65 +42,67 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html48"
+<LI><A NAME="tex2html51"
   HREF="TechnicalManual.html#SECTION00020000000000000000">Introduction</A>
 <UL>
-<LI><A NAME="tex2html49"
+<LI><A NAME="tex2html52"
   HREF="TechnicalManual.html#SECTION00021000000000000000">Software Requirements</A>
-<LI><A NAME="tex2html50"
+<LI><A NAME="tex2html53"
   HREF="TechnicalManual.html#SECTION00022000000000000000">Getting the Project</A>
-<LI><A NAME="tex2html51"
+<LI><A NAME="tex2html54"
   HREF="TechnicalManual.html#SECTION00023000000000000000">Installing the Project</A>
+<LI><A NAME="tex2html55"
+  HREF="TechnicalManual.html#SECTION00024000000000000000">Uninstall</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html52"
+<LI><A NAME="tex2html56"
   HREF="TechnicalManual.html#SECTION00030000000000000000">Agent, Environments, and Experiments</A>
 <UL>
-<LI><A NAME="tex2html53"
-  HREF="TechnicalManual.html#SECTION00031000000000000000">Compiling and Running Skeleton</A>
-<LI><A NAME="tex2html54"
-  HREF="TechnicalManual.html#SECTION00032000000000000000">Custom Flags for Custom Installs</A>
-<LI><A NAME="tex2html55"
-  HREF="TechnicalManual.html#SECTION00033000000000000000">Agents</A>
-<LI><A NAME="tex2html56"
-  HREF="TechnicalManual.html#SECTION00034000000000000000">Environments</A>
 <LI><A NAME="tex2html57"
-  HREF="TechnicalManual.html#SECTION00035000000000000000">Experiments</A>
+  HREF="TechnicalManual.html#SECTION00031000000000000000">Compiling and Running Skeleton</A>
 <LI><A NAME="tex2html58"
+  HREF="TechnicalManual.html#SECTION00032000000000000000">Custom Flags for Custom Installs</A>
+<LI><A NAME="tex2html59"
+  HREF="TechnicalManual.html#SECTION00033000000000000000">Agents</A>
+<LI><A NAME="tex2html60"
+  HREF="TechnicalManual.html#SECTION00034000000000000000">Environments</A>
+<LI><A NAME="tex2html61"
+  HREF="TechnicalManual.html#SECTION00035000000000000000">Experiments</A>
+<LI><A NAME="tex2html62"
   HREF="TechnicalManual.html#SECTION00036000000000000000">Gotchas!</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html59"
+<LI><A NAME="tex2html63"
   HREF="TechnicalManual.html#SECTION00040000000000000000">Who creates and frees memory?</A>
 <UL>
-<LI><A NAME="tex2html60"
+<LI><A NAME="tex2html64"
   HREF="TechnicalManual.html#SECTION00041000000000000000">Copy-On-Keep</A>
-<LI><A NAME="tex2html61"
+<LI><A NAME="tex2html65"
   HREF="TechnicalManual.html#SECTION00042000000000000000">Free Your Mess</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html62"
+<LI><A NAME="tex2html66"
   HREF="TechnicalManual.html#SECTION00050000000000000000">RL-Glue C/C++ Specification Reference</A>
 <UL>
-<LI><A NAME="tex2html63"
+<LI><A NAME="tex2html67"
   HREF="TechnicalManual.html#SECTION00051000000000000000">Types</A>
-<LI><A NAME="tex2html64"
+<LI><A NAME="tex2html68"
   HREF="TechnicalManual.html#SECTION00052000000000000000">Functions</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html65"
+<LI><A NAME="tex2html69"
   HREF="TechnicalManual.html#SECTION00060000000000000000">Changes and 2.x Backward Compatibility</A>
 <UL>
-<LI><A NAME="tex2html66"
+<LI><A NAME="tex2html70"
   HREF="TechnicalManual.html#SECTION00061000000000000000">Types</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html67"
+<LI><A NAME="tex2html71"
   HREF="TechnicalManual.html#SECTION00070000000000000000">Frequently Asked Questions</A>
-<LI><A NAME="tex2html68"
+<LI><A NAME="tex2html72"
   HREF="TechnicalManual.html#SECTION00080000000000000000">Credits and Acknowledgements</A>
 <UL>
-<LI><A NAME="tex2html69"
+<LI><A NAME="tex2html73"
   HREF="TechnicalManual.html#SECTION00081000000000000000">Contributing</A>
 </UL></UL>
 <!--End of Table of Contents-->
@@ -121,7 +123,7 @@ so we won't rehash all of the high level RL-Glue ideas.
 
 <P>
 This software project is licensed under the Apache-2.0<A NAME="tex2html1"
-  HREF="#foot201"><SUP>1</SUP></A> license. We're not lawyers, but our intention is that this code 
+  HREF="#foot210"><SUP>1</SUP></A> license. We're not lawyers, but our intention is that this code 
 should be used however it is useful.  We'd appreciate to hear what you're using it for, and to get credit if appropriate.
 
 <P>
@@ -135,9 +137,9 @@ Software Requirements</A>
 </H2>
 This project requires nothing more exotic than a C compiler, Make, etc.  This project uses a configure script that was created by GNU 
 Autotools<A NAME="tex2html4"
-  HREF="#foot202"><SUP>2</SUP></A>, so it should compile and run without problems 
+  HREF="#foot211"><SUP>2</SUP></A>, so it should compile and run without problems 
 on most *nix platforms (Unix, Linux, Mac OS X, Windows using CYGWIN<A NAME="tex2html6"
-  HREF="#foot203"><SUP>3</SUP></A>). 
+  HREF="#foot212"><SUP>3</SUP></A>). 
 
 <P>
 
@@ -206,6 +208,40 @@ Provided everything goes well, the headers, libraries, and binaries have been re
 <TT>/Users/btanner/tmp/rlglue/lib</TT>
 <BR>
 <TT>/Users/btanner/tmp/rlglue/bin</TT>
+
+<P>
+
+<H2><A NAME="SECTION00024000000000000000">
+Uninstall</A>
+</H2>
+If you decide that you don't want  RL-Glue on your machine anymore, you can easily uninstall it.  The procedures varies a tiny bit depending on if you installed it to the default location, or somewhere custom.
+
+<P>
+
+<H3><A NAME="SECTION00024100000000000000">
+RL-Glue Installed To Default Location</A>
+</H3>
+<PRE>
+	&gt;$ ./configure
+	&gt;$ sudo make uninstall
+</PRE>
+
+<P>
+This will remove all of the headers, libraries, and binaries from <TT>/usr/local</TT>.
+
+<P>
+
+<H3><A NAME="SECTION00024200000000000000">
+RL-Glue Installed To Custom Location</A>
+</H3>
+You'll need to make sure that either you haven't reconfigured the directory you downloaded from, or, if you removed/changed that already, you have to run configure again the exact same way as when you installed it.  For example:
+<PRE>
+	&gt;$ ./configure --prefix=/Users/btanner/tmp/rlglue
+	&gt;$ make uninstall
+</PRE>
+
+<P>
+That's it!  This will remove all of the headers, libraries, and binaries from <TT>/Users/btanner/tmp/rlglue</TT>.
 
 <P>
 
@@ -918,20 +954,20 @@ The command line arguments were: <BR>
 The translation was initiated by Brian Tanner on 2008-10-01
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot201">... Apache-2.0</A><A
+<DT><A NAME="foot210">... Apache-2.0</A><A
  HREF="TechnicalManual.html#tex2html1"><SUP>1</SUP></A></DT>
 <DD><TT><A NAME="tex2html2"
   HREF="http://www.apache.org/licenses/LICENSE-2.0.html">http://www.apache.org/licenses/LICENSE-2.0.html</A></TT>
 
 </DD>
-<DT><A NAME="foot202">...
+<DT><A NAME="foot211">...
 Autotools</A><A
  HREF="TechnicalManual.html#tex2html4"><SUP>2</SUP></A></DT>
 <DD><TT><A NAME="tex2html5"
   HREF="http://sources.redhat.com/autobook/">http://sources.redhat.com/autobook/</A></TT>
 
 </DD>
-<DT><A NAME="foot203">... CYGWIN</A><A
+<DT><A NAME="foot212">... CYGWIN</A><A
  HREF="TechnicalManual.html#tex2html6"><SUP>3</SUP></A></DT>
 <DD><TT><A NAME="tex2html7"
   HREF="http://www.cygwin.com/">http://www.cygwin.com/</A></TT>
