@@ -73,3 +73,12 @@ void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct){
 	}
 	printf("\n");
 }
+/*This is an easier trick to get the version */
+char svnVersionString[1024];
+
+char* __rlglue_get_svn_version(){
+	char *theVersion="$Revision$";
+	(void)strncpy(svnVersionString, theVersion+11, strlen(theVersion+11) - 3);
+    svnVersionString[sizeof(svnVersionString) - 1] = '\0';
+	return svnVersionString;
+}
