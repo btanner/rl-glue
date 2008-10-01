@@ -3,23 +3,23 @@
 
 
 $key = q/sec:custom-flags/;
-$external_labels{$key} = "$URL/" . q|details.html|; 
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sec:util-functions/;
-$external_labels{$key} = "$URL/" . q|details.html|; 
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sec:agent/;
-$external_labels{$key} = "$URL/" . q|details.html|; 
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sec:gotchas-shared-libs/;
-$external_labels{$key} = "$URL/" . q|details.html|; 
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sec:structure-types/;
-$external_labels{$key} = "$URL/" . q|details.html|; 
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
 1;

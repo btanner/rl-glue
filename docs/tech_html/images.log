@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=latex 2008.2.22)  28 SEP 2008 18:50
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=latex 2008.2.22)  30 SEP 2008 20:50
 entering extended mode
 **./images.tex
 (./images.tex
@@ -100,12 +100,12 @@ latex2htmlLength oddsidemargin=0.0pt
 latex2htmlLength evensidemargin=0.0pt
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 164.
+(Font)              <10.95> on input line 165.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 164.
+(Font)              <8> on input line 165.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 164.
-l2hSize :tex2html_wrap_inline252:8.7125pt::8.7125pt::78.41405pt.
+(Font)              <6> on input line 165.
+l2hSize :tex2html_wrap_inline209:8.7125pt::8.7125pt::78.41405pt.
 [1
 
 
@@ -114,7 +114,7 @@ l2hSize :tex2html_wrap_inline252:8.7125pt::8.7125pt::78.41405pt.
 Here is how much of TeX's memory you used:
  819 strings out of 94501
  10594 string characters out of 1176137
- 54589 words of memory out of 1500000
+ 54587 words of memory out of 1500000
  4032 multiletter control sequences out of 10000+50000
  6379 words of font info for 23 fonts, out of 1200000 for 2000
  580 hyphenation exceptions out of 8191
