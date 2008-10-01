@@ -42,64 +42,75 @@ Contents</A>
 <!--Table of Contents-->
 
 <UL>
-<LI><A NAME="tex2html40"
+<LI><A NAME="tex2html60"
   HREF="Glue-Overview.html#SECTION00020000000000000000">Introduction</A>
 <UL>
-<LI><A NAME="tex2html41"
+<LI><A NAME="tex2html61"
   HREF="Glue-Overview.html#SECTION00021000000000000000">Purpose of Document</A>
-<LI><A NAME="tex2html42"
+<LI><A NAME="tex2html62"
   HREF="Glue-Overview.html#SECTION00022000000000000000">How to Use This Document</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html43"
+<LI><A NAME="tex2html63"
   HREF="Glue-Overview.html#SECTION00030000000000000000">RL-Glue Concepts</A>
 <UL>
-<LI><A NAME="tex2html44"
+<LI><A NAME="tex2html64"
   HREF="Glue-Overview.html#SECTION00031000000000000000">Agents, Environments and Experiment Programs</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html45"
+<LI><A NAME="tex2html65"
   HREF="Glue-Overview.html#SECTION00040000000000000000">RL-Glue Environment Programs</A>
 <UL>
-<LI><A NAME="tex2html46"
+<LI><A NAME="tex2html66"
   HREF="Glue-Overview.html#SECTION00041000000000000000">Essential Components Of A RL-Glue Environment</A>
-<LI><A NAME="tex2html47"
+<LI><A NAME="tex2html67"
   HREF="Glue-Overview.html#SECTION00042000000000000000">Additional Components Of A RL-Glue Environment</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html48"
+<LI><A NAME="tex2html68"
   HREF="Glue-Overview.html#SECTION00050000000000000000">RL-Glue Agent Programs</A>
 <UL>
-<LI><A NAME="tex2html49"
+<LI><A NAME="tex2html69"
   HREF="Glue-Overview.html#SECTION00051000000000000000">Essential Components Of A RL-Glue Agent</A>
-<LI><A NAME="tex2html50"
+<LI><A NAME="tex2html70"
   HREF="Glue-Overview.html#SECTION00052000000000000000">Additional Components Of A RL-Glue Agent</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html51"
+<LI><A NAME="tex2html71"
   HREF="Glue-Overview.html#SECTION00060000000000000000">RL-Glue Experiment Programs</A>
 <UL>
-<LI><A NAME="tex2html52"
+<LI><A NAME="tex2html72"
   HREF="Glue-Overview.html#SECTION00061000000000000000">Basic Experiment Programs</A>
-<LI><A NAME="tex2html53"
+<LI><A NAME="tex2html73"
   HREF="Glue-Overview.html#SECTION00062000000000000000">Advanced Experiment Programs</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html54"
+<LI><A NAME="tex2html74"
   HREF="Glue-Overview.html#SECTION00070000000000000000">Command and Function Reference</A>
 <UL>
-<LI><A NAME="tex2html55"
+<LI><A NAME="tex2html75"
   HREF="Glue-Overview.html#SECTION00071000000000000000">Agent Functions</A>
-<LI><A NAME="tex2html56"
+<LI><A NAME="tex2html76"
   HREF="Glue-Overview.html#SECTION00072000000000000000">Environment Functions</A>
-<LI><A NAME="tex2html57"
+<LI><A NAME="tex2html77"
   HREF="Glue-Overview.html#SECTION00073000000000000000">Interface Routines Provided by the RL-Glue</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html58"
-  HREF="Glue-Overview.html#SECTION00080000000000000000">Frequently Asked Questions</A>
-<LI><A NAME="tex2html59"
-  HREF="Glue-Overview.html#SECTION00090000000000000000">Glossary</A>
+<LI><A NAME="tex2html78"
+  HREF="Glue-Overview.html#SECTION00080000000000000000">Changes from RL-Glue 2.x</A>
+<UL>
+<LI><A NAME="tex2html79"
+  HREF="Glue-Overview.html#SECTION00081000000000000000">The Codec Split</A>
+<LI><A NAME="tex2html80"
+  HREF="Glue-Overview.html#SECTION00082000000000000000">Build Changes</A>
+<LI><A NAME="tex2html81"
+  HREF="Glue-Overview.html#SECTION00083000000000000000">API Changes</A>
+<LI><A NAME="tex2html82"
+  HREF="Glue-Overview.html#SECTION00084000000000000000">Type Changes</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html83"
+  HREF="Glue-Overview.html#SECTION00090000000000000000">Frequently Asked Questions</A>
 </UL>
 <!--End of Table of Contents-->
 <P>
@@ -137,7 +148,7 @@ How to Use This Document</A>
 This document as been subdivided to reflect the five purposed described above. To learn about the major components of RL-Glue and a description of how those components interact see Section <A HREF="#RL-Glue">2</A>. To learn how to make an environment and agent programs compatible with RL-Glue we recommend sections <A HREF="#envp1">3.1</A> and <A HREF="#agentp1">4.1</A>. Sections <A HREF="#envp1">3.1</A> and <A HREF="#agentp1">4.1</A> describe only the mandatory functions that RL-Glue environments and agents must implement. Sections <A HREF="#envp2">3.2</A> and <A HREF="#agentp2">4.2</A> describe optional environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section <A HREF="#exp">5</A>. For quick function reference see Section <A HREF="#ref">6</A>.
 
 <P>
-Frequently asked questions and glossary can be found in sections <A HREF="#faq">7</A> and <A HREF="#glos">8</A>.
+Frequently asked questions can be found in Section <A HREF="#faq">8</A>.
 
 <P>
 This document and the RL-Glue Project using naming conventions and definitions from Sutton and Barto's ``Reinforcement Learning: An Introduction". We recommend that you review Sutton and Barto to get the most out of the RL-Glue documentation. An online version of Sutton and Barto can be founf here: <TT><A NAME="tex2html1"
@@ -173,10 +184,10 @@ The RL-Glue Standard. Arrows indicate function call direction.</CAPTION>
 </DIV>
 
 <P>
-RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for all RL researchers to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to "plug in" agents, environments and experiment programs (previously titled benchmarks) without having to continually rewrite the connecting code for these pieces. An experiment program is some very simple code stating how many times to run an agent in an environment and what data should be extracted from the agent and environment. Provided the agent, environment, and experiment program follow the RL-Glue protocol by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure <A HREF="#fig1">2</A> is a diagram which shows how function calls work in RL-Glue.
+RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for all RL researchers to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to ``plug in'' agents, environments and experiment programs (previously titled benchmarks) without having to continually rewrite the connecting code for these pieces. An experiment program is some very simple code stating how many times to run an agent in an environment and what data should be extracted from the agent and environment. Provided the agent, environment, and experiment program follow the RL-Glue protocol by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure <A HREF="#fig1">2</A> is a diagram which shows how function calls work in RL-Glue.
 
 <P>
-The Experiment Program contains the "main function" which will then make all of it's requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program should never have access to the agent or environment directly, all contact should always go through the RL-Glue interface first.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
+The Experiment Program contains the ``main function''" which will then make all of it's requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program should never have access to the agent or environment directly, all contact should always go through the RL-Glue interface first.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
 
 <P>
 
@@ -323,7 +334,7 @@ For example, this is a sample task_specification provided as one of the examples
 <PRE>
      "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0]"
 </PRE>     
-The V corresponds to the version number of the task specification language. E corresponds to the type of task being solved. It has a character value of 'e' if the task is episodic and 'c' if the task is continuing. O and A correspond to Observation and Action information respectively. Finally, the R corresponds to the range of rewards for the task. Within each of O, A and R a range can be provided, however if the values are unknown or infinite in magnitude, two special input values have been defined.
+The V corresponds to the version number of the task specification language. E corresponds to the type of task being solved. It has a character value of `e' if the task is episodic and `c' if the task is continuing. O and A correspond to Observation and Action information respectively. Finally, the R corresponds to the range of rewards for the task. Within each of O, A and R a range can be provided, however if the values are unknown or infinite in magnitude, two special input values have been defined.
 
 <BR>
 <BR>
@@ -739,7 +750,7 @@ We can now produce more advanced experiment programs that would be used in reinf
 <BR>
 Command and Function Reference
 </H1>
-Once your comfortable with the basics and you have written a few agents and environment you may often find yourself wondering "I need to do <B>X</B> what function should I use". You may also wonder what is the "intended purpose" of a particular RL-Glue function, when you are reviewing someone else's agent or environment code. This section provides a complete listing of all agent, environment and RL-Glue interface function for quick reference.
+Once your comfortable with the basics and you have written a few agents and environment you may often find yourself wondering ``I need to do <B>X</B> what function should I use?''. You may also wonder what is the ``intended purpose'' of a particular RL-Glue function, when you are reviewing someone else's agent or environment code. This section provides a complete listing of all agent, environment and RL-Glue interface function for quick reference.
 
 <H2><A NAME="SECTION00071000000000000000">
 Agent Functions</A>
@@ -1068,26 +1079,259 @@ This message passes the input string to the environment and returns the reply st
 
 <P>
 
-<H1><A NAME="SECTION00080000000000000000"></A>
+<H1><A NAME="SECTION00080000000000000000">
+Changes from RL-Glue 2.x</A>
+</H1>
+Version 3.0 of RL-Glue represents a large series of updates with the intention of bringing RL-Glue from a University of Alberta side project to an open source project generally useful to the global
+reinforcement learning community.  As part of that process, we made some pretty big changes.
+
+<P>
+
+<H2><A NAME="SECTION00081000000000000000">
+The Codec Split</A>
+</H2>
+The codecs (including the C/C++ codec) has been split from the main RL-Glue project.  Each codec package is now more independently, and they each may offer something different to the user.  However, as always, they layer on RL-Glue.  The root page for all of the codecs is:
+<BR>
+<A NAME="tex2html3"
+  HREF="http://glue.rl-community.org/Home/codecs">http://glue.rl-community.org/Home/codecs</A>
+<P>
+As usual, you don't need to change your code depending on how it will be used.  The code for an agent, environment, or experiment is identical no matter if you will run it using sockets or directly compiled together.  The only difference is what library you link against.
+
+<P>
+
+<H3><A NAME="SECTION00081100000000000000">
+RL-Glue Project</A>
+</H3>
+The idea of the RL-Glue project is that it will very very rarely change.  We've made most of the changes on our wishlist, so RL-Glue can become a library that is standard and reliable for doing reinforcement learning experiments.  The goal is that it is always there, and it always just works.
+
+<P>
+This project is written entirely in C and can be linked from C or C++ code.
+
+<P>
+When you download and install the RL-Glue project, you get three artifacts:
+<DL>
+<DT><STRONG>rl_glue executable socket server</STRONG></DT>
+<DD>The server for running socket-based experiments.
+	
+</DD>
+<DT><STRONG>librlglue</STRONG></DT>
+<DD>A C library that can be linked against for creating executables where the agent, environment, and experiment program are all written in C or C++. These experiments have virtually no rl-glue calling overhead.
+	
+</DD>
+<DT><STRONG>Agent/Environment/Experiment Headers</STRONG></DT>
+<DD>Four header files: RL_glue.h Agent_common.h, Environment_common.h, and RL_common.h. 
+</DD>
+</DL>
+
+<P>
+The way that they should be included in your agents/environments/experiments is like this:
+<PRE>
+&lt;rlglue/RL_common.h&gt;             /* Datastructures                                     */
+&lt;rlglue/RL_glue.h&gt;               /* Experiment (RL_) functions for experiments 
+                                  (includes RL_common)                                 */
+&lt;rlglue/Agent_common.h&gt;          /* Agent (agent_) functions (includes RL_common)      */
+&lt;rlglue/Environment_common.h&gt;    /* Environment (env_) functions (includes RL_common)  */
+&lt;rlglue/Environment_common.h&gt;    /* Environment (env_) functions (includes RL_common)  */
+&lt;rlglue/utils/C/RLStruct_util.h&gt; /* Handy utility functions for copying/initing structs*/
+</PRE> 
+
+<P>
+Generally, each of agent/env/experiment should only have to include one of these files.  You'll probably never include RL_common.h, but it is needed by the others.
+
+<P>
+
+<H3><A NAME="SECTION00081200000000000000">
+RL-Glue-Extensions Project :: C/C++ Codec</A>
+</H3>
+The <A NAME="tex2html4"
+  HREF="http://glue.rl-community.org/Home/codecs/c-c-codec">C/C++ codec</A>
+gives you libraries that can be used to build stand-alone socket-based agents, environment, and experiments.  The C Codec is in the rl-glue-ext project and is expected to change more frequently than the main RL-Glue project.
+
+<P>
+This project is written entirely in C and can be linked from C or C++ code.
+
+<P>
+The artifacts of the C Codec are:
+<DL>
+<DT><STRONG>librlagent</STRONG></DT>
+<DD>Library give agents what they need to connect to the rl_glue executable server over sockets.
+	
+</DD>
+<DT><STRONG>librlenvironment</STRONG></DT>
+<DD>Library give environments what they need to connect to the rl_glue executable server over sockets.
+	
+</DD>
+<DT><STRONG>librlexperiment</STRONG></DT>
+<DD>Library give experiments what they need to connect to the rl_glue executable server over sockets.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00082000000000000000">
+Build Changes</A>
+</H2>
+We're not manually writing Makefiles anymore!  We've moved both RL-Glue and the C/C++ Codec to a <A NAME="tex2html5"
+  HREF="http://www.gnu.org/software/autoconf/">GNU autotools system</A>. You can build these projects using the following standard Linux/Unix procedure now:
+<PRE>
+	&gt;$ ./configure
+	&gt;$ make
+	&gt;$ sudo make install
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00083000000000000000">
+API Changes</A>
+</H2>
+All of the API changes have been included in all of the codecs.
+
+<P>
+
+<H3><A NAME="SECTION00083100000000000000">
+RL_Freeze and Agent_Freeze</A>
+</H3>
+The freeze methods were the first in a long series of ``special'' methods that some people wanted RL-Glue to support.  The long term solution to special methods is the messaging system, RL_agent_message and RL_env_message. With the messaging system you can create any protocol you want between your experiment and agent or experiment and environment.
+
+<P>
+So, to reduce the clutter and kruft (cruft?) of the API, we've removed Freeze.  How do you unfreeze anyways?
+
+<P>
+
+<H3><A NAME="SECTION00083200000000000000">
+RL_Episode</A>
+</H3>
+Csaba Szepesvári made the request at some point that <TT>RL_Episode</TT> should let you know whether it ended because the time step limit expired, or because the episode ended normally.  We now return the value of the terminal flag from the last <TT>env_step</TT> of the episode. If the flag is set to 1, then the episode terminated normally, if not, the timeout ended the episode.  
+
+<P>
+
+<H3><A NAME="SECTION00083300000000000000">
+RL_Init</A>
+</H3>
+It made sense to us that <TT>RL_init</TT> should return the task spec, in case the experiment program wants to know it, make a note of it, etc. The RL_glue specification has now been updated to handle this.
+
+<P>
+
+<H2><A NAME="SECTION00084000000000000000">
+Type Changes</A>
+</H2>
+All of the Type changes have been included in all of the codecs.
+
+<P>
+
+<H3><A NAME="SECTION00084100000000000000">
+Typedefs</A>
+</H3>
+This is a big one. We revamped all of the type names for C/C++.  We made them all lower case, and added ``_t'' to them to identify them as types.  This should reduce confusion so there is no more code like:
+<BR>
+<TT>Observation observation;</TT>
+
+<P>
+Instead it'll be:
+<BR>
+<TT>observation_t observation;</TT>
+
+<P>
+We think the latter is easier to read.
+
+<P>
+This is a pain to change if you have a lot of existing code, so we've made it easy to transition.  There is a file you can include which will define all the old, ugly type names. This is good news because it means you can migrate to the new type names at your leisure.
+<PRE>
+#include &lt;rlglue/legacy_types.h&gt;
+</PRE>
+
+<P>
+You can find all the old and new type names here:
+<BR>
+<A NAME="tex2html6"
+  HREF="http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy_types.h">http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy_types.h</A>
+<P>
+
+<H3><A NAME="SECTION00084200000000000000">
+charArray!</A>
+</H3>
+Some people have found the interface of abstract types that are arrays of <TT>double</TT> and <TT>int</TT> a little bit too constricting.  We've added a third array, this time of <TT>char</TT>.  Now people can push strings and char arrays of anything they want through observations, action, state_key types, etc.
+
+<P>
+The rl_abstract_type_t now looks like:
+<PRE>
+typedef struct
+{
+    unsigned int numInts;
+    unsigned int numDoubles;
+    unsigned int numChars;
+    int* intArray;
+    double* doubleArray;
+    char* charArray;
+} rl_abstract_type_t;
+</PRE>
+
+<P>
+Keep in mind that charArray is an array of characters.  It is not necessarily null terminated.  We don't enforce null termination. Remember, 3 chars takes up 3 array spots, but ``123'' takes up 4 (`
+<BR>
+0' at the end).
+
+<P>
+If you do the following, bad things will probably happen if the char array is not null terminated:
+<PRE>
+	printf("My char array is %s\n",observation.charArray);
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00090000000000000000"></A>
 <A NAME="faq"></A>
 <BR>
 Frequently Asked Questions
 </H1>
-<B>Does Rl-Glue support multi-agent reinforcement learning?</B>
-<BR>
-No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  
 
 <P>
-<B>Why isn't the RL-Glue interface object oriented?</B>
+
+<H3><A NAME="SECTION00090100000000000000">
+Can I write my agents in &lt; insert language here &gt;</A>
+</H3>
+Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:
 <BR>
-<H1><A NAME="SECTION00090000000000000000"></A>
-<A NAME="glos"></A>
-<BR>
-Glossary
-</H1>
-Is this necessary or even useful?
+<A NAME="tex2html7"
+  HREF="http://glue.rl-community.org/Home/codecs">http://glue.rl-community.org/Home/codecs</A>
+<P>
+
+<H3><A NAME="SECTION00090200000000000000">
+Does Rl-Glue support multi-agent reinforcement learning?</A>
+</H3>
+ No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  
+
+<P>
+
+<H3><A NAME="SECTION00090300000000000000">
+Why isn't the RL-Glue interface object oriented?</A>
+</H3>
+RL-Glue is meant to be a low level protocol for connecting agents, environments, and experiments.  These interactions can
+easily be described by the simple, flat, functions calls of RL-Glue.  We don't feel that it is useful to overcomplicate
+things in that respect.
+
+<P>
+However, there is no reason that an implementation of an agent or environment shouldn't be designed using an object-oriented 
+approach.  In fact, many of the contributors to this project have their own object-oriented libraries of agents that 
+they use with RL-Glue.
+
+<P>
+Some might argue that it makes sense to create a C/C++ or Java codec that supports an OO design
+directly.  This would not be hard, it's just a matter of someone interested picking up the project and doing it.  Personally, 
+we've found it easy enough to write a small bridge between the existing codecs and our personal OO hierarchies.
+
+<P>
 
 <H1><A NAME="SECTION000100000000000000000">
+Document Information</A>
+</H1>
+<PRE>
+Revision Number: $Rev: 864 $
+Last Updated By: $Author: brian@tannerpages.com $
+Last Updated   : $Date: 2008-09-30 20:50:49 -0600 (Tue, 30 Sep 2008) $
+$URL: https://rl-glue.googlecode.com/svn/trunk/docs/TechnicalManual.tex $
+</PRE>
+<H1><A NAME="SECTION000110000000000000000">
 About this document ...</A>
 </H1>
  <STRONG>RL-Glue 3.0 Overview</STRONG><P>
