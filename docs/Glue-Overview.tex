@@ -665,6 +665,11 @@ If you do the following, bad things will probably happen if the char array is no
 \section{Frequently Asked Questions}
 \label{faq}
 
+\subsection{Where did the task spec parsers go?}
+The task specification language has always been a bit of a sensitive topic, and writing good parsers for the task spec has never been easy. We're currently considering slightly changing the task spec format, to make
+it easier to read and easier to parse.  After that, we'll need (\textbf{Chance to Contribute!}) a parser for each codec.  We won't need to change the main RL-Glue project, but we will need to re-release all of the 
+codec software.  So, we're waiting on deciding on changes to the language and implementing the parsers.
+
 \subsubsection{Can I write my agents in $<$ insert language here $>$}
 Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:\newline
 \htmladdnormallink{http://glue.rl-community.org/Home/codecs}{http://glue.rl-community.org/Home/codecs}
