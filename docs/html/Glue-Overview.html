@@ -114,6 +114,12 @@ Contents</A>
 <UL>
 <LI><A NAME="tex2html85"
   HREF="Glue-Overview.html#SECTION00091000000000000000">Where did the task spec parsers go?</A>
+<LI><A NAME="tex2html86"
+  HREF="Glue-Overview.html#SECTION00092000000000000000">Can I write my agents in &lt; insert language here &gt;</A>
+<LI><A NAME="tex2html87"
+  HREF="Glue-Overview.html#SECTION00093000000000000000">Does Rl-Glue support multi-agent reinforcement learning?</A>
+<LI><A NAME="tex2html88"
+  HREF="Glue-Overview.html#SECTION00094000000000000000">Why isn't the RL-Glue interface object oriented?</A>
 </UL></UL>
 <!--End of Table of Contents-->
 <P>
@@ -151,7 +157,7 @@ How to Use This Document</A>
 This document as been subdivided to reflect the five purposed described above. To learn about the major components of RL-Glue and a description of how those components interact see Section <A HREF="#RL-Glue">2</A>. To learn how to make an environment and agent programs compatible with RL-Glue we recommend sections <A HREF="#envp1">3.1</A> and <A HREF="#agentp1">4.1</A>. Sections <A HREF="#envp1">3.1</A> and <A HREF="#agentp1">4.1</A> describe only the mandatory functions that RL-Glue environments and agents must implement. Sections <A HREF="#envp2">3.2</A> and <A HREF="#agentp2">4.2</A> describe optional environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section <A HREF="#exp">5</A>. For quick function reference see Section <A HREF="#ref">6</A>.
 
 <P>
-Frequently asked questions can be found in Section <A HREF="#faq">8</A>.
+Frequently asked questions can be found in Section <A HREF="#faq">8</A>. A summary of and explanations for all changes from RL-Glue 2.X to Rl-Glue 3.0 can be found in Section <A HREF="#change">7</A>.
 
 <P>
 This document and the RL-Glue Project using naming conventions and definitions from Sutton and Barto's ``Reinforcement Learning: An Introduction". We recommend that you review Sutton and Barto to get the most out of the RL-Glue documentation. An online version of Sutton and Barto can be founf here: <TT><A NAME="tex2html1"
@@ -171,7 +177,7 @@ Another important part of learning is evaluation and improvement. With agents, l
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="fig1"></A><A NAME="43"></A>
+<DIV ALIGN="CENTER"><A NAME="fig1"></A><A NAME="44"></A>
 <TABLE>
 <CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
 The RL-Glue Standard. Arrows indicate function call direction.</CAPTION>
@@ -260,18 +266,12 @@ Details on how to encode observation and action types in C and C++ is described 
 Environment Start</A>
 </H3>
 Writing env_start is very simple. The function takes no input and simply returns an observation. The env_start function signifies the beginning of an episode; env_start chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudo code selects a random start state for a grid world and returns the observation:
-<PRE><TT>
-1. <B>env_start</B><IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> observation
-<BR>
-2. 		state = rand()*num_states
-<BR>
-3. 		set observation equal to state
-<BR>
-4. <B>return</B> observation
-</TT></PRE>
+<PRE>
+1. env_start -&gt; observation
+2.      state = rand()*num_states
+3.      set observation equal to state
+4. return observation
+</PRE>
 The RL-Glue Technical Documentation describes how to implement line 3 in C/C++.
 
 <P>
@@ -280,24 +280,15 @@ The RL-Glue Technical Documentation describes how to implement line 3 in C/C++.
 Environment Step</A>
 </H3>
 The final essential piece of an RL-Glue environment is the env_step function. The env_step function must take an action as input and produce a observation, reward and a termination flag as output. In most RL problems the  env_step function updates the internal state of the environment, tests for end of episode and returns the new observation of state and current reward. In other words, step function encodes the state transition and reward functions. Keeping with the grid world example, the following step function would be a valid env_step function:
-<PRE><TT>
-1. <B>env_step</B>(Action a) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> reward, observation, flag 
-<BR>
-2. 		newState = updateState(a, oldState)
-<BR>
-3. 		 flag = isTerminal()
-<BR>
-3. 		 reward = -1
-<BR>
-4. 		set observation equal to newState
-<BR>
-5. 		oldState = newState
-<BR>
-6. <B>return</B> reward, observation, flag
-</TT></PRE>
+<PRE>
+1. env_step(action) -&gt; reward, observation, flag 
+2.      newState = updateState(a, oldState)
+3.      flag = isTerminal()
+3.      reward = -1
+4.      set observation equal to newState
+5.      oldState = newState
+6. return reward, observation, flag
+</PRE>
 Here we assume the existence of a state update function and an isTerminal function that checks if the current state is a terminal state.
 
 <P>
@@ -411,35 +402,27 @@ Consider a simple gridworld with Actions North, South, East and West and a singl
      "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0] "
 </PRE>
 This Task_specification provides the following information:
-<DL>
-<DT><STRONG>-</STRONG></DT>
-<DD>RL-Glue version 2.0 supported
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>the task is episodic
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>Observation space has one dimension
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>the Observation variable has integer values (discrete state)
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>range of Observation variable is 0 to N-1
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>Action space has one dimension
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>the Action variable has integer values (discrete actions: tabular)
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>range of Action variable is 0 to 3
-</DD>
-<DT><STRONG>-</STRONG></DT>
-<DD>range of the rewards is -1 to 0
-</DD>
-</DL>
+
+<UL>
+<LI>Task Specification version 2.0 supported
+</LI>
+<LI>the task is episodic
+</LI>
+<LI>Observation space has one dimension
+</LI>
+<LI>the Observation variable has integer values (discrete state)
+</LI>
+<LI>range of Observation variable is 0 to N-1
+</LI>
+<LI>Action space has one dimension
+</LI>
+<LI>the Action variable has integer values (discrete actions: tabular)
+</LI>
+<LI>range of Action variable is 0 to 3
+</LI>
+<LI>range of the rewards is -1 to 0
+</LI>
+</UL>
 
 <P>
 
@@ -457,20 +440,13 @@ The env_cleanup function usually deallocates or frees anything allocated in env_
 Environment Message</A>
 </H3>
 Once in a while you will find yourself wishing there was an environment function that was part of RL-Glue. The env_message function allows you to exactly this: you can send a string message to the environment and it can respond with a string. For example to disable random starting states:
-<PRE><TT>
-1. env_message(inMessage) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> outMessage
-<BR>
-2.		 <B>if</B> inMessage == ``turnOffRandomStarts"  
-<BR>
-3. 				 randStarts = false
-<BR>
-4. 		 <B>end</B> 
-<BR>
-5. <B>return</B> ``1"
-</TT></PRE>
+<PRE>
+1. env_message(inMessage) -&gt; outMessage
+2.      if inMessage == "turnOffRandomStarts"  
+3.           randStarts = false
+4.      end 
+5. return "1"
+</PRE>
 
 <P>
 
@@ -481,19 +457,14 @@ It is often necessary to record the state of the environment and then reset the 
 
 <P>
 The get and set state functions are meant to be used during a single learning experiments not across runs. For example, the following experiment is valid:
-<PRE><TT>
+<PRE>
 1. initialize RL-Glue
-<BR>
-2. <B>until</B> observation ``cliff" <B>do</B> next step of episode
-<BR>
+2. until observation "cliff" do next step of episode
 3. get state key form environment and store in stateKey
-<BR>
-4. <B>for</B> 100 steps
-<BR>
-5. 		 set environment state to stateKey
-<BR>
-6. 		 run an episode
-</TT></PRE>
+4. for 100 steps
+5. set environment state to stateKey
+6. run an episode
+</PRE>
 Storing a state key in a file and then using that state key in a different experiment program or later time is outside the intended usage of the env_get_state and env_set_state functions. It might work with some RL-Glue environments and not others.
 
 <P>
@@ -540,22 +511,14 @@ The three agent functions take observations and rewards as input and return acti
 Agent Start</A>
 </H3>
 The agent_start function selects the first action at the beginning of an episode based on the first observation of the environment. The agent_start function does not receive a reward as input; agent_start usually contains no learning update code. For example, the following function selects the first action based on the current value function estimate:
-<PRE><TT>
-1. agent_start (observation) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> action
-<BR>
-2. 		 <B>for</B> each action <I>i</I>
-<BR>
-3.				 <B>if</B> highest valued action ( Q(observation,<I>i</I>) )
-<BR>
-4. 				<B>then</B> store <I>i</I> as maxAction
-<BR>
-5. 		 <B>set</B> action equal to newAction
-<BR>
-6. <B>return</B> action
-</TT></PRE>
+<PRE>
+1. agent_start (observation) -&gt; action
+2.      for each action i
+3.           if highest valued action (Q(observation,i))
+4.           then store i as maxAction
+5.      set action equal to newAction
+6. return action
+</PRE>
 The following sections will describe how to perform step 5 in several different programming languages.
 
 <P>
@@ -564,34 +527,17 @@ The following sections will describe how to perform step 5 in several different 
 Agent Step</A>
 </H3>
 The agent_step function encodes the heart of the agents' learning algorithm and action selection mechanism. At a minimum the step function must return an action every time it is called. In most learning agents, the step function queries the agent programs action selection function and performs a learning update based on the input observation and reward. The following agent_step function does a SARSA update on a tabular value function Q:
-<PRE><TT>
-1. agent_step(reward, observation) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> action
-<BR>
-2. 		newAction = egreedy(observation)
-<BR>
-3. 		 QofOld = Q(oldState,oldAction)
-<BR>
-4. 		 QofNew = Q(observation,newAction) 
-<BR>
-5. 		 Q(oldState,oldAction) = QofOld + <IMG
- WIDTH="16" HEIGHT="15" ALIGN="BOTTOM" BORDER="0"
- SRC="img2.png"
- ALT="$\alpha$">[reward + <IMG
- WIDTH="14" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="img3.png"
- ALT="$\gamma$">QofNew - QofOld]
-<BR>
-6. 		 oldState = observation
-<BR>
-7.		 oldAction = newAction
-<BR>
-8. 		 <B>set</B> action equal to newAction
-<BR>
-9. <B>return</B> action
-</TT></PRE>  
+<PRE>
+1. agent_step(reward, observation)-&gt; action
+2.      newAction = egreedy(observation)
+3.      QofOld = Q(oldState,oldAction)
+4.      QofNew = Q(observation,newAction) 
+5.      Q(oldState,oldAction) = QofOld + alpha*[reward + gamma*QofNew - QofOld]
+6.      oldState = observation
+7.     oldAction = newAction
+8.      set action equal to newAction
+9. return action
+</PRE>  
 Notice that the agent program must explicitly store the observation and action from the previous time step. RL-Glue does not make the history of actions, observations and rewards available to the agent or environment.
 
 <P>
@@ -645,21 +591,15 @@ Basic Experiment Programs
 
 <P>
 At a minimum the experiment program must call RL_init and RL_cleanup and execute several time steps of agent-environment interaction. The following pseudo code represents a simple experiment program.
-<PRE><TT>
+<PRE>
 1. RL_init()
-<BR>
 2. RL_start()
-<BR>
 3. steps=0
-<BR>
 4. terminal=false 
-<BR>
-5. <B>while</B> steps &lt; 100 <B>and not</B> terminal
-<BR>
-6.		 terminal,reward,observation,action = RL_step()
-<BR>
+5. while steps &lt; 100 and not terminal
+6.     terminal,reward,observation,action = RL_step()
 7. RL_cleanup()
-</TT></PRE>
+</PRE>
 This experiment program initializes the agent and environment (RL_init), calls the start functions of the agent and environment (RL_start) and then executes a 100 or less step episode. 
 
 <P>
@@ -673,21 +613,15 @@ The RL_step function allows the experiment program to record/sum/average the rew
 
 <P>
 Putting these new functions together we can write a more useful experiment program:
-<PRE><TT>
+<PRE>
 1. RL_init()
-<BR>
 2. theReturn = 0
-<BR>
-3. <B>for</B> 1 = 1:100
-<BR>
-4. 		 RL_episode(1000)
-<BR>
-5. 		 theReturn += RL_return()
-<BR>
-6.  <B>Print</B> theReturn/100
-<BR>
+3. for 1 = 1:100
+4.      RL_episode(1000)
+5.      theReturn += RL_return()
+6.  Print theReturn/100
 7. RL_cleanup()
-</TT></PRE>
+</PRE>
 The above experiment program runs 100 episodes, each with max length 1000, and computes the average cumulative reward per episode.
 
 <H2><A NAME="SECTION00062000000000000000"></A>
@@ -698,53 +632,25 @@ Advanced Experiment Programs
 
 <P>
 As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are access through calls to the RL-Glue interface from an experiment program. For example, to send a message to the agent use RL_agent_message. To get the state key from the environment use RL_get_state. The pattern is simple to follow:
-
-<UL>
-<LI>RL_set_state() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> env_set_state()
-</LI>
-<LI>RL_get_random_seed() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> env_get_random_seed()
-</LI>
-<LI>RL_set_random_seed() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> env_set_random_seed()
-</LI>
-<LI>RL_env_message() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> env_message
-
-<P>
-</LI>
-</UL>
+<PRE>
+     RL_set_state() -&gt; env_set_state()
+     RL_get_random_seed() -&gt; env_get_random_seed()
+     RL_set_random_seed() -&gt; env_set_random_seed()
+     RL_env_message() -&gt; env_message
+</PRE>
 We can now produce more advanced experiment programs that would be used in reinforcement learning research:
-<PRE><TT>
+<PRE>
 1. RL_init()
-<BR>
 2. numSteps = 0
-<BR>
-3. <B>for</B> 1 = 1:1000
-<BR>
-4. 		 RL_episode(1000)
-<BR>
+3. for 1 = 1:1000
+4.      RL_episode(1000)
 5. RL_agent_message("freezeAgentPolicy")
-<BR>
-6. <B>for</B> 1 = 1:100
-<BR>
-7. 		 RL_episode(1000)
-<BR>
-8. 		 numSteps += RL_num_steps()
-<BR>
-9.  <B>Print</B> numSteps/100
-<BR>
+6. for 1 = 1:100
+7.      RL_episode(1000)
+8.      numSteps += RL_num_steps()
+9.  Print numSteps/100
 10. RL_cleanup()
-</TT></PRE>
+</PRE>
 
 <P>
 
@@ -761,56 +667,33 @@ Agent Functions</A>
 
 <P>
 Every agent must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
-
-<BR>
-<BR>
-agent_start:  agent_start(first_observation) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> first_action
-<BR>
+<PRE>
+     agent_start(first_observation) -&gt; first_action
+</PRE>
 Given the first_observation (the observation of the agent in the start state) the agent must then return the action it wishes to perform. This is called once if the task is continuing, else it happens at the beginning of each episode.
-
-<BR>
-<BR>
-agent_step: agent_step( reward, observation) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> action
-<BR>
+<PRE>
+     agent_step( reward, observation) -&gt; action
+</PRE>
 This is the most important function of the agent. Given the reward garnered by the agent's previous action, and the resulting observation, choose the next action to take. Any learning (policy improvement) should be done through this function.
-
-<BR>
-<BR>
-agent_end: agent_end(reward)
-<BR>
+<PRE>
+     agent_end(reward)
+</PRE>     
 If the agent is in an episodic environment, this function will be called after the terminal state is entered. This allows for any final learning updates. If the episode is terminated prematurely (ie a benchmark cutoff before entering a terminal state) agent_end is NOT called.
-
-<BR>
-<BR>
-agent_init: agent_init(task_specification)
-<BR>
+<PRE>
+     agent_init(task_specification)
+</PRE>     
 This function will be called first, even before agent_start. The task_specification is a description of important experiment information, including but not exclusive to a description of the state and action space. The RL-Glue standard for writing task_specification strings is found here.  In agent_init, information about the environment is extracted from the task_specification and then used to set up any necessary resources (for example, initialize the value function to a prelearning state).
-
-<BR>
-<BR>
-agent_cleanup: agent_cleanup()
-<BR>
+<PRE>
+     agent_cleanup()
+</PRE>     
 This function is called at the end of a run/trial and can be used to free any resources which may have allocated in agent_init. Calls to agent_cleanup should be in a one to one ratio with the calls to agent_init.
-
-<BR>
-<BR>
-agent_freeze: agent_freeze()
-<BR>
+<PRE>
+     agent_freeze()
+</PRE>
 Signals to the agent that training has ended. Requests that the agent freeze its current policy and value function (ie: stops learning and exploration).
-
-<BR>
-<BR>
-agent_message:agent_message(input_message) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> output_message
-<BR>
+<PRE>
+     agent_message(input_message) -&gt; output_message
+</PRE>     
 The agent_message function is a jack of all trades and master of none. Having no particular functionality, it is up to the user to determine what agent_message should implement. If there is any information which needs to be passed in or out of the agent, this message should do it. For example, if it is desirable that an agent's learning parameters be tweaked mid experiment, the author could establish an input string that triggers this action. Likewise, if the author wished to extract a representation of the value function, they could establish an input string which would cause agent_message to return the desired information.
 
 <P>
@@ -821,77 +704,41 @@ The agent_message function is a jack of all trades and master of none. Having no
 Environment Functions
 </H2>
 Every environment must define all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly access these functions.
-
-<BR>
-<BR>
-env_start: env_start() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> first_observation
-<BR>
+<PRE>
+     env_start() -&gt; first_observation
+</PRE>
 For a continuing task this is done once. For an episodic task, this is done at the beginning of each episode. Env_start assembles a first_observation given the agent is in the start state. Note the start state cannot also be a terminal state.
-
-<BR>
-<BR>
-env_step: env_step(action) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> reward, observation, terminal
-<BR>
+<PRE>
+     env_step(action) -&gt; reward, observation, terminal
+</PRE>
 Complete one step in the environment. Take the action passed in and determine what the reward and next state are for that transition.
-
-<BR>
-<BR>
-env_init: env_init() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> task_specification
-<BR>
+<PRE>
+     env_init() -&gt; task_specification
+</PRE>
 This routine will be called exactly once for each trial/run. This function is an ideal place to initialize all environment information and allocate any resources required to represent the environment. It must return a task_specification which adheres to the task specification language. A task_specification stores information regarding the observation and action space, as well as whether the task is episodic or continuous.
-
-<BR>
-<BR>
-env_get_state: env_get_state() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> state_key
-<BR>
+<PRE>
+     env_get_state() -&gt; state_key
+</PRE>
 The state_key is a compact representation of the current state of the environment such that at any point in the future, provided with the state_key, the environment could return to thatstate. Note that this does not include the agent's value function, it is merely restoring the details of the environment. For example, in a static grid world this would be as simple as the position of the agent.
-
-<BR>
-<BR>
-env_set_state: env_set_state(state_key)
-<BR>
+<PRE>
+     env_set_state(state_key)
+</PRE>
 Given the state_key, the environment should return to it's exact formation when the state_key was obtained. 
-
-<BR>
-<BR>
-env_get_random_seed: env_get_random_seed() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> random_seed_key
-<BR>
+<PRE>
+     env_get_random_seed() -&gt; random_seed_key
+</PRE>
 Saves the random seed object used by the environment such that it can be restored upon presentation of random_seed_key.
-
-<BR>
-<BR>
-env_set_random_seed: env_set_random_seed(random_seed_key)
-<BR>
+<PRE>
+     env_set_random_seed(random_seed_key)
+</PRE>
 Sets the random seed used by the environment. Typically it is advantageous for the experiment program to control the randomness of the environment. Env_set_random_seed can be used in conjunction with env_set state to save and restore a random_seed such that the environment will behave exactly the same way it has previously when it was in this state and given the same actions.
-
-<BR>
-<BR>
-env_cleanup: env_cleanup()
-<BR>
+<PRE>                 
+     env_cleanup()
+</PRE>
 This can be used to release any allocated resources. It will be called once for every call to env_init.
-
-<BR>
-<BR>
-env_message:env_message(input_string) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> output_string
-<BR>
+<PRE>
+     env_message(input_string) -&gt; output_string
+</PRE>
 Similar to agent_message, this function allows for any message passing to the environment required by the experiment program. This may be used to modify the environment mid experiment. Any information that needs to passed in or out of the environment can be handled by this function.
 
 <P>
@@ -906,184 +753,107 @@ The following built in RL-Glue functions are provided primarily for the use of t
 <BR>
 <BR>
 To understand the following, it is helpful to think of an episode as consisting of sequences of observations, actions, and rewards that are indexed by time-step as follows:
-
-<P>
-o0, a0,  r1, o1, a1,  r2, o2, a2, ..., rT, terminal_observation
-
-<BR>
-<BR>
+<PRE>
+     o0, a0,  r1, o1, a1,  r2, o2, a2, ..., rT, terminal_observation
+</PRE>
 where the episode lasts T time steps (T may be infinite) and terminal_observation is a special, designated observation signaling the end of the episode.
-<PRE><TT>
-RL_init() 
-<BR>
-agent_init(env_init())
-</TT></PRE>
-This initializes everything, passing the environment's task_specification to the agent. This should be called at the beginning of every trial.
-<PRE><TT>
-RL_start() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> o0, a0
-<BR>
-global upcoming_action
-<BR>
-o = env_start()
-<BR>
-a = agent_start(o)
-<BR>
-upcoming_action = a
-<BR>
-return o,a
-</TT></PRE>
 
 <P>
+<PRE>
+RL_init()
+     agent_init(env_init())
+</PRE>
+This initializes everything, passing the environment's task_specification to the agent. This should be called at the beginning of every trial.
+<PRE>
+RL_start() --&gt; o0, a0
+     global upcoming_action
+     o = env_start()
+     a = agent_start(o)
+     upcoming_action = a
+return o,a
+</PRE>
 Do the first step of a run or episode.  The action is saved in upcoming_action so that it can be used on the next step.
-<PRE><TT>
-RL_step() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> rt, ot, terminal, at
-<BR>
-global upcoming_action
-<BR>
-r,o,terminal = env_step(upcoming_action)
-<BR>
-if terminal == true
-<BR>
-agent_end(r)
-<BR>
-return r, o,terminal
-<BR>
-else
-<BR>
-a = agent_step(r, o)
-<BR>
-upcoming_action = a
-<BR>
-return r, o, terminal, a
-</TT></PRE>
+<PRE>
+RL_step() --&gt; rt, ot, terminal, at
+     global upcoming_action
+     r,o,terminal = env_step(upcoming_action)
+     if terminal == true
+           agent_end(r)
+           return r, o,terminal
+     else
+           a = agent_step(r, o)
+           upcoming_action = a
+     return r, o, terminal, a
+</PRE>
 Take one step.  RL_step uses the saved action and saves the returned action for the next step.  The action returned from one call must be used in the next, so it is better to handle this implicitly so that the user doesn't have to keep track of the action.  If the end-of-episode observation occurs, then no action is returned.
-<PRE><TT>
- RL_episode(steps)
-<BR>
-num_steps = 0
-<BR>
-o, a = RL_start()
-<BR>
-num_steps = num_steps + 1
-<BR>
-list = [o, a]
-<BR>
-while o <IMG
- WIDTH="18" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
- SRC="img4.png"
- ALT="$\neq$"> terminal_observation
-<BR>
-if(steps <IMG
- WIDTH="18" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
- SRC="img4.png"
- ALT="$\neq$"> 0 and num_steps <IMG
- WIDTH="18" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
- SRC="img5.png"
- ALT="$\geq$"> steps)
-<BR>
-end
-<BR>
-else
-<BR>
-r, o, a = RL_step()
-<BR>
-list = list + [r, o, a]
-<BR>
-num_steps = num_steps + 1
-<BR>
-agent_end(r)
-<BR>
-</TT></PRE>
+<PRE>
+RL_episode(steps)
+     num_steps = 0
+     o, a = RL_start()
+     num_steps = num_steps + 1
+     list = [o, a]
+     while o != terminal_observation
+           if(steps !=0 and num_steps &gt;= steps)
+                end
+           else
+                r, o, a = RL_step()
+                list = list + [r, o, a]
+                num_steps = num_steps + 1
+           
+     agent_end(r)
+</PRE>
 Do one episode until a termination observation occurs or until steps steps have elapsed, whichever comes first.  As you might imagine, this is done by calling RL_start, then RL_step until the terminal observation occurs.  If steps is set to 0, it is taken to be the case where there is no limitation on the number of steps taken and RL_episode will continue until a termination observation occurs. If no terminal observation is reached before num_steps is reached, the agent does not call agent_end, it simply stops.
-
-<BR>
-<BR>
-RL_return() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> return
-
-<BR>
-<BR>
+<PRE>
+     RL_return() -&gt; return
+</PRE>
 Return the cumulative total reward of the current or just completed episode.  The collection of all the rewards received in an episode (the return) is done within RL_return however, any discounting of rewards must be done inside the environment or agent.
-
-<BR>
-<BR>
-RL_num_steps() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> num_steps
-
-<BR>
-<BR>
+<PRE>
+     RL_num_steps() -&gt; num_steps
+</PRE>
 Return the number of steps elapsed in the current or just completed episode.
-<PRE><TT>
-RL_cleanup()
-<BR>
-env_cleanup()
-<BR>
-agent_cleanup()
-</TT></PRE>
+<PRE>
+     RL_cleanup()
+          env_cleanup()
+          agent_cleanup()
+</PRE>
 Provides an opportunity to reclaim resources allocated by RL_init.
-<PRE><TT>
-RL_set_state(State_key)
-<BR>
-env_set_state(State_key) 
-</TT></PRE>
+<PRE>
+     RL_set_state(State_key)
+          env_set_state(State_key)
+</PRE>
 Provides an opportunity to reset the state (see env_set_state for details).
-<PRE><TT>
-RL_set_random_seed(Random_seed_key)
-<BR>
-env_set_random_seed(Random_seed_key)
-</TT></PRE>
+<PRE>
+     RL_set_random_seed(Random_seed_key)
+          env_set_random_seed(Random_seed_key)
+</PRE>
 Provides an opportunity to reset the random seed key (see env_set_random_seed for details).
-<PRE><TT>
-RL_get_state() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> State_key
-<BR>
-return env_get_state() 
-</TT></PRE>
+<PRE>
+     RL_get_state() -&gt; State_key
+          return env_get_state()
+</PRE>
 Provides an opportunity to extract the state key from the environment (see env_get_state for details).
-<PRE><TT>
-RL_get_random_seed() <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> Random_seed_key
-<BR>
-return env_get_random_seed() 
-</TT></PRE>
+<PRE>
+     RL_get_random_seed() -&gt; Random_seed_key
+          return env_get_random_seed()
+</PRE>
 Provides an opportunity to extract the random seed key from the environment (see env_get_random_seed for details).               
-<PRE><TT>
-RL_agent_message(input_message_string) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> output_message_string
-<BR>
-return agent_message(input_message_string)
-</TT></PRE>
+<PRE>
+     RL_agent_message(input_message_string) -&gt; output_message_string
+          return agent_message(input_message_string)
+</PRE>
 This message passes the input string to the agent and returns the reply string given by the agent. See agent_message for more details.                
-<PRE><TT>
-RL_env_message(input_message_string) <IMG
- WIDTH="22" HEIGHT="17" ALIGN="BOTTOM" BORDER="0"
- SRC="img1.png"
- ALT="$\rightarrow$"> output_message_string
-<BR>
-return env_message(input_message_string)
-</TT></PRE>
+<PRE>
+     RL_env_message(input_message_string) -&gt; output_message_string
+          return env_message(input_message_string)
+</PRE>
 This message passes the input string to the environment and returns the reply string given by the environment. See env_message for more details. 
 
 <P>
 
-<H1><A NAME="SECTION00080000000000000000">
-Changes from RL-Glue 2.x</A>
+<H1><A NAME="SECTION00080000000000000000"></A>
+<A NAME="change"></A>
+<BR>
+Changes from RL-Glue 2.x
 </H1>
 Version 3.0 of RL-Glue represents a large series of updates with the intention of bringing RL-Glue from a University of Alberta side project to an open source project generally useful to the global
 reinforcement learning community.  As part of that process, we made some pretty big changes.
@@ -1299,25 +1069,25 @@ codec software.  So, we're waiting on deciding on changes to the language and im
 
 <P>
 
-<H3><A NAME="SECTION00091100000000000000">
+<H2><A NAME="SECTION00092000000000000000">
 Can I write my agents in &lt; insert language here &gt;</A>
-</H3>
+</H2>
 Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:
 <BR>
 <A NAME="tex2html7"
   HREF="http://glue.rl-community.org/Home/codecs">http://glue.rl-community.org/Home/codecs</A>
 <P>
 
-<H3><A NAME="SECTION00091200000000000000">
+<H2><A NAME="SECTION00093000000000000000">
 Does Rl-Glue support multi-agent reinforcement learning?</A>
-</H3>
+</H2>
  No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  
 
 <P>
 
-<H3><A NAME="SECTION00091300000000000000">
+<H2><A NAME="SECTION00094000000000000000">
 Why isn't the RL-Glue interface object oriented?</A>
-</H3>
+</H2>
 RL-Glue is meant to be a low level protocol for connecting agents, environments, and experiments.  These interactions can
 easily be described by the simple, flat, functions calls of RL-Glue.  We don't feel that it is useful to overcomplicate
 things in that respect.
@@ -1361,7 +1131,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>Glue-Overview.tex -split 0 -dir html -mkdir -title 'RL-Glue 3.0' -local_icons -math</TT>
 <P>
-The translation was initiated by Brian Tanner on 2008-09-30<HR>
+The translation was initiated by Brian Tanner on 2008-10-01<HR>
 <!--Navigation Panel-->
 <IMG WIDTH="81" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next_inactive" SRC="nx_grp_g.png"> 
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_g.png"> 
@@ -1370,7 +1140,7 @@ The translation was initiated by Brian Tanner on 2008-09-30<HR>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Brian Tanner
-2008-09-30
+2008-10-01
 </ADDRESS>
 </BODY>
 </HTML>

@@ -680,14 +680,14 @@ The task specification language has always been a bit of a sensitive topic, and 
 it easier to read and easier to parse.  After that, we'll need (\textbf{Chance to Contribute!}) a parser for each codec.  We won't need to change the main RL-Glue project, but we will need to re-release all of the 
 codec software.  So, we're waiting on deciding on changes to the language and implementing the parsers.
 
-\subsubsection{Can I write my agents in $<$ insert language here $>$}
+\subsection{Can I write my agents in $<$ insert language here $>$}
 Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:\newline
 \htmladdnormallink{http://glue.rl-community.org/Home/codecs}{http://glue.rl-community.org/Home/codecs}
 
-\subsubsection{Does Rl-Glue support multi-agent reinforcement learning?}
+\subsection{Does Rl-Glue support multi-agent reinforcement learning?}
  No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  
  
-\subsubsection{Why isn't the RL-Glue interface object oriented?}
+\subsection{Why isn't the RL-Glue interface object oriented?}
 RL-Glue is meant to be a low level protocol for connecting agents, environments, and experiments.  These interactions can
 easily be described by the simple, flat, functions calls of RL-Glue.  We don't feel that it is useful to overcomplicate
 things in that respect.

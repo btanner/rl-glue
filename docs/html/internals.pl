@@ -6,15 +6,11 @@ $key = q/exp/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/change/;
+$ref_files{$key} = "$dir".q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/faq/;
-$ref_files{$key} = "$dir".q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/Eref/;
-$ref_files{$key} = "$dir".q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/ref/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -22,15 +18,23 @@ $key = q/env/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/ref/;
+$ref_files{$key} = "$dir".q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/Eref/;
+$ref_files{$key} = "$dir".q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/envp1/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/task/;
+$key = q/fig1/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/fig1/;
+$key = q/task/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -42,11 +46,11 @@ $key = q/expp1/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/glos/;
+$key = q/agentp1/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/agentp1/;
+$key = q/glos/;
 $ref_files{$key} = "$dir".q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 

@@ -6,15 +6,11 @@ $key = q/exp/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/change/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/faq/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/Eref/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/ref/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -22,15 +18,23 @@ $key = q/env/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/ref/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/Eref/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/envp1/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/task/;
+$key = q/fig1/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/fig1/;
+$key = q/task/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -42,11 +46,11 @@ $key = q/expp1/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/glos/;
+$key = q/agentp1/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/agentp1/;
+$key = q/glos/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -81,28 +85,32 @@ $key = q/faq/;
 $external_latex_labels{$key} = q|8|; 
 $noresave{$key} = "$nosave";
 
-$key = q/env/;
-$external_latex_labels{$key} = q|3|; 
-$noresave{$key} = "$nosave";
-
-$key = q/ref/;
-$external_latex_labels{$key} = q|6|; 
+$key = q/change/;
+$external_latex_labels{$key} = q|7|; 
 $noresave{$key} = "$nosave";
 
 $key = q/Eref/;
 $external_latex_labels{$key} = q|6.2|; 
 $noresave{$key} = "$nosave";
 
+$key = q/ref/;
+$external_latex_labels{$key} = q|6|; 
+$noresave{$key} = "$nosave";
+
+$key = q/env/;
+$external_latex_labels{$key} = q|3|; 
+$noresave{$key} = "$nosave";
+
 $key = q/envp1/;
 $external_latex_labels{$key} = q|3.1|; 
 $noresave{$key} = "$nosave";
 
-$key = q/fig1/;
-$external_latex_labels{$key} = q|2|; 
-$noresave{$key} = "$nosave";
-
 $key = q/task/;
 $external_latex_labels{$key} = q|3.2.1|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig1/;
+$external_latex_labels{$key} = q|2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/envp2/;
