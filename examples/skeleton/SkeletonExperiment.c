@@ -42,13 +42,13 @@ int main(int argc, char *argv[]) {
 	/*Talk to the agent and environment a bit...*/
 	responseMessage=RL_agent_message("what is your name?");
 	printf("Agent responded to \"what is your name?\" with: %s\n",responseMessage);
-	responseMessage=RL_agent_message("who is your daddy and what does he do?");
-	printf("Agent responded to \"who is your daddy and what does he do?\" with: %s\n\n",responseMessage);
+	responseMessage=RL_agent_message("If at first you don't succeed; call it version 1.0");
+	printf("Agent responded to \"If at first you don't succeed; call it version 1.0\" with: %s\n\n",responseMessage);
 
 	responseMessage=RL_env_message("what is your name?");
 	printf("Environment responded to \"what is your name?\" with: %s\n",responseMessage);
-	responseMessage=RL_env_message("who is your daddy and what does he do?");
-	printf("Environment responded to \"who is your daddy and what does he do?\" with: %s\n",responseMessage);
+	responseMessage=RL_env_message("If at first you don't succeed; call it version 1.0");
+	printf("Environment responded to \"If at first you don't succeed; call it version 1.0\" with: %s\n",responseMessage);
 
 	printf("\n\n----------Running a few episodes----------\n");
 	runEpisode(100);

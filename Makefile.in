@@ -37,10 +37,9 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/config/config.h.in \
-	$(top_srcdir)/configure AUTHORS ChangeLog INSTALL NEWS \
-	config/compile config/config.guess config/config.sub \
-	config/depcomp config/install-sh config/ltmain.sh \
-	config/missing
+	$(top_srcdir)/configure ChangeLog INSTALL config/compile \
+	config/config.guess config/config.sub config/depcomp \
+	config/install-sh config/ltmain.sh config/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -178,7 +177,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 SUBDIRS = src tests
-EXTRA_DIST = docs AUTHORS ChangeLog README INSTALL LICENSE-2.0.txt
+EXTRA_DIST = docs ChangeLog examples README INSTALL LICENSE-2.0.txt
 all: all-recursive
 
 .SUFFIXES:
