@@ -15,7 +15,8 @@
 
 
 \title{RL-Glue 3.0 Overview}
-\author{Adam White}
+\author{Adam White :: awhite@cs.ualberta.ca}
+\date{}
 
 \begin{document}
 \maketitle
@@ -27,65 +28,77 @@
 This document has been laid out so that it can be used for: 
 \begin{enumerate}
 \item  {\bf RL-Glue what?} learning about RL-Glue at an abstract level
-\item {\bf Compatibility:} making existing C/C++ agents and environments work with RL-Glue
+\item {\bf Compatibility:} help convert existing and environments work with RL-Glue
 \item {\bf Plugging agents and environments together:} how to write experiment programs
 \item{\bf What function do I use to:} quick function reference for RL-Glue
 \end{enumerate}
 
-Recently (September 08), the RL-Glue Project was split into the RL-Glue Project and RL-Glue Extensions Project. The RL-Glue Project now only includes the RL-Glue interface and plugs for C/C++ agents, environments and experiment programs. The RL-Glue Extensions Project contains codecs for Java, Python and Matlab. The Extensions Project provides multi-language support code that was previously part of RL-Glue. This document contains {\bf NO} technical details for writing programs: everything is abstracted. See the RL-Glue Technical Documentation distributed with RL-Glue and the codec documentation for language specific details on how to implement agents, environments and experiment programs in C/C++, Java, Python and Matlab.
+In September 2008, the RL-Glue Project was split into two projects: RL-Glue and RL-Glue Extensions.
+
+RL-Glue now only includes the RL-Glue interface and plugs for direct-compile C/C++ agents, environments and experiment programs.
+
+The RL-Glue Extensions Project contains codecs that allow C/C++, Java, Python, Matlab, and Lisp agents/environments/experiments to use RL-Glue.  This multi-language support was previously bundled with RL-Glue.  The reason for the split was partially to separate the technical details of using RL-Glue with a particular language from the high level overview of what RL-Glue does.
+
+This document is the high-level overview document: it contains contains {\bf NO} implementation specific technical details for writing programs.
+
+Please refer to the \htmladdnormallink{RL-Glue technical manual}{http://rl-glue.googlecode.com/svn/trunk/docs/tech_html/index.html} and \htmladdnormallink{manuals for specific codecs}{http://glue.rl-community.org/Home/Extensions} for language specific details on how to implement agents, environments and experiment programs.
  
 \subsection{How to Use This Document}
 
-This document as been divided to reflect the purposes described above. To learn about the major components of RL-Glue and a description of how those components interact see Section \ref{RL-Glue}. To learn how to make environment and agent programs compatible with RL-Glue we recommend sections \ref{envp1} and \ref{agentp1}. Sections \ref{envp1} and \ref{agentp1} describe only the mandatory functions that RL-Glue environments and agents must implement. Sections \ref{envp2} and \ref{agentp2} describe optional environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section \ref{exp}. For quick function reference see Section \ref{ref}. Frequently asked questions can be found in Section \ref{faq}. A summary of and explanations for all changes from RL-Glue 2.X to Rl-Glue 3.0 can be found in Section \ref{change}.
+This document as been divided to reflect the purposes described above. To learn about the major components of RL-Glue and a description of how those components interact see Section \ref{RL-Glue}. To learn how to make environment and agent programs compatible with RL-Glue we recommend sections \ref{envp1} and \ref{agentp1}. Sections \ref{envp1} and \ref{agentp1} describe only the mandatory functions that RL-Glue environments and agents must implement. Sections \ref{envp2} and \ref{agentp2} describe advanced environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section \ref{exp}. For quick function reference see Section \ref{ref}. Frequently asked questions can be found in Section \ref{faq}. A summary of and explanations for all changes from RL-Glue 2.X to RL-Glue 3.0 can be found in Section \ref{change}.
 
-This document and the RL-Glue Project use naming conventions and definitions from Sutton and Barto's ``Reinforcement Learning: An Introduction". We recommend that you review Sutton and Barto to get the most out of the RL-Glue documentation. An online version of Sutton and Barto can be founf here: \url{http://www.cs.ualberta.ca/~sutton/book/the-book.html}.
-
-
-
+RL-Glue uses naming conventions and definitions from Sutton and Barto's text: ``Reinforcement Learning: An Introduction".  This text is available for free online: \url{http://www.cs.ualberta.ca/~sutton/book/the-book.html}.
  
  
 \section{RL-Glue Concepts}
 \label{RL-Glue}
-A large part of studying and researching reinforcement learning is experimentation. When you write an agent, you should ensure the agent makes exploratory moves to discover more about the world. Similarly, it is important that you are able to "explore" new algorithms and ideas without having to rewriting the experimentation code, for each test . One of the purposes of RL-Glue is to simplify and speed up the process of writing an experiment so that many ideas can be easily tested. 
+A large part of studying and researching reinforcement learning is experimentation. When you write an agent, you should ensure the agent makes exploratory moves to discover more about the world. Similarly, it is important that you are able to ``explore'' new algorithms and ideas without having to create the experiment code for each test. One of the goals of RL-Glue is to simplify and accelerate the process of writing an experiment so that many ideas can be easily tested. 
 
 
-In ML research it is important to look at other work being done in the field, compare your own performance and then improve. One goal for RL-Glue is to provide a consistent tool for running and comparing a number of agents and environments from diverse sources. A common problem for researchers arrises when they try compare their work with previously published results. Pre-RL-Glue, the solution was often to reverse engineer code for the experiment based on the results and environment/agent descriptions from in published papers.  Even when a researcher makes their code public, there was still the issue of deciphering and adapting the original code. Now, you can make the necessary RL-Glue agent/environment/experiment programs  available to the public such that another experimenter can rerun your original experiment and easily plug in their own code to compare performance.  Several recent reinforcement competitions, at NIPS and ICML, have used RL-Glue for benchmarking participant submissions, further exemplifying the utility of RL-Glue to the research community.
+In machine learning research, it is important to look at other work being done in the field, compare your own performance and then improve. One goal for RL-Glue is to provide a consistent tool for using and comparing agents and environments from diverse sources. A common problem for researchers arises when they try compare their work with previously published results.
+
+Before RL-Glue, the solution was often to reverse engineer code for the experiment based on the results and (often incomplete) implementation descriptions that had been published.  Even code was released to the public, it was often still a challenge to understand adapt the original code. Now, you can make the necessary RL-Glue agent/environment/experiment programs  available to the public such that another experimenter can reproduce your original experiment and easily experiment with their own code to compare performance.  Several recent reinforcement competitions, at \htmladdnormallink{NIPS}{http://rlai.cs.ualberta.ca/RLAI/rlc.html} and \htmladdnormallink{ICML}{http://rl-competition.org} have used RL-Glue for benchmarking participant submissions, further exemplifying the utility of RL-Glue to the research community.
  
 \begin{figure}
-\label{fig1}
-\begin{center}
+	\begin{centering}
 %\htmlimage{scale=0.5}
 \includegraphics[height=60mm]{images/glue_connections_no_shadow.png}
 \caption{The RL-Glue Standard. Arrows indicate function call direction.}
-\end{center}
+\label{fig:glue-connections}
+\end{centering}
 \end{figure}
 
-RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for all reinforcement learning researchers to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to ``plug in'' agents, environments and experiment programs without having to continually rewrite the connecting code for these pieces. An experiment program is, very simply, code stating how many times to run an agent in an environment and what data should be extracted this interaction. Provided the agent, environment, and experiment program follow the RL-Glue protocol, by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure \ref{fig1} is a diagram which shows how function calls work in RL-Glue.
+RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for the reinforcement learning community to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to ``plug in'' agents, environments and experiment programs without having to continually rewrite the connecting code for these pieces. An experiment program is, very simply, code stating how many times to run an agent in an environment and what data should be extracted this interaction. Provided the agent, environment, and experiment program follow the RL-Glue protocol, by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure \ref{fig:glue-connections} is a diagram which shows how function calls work in RL-Glue.
 
 
 
-The Experiment Program contains the ``main function''" which will then make all of it's requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program can never access to the agent or environment directly, all contact goes through the RL-Glue interface.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
+The Experiment Program contains the ``main function'' which will make all of the requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program can never interact with the agent or environment directly: all contact goes through the RL-Glue interface.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
 
 
 
 \subsection{Agents, Environments and Experiment Programs}
-Understanding agents and environments is a fundamental part of understanding reinforcement learning. A more detailed explanation of reinforcement learning, and its definitions for agents and environments, can be obtained from Reinforcement Learning: An Introduction (Sutton, Barto. 1998).  The agent is both the learning algorithm and the decision maker. For RL-Glue, the agent only needs to decide which action to take at every step. The environment is responsible for storing all the relevant details of the world of your experiment. This should include knowledge of the current state representation (the observation) as well as some function for determining state transitions and rewards. When writing code for an experiment, RL-Glue has been structured to place separation between the agent and environment. This division of the agent and environment both helps create modularized code and is theoretically desirable.
+Understanding the semantic we mean for \textit{agents}, \textit{environments}, and \textit{experiments} is a fundamental part of understanding RL-Glue.
 
+In RL-Glue, the \textit{agent} is both the learning algorithm and the decision maker. The agent decides which action to take at every step.
 
-The experiment program is familiar to anyone who has written code to run an reinforcement learning experiment on their own. Akin to the typical main function in many reinforcement learning experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment {\bf x} number of times, perhaps doing {\bf y} trials of these {\bf x} episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section \ref{ref}) to assist in writing an experiment program.
+The \textit{environment} is responsible for storing all the relevant details of the world, or problem of your experiment. The environment generates the observations/states/perceptions that are provided to the agent, and also determines the transition dynamics and rewards.  
+
+The experiment is the intermediary which (through RL-Glue) controls all communication between the agent and environment.  This structured separation is by design, division of the agent and environment both helps create modularized code and captures our intuitions about how much the agent and environment should ``know'' about each other.
+
+The experiment program will be familiar to anyone who create reinforcement learning experiments. Akin to the typical main function in many reinforcement learning experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment {\bf x} number of times, perhaps doing {\bf y} trials of these {\bf x} episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section \ref{ref}) to assist in writing an experiment program.
 
 
 
 \section{RL-Glue Environment Programs}
 \label{env}
-The environment represents everything outside the agents direct control. In a gridworld, the environment is the grid, obstacles, rewards, start states, termination conditions and transition function. In a robotic task, the environment would also include the robot's body, because the agent does not have complete, deterministic control over its motors. The environment is basically everything that is not the agent.
+The environment represents everything outside the agent's direct control. For example, in a tabular gridworld, the environment determines the state space, the obstacles, the rewards, start states, termination conditions and the state transitions.  In a robotic task, the environment would also include the robot's body, because the agent does not have complete, deterministic control over its motors. The environment is basically everything that is not the agent.
 
 In RL-Glue, the environment is defined by a set of parameterized functions that the RL-Glue interface queries on behalf of the experiment program. These functions define what the environment does before an experiment begins, at the beginning of an episode, on every remaining step of the episode and after the experiment is completed. The following sections describe the basic requirements of an RL-Glue environment and present a complete list of all environment functions.
 
 \subsection{Essential Components Of A RL-Glue Environment}
 \label{envp1}
 
-Every RL-Glue environment must define and initialize the action and observation types (rewards are always real-valued scalars) and define the env\_start and env\_step functions.   
+Every RL-Glue environment must implement the env\_start and env\_step functions.   
 
 \subsubsection{Observation and Action Encoding}
 The representation of the observation and the actions must be one of the following: 
