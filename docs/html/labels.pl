@@ -2,47 +2,7 @@
 # Associate labels original text with physical files.
 
 
-$key = q/exp/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/change/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/faq/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/env/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/ref/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/Eref/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/envp1/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/fig1/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/task/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/envp2/;
-$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/expp1/;
+$key = q/fig:glue-connections/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -54,11 +14,55 @@ $key = q/glos/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/agent/;
+$key = q/RL-Glue/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/RL-Glue/;
+$key = q/exp/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/faq/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/change/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/Eref/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/ref/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/env/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/envp1/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/task/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig1/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/envp2/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/expp1/;
+$external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/agent/;
 $external_labels{$key} = "$URL/" . q|Glue-Overview.html|; 
 $noresave{$key} = "$nosave";
 
@@ -109,12 +113,12 @@ $key = q/task/;
 $external_latex_labels{$key} = q|3.2.1|; 
 $noresave{$key} = "$nosave";
 
-$key = q/fig1/;
-$external_latex_labels{$key} = q|2|; 
-$noresave{$key} = "$nosave";
-
 $key = q/envp2/;
 $external_latex_labels{$key} = q|3.2|; 
+$noresave{$key} = "$nosave";
+
+$key = q/fig:glue-connections/;
+$external_latex_labels{$key} = q|1|; 
 $noresave{$key} = "$nosave";
 
 $key = q/expp1/;
