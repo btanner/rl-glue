@@ -149,10 +149,10 @@ message_t RL_env_message(const message_t message) {
 terminal_t RL_episode(unsigned int maxStepsThisEpisode) {
 	reward_observation_action_terminal_t rl_step_result={0};
 	rl_step_result.terminal=0;	
-  	unsigned int x = 0;
+
   	RL_start();
-/* RL_start sets current step to 1, so we should start x at 1 */
-  	for ( x = 1; !rl_step_result.terminal && (maxStepsThisEpisode == 0 ? 1 : x < maxStepsThisEpisode); ++x ) {
+	/*RL_start sets steps to 1*/
+  	for (; !rl_step_result.terminal && (maxStepsThisEpisode == 0 ? 1 : num_steps < maxStepsThisEpisode); ) {
     	rl_step_result=RL_step();
   	}
 
