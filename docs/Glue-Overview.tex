@@ -626,8 +626,8 @@ Version 3.0 of RL-Glue represents a large series of updates with the intention o
 reinforcement learning community.  As part of that process, we made some pretty big changes.
 
 \subsection{The Codec Split}
-The codecs (including the C/C++ codec) has been split from the main RL-Glue project.  Each codec package is now more independently, and they each may offer something different to the user.  However, as always, they layer on RL-Glue.  The root page for all of the codecs is:\newline
-\htmladdnormallink{http://glue.rl-community.org/Home/codecs}{http://glue.rl-community.org/Home/codecs}
+The codecs (including the C/C++ codec) have been split from the main RL-Glue project.  Each codec package is now more independently, and they each may offer something different to the user.  However, as always, they layer on RL-Glue.  The root page for all of the codecs is:\newline
+\htmladdnormallink{http://glue.rl-community.org/Home/Extensions}{http://glue.rl-community.org/Home/Extensions}
 
 As usual, you don't need to change your code depending on how it will be used.  The code for an agent, environment, or experiment is identical no matter if you will run it using sockets or directly compiled together.  The only difference is what library you link against.
 
@@ -636,7 +636,7 @@ The idea of the RL-Glue project is that it will very very rarely change.  We've 
 
 This project is written entirely in C and can be linked from C or C++ code.
 
-When you download and install the RL-Glue project, you get three artifacts:
+When you download and install the RL-Glue project, you get a few artifacts:
 \begin{description}
 	\item [rl\_glue executable socket server] The server for running socket-based experiments.
 	\item [librlglue] A C library that can be linked against for creating executables where the agent, environment, and experiment program are all written in C or C++. These experiments have virtually no rl-glue calling overhead.
@@ -657,7 +657,7 @@ The way that they should be included in your agents/environments/experiments is 
 Generally, each of agent/env/experiment should only have to include one of these files.  You'll probably never include RL\_common.h, but it is needed by the others.
 
 \subsubsection{RL-Glue-Extensions Project :: C/C++ Codec}
-The \htmladdnormallink{C/C++ codec}{http://glue.rl-community.org/Home/codecs/c-c-codec} gives you libraries that can be used to build stand-alone socket-based agents, environment, and experiments.  The C Codec is in the rl-glue-ext project and is expected to change more frequently than the main RL-Glue project.
+The \htmladdnormallink{C/C++ codec}{http://glue.rl-community.org/Home/Extensions/c-c-codec} gives you libraries that can be used to build stand-alone socket-based agents, environment, and experiments.  The C Codec is in the rl-glue-ext project and is expected to change more frequently than the main RL-Glue project.
 
 This project is written entirely in C and can be linked from C or C++ code.
 
@@ -685,7 +685,7 @@ The freeze function were the first in a long series of ``special'' functions tha
 So, to reduce the clutter and kruft (cruft?) of the API, we've removed Freeze.  How do you unfreeze anyways?
 
 \subsubsection{RL\_Episode}
-Csaba Szepesvári made the request at some point that \texttt{RL\_Episode} should let you know whether it ended because the time step limit expired, or because the episode ended normally.  We now return the value of the terminal flag from the last \texttt{env\_step} of the episode. If the flag is set to 1, then the episode terminated normally, if not, the timeout ended the episode.  
+Csaba Szepesvari made the request at some point that \texttt{RL\_Episode} should let you know whether it ended because the time step limit expired, or because the episode ended normally.  We now return the value of the terminal flag from the last \texttt{env\_step} of the episode. If the flag is set to 1, then the episode terminated normally, if not, the timeout ended the episode.  
 
 \subsubsection{RL\_Init}
 It made sense to us that \texttt{RL\_init} should return the task spec, in case the experiment program wants to know it, make a note of it, etc. The RL\_glue specification has now been updated to handle this.
@@ -743,9 +743,9 @@ codec software.  So, we're waiting on deciding on changes to the language and im
 
 \subsection{Can I write my agents in $<$ insert language here $>$}
 Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:\newline
-\htmladdnormallink{http://glue.rl-community.org/Home/codecs}{http://glue.rl-community.org/Home/codecs}
+\htmladdnormallink{http://glue.rl-community.org/Home/Extensions}{http://glue.rl-community.org/Home/Extensions}
 
-\subsection{Does Rl-Glue support multi-agent reinforcement learning?}
+\subsection{Does RL-Glue support multi-agent reinforcement learning?}
  No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  
  
 \subsection{Why isn't the RL-Glue interface object oriented?}
@@ -761,41 +761,32 @@ Some might argue that it makes sense to create a C/C++ or Java codec that suppor
 directly.  This would not be hard, it's just a matter of someone interested picking up the project and doing it.  Personally, 
 we've found it easy enough to write a small bridge between the existing codecs and our personal OO hierarchies.
 
-\subsection{What languages can I write my agent and environment programs in?}
-As of RL-Glue 3.0, C, C++, Java, Matlab and Python are supported. We soon hope to have Lisp added.
-
-
 \subsection{What does Observation mean? Why does the RL-Glue not pass around ``states''?}
-Observation is a more  general term, to which the concept of state, and state of say mountain car is a subset. Observation can be an array of doubles or an int or whatever. This is controlled in the common types file for each agent-environment pair.
+If the state of an environment is fully observable, then you can often use the terms \textit{state} and \textit{observation} interchangeably. However, 
+observation is a more  general term that is meant to mean the \textit{perceptions} that the agent receives.  This can be different 
+from the concept of \textit{state}, which corresponds to some \textit{truth} about the environment.  For example, in partially observable environments, the observations
+may be \textit{aliased}: the environment may be in different states, but the agent receives the same observation. 
 
 
 \subsection{Where is the ``environmental state" stored in RL-Glue? In other systems, such as CLSquare, the old state is passed to the environment step function.}
-The environment in RL-Glue is responsible for keeping  track of the current ``state'' and computing the next ``state'' given an action. Old state need not be passed. The state stays within the  environment. The next\_state method in CLSquare is basically the same as \texttt{env\_step} in RL-Glue.
+The environment in RL-Glue is responsible for keeping  track of the current ``state'' and computing the next ``state'' given an action. The old state does not need to be passed
+outside of the environment, the state stays within the  environment. The \texttt{next\_state} method in CLSquare is basically the same as \texttt{env\_step} in RL-Glue.
 
 
 \subsection{Can RL-Glue handle sampling the same trajectory a number of times consecutively?}
-This can be done in RL-Glue using a couple of optional functions. Using env\_get\_state one can get a key for current environmental state. Then use env\_set\_state to initialize the environment to a particular state  given the key. Using \texttt{env\_get\_random\_seed} the user can acquire the random seed used by the environment, and reset it using \texttt{env\_set\_random\_seed} in the same fashion as getting and setting state described above. 
-
-\subsection{How can my agent distinguish between training (e.g. exploration) and testing phases?}
-To freeze an agent use the \texttt{RL\_agent\_message} and \texttt{agent\_message} functions. There is no standard RL function for freezing, unfreezing or checking. RL\_agent\_freeze has been depreciated. 
+This can be done in RL-Glue using a couple of optional functions. Using env\_get\_state one can get a key for current environmental state. Then use \texttt{env\_set\_state} to initialize the environment to a particular state  given the key. Using \texttt{env\_get\_random\_seed} the user can acquire the random seed used by the environment, and reset it using \texttt{env\_set\_random\_seed} in the same fashion as getting and setting state described above. 
 
 \subsection{Why is there no RL\_freeze, RL\_unfreeze or RL\_frozen?}
-
-Answer: These three functions can easily be implemented through \texttt{RL\_agent\_message} and agent\_message. There is no standard RL function for unfreezing or checking if the agent is frozen. To avoid the RL-Glue interface becoming bloated, we are trying to avoid adding too many redundant functions.
-
-
-\subsection{Some combinations of environments and agents did not seem to work since they assume a different specification (states specified as an array, single dimension, etc). For example, the agents I added do not work with problems with single dimensions, since I added for-loops which assume an array specification of the observations and actions.}
-
-Although we would all like to see it, it is not the current state of the art to have a single agent that solves many problems. Most write agents for particular tasks. However, we expect that an agent that works with multi-dimensional continuous state should be able to solve mountain car and say cart-pole. The RL-Glue fully supports this, with some setup work required in the \texttt{agent\_init}  function. That said, its not likely that an agent made for a multi dimensional task should work with a tabular agent. Reasonable subclasses exist and the workshop organizers have done a good job illustrating them in the benchmark announcement. Take a look at SarsaAgent.cpp. This should work with any tabular problem. A similar multi dimension continuous agent could be easily extended form TileAgent.cpp.
-
+The functionality of Freeze can easily be replicated through \texttt{RL\_agent\_message} and \texttt{agent\_message}.  There are literally a hundred similar methods that would 
+be desirable to one person or another. To avoid the RL-Glue interface becoming bloated, we are trying to avoid adding too many redundant functions for the sake of convenience.
 
 
 
 \section*{Document Information}
 \begin{verbatim}
-Revision Number: $Rev: 864 $
-Last Updated By: $Author: brian@tannerpages.com $
-Last Updated   : $Date: 2008-09-30 20:50:49 -0600 (Tue, 30 Sep 2008) $
-$URL: https://rl-glue.googlecode.com/svn/trunk/docs/TechnicalManual.tex $
+Revision Number: $Rev$
+Last Updated By: $Author$
+Last Updated   : $Date$
+$URL$
 \end{verbatim}
 \end{document}  
