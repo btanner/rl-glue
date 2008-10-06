@@ -30,6 +30,19 @@
 #include <assert.h>
 #include <rlglue/RL_glue.h>
 	
+#define LITTLE_ENDIAN_CHECK 0
+#define BIG_ENDIAN_CHECK    1
+
+int machineEndianness()
+{
+  int i = 1;
+  char *p = (char *) &i;
+  if (p[0] == 1) // Lowest address contains the least significant byte
+    return LITTLE_ENDIAN_CHECK;
+  else
+    return BIG_ENDIAN_CHECK;
+}
+
 int tests_failed=0;
 int test_count=0;
 
@@ -44,6 +57,14 @@ void check_fail(int condition){
 	
 int main(int argc, char *argv[]) {
   task_specification_t task_spec;
+
+	if(machineEndianness()==LITTLE_ENDIAN_CHECK)
+		printf("This machine is LITTLE ENDIAN\n");
+	if(machineEndianness()==BIG_ENDIAN_CHECK)
+		printf("This machine is BIGENDIAN\n");
+		
+		printf("Sizes: char %lu int %lu double %lu\n",sizeof(char),sizeof(int),sizeof(double));
+
   task_spec=RL_init();
 
   check_fail(strcmp(task_spec,"sample task spec")!=0);
