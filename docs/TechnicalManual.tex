@@ -371,13 +371,13 @@ These examples might make it clear why most of our samples use global variables 
 This allows us to only worry about re-allocating the arrays inside the struct, instead of also worrying about pointers to the structs themselves.
 
 \subsection{Free Your Mess}
-When using this RL-Glue, you are responsible for cleaning up any memory that you allocate. The good news is that that you can trust that between function calls, any memory you've returned to a caller has either been
+When using RL-Glue, you are responsible for cleaning up any memory that you allocate. The good news is that that you can trust that between function calls, any memory you've returned to a caller has either been
 copied or is not necessary (it is safe to free it).  Remember that in C/C++ it's not safe to return pointers to stack-based memory.
 
 The Skeleton examples do the appropriate thing in this respect: the \texttt{intArrays} that need to be dynamically allocated are allocated in the \texttt{\_init} methods, and then the memory is released in the \texttt{\_cleanup} methods.
 
 \subsubsection{Messaging Examples}
-Strings seem to be more complicated for some people, so here are a couple of examples:
+Copying, comparing, and allocating Strings in C can be tricky, so here are a couple of examples:
 
 \begin{verbatim}
 /********************   UNSAFE   *******************/

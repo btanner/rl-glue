@@ -35,8 +35,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = test_sanity$(EXEEXT) test_1$(EXEEXT) \
-	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
+check_PROGRAMS = test_endian$(EXEEXT) test_sanity$(EXEEXT) \
+	test_1$(EXEEXT) test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
 	test_state_and_seed_keys$(EXEEXT) test_empty$(EXEEXT) \
 	test_speed$(EXEEXT)
 subdir = tests
@@ -62,6 +62,10 @@ am_test_empty_OBJECTS = test_empty-test_empty_environment.$(OBJEXT) \
 test_empty_OBJECTS = $(am_test_empty_OBJECTS)
 test_empty_LDADD = $(LDADD)
 test_empty_DEPENDENCIES = ../src/librlglue.la
+am_test_endian_OBJECTS = test_endian-test_endian.$(OBJEXT)
+test_endian_OBJECTS = $(am_test_endian_OBJECTS)
+test_endian_LDADD = $(LDADD)
+test_endian_DEPENDENCIES = ../src/librlglue.la
 am_test_message_OBJECTS = test_message-test_message_agent.$(OBJEXT) \
 	test_message-test_message_environment.$(OBJEXT) \
 	test_message-test_message_experiment.$(OBJEXT) \
@@ -110,13 +114,13 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
-	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
-	$(test_sanity_SOURCES) $(test_speed_SOURCES) \
-	$(test_state_and_seed_keys_SOURCES)
+	$(test_endian_SOURCES) $(test_message_SOURCES) \
+	$(test_rl_episode_SOURCES) $(test_sanity_SOURCES) \
+	$(test_speed_SOURCES) $(test_state_and_seed_keys_SOURCES)
 DIST_SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
-	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
-	$(test_sanity_SOURCES) $(test_speed_SOURCES) \
-	$(test_state_and_seed_keys_SOURCES)
+	$(test_endian_SOURCES) $(test_message_SOURCES) \
+	$(test_rl_episode_SOURCES) $(test_sanity_SOURCES) \
+	$(test_speed_SOURCES) $(test_state_and_seed_keys_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -227,6 +231,8 @@ target_alias = @target_alias@
 TESTS = $(check_PROGRAMS)
 INCLUDES = -I$(top_srcdir)/src
 LDADD = ../src/librlglue.la
+test_endian_SOURCES = test_endian.c
+test_endian_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_sanity_SOURCES = test_1_environment.c	test_1_agent.c test_sanity_experiment.c useful_functions.c useful_functions.h
 test_sanity_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_1_SOURCES = test_1_environment.c	test_1_agent.c test_1_experiment.c useful_functions.c useful_functions.h
@@ -287,6 +293,9 @@ test_1$(EXEEXT): $(test_1_OBJECTS) $(test_1_DEPENDENCIES)
 test_empty$(EXEEXT): $(test_empty_OBJECTS) $(test_empty_DEPENDENCIES) 
 	@rm -f test_empty$(EXEEXT)
 	$(LINK) $(test_empty_LDFLAGS) $(test_empty_OBJECTS) $(test_empty_LDADD) $(LIBS)
+test_endian$(EXEEXT): $(test_endian_OBJECTS) $(test_endian_DEPENDENCIES) 
+	@rm -f test_endian$(EXEEXT)
+	$(LINK) $(test_endian_LDFLAGS) $(test_endian_OBJECTS) $(test_endian_LDADD) $(LIBS)
 test_message$(EXEEXT): $(test_message_OBJECTS) $(test_message_DEPENDENCIES) 
 	@rm -f test_message$(EXEEXT)
 	$(LINK) $(test_message_LDFLAGS) $(test_message_OBJECTS) $(test_message_LDADD) $(LIBS)
@@ -319,6 +328,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_experiment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-useful_functions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_endian-test_endian.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_message-test_message_experiment.Po@am__quote@
@@ -470,6 +480,20 @@ test_empty-useful_functions.obj: useful_functions.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_empty-useful_functions.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -c -o test_empty-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`
+
+test_endian-test_endian.o: test_endian.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_endian_CFLAGS) $(CFLAGS) -MT test_endian-test_endian.o -MD -MP -MF "$(DEPDIR)/test_endian-test_endian.Tpo" -c -o test_endian-test_endian.o `test -f 'test_endian.c' || echo '$(srcdir)/'`test_endian.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_endian-test_endian.Tpo" "$(DEPDIR)/test_endian-test_endian.Po"; else rm -f "$(DEPDIR)/test_endian-test_endian.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_endian.c' object='test_endian-test_endian.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_endian_CFLAGS) $(CFLAGS) -c -o test_endian-test_endian.o `test -f 'test_endian.c' || echo '$(srcdir)/'`test_endian.c
+
+test_endian-test_endian.obj: test_endian.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_endian_CFLAGS) $(CFLAGS) -MT test_endian-test_endian.obj -MD -MP -MF "$(DEPDIR)/test_endian-test_endian.Tpo" -c -o test_endian-test_endian.obj `if test -f 'test_endian.c'; then $(CYGPATH_W) 'test_endian.c'; else $(CYGPATH_W) '$(srcdir)/test_endian.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_endian-test_endian.Tpo" "$(DEPDIR)/test_endian-test_endian.Po"; else rm -f "$(DEPDIR)/test_endian-test_endian.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_endian.c' object='test_endian-test_endian.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_endian_CFLAGS) $(CFLAGS) -c -o test_endian-test_endian.obj `if test -f 'test_endian.c'; then $(CYGPATH_W) 'test_endian.c'; else $(CYGPATH_W) '$(srcdir)/test_endian.c'; fi`
 
 test_message-test_message_agent.o: test_message_agent.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_message_CFLAGS) $(CFLAGS) -MT test_message-test_message_agent.o -MD -MP -MF "$(DEPDIR)/test_message-test_message_agent.Tpo" -c -o test_message-test_message_agent.o `test -f 'test_message_agent.c' || echo '$(srcdir)/'`test_message_agent.c; \
