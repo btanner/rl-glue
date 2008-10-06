@@ -614,7 +614,40 @@ All of the types that existed in the RL-Glue 2.x  (ex: \texttt{Observation} inst
 
 
 \section{Frequently Asked Questions}
-We're waiting to hear your questions!
+We're waiting to hear more questions!
+
+\subsection{How can I tell what version of RL-Glue is installed?}
+You can find out the release number, and the specific build number by 
+calling RL-Glue with invalid (any) parameters.  For example:
+\begin{verbatim}
+> $ rl_glue --help
+    RL-Glue Version 3.0-RC1a, Build 882
+
+        rl_glue version	=	3.0-RC1a
+        build number	=	882
+
+    Usage: $:>rl_glue
+
+    By default rl_glue listens on port 4096.
+    To choose a different port, set environment variable RLGLUE_PORT.
+\end{verbatim}
+
+This tells you that the name of the release you have installed is \texttt{3.0-RC1a}, and the 
+specific build from subversion is \texttt{r882}.
+
+\subsection{Where can I get more help?}
+\subsubsection{Online FAQ}
+We suggest checking out the online RL-Glue C/C++ Codec FAQ:\newline
+\url{http://glue.rl-community.org/Home/rl-glue#TOC-Frequently-Asked-Questions}
+
+The online FAQ may be more current than this document, which may have been distributed some time ago.
+
+\subsubsection{Google Group / Mailing List}
+First, you should join the RL-Glue Google Group Mailing List:\newline
+\url{http://groups.google.com/group/rl-glue}
+
+We're happy to answer any questions about RL-Glue.  Of course, try to search through previous messages first in case your question has been answered before.
+
 
 \section{Credits and Acknowledgements}
 Andrew Butcher originally wrote the RL-Glue library and network library.  Thanks Andrew.
