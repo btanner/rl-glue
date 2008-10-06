@@ -735,6 +735,18 @@ If you do the following, bad things will probably happen if the char array is no
 
 \section{Frequently Asked Questions}
 \label{faq}
+\subsection{Where can I get more help?}
+\subsubsection{Online FAQ}
+We suggest checking out the online RL-Glue C/C++ Codec FAQ:\newline
+\url{http://glue.rl-community.org/Home/rl-glue#TOC-Frequently-Asked-Questions}
+
+The online FAQ may be more current than this document, which may have been distributed some time ago.
+
+\subsubsection{Google Group / Mailing List}
+First, you should join the RL-Glue Google Group Mailing List:\newline
+\url{http://groups.google.com/group/rl-glue}
+
+We're happy to answer any questions about RL-Glue.  Of course, try to search through previous messages first in case your question has been answered before.
 
 \subsection{Where did the task spec parsers go?}
 The \texttt{task\_spec} language has always been a bit of a sensitive topic, and writing good parsers for the task spec has never been easy. We're currently considering slightly changing the task spec format, to make
@@ -779,7 +791,6 @@ This can be done in RL-Glue using a couple of optional functions. Using env\_get
 \subsection{Why is there no RL\_freeze, RL\_unfreeze or RL\_frozen?}
 The functionality of Freeze can easily be replicated through \texttt{RL\_agent\_message} and \texttt{agent\_message}.  There are literally a hundred similar methods that would 
 be desirable to one person or another. To avoid the RL-Glue interface becoming bloated, we are trying to avoid adding too many redundant functions for the sake of convenience.
-
 
 
 \section*{Document Information}

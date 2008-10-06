@@ -34,7 +34,7 @@ $external_latex_labels{$key} = q|2.2|;
 $noresave{$key} = "$nosave";
 
 $key = q/sec:util-functions/;
-$external_latex_labels{$key} = q|4.2.4|; 
+$external_latex_labels{$key} = q|5.2.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sec:agent/;
@@ -46,7 +46,7 @@ $external_latex_labels{$key} = q|2.6.2|;
 $noresave{$key} = "$nosave";
 
 $key = q/sec:structure-types/;
-$external_latex_labels{$key} = q|4.1.2|; 
+$external_latex_labels{$key} = q|5.1.2|; 
 $noresave{$key} = "$nosave";
 
 1;
