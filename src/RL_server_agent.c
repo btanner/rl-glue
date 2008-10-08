@@ -33,6 +33,9 @@
 
 #include <rlglue/Agent_common.h>
 #include <rlglue/network/RL_network.h>
+/* Convenience functions for manupulating RL Structs*/
+#include <rlglue/utils/C/RLStruct_util.h>
+
 
 static action_t theAction= {0};
 static rlBuffer theBuffer = {0};
@@ -131,40 +134,21 @@ void agent_end(reward_t theReward) {
 
 /* Tell the agent that we're cleaning up */
 void agent_cleanup() {
-  int agentState = kAgentCleanup;
+	int agentState = kAgentCleanup;
 
-  rlBufferClear(&theBuffer);
-  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
+	rlBufferClear(&theBuffer);
+	rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
-  assert(agentState == kAgentCleanup);
+	rlBufferClear(&theBuffer);
+	rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
+	assert(agentState == kAgentCleanup);
 
-  if (theAction.intArray != 0) {
-    free(theAction.intArray);
-    theAction.intArray    = 0;
-    theAction.numInts     = 0;
-  }
+	clearRLStruct(&theAction);
 
-  if (theAction.doubleArray != 0) {
-    free(theAction.doubleArray);
-    theAction.doubleArray = 0;
-    theAction.numDoubles  = 0;
-  }
-
-	// October 8, 2008, Andrew Butcher :: theAction.charArray was not being cleaned up
-	if(theAction.charArray != 0) {
-		free(theAction.charArray);
-		theAction.charArray = 0;
-		theAction.numChars  = 0;  
+	if (theOutMessage != 0) {
+	  free(theOutMessage);
+	  theOutMessage = 0;
 	}
-	
-  if (theOutMessage != 0) {
-    free(theOutMessage);
-    theOutMessage = 0;
-  }
-
-  rlBufferDestroy(&theBuffer);
 }
 
 

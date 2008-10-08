@@ -42,6 +42,9 @@
 /* RL_netlib Library Header */
 #include <rlglue/network/RL_network.h>
 
+/* Convenience functions for manupulating RL Structs*/
+#include <rlglue/utils/C/RLStruct_util.h>
+
 /* Open and configure a socket */
 int rlOpen(short thePort) {
   int flag = 1;
@@ -447,78 +450,38 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
 	offset = rlBufferRead(src, offset, &numCharsInBuffer, 1, sizeof(unsigned int));
 	/* fprintf(stderr, "recv 4 offset = %u\n", offset); */
 
-/* 	I'll comment this first block and the rest follow similar patterns
-*	- Check if the size of the intArray from the buffer is bigger
-*    than the one allocated in dst
-*
-*	- If dst's array is too small, make a new temporary array of the right size.
-*		- copy dst's array to the new temporary array
-*		- free dst's array
-*       - assign the temporary array to dst->intArray
-*	- If the buffer had any ints, read them into dst->intArray
 
+	if(numIntsInBuffer>1000000 || numDoublesInBuffer>1000000 || numCharsInBuffer > 1000000){
+		fprintf(stderr,"ERROR -- more than a million of ints, doubles, or chars in the buffer (%d %d %d), probably corrupt datastream, exiting\n",numIntsInBuffer,numDoublesInBuffer,numCharsInBuffer);
+		exit(1);
+	}
 
- NEW PLAN, SIMPLIFY THIS CODE
+/* 	Brian Tanner: October 8, 2008 
+
+	This code used to be clever and would only clear and re-allocate memory when it was absolutely necessary.
+	However, that code was a little bit buggy, and to make RL-Glue 3.0 really solid we've replaced it with some 
+	very simple code.
+	
+	This memory de-allocation/allocation should not be a disastrous bottleneck, I think the sockets are introducing
+	enough latency that optimizing this might have a negligible impact.  However, we should one day come back here
+	and optimize this code to avoid it some time in the future. 
 */
-  if(numIntsInBuffer>1000000 || numDoublesInBuffer>1000000 || numCharsInBuffer > 1000000){
-	fprintf(stderr,"ERROR -- more than a million of ints, doubles, or chars in the buffer (%d %d %d), probably corrupt datastream, exiting\n",numIntsInBuffer,numDoublesInBuffer,numCharsInBuffer);
-	exit(1);
- }
-
-/* Simplified Code */
-dst->numInts = numIntsInBuffer;
-if(dst->intArray!=0){
-	free(dst->intArray);
-	dst->intArray=0;
-}
-
-if(numIntsInBuffer>0){
-    dst->intArray = (int*)calloc(numIntsInBuffer, sizeof(int));
-    offset = rlBufferRead(src, offset, dst->intArray, dst->numInts, sizeof(int));
-}
-
-dst->numDoubles = numDoublesInBuffer;
-if(dst->doubleArray!=0){
-	free(dst->doubleArray);
-	dst->doubleArray=0;
-}
-if(numDoublesInBuffer>0){
-    dst->doubleArray = (double*)calloc(numDoublesInBuffer, sizeof(double));
-    offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
-}
-dst->numChars = numCharsInBuffer;
-if(dst->charArray!=0){
-	free(dst->charArray);
-	dst->charArray=0;
-}
-if(numCharsInBuffer>0){
-    dst->charArray = (char*)calloc(numCharsInBuffer, sizeof(char));
-    offset = rlBufferRead(src, offset, dst->charArray, dst->numChars, sizeof(char));
-}
 
 
-/*
- if (numDoublesInBuffer != dst->numDoubles) {
-    doubleArray = (double*)calloc(numDoublesInBuffer, sizeof(double));
-    free(dst->doubleArray);
-    dst->doubleArray = doubleArray;
-  }
-  dst->numDoubles = numDoublesInBuffer;
+	/*Just clear out DST for now, one day we will make an optimization pass and make this more efficient */
+	allocateRLStruct(dst,numIntsInBuffer,numDoublesInBuffer,numCharsInBuffer);	
 
-  if (dst->numDoubles > 0) {
-    offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
-  }
+	if(numIntsInBuffer>0){
+		offset = rlBufferRead(src, offset, dst->intArray, dst->numInts, sizeof(int));
+	}
 
-  if (numCharsInBuffer != dst->numChars) {
-    charArray = (char*)calloc(numCharsInBuffer, sizeof(char));
-    free(dst->charArray);
-    dst->charArray = charArray;
-  }
-  dst->numChars = numCharsInBuffer;
+	if(numDoublesInBuffer>0){
+		offset = rlBufferRead(src, offset, dst->doubleArray, dst->numDoubles, sizeof(double));
+	}
 
-  if (dst->numChars > 0) {
-    offset = rlBufferRead(src, offset, dst->charArray, dst->numChars, sizeof(char));
-  }
-*/
-  return offset;
+	if(numCharsInBuffer>0){
+		offset = rlBufferRead(src, offset, dst->charArray, dst->numChars, sizeof(char));
+	}
+
+	return offset;
 }

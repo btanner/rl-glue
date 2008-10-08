@@ -23,6 +23,7 @@
 #include <config.h>
 #endif
 
+#include <assert.h>
 #include <stdlib.h> /* free, calloc */
 #include <string.h> /* memcpy */
 #include <rlglue/utils/C/RLStruct_util.h>
@@ -100,9 +101,8 @@ void freeRLStructPointer(rl_abstract_type_t *dst){
 }
 
 void allocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars){
-	if(dst!=0){
-		clearRLStruct(dst);
-	}
+	assert(dst!=0);
+	clearRLStruct(dst);
 	dst->numInts=numInts;
 	dst->numDoubles=numDoubles;
 	dst->numChars=numChars;

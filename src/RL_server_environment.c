@@ -34,6 +34,9 @@
 #include <rlglue/Environment_common.h>
 #include <rlglue/network/RL_network.h>
 
+/* Convenience functions for manupulating RL Structs*/
+#include <rlglue/utils/C/RLStruct_util.h>
+
 static task_specification_t theTaskSpec   = 0;
 static rlBuffer theBuffer               = {0};
 static observation_t theObservation = {0};
@@ -124,83 +127,30 @@ reward_observation_t env_step(action_t theAction) {
 }
 
 void env_cleanup() {
-  int envState = kEnvCleanup;
+	int envState = kEnvCleanup;
 
-  rlBufferClear(&theBuffer);
-  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
+	rlBufferClear(&theBuffer);
+	rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
-  assert(envState == kEnvCleanup);
+	rlBufferClear(&theBuffer);
+	rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
+	assert(envState == kEnvCleanup);
 
-  rlBufferDestroy(&theBuffer);
+	rlBufferDestroy(&theBuffer);
 
-  if (theTaskSpec != 0) {
-    free(theTaskSpec);
-    theTaskSpec = 0;
-  }
+	clearRLStruct(&theObservation);
+	clearRLStruct(&theStateKey);
+	clearRLStruct(&theRandomSeedKey);
 
-  if (theObservation.intArray != 0) {
-    free(theObservation.intArray);
-    theObservation.intArray = 0;
-    theObservation.numInts = 0;
-  }
-
-  if (theObservation.doubleArray != 0) {
-    free(theObservation.doubleArray);
-    theObservation.doubleArray = 0;
-    theObservation.numDoubles = 0;
-  }
-	
-	// October 8, 2008, Andrew Butcher :: theObservation.charArray was not being cleaned up
-	if (theObservation.charArray != 0) {
-		free(theObservation.charArray);
-		theObservation.charArray = 0;
-		theObservation.numChars = 0;
+	if (theTaskSpec != 0) {
+		free(theTaskSpec);
+		theTaskSpec = 0;
 	}
 
-  if (theStateKey.intArray != 0) {
-    free(theStateKey.intArray);
-    theStateKey.intArray = 0;
-    theStateKey.numInts = 0;
-  }
-
-  if (theStateKey.doubleArray != 0) {
-    free(theStateKey.doubleArray);
-    theStateKey.doubleArray = 0;
-    theStateKey.numDoubles = 0;
-  }
-	
-	// October 8, 2008, Andrew Butcher :: theStateKey.charArray was not being cleaned up
-	if (theStateKey.charArray != 0) {
-		free(theStateKey.charArray);
-		theStateKey.charArray = 0;
-		theStateKey.numChars = 0;
+	if (theOutMessage != 0) {
+		free(theOutMessage);
+		theOutMessage = 0;
 	}
-
-  if (theRandomSeedKey.intArray != 0) {
-    free(theRandomSeedKey.intArray);
-    theRandomSeedKey.intArray = 0;
-    theRandomSeedKey.numInts = 0;
-  }
-
-  if (theRandomSeedKey.doubleArray != 0) {
-    free(theRandomSeedKey.doubleArray);
-    theRandomSeedKey.doubleArray = 0;
-    theRandomSeedKey.numDoubles = 0;
-  }
-	
-	// October 8, 2008, Andrew Butcher :: theRandomSeedKey.charArray was not being cleaned up
-	if (theRandomSeedKey.charArray != 0) {
-		free(theRandomSeedKey.charArray);
-		theRandomSeedKey.charArray = 0;
-		theRandomSeedKey.numChars = 0;
-	}
-
-  if (theOutMessage != 0) {
-    free(theOutMessage);
-    theOutMessage = 0;
-  }
 }
 
 void env_set_state(state_key_t theStateKey) {
