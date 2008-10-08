@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 	if(machineEndianness()==BIG_ENDIAN_CHECK)
 		printf("This machine is BIGENDIAN\n");
 		
-		printf("Sizes: char %lu int %lu long %lu float %lu double %lu\n",sizeof(char),sizeof(int),sizeof(long), sizeof(float),sizeof(double));
+		printf("Sizes: char %u int %u long %u float %u double %u\n",sizeof(char),sizeof(int),sizeof(long), sizeof(float),sizeof(double));
 
   task_spec=RL_init();
 
