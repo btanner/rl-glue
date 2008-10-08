@@ -213,9 +213,18 @@ void onRLCleanup(int theConnection) {
     theStateKey.doubleArray = 0;
   }
 
+	// October 8, 2008, Andrew Butcher :: theStateKey.charArray was not being cleaned up
+	if (theStateKey.charArray != 0) {
+		free(theStateKey.charArray);
+		theStateKey.charArray = 0;
+	}
+
+	
   theStateKey.numInts = 0;
   theStateKey.numDoubles = 0;
-
+	theStateKey.numChars = 0;  // October 8, 2008, Andrew Butcher :: theStateKey.charArray was not being cleaned up
+	
+	
   /* Cleanup the random seed key */
   if (theRandomSeedKey.intArray != 0) {
     free(theRandomSeedKey.intArray);
@@ -227,8 +236,16 @@ void onRLCleanup(int theConnection) {
     theRandomSeedKey.doubleArray = 0;
   }
 
+	// October 8, 2008, Andrew Butcher :: theRandomSeedKey.charArray was not being cleaned up
+	if (theRandomSeedKey.charArray != 0) {
+		free(theRandomSeedKey.charArray);
+		theRandomSeedKey.numChars = 0;
+	}
+
+	
   theRandomSeedKey.numInts = 0;
   theRandomSeedKey.numDoubles = 0;
+	theRandomSeedKey.charArray = 0; 	// October 8, 2008, Andrew Butcher :: theRandomSeedKey.charArray was not being cleaned up
 }
 
 void onRLAgentMessage(int theConnection) {

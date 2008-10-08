@@ -151,6 +151,13 @@ void env_cleanup() {
     theObservation.doubleArray = 0;
     theObservation.numDoubles = 0;
   }
+	
+	// October 8, 2008, Andrew Butcher :: theObservation.charArray was not being cleaned up
+	if (theObservation.charArray != 0) {
+		free(theObservation.charArray);
+		theObservation.charArray = 0;
+		theObservation.numChars = 0;
+	}
 
   if (theStateKey.intArray != 0) {
     free(theStateKey.intArray);
@@ -163,6 +170,13 @@ void env_cleanup() {
     theStateKey.doubleArray = 0;
     theStateKey.numDoubles = 0;
   }
+	
+	// October 8, 2008, Andrew Butcher :: theStateKey.charArray was not being cleaned up
+	if (theStateKey.charArray != 0) {
+		free(theStateKey.charArray);
+		theStateKey.charArray = 0;
+		theStateKey.numChars = 0;
+	}
 
   if (theRandomSeedKey.intArray != 0) {
     free(theRandomSeedKey.intArray);
@@ -175,6 +189,13 @@ void env_cleanup() {
     theRandomSeedKey.doubleArray = 0;
     theRandomSeedKey.numDoubles = 0;
   }
+	
+	// October 8, 2008, Andrew Butcher :: theRandomSeedKey.charArray was not being cleaned up
+	if (theRandomSeedKey.charArray != 0) {
+		free(theRandomSeedKey.charArray);
+		theRandomSeedKey.charArray = 0;
+		theRandomSeedKey.numChars = 0;
+	}
 
   if (theOutMessage != 0) {
     free(theOutMessage);

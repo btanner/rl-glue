@@ -152,6 +152,13 @@ void agent_cleanup() {
     theAction.numDoubles  = 0;
   }
 
+	// October 8, 2008, Andrew Butcher :: theAction.charArray was not being cleaned up
+	if(theAction.charArray != 0) {
+		free(theAction.charArray);
+		theAction.charArray = 0;
+		theAction.numChars  = 0;  
+	}
+	
   if (theOutMessage != 0) {
     free(theOutMessage);
     theOutMessage = 0;
