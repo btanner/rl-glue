@@ -47,7 +47,7 @@ static char* theOutMessage = 0;
 extern void rlSetEnvironmentConnection();
 extern int rlGetEnvironmentConnection();
 
-const char* env_init() {
+task_specification_t env_init() {
   /* Setup the connection */
   int envState = kEnvInit;
   unsigned int theTaskSpecLength = 0;
@@ -211,7 +211,7 @@ random_seed_key_t env_get_random_seed() {
   return theRandomSeedKey;
 }
 
-const char* env_message(const char* inMessage) {
+message_t env_message(const message_t inMessage) {
   int envState = kEnvMessage;
   unsigned int theInMessageLength = 0;
   unsigned int theOutMessageLength = 0;

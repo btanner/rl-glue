@@ -27,8 +27,8 @@ void runEpisode(int stepLimit) {
 }
 
 int main(int argc, char *argv[]) {
-	const char* task_spec;
-	const char* responseMessage;
+	task_specification_t task_spec;
+	message_t responseMessage=0;
 	reward_observation_action_terminal_t stepResponse;
 	observation_action_t startResponse;
 

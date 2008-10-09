@@ -38,13 +38,13 @@ extern "C" {
 	* Experiments should not implement these functions, rather, these are the functions
 	* that experiments should call.
 */
-const char* RL_init();
+task_specification_t RL_init();
 observation_action_t RL_start();
 reward_observation_action_terminal_t RL_step();
 void RL_cleanup();
 
-const char* RL_agent_message(const char* message);
-const char* RL_env_message(const char* message);
+message_t RL_agent_message(message_t message);
+message_t RL_env_message(message_t message);
 
 reward_t RL_return();
 int RL_num_steps();

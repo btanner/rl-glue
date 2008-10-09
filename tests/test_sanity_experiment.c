@@ -56,14 +56,14 @@ void check_fail(int condition){
 	
 	
 int main(int argc, char *argv[]) {
-  const char* task_spec;
+  task_specification_t task_spec;
 
 	if(machineEndianness()==LITTLE_ENDIAN_CHECK)
 		printf("This machine is LITTLE ENDIAN\n");
 	if(machineEndianness()==BIG_ENDIAN_CHECK)
 		printf("This machine is BIGENDIAN\n");
 		
-		printf("Sizes: char %u int %u long %u float %u double %u\n",(unsigned int)sizeof(char),(unsigned int)sizeof(int),(unsigned int)sizeof(long),(unsigned int)sizeof(float),(unsigned int)sizeof(double));
+		printf("Sizes: char %u int %u long %u float %u double %u\n",sizeof(char),sizeof(int),sizeof(long), sizeof(float),sizeof(double));
 
   task_spec=RL_init();
 

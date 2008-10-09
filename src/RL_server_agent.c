@@ -46,7 +46,7 @@ extern void rlSetAgentConnection(int);
 extern int rlGetAgentConnection();
 
 /* Send the task spec to the agent */
-void agent_init(const char * theTaskSpec) {
+void agent_init(const task_specification_t theTaskSpec) {
   int agentState = kAgentInit;
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
@@ -152,7 +152,7 @@ void agent_cleanup() {
 }
 
 
-const char* agent_message(const char* inMessage) {
+message_t agent_message(const message_t inMessage) {
   int agentState = kAgentMessage;
   unsigned int theInMessageLength = 0;
   unsigned int theOutMessageLength = 0;

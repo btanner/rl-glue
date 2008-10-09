@@ -32,9 +32,9 @@
 
 #include "useful_functions.h"
 
-char* env_responseMessage=0;
+message_t env_responseMessage=0;
 
-const char* env_init()
+task_specification_t env_init()
 {    
 	return "";
 }
@@ -80,7 +80,7 @@ random_seed_key_t env_get_random_seed()
 	return theKey;
 }
 
-const char* env_message(const char* inMessage) {
+message_t env_message(const message_t inMessage) {
 	char tmpBuffer[1024];
 	
 	if(inMessage==0)

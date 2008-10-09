@@ -36,7 +36,7 @@
 state_key_t env_saved_state_key={0};
 random_seed_key_t env_saved_random_key={0};
 
-const char* env_init()
+task_specification_t env_init()
 {    
 	return "";
 }
@@ -80,7 +80,7 @@ random_seed_key_t env_get_random_seed()
 	return env_saved_random_key;
 }
 
-const char* env_message(const char* inMessage) {
+message_t env_message(const message_t inMessage) {
 	return "";
 }
 	
