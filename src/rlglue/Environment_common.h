@@ -37,7 +37,7 @@ extern "C" {
 #include <rlglue/RL_common.h>
 
 	/* Environment Interface */
-	task_specification_t env_init();
+	const char* env_init();
 	observation_t env_start();
 	reward_observation_t env_step(action_t a);
 	void env_cleanup();
@@ -45,7 +45,7 @@ extern "C" {
 	void env_set_random_seed(random_seed_key_t rsk);
 	state_key_t env_get_state();
 	random_seed_key_t env_get_random_seed();
-	message_t env_message(const message_t message);
+	const char* env_message(const char * message);
 
 #ifdef __cplusplus
 }

@@ -32,7 +32,7 @@
 
 #include "useful_functions.h"
 
-message_t env_responseMessage=0;
+char* env_responseMessage=0;
 observation_t emptyObservation;
 observation_t nonEmptyObservation;
 
@@ -40,7 +40,7 @@ observation_t nonEmptyObservation;
 int env_whichEpisode=0;
 
 
-task_specification_t env_init()
+const char* env_init()
 {    
 	env_whichEpisode=0;
 
@@ -107,7 +107,7 @@ random_seed_key_t env_get_random_seed()
 	return theKey;
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	return "";
 }
 	

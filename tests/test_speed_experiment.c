@@ -71,7 +71,7 @@ void check_fail(int condition){
 	
 	
 int main(int argc, char *argv[]) {
-  task_specification_t task_spec;
+  const char* task_spec;
 	long t0,t1;
 	int steps;
 

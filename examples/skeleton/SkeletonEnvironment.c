@@ -35,9 +35,9 @@ reward_observation_t this_reward_observation;
 int current_state=0;
 
 
-task_specification_t env_init()
+const char* env_init()
 {    
-	task_specification_t task_spec="2:e:1_[i]_[0,20]:1_[i]_[0,1]:[-1,1]";
+	char* task_spec="2:e:1_[i]_[0,20]:1_[i]_[0,1]:[-1,1]";
 
 	/* Allocate the observation variable */
 	allocateRLStruct(&this_observation,1,0,0);
@@ -97,7 +97,7 @@ void env_cleanup()
 	clearRLStruct(&this_observation);
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	if(strcmp(inMessage,"what is your name?")==0)
 		return "my name is skeleton_environment!";
 

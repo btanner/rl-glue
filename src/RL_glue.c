@@ -47,8 +47,8 @@ static int num_episodes    = 0;
 
 
 
-task_specification_t RL_init() {
-  task_specification_t task_spec;
+const char* RL_init() {
+  const char* task_spec;
   task_spec = env_init();
   agent_init(task_spec);
 
@@ -116,34 +116,40 @@ void RL_cleanup() {
   agent_cleanup();
 }
 
-message_t RL_agent_message(const message_t message) {
-	char *theAgentResponse;
-	char *messageToSend=message;
-	
-	/* I think this is safe because nobody will try to free stuff that is sent to them */
-  if(messageToSend==0)
-	 messageToSend="";
-	
-  theAgentResponse=agent_message(messageToSend);
-  if(theAgentResponse==0)
-	theAgentResponse="";
-	
-  return theAgentResponse;
+const char* RL_agent_message(const char* message) {
+	const char *theAgentResponse;
+	const char *messageToSend;
+
+	if(message!=0){
+		messageToSend=message;
+	}else{
+		messageToSend="";
+	}
+
+	theAgentResponse=agent_message(messageToSend);
+	if(theAgentResponse==0){
+		return "";
+	}
+
+	return theAgentResponse;
 }
 
-message_t RL_env_message(const message_t message) {
-	char *theEnvResponse;
-	char *messageToSend=message;
+const char* RL_env_message(const char* message) {
+	const char *theEnvResponse;
+	const char *messageToSend;
 
-	/* I think this is safe because nobody will try to free stuff that is sent to them */
-  if(messageToSend==0)
-	 messageToSend="";
+	if(message!=0){
+		messageToSend=message;
+	}else{
+		messageToSend="";
+	}
 
-  theEnvResponse=env_message(messageToSend);
-  if(theEnvResponse==0)
-	theEnvResponse="";
+	theEnvResponse=env_message(messageToSend);
+	if(theEnvResponse==0){
+		return "";
+	}
 
-  return theEnvResponse;
+	return theEnvResponse;
 }
 
 terminal_t RL_episode(unsigned int maxStepsThisEpisode) {

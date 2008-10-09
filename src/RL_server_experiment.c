@@ -79,7 +79,7 @@ void termination_handler(int signum) {
 void onRLInit(int theConnection) {
 	unsigned int TS_length=0;
 	unsigned int offset=0;
-	task_specification_t TS=RL_init();
+	const char* TS=RL_init();
 	rlBufferClear(&theBuffer);
 	/* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
 	initNoCleanUp=1;
@@ -209,8 +209,8 @@ void onRLCleanup(int theConnection) {
 }
 
 void onRLAgentMessage(int theConnection) {
-	char* inMessage = 0;
-	char* outMessage = 0;
+	char* inMessage;
+	const char* outMessage;
 	unsigned int inMessageLength = 0;
 	unsigned int outMessageLength = 0;
 	unsigned int offset = 0;
@@ -225,7 +225,7 @@ void onRLAgentMessage(int theConnection) {
 	/* Sept 12 2008 moved out of if to make sure it is null terminated if empty message*/
 	inMessage[inMessageLength] = '\0';
 
-	outMessage = RL_agent_message(inMessage);    
+	outMessage = RL_agent_message(inMessage);
 
 	if (outMessage != 0) {
 		outMessageLength = strlen(outMessage);
@@ -245,7 +245,7 @@ void onRLAgentMessage(int theConnection) {
 
 void onRLEnvMessage(int theConnection) {
 	char* inMessage = 0;
-	char* outMessage = 0;
+	const char* outMessage;
 	unsigned int inMessageLength = 0;
 	unsigned int outMessageLength = 0;
 	unsigned int offset = 0;

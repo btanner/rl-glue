@@ -44,7 +44,7 @@
 	
 
 int main(int argc, char *argv[]) {
-	char *theResponse;
+	const char *theResponse;
 	
 	RL_init();
 

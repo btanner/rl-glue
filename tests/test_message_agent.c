@@ -39,12 +39,12 @@ This agent doesn't implement all the methods.. isn't that bad?
 #include "useful_functions.h"
 
 
-message_t agent_responseMessage=0;
+char* agent_responseMessage=0;
 action_t emptyAction;
 
 
 
-void agent_init(const task_specification_t task_spec){
+void agent_init(const char * task_spec){
 	clean_abstract_type(&emptyAction);
 
 }
@@ -66,7 +66,7 @@ void agent_cleanup() {
 void agent_freeze() {
 }
 
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
 	char tmpBuffer[1024];
 	
 	if(inMessage==0)

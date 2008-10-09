@@ -34,11 +34,11 @@
 
 observation_t o={0};
 reward_observation_t ro={0};
-message_t env_responseMessage=0;
+char* env_responseMessage=0;
 int env_stepCount=0;
 int env_episodeCount=0;
 
-task_specification_t env_init()
+const char* env_init()
 {    
 	return "sample task spec";
 }
@@ -114,6 +114,6 @@ random_seed_key_t env_get_random_seed()
 	return theKey;
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	return "";
 }

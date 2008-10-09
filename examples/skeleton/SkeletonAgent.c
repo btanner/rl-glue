@@ -33,7 +33,7 @@ int randInRange(int max){
 	return (int)x;
 }
 
-void agent_init(const task_specification_t task_spec)
+void agent_init(const char* task_spec)
 {
 	/*Seed the random number generator*/
 	srand(time(0));
@@ -91,7 +91,7 @@ void agent_cleanup() {
 	clearRLStruct(&last_observation);
 }
 
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
 	if(strcmp(inMessage,"what is your name?")==0)
 		return "my name is skeleton_agent!";
 
