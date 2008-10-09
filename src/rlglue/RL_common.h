@@ -32,7 +32,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
-#define __RL_CHECK_STRUCT(X)  if(__rlglue_check_abstract_type(X)!=0){printf("Struct failed validity check at file %s line %d\n",__FILE__,__LINE__);exit(__rlglue_check_abstract_type(X));}
+#define __RL_CHECK_STRUCT(X)  if(__rlglue_check_abstract_type(X)!=0){printf("Struct failed validity check at file %s line %d\n",__FILE__,__LINE__);abort();}
 
 
 typedef double reward_t;

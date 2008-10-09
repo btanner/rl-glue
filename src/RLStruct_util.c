@@ -40,10 +40,12 @@ void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst){
 	if(dst->numInts!=src->numInts){
 		if(dst->numInts>0 && dst->intArray!=0){
 			free(dst->intArray);
+			dst->intArray=0;
 		}
 		dst->numInts=src->numInts;
-		dst->intArray=(int *)calloc(dst->numInts,sizeof(int));
-		assert(dst->intArray!=0);
+		if(dst->numInts>0){
+			dst->intArray=(int *)calloc(dst->numInts,sizeof(int));
+		}
 	}
 	if(src->numInts>0){
 		memcpy(dst->intArray, src->intArray,dst->numInts*sizeof(int));
@@ -52,9 +54,12 @@ void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst){
 	if(dst->numDoubles!=src->numDoubles){
 		if(dst->numDoubles>0 && dst->doubleArray!=0){
 			free(dst->doubleArray);
+			dst->doubleArray=0;
 		}
 		dst->numDoubles=src->numDoubles;
-		dst->doubleArray=(double *)calloc(dst->numDoubles,sizeof(double));
+		if(dst->numDoubles>0){
+			dst->doubleArray=(double *)calloc(dst->numDoubles,sizeof(double));
+		}
 	}
 	if(src->numDoubles>0){
 		memcpy(dst->doubleArray, src->doubleArray,dst->numDoubles*sizeof(double));
@@ -63,9 +68,12 @@ void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst){
 	if(dst->numChars!=src->numChars){
 		if(dst->numChars>0 && dst->charArray!=0){
 			free(dst->charArray);
+			dst->charArray=0;
 		}
 		dst->numChars=src->numChars;
-		dst->charArray=(char *)calloc(dst->numChars,sizeof(char));
+		if(dst->numChars>0){
+			dst->charArray=(char *)calloc(dst->numChars,sizeof(char));
+		}
 	}
 	if(src->numChars>0){
 		memcpy(dst->charArray, src->charArray,dst->numChars*sizeof(char));
