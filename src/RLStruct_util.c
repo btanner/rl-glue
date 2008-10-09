@@ -34,15 +34,19 @@
 *	Freeing and reallocating if necessary
 **/
 void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst){
+	assert(src!=0);
+	assert(dst!=0);
+	
 	if(dst->numInts!=src->numInts){
 		if(dst->numInts>0 && dst->intArray!=0){
 			free(dst->intArray);
 		}
 		dst->numInts=src->numInts;
 		dst->intArray=(int *)calloc(dst->numInts,sizeof(int));
+		assert(dst->intArray!=0);
 	}
 	if(src->numInts>0){
-		memcpy(dst->intArray, src->intArray,dst->numInts);
+		memcpy(dst->intArray, src->intArray,dst->numInts*sizeof(int));
 	}
 
 	if(dst->numDoubles!=src->numDoubles){
@@ -53,7 +57,7 @@ void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst){
 		dst->doubleArray=(double *)calloc(dst->numDoubles,sizeof(double));
 	}
 	if(src->numDoubles>0){
-		memcpy(dst->doubleArray, src->doubleArray,dst->numDoubles);
+		memcpy(dst->doubleArray, src->doubleArray,dst->numDoubles*sizeof(double));
 	}
 
 	if(dst->numChars!=src->numChars){
@@ -64,7 +68,7 @@ void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst){
 		dst->charArray=(char *)calloc(dst->numChars,sizeof(char));
 	}
 	if(src->numChars>0){
-		memcpy(dst->charArray, src->charArray,dst->numChars);
+		memcpy(dst->charArray, src->charArray,dst->numChars*sizeof(char));
 	}	
 }
 
@@ -73,6 +77,7 @@ Created by Brian Tanner on Sept 27, 2008.
 I thought this might be handy for people
 */
 void clearRLStruct(rl_abstract_type_t *dst){
+	if(dst==0)return;
 	if(dst->intArray!=0){
 		free(dst->intArray);
 	}
@@ -120,5 +125,12 @@ void allocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const
 rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars){
 	rl_abstract_type_t *dst=(rl_abstract_type_t *)calloc(1,sizeof(rl_abstract_type_t));
 	allocateRLStruct(dst,numInts,numDoubles,numChars);
+	return dst;
+}
+
+rl_abstract_type_t *duplicateRLStructToPointer(const rl_abstract_type_t *src){
+	assert(src!=0);
+	rl_abstract_type_t *dst=(rl_abstract_type_t *)calloc(1,sizeof(rl_abstract_type_t));
+	replaceRLStruct(src,dst);
 	return dst;
 }
