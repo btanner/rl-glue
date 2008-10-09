@@ -31,6 +31,8 @@
 
 
 int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct){
+	if(theStruct==0)return 0;
+	
 	if(theStruct->numInts>1000000){printf("abstract type integrity error: numInts = %d\n",theStruct->numInts);return 1;}
 	if(theStruct->numDoubles>1000000)return 2;
 	if(theStruct->numChars>1000000)return 3;
@@ -49,7 +51,8 @@ int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct){
 /* Take ths out later */
 void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct){
 	int i;
-		printf("Printing Abstract Type\n-----------------\n");
+	if(theStruct==0)return;
+	printf("Printing Abstract Type\n-----------------\n");
 	printf("\t Ints: %d \t Doubles: %d\t Chars: %d\n",theStruct->numInts, theStruct->numDoubles, theStruct->numChars);
 	if(theStruct->numInts>0)assert(theStruct->intArray!=0);
 	if(theStruct->numDoubles>0)assert(theStruct->doubleArray!=0);
