@@ -1,6 +1,526 @@
 -----------------------------------------
+RL-GLUE 3.0 Release Candidate 1 (RC2) :: 2008-10-11  
+-----------------------------------------
+2008-10-11  Brian Tanner <brian@tannerpages.com>
+
+	* [r914] configure, configure.ac, docs/Glue-Overview.pdf,
+	  docs/Glue-Overview.tex, docs/TechnicalManual.pdf,
+	  docs/TechnicalManual.tex, docs/html/Glue-Overview.html,
+	  docs/html/index.html, docs/tech_html/TechnicalManual.html,
+	  docs/tech_html/index.html, examples/skeleton/SkeletonAgent.c,
+	  examples/skeleton/SkeletonEnvironment.c,
+	  examples/skeleton/SkeletonExperiment.c, src/Makefile.am,
+	  src/Makefile.in, src/RL_glue.c, src/RL_network.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/RL_common.h,
+	  src/rlglue/RL_glue.h, src/rlglue/legacy_types.h,
+	  src/rlglue/utils/C/RLStruct_util.h, tests/Makefile.am,
+	  tests/Makefile.in, tests/test_1_agent.c,
+	  tests/test_1_environment.c, tests/test_1_experiment.c,
+	  tests/test_empty_agent.c, tests/test_empty_environment.c,
+	  tests/test_empty_experiment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c,
+	  tests/test_message_experiment.c,
+	  tests/test_rl_episode_experiment.c,
+	  tests/test_sanity_experiment.c, tests/test_seeds_environment.c,
+	  tests/test_seeds_experiment.c, tests/test_speed_environment.c,
+	  tests/test_speed_experiment.c, tests/useful_functions.c: Moved to
+	  const-pointer glue as discussed on the rl-glue list. Instead of
+	  passing structures around, we are going to pass pointers to
+	  structures. This will allow us to return const pointers and use
+	  them as parameters, hopefully clarifying to users exactly what
+	  they are supposed/allowed to modify, and exactly what they should
+	  feel safe that nobody else will modify. I re-applied the changes
+	  from 897:898, and then merged the branch.
+
+2008-10-09  Brian Tanner <brian@tannerpages.com>
+
+	* [r912] src/RLStruct_util.c: Added newline.
+
+	* [r910] src/RLStruct_util.c, src/rlglue/RL_common.h: Fixed a bug
+	  in RLStruct_util (from the const branch) and updated the check
+	  macro to abort instead of exit.
+
+	* [r909] src/RL_glue_debug.c: comitting so the string works.
+
+	* [r903] tests/test_sanity_experiment.c: Fixed a warning in this
+	  branch.
+
+	* [r902] src/RLStruct_util.c: Fixed a bug in replaceRLStruct and
+	  added duplicateRLStructToPointer.
+
+	* [r900] examples/skeleton/SkeletonAgent.c,
+	  examples/skeleton/SkeletonEnvironment.c,
+	  examples/skeleton/SkeletonExperiment.c, src/RL_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/RL_glue.h,
+	  tests/test_1_agent.c, tests/test_1_environment.c,
+	  tests/test_1_experiment.c, tests/test_empty_agent.c,
+	  tests/test_empty_environment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c,
+	  tests/test_message_experiment.c, tests/test_sanity_experiment.c,
+	  tests/test_seeds_environment.c, tests/test_speed_environment.c,
+	  tests/test_speed_experiment.c: Undoing the const commit because I
+	  am going to play in a branch and then commit if it looks good.
+
+	* [r898] examples/skeleton/SkeletonAgent.c,
+	  examples/skeleton/SkeletonEnvironment.c,
+	  examples/skeleton/SkeletonExperiment.c, src/RL_glue.c,
+	  src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c, src/rlglue/Agent_common.h,
+	  src/rlglue/Environment_common.h, src/rlglue/RL_glue.h,
+	  tests/test_1_agent.c, tests/test_1_environment.c,
+	  tests/test_1_experiment.c, tests/test_empty_agent.c,
+	  tests/test_empty_environment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c,
+	  tests/test_message_experiment.c, tests/test_sanity_experiment.c,
+	  tests/test_seeds_environment.c, tests/test_speed_environment.c,
+	  tests/test_speed_experiment.c: Modified all messages and env_init
+	  related methods to use const where possible.
+
+2008-10-08  Brian Tanner <brian@tannerpages.com>
+
+	* [r897] tests/test_sanity_experiment.c: Fixing a print statement
+	  to not give warnings.
+
+	* [r896] src/Makefile.am, src/Makefile.in, src/RLStruct_util.c,
+	  src/RL_network.c, src/RL_server_agent.c,
+	  src/RL_server_environment.c, src/RL_server_experiment.c: Fixed
+	  tabbing and formatting in RL_server_experiment.c, upgraded Andrew
+	  Butcher's memory leak fix to use the struct utils, making it
+	  cleaner and easier to debug, fixed a place where a pointer was
+	  being freed but not set to 0, and setup the project to link the
+	  libraries to librlutils so that we can use the utils in the glue.
+
+2008-10-08  Andrew Butcher <andrew.butcher@uleth.ca>
+
+	* [r895] src/RL_server_agent.c, src/RL_server_environment.c,
+	  src/RL_server_experiment.c: Fixed Issue 97
+
+2008-10-06  Brian Tanner <brian@tannerpages.com>
+
+	* [r894] configure, configure.ac, docs, docs/Glue-Overview.pdf,
+	  docs/Glue-Overview.tex, docs/TechnicalManual.pdf,
+	  docs/TechnicalManual.tex, docs/html/Glue-Overview.html,
+	  docs/html/WARNINGS, docs/html/index.html,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/index.html,
+	  docs/tech_html/labels.pl: Added section for getting more help to
+	  faq, link to mailing list, advanced usage (setting ports), and a
+	  few other things.
+
+	* [r893] docs/TechnicalManual.pdf, docs/TechnicalManual.tex,
+	  docs/html/Glue-Overview.html, docs/html/WARNINGS,
+	  docs/html/img1.png, docs/html/img2.png, docs/html/img3.png,
+	  docs/html/img4.png, docs/html/img5.png, docs/html/index.html,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/index.html:
+	  Removing some images that I think don't need to be in these docs.
+
+	* [r892] tests/test_sanity_experiment.c: Updated to print out longs
+	  and float sizes too.
+
+	* [r891] tests/Makefile.am, tests/Makefile.in,
+	  tests/test_sanity_experiment.c: Fixed an endian check linking
+	  problem by putting it in the sanity experiment.
+
+	* [r890] docs/TechnicalManual.tex, tests/Makefile.am,
+	  tests/Makefile.in, tests/test_endian.c: Small fix to the docs,
+	  and endian test to see endianness and primitive type sizes.
+
+2008-10-02  Brian Tanner <brian@tannerpages.com>
+
+	* [r889] Makefile.am, Makefile.in, configure, configure.ac,
+	  examples/skeleton/SkeletonExperiment.c: Updated Makefile.am to
+	  include examples directory.
+
+	* [r888] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/html/Glue-Overview.html, docs/html/index.html: The remainder
+	  of Brian's edits.
+
+	* [r887] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/TechnicalManual.pdf, docs/html/Glue-Overview.html,
+	  docs/html/index.html, docs/html/internals.pl,
+	  docs/html/labels.pl, docs/tech_html/TechnicalManual.html,
+	  docs/tech_html/index.html: Partially done my edits.
+
+	* [r886] src/RL_glue.c: Adam's docs made me take another look at
+	  RL_episode and I was able to simplify it quite a bit.
+
+	* [r885] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/TechnicalManual.pdf, docs/TechnicalManual.tex,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/index.html:
+	  On line 101 of my edits of the overview.... about to do a big
+	  find and replace so I want to commit.
+
+
+
+-----------------------------------------
 RL-GLUE 3.0 Release Candidate 1 (RC1) :: 2008-10-01  
 -----------------------------------------
+2008-10-01  Adam White <awhite@cs.ualberta.ca>
+
+	* [r884] docs/Glue-Overview.tex: adding to the docs
+
+2008-10-01  Brian Tanner <brian@tannerpages.com>
+
+	* [r883] docs/TechnicalManual.pdf, docs/TechnicalManual.tex,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/WARNINGS,
+	  docs/tech_html/index.html: Fixed a few small things in the
+	  technical manual.
+
+	* [r882] src/RL_glue_debug.c: Removed a blank line.
+
+	* [r881] ChangeLog, Makefile.am: Updated the changelog and took
+	  AUTHORS out of EXTRA_DIST in Makefile.am.
+
+	* [r880] AUTHORS, INSTALL, NEWS, README: Updated the readme,
+	  removed some extra files we didn't need.
+
+	* [r879] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/TechnicalManual.pdf, docs/html/Glue-Overview.html,
+	  docs/html/index.html, docs/tech_html/TechnicalManual.html,
+	  docs/tech_html/index.html: Created authors section in the glue
+	  overview.
+
+	* [r878] configure, configure.ac: I think we're close to ready to
+	  call this RC1.
+
+	* [r877] src/RL_server_experiment.c: Fixed a call to old svn
+	  version approach.
+
+	* [r876] Makefile.am, Makefile.in, config/config.h.in, configure,
+	  configure.ac, examples/skeleton/SkeletonEnvironment.c,
+	  src/Makefile.in, src/RL_glue_debug.c, src/RL_server_experiment.c,
+	  src/rlglue/RL_common.h, tests/Makefile.in: Found an easier way to
+	  put the svn version into the source... using the properties.
+
+	* [r875] src/RL_glue_debug.c: Trying to make it easier to get the
+	  svn version.
+
+	* [r874] src/RL_server_experiment.c: Trying a quick trick to get
+	  the svn version working.
+
+	* [r873] docs/TechnicalManual.pdf, docs/TechnicalManual.tex,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/index.html:
+	  Add uninstall directions to RL-Glue technical manual.
+
+	* [r872] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/html/Glue-Overview.html, docs/html/WARNINGS,
+	  docs/html/index.html, docs/html/internals.pl,
+	  docs/html/labels.pl, docs/tech_html/TechnicalManual.html,
+	  docs/tech_html/index.html: Updated the FAQ section to show up
+	  right in the contentd.
+
+2008-10-01  Adam White <awhite@cs.ualberta.ca>
+
+	* [r871] docs/Glue-Overview.pdf: adding to the docs
+
+	* [r870] docs/Glue-Overview.tex: adding to the docs
+
+2008-10-01  Brian Tanner <brian@tannerpages.com>
+
+	* [r869] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/html/Glue-Overview.html, docs/html/index.html: Added a bit
+	  about the task spec in the faq.
+
+	* [r868] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/html/Glue-Overview.html, docs/html/WARNINGS,
+	  docs/html/index.html, docs/html/labels.pl: Added the RL-Glue
+	  changes to the main doc, and made the FAQ into subsections.
+
+	* [r867] docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/TechnicalManual.pdf, docs/html, docs/html/Glue-Overview.css,
+	  docs/html/Glue-Overview.html, docs/html/WARNINGS,
+	  docs/html/crossref.png, docs/html/glue_connections_no_shadow.png,
+	  docs/html/images.aux, docs/html/images.idx, docs/html/images.log,
+	  docs/html/images.pl, docs/html/images.tex, docs/html/img1.png,
+	  docs/html/img2.png, docs/html/img3.png, docs/html/img4.png,
+	  docs/html/img5.png, docs/html/index.html, docs/html/internals.pl,
+	  docs/html/labels.pl, docs/html/nx_grp_g.png,
+	  docs/html/prev_g.png, docs/html/up_g.png,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/WARNINGS,
+	  docs/tech_html/index.html, docs/tech_html/labels.pl: Changed the
+	  title of the overview doc and regenerated everything.
+
+	* [r866] docs/Glue-Docs, docs/html: Removing old files.
+
+	* [r865] docs/details_html, docs/html/WARNINGS,
+	  docs/html/index.html, docs/html/internals.pl,
+	  docs/html/labels.pl, docs/tech_html,
+	  docs/tech_html/TechnicalManual.css,
+	  docs/tech_html/TechnicalManual.html, docs/tech_html/WARNINGS,
+	  docs/tech_html/crossref.png, docs/tech_html/images.aux,
+	  docs/tech_html/images.log, docs/tech_html/images.pl,
+	  docs/tech_html/images.tex, docs/tech_html/img1.png,
+	  docs/tech_html/index.html, docs/tech_html/internals.pl,
+	  docs/tech_html/labels.pl, docs/tech_html/nx_grp_g.png,
+	  docs/tech_html/prev_g.png, docs/tech_html/up_g.png: Renaming the
+	  HTML directories too.
+
+	* [r864] docs/Glue-Docs.pdf, docs/Glue-Docs.tex,
+	  docs/Glue-Overview.pdf, docs/Glue-Overview.tex,
+	  docs/TechnicalManual.pdf, docs/TechnicalManual.tex,
+	  docs/details.pdf, docs/details.tex, docs/makeDocs.bash: Changing
+	  the names of some things around in the RL-Glue docs.
+
+2008-10-01  Adam White <awhite@cs.ualberta.ca>
+
+	* [r863] docs/Glue-Docs.pdf, docs/Glue-Docs.tex,
+	  docs/Glue-Docs/Glue-Docs.html, docs/Glue-Docs/WARNINGS,
+	  docs/Glue-Docs/images.pl, docs/Glue-Docs/img1.png,
+	  docs/Glue-Docs/img2.png, docs/Glue-Docs/img4.png,
+	  docs/Glue-Docs/img5.png, docs/Glue-Docs/img6.png,
+	  docs/Glue-Docs/index.html, docs/Glue-Docs/internals.pl,
+	  docs/Glue-Docs/labels.pl, docs/Glue-Docs/node1.html,
+	  docs/Glue-Docs/node10.html, docs/Glue-Docs/node11.html,
+	  docs/Glue-Docs/node12.html, docs/Glue-Docs/node13.html,
+	  docs/Glue-Docs/node14.html, docs/Glue-Docs/node15.html,
+	  docs/Glue-Docs/node16.html, docs/Glue-Docs/node17.html,
+	  docs/Glue-Docs/node18.html, docs/Glue-Docs/node19.html,
+	  docs/Glue-Docs/node2.html, docs/Glue-Docs/node20.html,
+	  docs/Glue-Docs/node21.html, docs/Glue-Docs/node22.html,
+	  docs/Glue-Docs/node23.html, docs/Glue-Docs/node24.html,
+	  docs/Glue-Docs/node25.html, docs/Glue-Docs/node26.html,
+	  docs/Glue-Docs/node27.html, docs/Glue-Docs/node28.html,
+	  docs/Glue-Docs/node29.html, docs/Glue-Docs/node3.html,
+	  docs/Glue-Docs/node30.html, docs/Glue-Docs/node31.html,
+	  docs/Glue-Docs/node32.html, docs/Glue-Docs/node33.html,
+	  docs/Glue-Docs/node34.html, docs/Glue-Docs/node35.html,
+	  docs/Glue-Docs/node36.html, docs/Glue-Docs/node37.html,
+	  docs/Glue-Docs/node4.html, docs/Glue-Docs/node5.html,
+	  docs/Glue-Docs/node6.html, docs/Glue-Docs/node7.html,
+	  docs/Glue-Docs/node8.html, docs/Glue-Docs/node9.html,
+	  docs/html/Glue-Docs.html, docs/html/WARNINGS,
+	  docs/html/index.html: adding to the docs
+
+2008-09-30  Adam White <awhite@cs.ualberta.ca>
+
+	* [r862] docs/Glue-Docs.pdf, docs/Glue-Docs.tex,
+	  docs/details_html/WARNINGS, docs/details_html/details.html,
+	  docs/details_html/index.html, docs/details_html/labels.pl,
+	  docs/html/Glue-Docs.html, docs/html/WARNINGS,
+	  docs/html/index.html, docs/html/internals.pl,
+	  docs/html/labels.pl: adding to the docs
+
+	* [r861] docs/Glue-Docs.pdf, docs/Glue-Docs.tex: adding to the docs
+
+	* [r860] docs/Glue-Docs.pdf, docs/Glue-Docs.tex: adding to the docs
+
+	* [r859] docs/Glue-Docs.pdf, docs/Glue-Docs.tex: adding to the docs
+
+	* [r858] docs/Glue-Docs.pdf, docs/Glue-Docs.tex: adding to the docs
+
+2008-09-29  Adam White <awhite@cs.ualberta.ca>
+
+	* [r857] docs/Glue-Docs.pdf, docs/Glue-Docs.tex: adding to the docs
+
+2008-09-29  Brian Tanner <brian@tannerpages.com>
+
+	* [r856] Makefile.in, configure, docs/Glue-Docs.pdf,
+	  src/Makefile.am, src/Makefile.in, src/RLStruct_util.c,
+	  src/rlglue/utils, src/rlglue/utils/C,
+	  src/rlglue/utils/C/RLStruct_util.h: Moved the RLStruct_Utils to
+	  the RL-Glue project from the Codec because it's more widely
+	  useful to all code, not just networked.
+
+	* [r855] Makefile.am, configure.ac, docs, docs/Glue-Docs.tex,
+	  docs/details.pdf, docs/details.tex, docs/details_html,
+	  docs/details_html/WARNINGS, docs/details_html/crossref.png,
+	  docs/details_html/details.css, docs/details_html/details.html,
+	  docs/details_html/images.aux, docs/details_html/images.log,
+	  docs/details_html/images.pl, docs/details_html/images.tex,
+	  docs/details_html/img1.png, docs/details_html/index.html,
+	  docs/details_html/internals.pl, docs/details_html/labels.pl,
+	  docs/details_html/nx_grp_g.png, docs/details_html/prev_g.png,
+	  docs/details_html/up_g.png, docs/html, docs/html/Glue-Docs.css,
+	  docs/html/Glue-Docs.html, docs/html/WARNINGS,
+	  docs/html/glue_connections_no_shadow.jpg,
+	  docs/html/glue_connections_no_shadow.png, docs/html/images.aux,
+	  docs/html/images.log, docs/html/images.pl, docs/html/images.tex,
+	  docs/html/img1.png, docs/html/img2.png, docs/html/img3.png,
+	  docs/html/img4.png, docs/html/img5.png, docs/html/index.html,
+	  docs/html/internals.pl, docs/html/labels.pl,
+	  docs/html/nx_grp_g.png, docs/html/prev_g.png, docs/html/up_g.png,
+	  docs/images/glue_connections_no_shadow.png, docs/makeDocs.bash,
+	  examples, examples/skeleton, examples/skeleton/Makefile,
+	  examples/skeleton/SkeletonAgent.c,
+	  examples/skeleton/SkeletonEnvironment.c,
+	  examples/skeleton/SkeletonExperiment.c: Added a technical manual
+	  for direct-compile experiments.
+
+	* [r854] docs/makeDocs.bash: added a script for building the html
+	  docs.
+
+2008-09-28  Brian Tanner <brian@tannerpages.com>
+
+	* [r853] docs/Glue-Docs/Glue-Docs.html, docs/Glue-Docs/images.log,
+	  docs/Glue-Docs/images.tex, docs/Glue-Docs/index.html,
+	  docs/Glue-Docs/node1.html, docs/Glue-Docs/node10.html,
+	  docs/Glue-Docs/node11.html, docs/Glue-Docs/node12.html,
+	  docs/Glue-Docs/node13.html, docs/Glue-Docs/node14.html,
+	  docs/Glue-Docs/node15.html, docs/Glue-Docs/node16.html,
+	  docs/Glue-Docs/node17.html, docs/Glue-Docs/node18.html,
+	  docs/Glue-Docs/node19.html, docs/Glue-Docs/node2.html,
+	  docs/Glue-Docs/node20.html, docs/Glue-Docs/node21.html,
+	  docs/Glue-Docs/node22.html, docs/Glue-Docs/node23.html,
+	  docs/Glue-Docs/node24.html, docs/Glue-Docs/node25.html,
+	  docs/Glue-Docs/node26.html, docs/Glue-Docs/node27.html,
+	  docs/Glue-Docs/node28.html, docs/Glue-Docs/node29.html,
+	  docs/Glue-Docs/node3.html, docs/Glue-Docs/node30.html,
+	  docs/Glue-Docs/node31.html, docs/Glue-Docs/node32.html,
+	  docs/Glue-Docs/node33.html, docs/Glue-Docs/node34.html,
+	  docs/Glue-Docs/node35.html, docs/Glue-Docs/node36.html,
+	  docs/Glue-Docs/node37.html, docs/Glue-Docs/node38.html,
+	  docs/Glue-Docs/node39.html, docs/Glue-Docs/node4.html,
+	  docs/Glue-Docs/node40.html, docs/Glue-Docs/node41.html,
+	  docs/Glue-Docs/node42.html, docs/Glue-Docs/node43.html,
+	  docs/Glue-Docs/node44.html, docs/Glue-Docs/node45.html,
+	  docs/Glue-Docs/node46.html, docs/Glue-Docs/node47.html,
+	  docs/Glue-Docs/node48.html, docs/Glue-Docs/node49.html,
+	  docs/Glue-Docs/node5.html, docs/Glue-Docs/node50.html,
+	  docs/Glue-Docs/node51.html, docs/Glue-Docs/node52.html,
+	  docs/Glue-Docs/node6.html, docs/Glue-Docs/node7.html,
+	  docs/Glue-Docs/node8.html, docs/Glue-Docs/node9.html,
+	  src/RL_glue.c, src/RL_server_experiment.c,
+	  src/rlglue/RL_common.h, tests/test_rl_episode_experiment.c:
+	  Adding updated docs and also fixed a bug or two in the network
+	  code.
+
+2008-09-26  Brian Tanner <brian@tannerpages.com>
+
+	* [r852] docs/Glue-Docs.tex: Updated location of jpg to images/
+
+2008-09-26  Adam White <awhite@cs.ualberta.ca>
+
+	* [r851] docs/images/glue_connections_no_shadow.jpg: adding image
+	  required for docs
+
+2008-09-26  Brian Tanner <brian@tannerpages.com>
+
+	* [r850] docs/Glue-Docs.tex: Updated location of jpg to images/
+
+	* [r849] docs/images: Added images directory.
+
+2008-09-26  Adam White <awhite@cs.ualberta.ca>
+
+	* [r848] docs/Glue-Docs, docs/Glue-Docs/Glue-Docs.css,
+	  docs/Glue-Docs/Glue-Docs.html, docs/Glue-Docs/WARNINGS,
+	  docs/Glue-Docs/footnode.html, docs/Glue-Docs/images.aux,
+	  docs/Glue-Docs/images.log, docs/Glue-Docs/images.pl,
+	  docs/Glue-Docs/images.tex, docs/Glue-Docs/img1.png,
+	  docs/Glue-Docs/img2.png, docs/Glue-Docs/img3.png,
+	  docs/Glue-Docs/img4.png, docs/Glue-Docs/img5.png,
+	  docs/Glue-Docs/img6.png, docs/Glue-Docs/img7.png,
+	  docs/Glue-Docs/img8.png, docs/Glue-Docs/index.html,
+	  docs/Glue-Docs/internals.pl, docs/Glue-Docs/labels.pl,
+	  docs/Glue-Docs/node1.html, docs/Glue-Docs/node10.html,
+	  docs/Glue-Docs/node11.html, docs/Glue-Docs/node12.html,
+	  docs/Glue-Docs/node13.html, docs/Glue-Docs/node14.html,
+	  docs/Glue-Docs/node15.html, docs/Glue-Docs/node16.html,
+	  docs/Glue-Docs/node17.html, docs/Glue-Docs/node18.html,
+	  docs/Glue-Docs/node19.html, docs/Glue-Docs/node2.html,
+	  docs/Glue-Docs/node20.html, docs/Glue-Docs/node21.html,
+	  docs/Glue-Docs/node22.html, docs/Glue-Docs/node23.html,
+	  docs/Glue-Docs/node24.html, docs/Glue-Docs/node25.html,
+	  docs/Glue-Docs/node26.html, docs/Glue-Docs/node27.html,
+	  docs/Glue-Docs/node28.html, docs/Glue-Docs/node29.html,
+	  docs/Glue-Docs/node3.html, docs/Glue-Docs/node30.html,
+	  docs/Glue-Docs/node31.html, docs/Glue-Docs/node32.html,
+	  docs/Glue-Docs/node33.html, docs/Glue-Docs/node34.html,
+	  docs/Glue-Docs/node35.html, docs/Glue-Docs/node36.html,
+	  docs/Glue-Docs/node37.html, docs/Glue-Docs/node38.html,
+	  docs/Glue-Docs/node39.html, docs/Glue-Docs/node4.html,
+	  docs/Glue-Docs/node40.html, docs/Glue-Docs/node41.html,
+	  docs/Glue-Docs/node42.html, docs/Glue-Docs/node43.html,
+	  docs/Glue-Docs/node44.html, docs/Glue-Docs/node45.html,
+	  docs/Glue-Docs/node46.html, docs/Glue-Docs/node47.html,
+	  docs/Glue-Docs/node48.html, docs/Glue-Docs/node49.html,
+	  docs/Glue-Docs/node5.html, docs/Glue-Docs/node50.html,
+	  docs/Glue-Docs/node51.html, docs/Glue-Docs/node52.html,
+	  docs/Glue-Docs/node6.html, docs/Glue-Docs/node7.html,
+	  docs/Glue-Docs/node8.html, docs/Glue-Docs/node9.html: trying out
+	  with docs in svn
+
+	* [r847] docs, docs/Glue-Docs.tex: adding documents to rl-glue
+	  project
+
+2008-09-18  Brian Tanner <brian@tannerpages.com>
+
+	* [r846] config/config.guess, config/config.h.in,
+	  config/config.sub, config/ltmain.sh, configure, configure.ac,
+	  tests/Makefile.am, tests/Makefile.in,
+	  tests/test_empty_experiment.c, tests/test_speed_environment.c,
+	  tests/test_speed_experiment.c: Added the test speed experiment
+	  and the necessary goop in the configure.ac and fixed some
+	  warnings in some other tests
+
+2008-09-17  Brian Tanner <brian@tannerpages.com>
+
+	* [r845] src/RL_glue_debug.c: Updated error checking to think
+	  structs inconsistent if they have more than 1 million elements
+	  instead of 1000
+
+	* [r844] Makefile.in, aclocal.m4, configure, configure.ac,
+	  src/Makefile.in, tests/Makefile.in, tests/test_1_experiment.c:
+	  Fixed a bug in test_1_experiment.c that was just always returning
+	  no error
+
+2008-09-16  Brian Tanner <brian@tannerpages.com>
+
+	* [r843] src/Makefile.am, src/Makefile.in: Updated Makefile.am,
+	  removed -no-undefined because we need undefined symbols and
+	  windows might be managing alright anyways
+
+	* [r842] Makefile.in, aclocal.m4, config/config.guess,
+	  config/config.sub, config/ltmain.sh, src/Makefile.in,
+	  tests/Makefile.in, tests/test_1_agent.c,
+	  tests/test_1_environment.c, tests/test_message_agent.c,
+	  tests/test_message_environment.c: Used valgrind to find some
+	  nasty memory leaks in the tests
+
+	* [r841] Makefile.in, configure, src/Makefile.am, src/Makefile.in,
+	  src/RL_glue_debug.c, src/RL_server_experiment.c,
+	  tests/Makefile.in: Added a newline to RL_debug.c and
+	  -no-undefined to LD_FLAGS so that it woudl build on Windows
+	  (windows needs all symbols defined a compile time)
+
+	* [r840] config, config/saved_svn_version.txt, configure,
+	  src/rlglue/Agent_common.h, src/rlglue/Environment_common.h,
+	  src/rlglue/RL_glue.h: Took config/saved_svn_version.txt out of
+	  subversion. I'll put it in EXTRA_DIST so it gets included. It is
+	  replaced whenever we ./configure from an SVN repository, so we
+	  don't have to worry about it not existing.
+
+	* [r839] config/saved_svn_version.txt, configure.ac,
+	  src/Makefile.am, src/Makefile.in, src/RL_glue.c,
+	  src/RL_server_experiment.c, src/rlglue/Experiment_common.h,
+	  src/rlglue/RL_glue.h, tests/test_1_experiment.c,
+	  tests/test_empty_experiment.c, tests/test_message_experiment.c,
+	  tests/test_rl_episode_experiment.c,
+	  tests/test_sanity_experiment.c, tests/test_seeds_experiment.c:
+	  Renamed Experiment_common.h back to RL_glue.h because I think
+	  that's a better system.
+
+2008-09-15  Brian Tanner <brian@tannerpages.com>
+
+	* [r838] config/saved_svn_version.txt, configure, configure.ac,
+	  src/Makefile.am, src/Makefile.in, src/RL_glue.c,
+	  src/RL_glue_debug.c: Added RL_glue_debug.c which has the print
+	  and consistency check routines for the rl_struct.
+
+	* [r837] tests/test_seeds_environment.c, tests/useful_functions.h:
+	  Added newline in useful_functions.h and removed rogue symbol in
+	  test_seeds_environment.c to remove warnings in linux
+
+	* [r835] ChangeLog, HOWTORELEASE, config/saved_svn_version.txt,
+	  configure, configure.ac: Updated HOWTORELEASE and changelog
+
+	* [r833] AUTHORS, ChangeLog, HOWTORELEASE, NEWS, authors.xml,
+	  config/saved_svn_version.txt: Updated NEWS, added a document
+	  about how to do a release, updated the AUTHORS file, added an
+	  authors.xml file to be used by automatic changelog creation.
+
 2008-09-15  Brian Tanner <brian@tannerpages.com>
 
 	* [r833] AUTHORS, ChangeLog, HOWTORELEASE, NEWS, authors.xml,
