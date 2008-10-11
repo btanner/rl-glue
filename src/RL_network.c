@@ -45,6 +45,10 @@
 /* Convenience functions for manupulating RL Structs*/
 #include <rlglue/utils/C/RLStruct_util.h>
 
+/*When someone passes us a null pointer to send across the network, 
+we'll send this instead*/
+static rl_abstract_type_t emptyAbstractType={0, 0, 0, 0, 0, 0};
+
 /* Open and configure a socket */
 int rlOpen(short thePort) {
   int flag = 1;
@@ -399,36 +403,39 @@ int rlWaitForConnection(const char *address, const short port, const int retryTi
 * the read.
 **/
 unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, unsigned int offset) {
-/* The header is made up of the counts: numInts, numDoubles, and numChars */
-  const int headerSize = sizeof(unsigned int) * 3;
-/* The body is all of the ints, doubles, and chars */
-  const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double) + src->numChars * sizeof(char);
+	/* The header is made up of the counts: numInts, numDoubles, and numChars */
+	const int headerSize = sizeof(unsigned int) * 3;
+	/* The body is all of the ints, doubles, and chars */
+	const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double) + src->numChars * sizeof(char);
 
-  __RL_CHECK_STRUCT(src);
+	if(src==0){
+		src=&emptyAbstractType;
+	}
+	__RL_CHECK_STRUCT(src);
 
-  rlBufferReserve(dst, dst->size + headerSize + dataSize);
+	rlBufferReserve(dst, dst->size + headerSize + dataSize);
 
-  /* fprintf(stderr, "send 1 offset = %u\n", offset); */
-  offset = rlBufferWrite(dst, offset, &src->numInts, 1, sizeof(unsigned int));
-  /* fprintf(stderr, "send 2 offset = %u\n", offset); */
-  offset = rlBufferWrite(dst, offset, &src->numDoubles, 1, sizeof(unsigned int));
-  /* fprintf(stderr, "send 3 offset = %u\n", offset); */
-  offset = rlBufferWrite(dst, offset, &src->numChars, 1, sizeof(unsigned int));
+	/* fprintf(stderr, "send 1 offset = %u\n", offset); */
+	offset = rlBufferWrite(dst, offset, &src->numInts, 1, sizeof(unsigned int));
+	/* fprintf(stderr, "send 2 offset = %u\n", offset); */
+	offset = rlBufferWrite(dst, offset, &src->numDoubles, 1, sizeof(unsigned int));
+	/* fprintf(stderr, "send 3 offset = %u\n", offset); */
+	offset = rlBufferWrite(dst, offset, &src->numChars, 1, sizeof(unsigned int));
 
-  if (src->numInts > 0) {
-    offset = rlBufferWrite(dst, offset, src->intArray, src->numInts, sizeof(int));
-  }
+	if (src->numInts > 0) {
+		offset = rlBufferWrite(dst, offset, src->intArray, src->numInts, sizeof(int));
+	}
 
-  if (src->numDoubles > 0) {
-    offset = rlBufferWrite(dst, offset, src->doubleArray, src->numDoubles, sizeof(double));  
-  }
+	if (src->numDoubles > 0) {
+		offset = rlBufferWrite(dst, offset, src->doubleArray, src->numDoubles, sizeof(double));  
+	}
 
-  if (src->numChars > 0) {
-    offset = rlBufferWrite(dst, offset, src->charArray, src->numChars, sizeof(char));  
-  }
+	if (src->numChars > 0) {
+		offset = rlBufferWrite(dst, offset, src->charArray, src->numChars, sizeof(char));  
+	}
 
 
-  return offset;
+	return offset;
 }
 
 /**
@@ -441,6 +448,8 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
 	unsigned int numIntsInBuffer    = 0;
 	unsigned int numDoublesInBuffer = 0;
 	unsigned int numCharsInBuffer   = 0;
+	
+	assert(dst!=0);
 
 	/* fprintf(stderr, "recv 1 offset = %u\n", offset); */
 	offset = rlBufferRead(src, offset, &numIntsInBuffer, 1, sizeof(unsigned int));

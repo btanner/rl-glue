@@ -28,7 +28,7 @@
 #include <stdio.h>
 
 #include <rlglue/RL_glue.h>
-#include <string.h>
+#include <rlglue/utils/C/RLStruct_util.h>
 
 	int tests_failed=0;
 	int test_count=0;
@@ -46,53 +46,53 @@
 int main(int argc, char *argv[]) {
 	int whichEpisode=0;
 	int whichStep=0;
-	observation_action_t startTuple={{0}, {0}};
-	reward_observation_action_terminal_t stepTuple={0};
-
+	const observation_action_t *startTuple;
+	const reward_observation_action_terminal_t *stepTuple;
+	
 	RL_init();
 	
 	for(whichEpisode=1;whichEpisode<5;whichEpisode++){
 		startTuple=RL_start();
 		
 		if(whichEpisode%2==0){
-			check_fail(startTuple.a.numInts!=0);
-			check_fail(startTuple.a.numDoubles!=0);
-			check_fail(startTuple.a.numChars!=0);
+			check_fail(startTuple->action->numInts!=0);
+			check_fail(startTuple->action->numDoubles!=0);
+			check_fail(startTuple->action->numChars!=0);
 
-			check_fail(startTuple.o.numInts!=0);
-			check_fail(startTuple.o.numDoubles!=0);
-			check_fail(startTuple.o.numChars!=0);
+			check_fail(startTuple->observation->numInts!=0);
+			check_fail(startTuple->observation->numDoubles!=0);
+			check_fail(startTuple->observation->numChars!=0);
 		}else{
-			check_fail(startTuple.a.numInts!=7);
-			check_fail(startTuple.a.numDoubles!=3);
-			check_fail(startTuple.a.numChars!=1);
+			check_fail(startTuple->action->numInts!=7);
+			check_fail(startTuple->action->numDoubles!=3);
+			check_fail(startTuple->action->numChars!=1);
 
-			check_fail(startTuple.o.numInts!=2);
-			check_fail(startTuple.o.numDoubles!=4);
-			check_fail(startTuple.o.numChars!=5);
+			check_fail(startTuple->observation->numInts!=2);
+			check_fail(startTuple->observation->numDoubles!=4);
+			check_fail(startTuple->observation->numChars!=5);
 		}
 		
 		for(whichStep=0;whichStep<5;whichStep++){
 			stepTuple=RL_step();
-			check_fail(stepTuple.terminal!=0);
-			check_fail(stepTuple.r!=0);
+			check_fail(stepTuple->terminal!=0);
+			check_fail(stepTuple->reward!=0);
 
 			if(whichEpisode%2==0){
-				check_fail(stepTuple.a.numInts!=0);
-				check_fail(stepTuple.a.numDoubles!=0);
-				check_fail(stepTuple.a.numChars!=0);
+				check_fail(stepTuple->action->numInts!=0);
+				check_fail(stepTuple->action->numDoubles!=0);
+				check_fail(stepTuple->action->numChars!=0);
 
-				check_fail(stepTuple.o.numInts!=0);
-				check_fail(stepTuple.o.numDoubles!=0);
-				check_fail(stepTuple.o.numChars!=0);
+				check_fail(stepTuple->observation->numInts!=0);
+				check_fail(stepTuple->observation->numDoubles!=0);
+				check_fail(stepTuple->observation->numChars!=0);
 			}else{
-				check_fail(stepTuple.a.numInts!=7);
-				check_fail(stepTuple.a.numDoubles!=3);
-				check_fail(stepTuple.a.numChars!=1);
+				check_fail(stepTuple->action->numInts!=7);
+				check_fail(stepTuple->action->numDoubles!=3);
+				check_fail(stepTuple->action->numChars!=1);
 
-				check_fail(stepTuple.o.numInts!=2);
-				check_fail(stepTuple.o.numDoubles!=4);
-				check_fail(stepTuple.o.numChars!=5);
+				check_fail(stepTuple->observation->numInts!=2);
+				check_fail(stepTuple->observation->numDoubles!=4);
+				check_fail(stepTuple->observation->numChars!=5);
 			}
 			
 		}

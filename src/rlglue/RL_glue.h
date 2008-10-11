@@ -38,22 +38,22 @@ extern "C" {
 	* Experiments should not implement these functions, rather, these are the functions
 	* that experiments should call.
 */
-task_specification_t RL_init();
-observation_action_t RL_start();
-reward_observation_action_terminal_t RL_step();
+const char* RL_init();
+const observation_action_t *RL_start();
+const reward_observation_action_terminal_t *RL_step();
 void RL_cleanup();
 
-message_t RL_agent_message(message_t message);
-message_t RL_env_message(message_t message);
+const char* RL_agent_message(const char* message);
+const char* RL_env_message(const char* message);
 
-reward_t RL_return();
+double RL_return();
 int RL_num_steps();
 int RL_num_episodes();
-terminal_t RL_episode(unsigned int num_steps);
-void RL_set_state(state_key_t sk);
-void RL_set_random_seed(random_seed_key_t rsk);
-state_key_t RL_get_state();
-random_seed_key_t RL_get_random_seed();
+int RL_episode(unsigned int num_steps);
+void RL_set_state(const state_key_t* stateKey);
+void RL_set_random_seed(const random_seed_key_t* randomKey);
+const state_key_t* RL_get_state();
+const random_seed_key_t* RL_get_random_seed();
 
 #ifdef __cplusplus
 }

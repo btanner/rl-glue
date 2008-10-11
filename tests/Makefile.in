@@ -54,41 +54,42 @@ am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 	test_1-useful_functions.$(OBJEXT)
 test_1_OBJECTS = $(am_test_1_OBJECTS)
 test_1_LDADD = $(LDADD)
-test_1_DEPENDENCIES = ../src/librlglue.la
+test_1_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
 am_test_empty_OBJECTS = test_empty-test_empty_environment.$(OBJEXT) \
 	test_empty-test_empty_agent.$(OBJEXT) \
 	test_empty-test_empty_experiment.$(OBJEXT) \
 	test_empty-useful_functions.$(OBJEXT)
 test_empty_OBJECTS = $(am_test_empty_OBJECTS)
 test_empty_LDADD = $(LDADD)
-test_empty_DEPENDENCIES = ../src/librlglue.la
+test_empty_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
 am_test_message_OBJECTS = test_message-test_message_agent.$(OBJEXT) \
 	test_message-test_message_environment.$(OBJEXT) \
 	test_message-test_message_experiment.$(OBJEXT) \
 	test_message-useful_functions.$(OBJEXT)
 test_message_OBJECTS = $(am_test_message_OBJECTS)
 test_message_LDADD = $(LDADD)
-test_message_DEPENDENCIES = ../src/librlglue.la
+test_message_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
 am_test_rl_episode_OBJECTS = test_1_environment.$(OBJEXT) \
 	test_1_agent.$(OBJEXT) test_rl_episode_experiment.$(OBJEXT) \
 	useful_functions.$(OBJEXT)
 test_rl_episode_OBJECTS = $(am_test_rl_episode_OBJECTS)
 test_rl_episode_LDADD = $(LDADD)
-test_rl_episode_DEPENDENCIES = ../src/librlglue.la
+test_rl_episode_DEPENDENCIES = ../src/librlglue.la \
+	../src/librlutils.la
 am_test_sanity_OBJECTS = test_sanity-test_1_environment.$(OBJEXT) \
 	test_sanity-test_1_agent.$(OBJEXT) \
 	test_sanity-test_sanity_experiment.$(OBJEXT) \
 	test_sanity-useful_functions.$(OBJEXT)
 test_sanity_OBJECTS = $(am_test_sanity_OBJECTS)
 test_sanity_LDADD = $(LDADD)
-test_sanity_DEPENDENCIES = ../src/librlglue.la
+test_sanity_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
 am_test_speed_OBJECTS = test_speed-test_speed_environment.$(OBJEXT) \
 	test_speed-test_1_agent.$(OBJEXT) \
 	test_speed-test_speed_experiment.$(OBJEXT) \
 	test_speed-useful_functions.$(OBJEXT)
 test_speed_OBJECTS = $(am_test_speed_OBJECTS)
 test_speed_LDADD = $(LDADD)
-test_speed_DEPENDENCIES = ../src/librlglue.la
+test_speed_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
 am_test_state_and_seed_keys_OBJECTS =  \
 	test_state_and_seed_keys-test_seeds_environment.$(OBJEXT) \
 	test_state_and_seed_keys-test_1_agent.$(OBJEXT) \
@@ -97,7 +98,8 @@ am_test_state_and_seed_keys_OBJECTS =  \
 test_state_and_seed_keys_OBJECTS =  \
 	$(am_test_state_and_seed_keys_OBJECTS)
 test_state_and_seed_keys_LDADD = $(LDADD)
-test_state_and_seed_keys_DEPENDENCIES = ../src/librlglue.la
+test_state_and_seed_keys_DEPENDENCIES = ../src/librlglue.la \
+	../src/librlutils.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -226,7 +228,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 TESTS = $(check_PROGRAMS)
 INCLUDES = -I$(top_srcdir)/src
-LDADD = ../src/librlglue.la
+LDADD = ../src/librlglue.la ../src/librlutils.la
 test_sanity_SOURCES = test_1_environment.c	test_1_agent.c test_sanity_experiment.c useful_functions.c useful_functions.h
 test_sanity_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_1_SOURCES = test_1_environment.c	test_1_agent.c test_1_experiment.c useful_functions.c useful_functions.h

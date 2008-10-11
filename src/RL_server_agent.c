@@ -37,7 +37,7 @@
 #include <rlglue/utils/C/RLStruct_util.h>
 
 
-static action_t theAction= {0};
+static action_t *globalAction= 0;
 static rlBuffer theBuffer = {0};
 static char* theOutMessage = 0;
 
@@ -46,7 +46,7 @@ extern void rlSetAgentConnection(int);
 extern int rlGetAgentConnection();
 
 /* Send the task spec to the agent */
-void agent_init(const task_specification_t theTaskSpec) {
+void agent_init(const char * theTaskSpec) {
   int agentState = kAgentInit;
   unsigned int theTaskSpecLength = 0;
   unsigned int offset = 0;
@@ -75,35 +75,37 @@ void agent_init(const task_specification_t theTaskSpec) {
 }
 
 /* Send the observation to the agent, receive the action and return it */
-action_t agent_start(observation_t theObservation) {
-  int agentState = kAgentStart;
-  unsigned int offset = 0;
+const action_t *agent_start(const observation_t *theObservation) {
+	int agentState = kAgentStart;
+	unsigned int offset = 0;
 
-__RL_CHECK_STRUCT(&theObservation);
-  rlBufferClear(&theBuffer);
-  offset = 0;
-  offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
-  rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
+	__RL_CHECK_STRUCT(theObservation);
+	rlBufferClear(&theBuffer);
+	offset = 0;
+	offset = rlCopyADTToBuffer(theObservation, &theBuffer, offset);
+	rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
-  assert(agentState == kAgentStart);
-    
-  offset = 0;
-  offset = rlCopyBufferToADT(&theBuffer, offset, &theAction);
+	rlBufferClear(&theBuffer);
+	rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
+	assert(agentState == kAgentStart);
+  
+	offset = 0;
 
-  return theAction;
+	if(globalAction==0)globalAction=allocateRLStructPointer(0,0,0);
+	offset = rlCopyBufferToADT(&theBuffer, offset, globalAction);
+
+	return globalAction;
 }
 
 /* Send the reward and the observation to the agent, receive the action and return it */
-action_t agent_step(reward_t theReward, observation_t theObservation) {
+const action_t *agent_step(const double theReward, const observation_t *theObservation) {
   int agentState = kAgentStep;
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
   offset = 0;
-  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(reward_t));
-  offset = rlCopyADTToBuffer(&theObservation, &theBuffer, offset);
+  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(double));
+  offset = rlCopyADTToBuffer(theObservation, &theBuffer, offset);
   rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
@@ -112,19 +114,20 @@ action_t agent_step(reward_t theReward, observation_t theObservation) {
   assert(agentState == kAgentStep);
 
   offset = 0;
-  offset = rlCopyBufferToADT(&theBuffer, offset, &theAction);
+	if(globalAction==0)globalAction=allocateRLStructPointer(0,0,0);
+  offset = rlCopyBufferToADT(&theBuffer, offset, globalAction);
 
-  return theAction;
+  return globalAction;
 }
 
 /* Send the final reward to the agent */
-void agent_end(reward_t theReward) { 
+void agent_end(const double theReward) { 
   int agentState = kAgentEnd;
   unsigned int offset = 0;
 
   rlBufferClear(&theBuffer);
   /*offset = rlBufferWrite(&theBuffer, offset, &agentState, 1, sizeof(int));*/ /* Removed, shouldn't have been sent. */
-  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(reward_t));
+  offset = rlBufferWrite(&theBuffer, offset, &theReward, 1, sizeof(double));
   rlSendBufferData(rlGetAgentConnection(), &theBuffer, agentState);
 
   rlBufferClear(&theBuffer);
@@ -143,7 +146,8 @@ void agent_cleanup() {
 	rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
 	assert(agentState == kAgentCleanup);
 
-	clearRLStruct(&theAction);
+	clearRLStruct(globalAction);
+	globalAction=0;
 
 	if (theOutMessage != 0) {
 	  free(theOutMessage);
@@ -152,7 +156,7 @@ void agent_cleanup() {
 }
 
 
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
   int agentState = kAgentMessage;
   unsigned int theInMessageLength = 0;
   unsigned int theOutMessageLength = 0;

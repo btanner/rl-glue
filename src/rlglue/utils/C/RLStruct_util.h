@@ -50,6 +50,9 @@ void allocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const
 /* Create a new rl_abstract_type_t, allocate its arrays and its numInts/Doubles/Chars using allocateRLStruct, return the pointer */
 rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars);
 
+/* Create a new rl_abstract_type_t pointer that is a copy of an existing one (src) */
+rl_abstract_type_t *duplicateRLStructToPointer(const rl_abstract_type_t *src);
+
 #ifdef __cplusplus
 }
 #endif

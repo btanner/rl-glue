@@ -21,16 +21,16 @@ int whichEpisode=0;
 
 /* Run One Episode of length maximum cutOff*/
 void runEpisode(int stepLimit) {        
-    terminal_t terminal=RL_episode(stepLimit);
+    int terminal=RL_episode(stepLimit);
 	printf("Episode %d\t %d steps \t%f total reward\t %d natural end \n",whichEpisode,RL_num_steps(),RL_return(), terminal);
 	whichEpisode++;
 }
 
 int main(int argc, char *argv[]) {
-	task_specification_t task_spec;
-	message_t responseMessage=0;
-	reward_observation_action_terminal_t stepResponse;
-	observation_action_t startResponse;
+	const char* task_spec;
+	const char* responseMessage;
+	const reward_observation_action_terminal_t *stepResponse;
+	const observation_action_t *startResponse;
 
 	printf("\n\nExperiment starting up!\n");
 
@@ -68,15 +68,15 @@ int main(int argc, char *argv[]) {
 	/*We could run one step at a time instead of one episode at a time */
 	/*Start the episode */
 	startResponse=RL_start();
-	printf("First observation and action were: %d %d\n",startResponse.o.intArray[0],startResponse.a.intArray[0]);
+	printf("First observation and action were: %d %d\n",startResponse->observation->intArray[0],startResponse->action->intArray[0]);
 
 	/*Run one step */
 	stepResponse=RL_step();
 	
 	/*Run until the episode ends*/
-	while(stepResponse.terminal!=1){
+	while(stepResponse->terminal!=1){
 		stepResponse=RL_step();
-		if(stepResponse.terminal!=1){
+		if(stepResponse->terminal!=1){
 			/*Could optionally print state,action pairs */
 			/*printf("(%d,%d) ",stepResponse.o.intArray[0],stepResponse.a.intArray[0]);*/
 		}

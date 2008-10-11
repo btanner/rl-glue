@@ -29,32 +29,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <rlglue/Environment_common.h>
+#include <rlglue/utils/C/RLStruct_util.h>
 
 #include "useful_functions.h"
 
-message_t env_responseMessage=0;
-observation_t emptyObservation;
-observation_t nonEmptyObservation;
+char* env_responseMessage=0;
+observation_t *emptyObservation=0;
+observation_t *nonEmptyObservation=0;
 
 
 int env_whichEpisode=0;
 
 
-task_specification_t env_init()
+const char* env_init()
 {    
 	env_whichEpisode=0;
 
-	clean_abstract_type(&emptyObservation);
-	clean_abstract_type(&nonEmptyObservation);
+	emptyObservation=allocateRLStructPointer(0,0,0);
+	nonEmptyObservation=allocateRLStructPointer(0,0,0);
 
-	set_k_ints_in_abstract_type(&nonEmptyObservation,2);
-	set_k_doubles_in_abstract_type(&nonEmptyObservation,4);
-	set_k_chars_in_abstract_type(&nonEmptyObservation,5);
+	set_k_ints_in_abstract_type(nonEmptyObservation,2);
+	set_k_doubles_in_abstract_type(nonEmptyObservation,4);
+	set_k_chars_in_abstract_type(nonEmptyObservation,5);
 
 	return "";
 }
 
-observation_t env_start()
+const observation_t *env_start()
 {
 	env_whichEpisode++;
 	
@@ -64,50 +65,50 @@ observation_t env_start()
 	return nonEmptyObservation;
 }
 
-reward_observation_t env_step(action_t a)
+const reward_observation_t *env_step(const action_t *a)
 {
-	reward_observation_t ro={0};
+	static reward_observation_t ro={0};
 
 	if(env_whichEpisode%2==0)
-		ro.o=emptyObservation;
+		ro.observation=emptyObservation;
 	else
-		ro.o=nonEmptyObservation;
+		ro.observation=nonEmptyObservation;
 		
-	ro.r=0;
+	ro.reward=0;
 	ro.terminal=0;
 	
-	return ro;
+	return &ro;
 }
 
 void env_cleanup()
 {
-	clean_abstract_type(&emptyObservation);
-	clean_abstract_type(&nonEmptyObservation);
+	clearRLStruct(emptyObservation);
+	clearRLStruct(nonEmptyObservation);
 }
 
-void env_set_state(state_key_t sk)
+void env_set_state(const state_key_t *sk)
 {
 }
      
-void env_set_random_seed(random_seed_key_t rsk)
+void env_set_random_seed(const random_seed_key_t *rsk)
 {
 }
 
-state_key_t env_get_state()
+const state_key_t *env_get_state()
 {
-	state_key_t theKey={0};
-	clean_abstract_type(&theKey);
+	state_key_t *theKey=0;
+	clearRLStruct(theKey);
 	return theKey;
 }
 
-random_seed_key_t env_get_random_seed()
+const random_seed_key_t *env_get_random_seed()
 {
-	random_seed_key_t theKey={0};
-	clean_abstract_type(&theKey);
+	random_seed_key_t *theKey=0;
+	clearRLStruct(theKey);
 	return theKey;
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	return "";
 }
 	

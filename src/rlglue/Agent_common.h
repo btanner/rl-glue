@@ -36,12 +36,12 @@ extern "C" {
 	* This should be included by all C/C++ agents as #include <rlglue/Agent_common.h>
 	* Agents must implement all of these functions.
 */
-void agent_init(const task_specification_t task_spec);
-action_t agent_start(observation_t o);
-action_t agent_step(reward_t r, observation_t o);
-void agent_end(reward_t r);  
+void agent_init(const char* task_spec);
+const action_t* agent_start(const observation_t* observation);
+const action_t* agent_step(double reward, const observation_t* observation);
+void agent_end(double reward);  
 void agent_cleanup();
-message_t agent_message(const message_t message);
+const char* agent_message(const char* message);
 
 #ifdef __cplusplus
 }

@@ -2,7 +2,7 @@ check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_state_and_s
 TESTS = $(check_PROGRAMS)
 
 INCLUDES = -I$(top_srcdir)/src
-LDADD = ../src/librlglue.la
+LDADD = ../src/librlglue.la ../src/librlutils.la
 
 test_sanity_SOURCES = test_1_environment.c	test_1_agent.c test_sanity_experiment.c useful_functions.c useful_functions.h
 test_sanity_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99

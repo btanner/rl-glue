@@ -29,30 +29,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <rlglue/Environment_common.h>
+#include <rlglue/utils/C/RLStruct_util.h>
 #include "useful_functions.h"
 
 
 
-state_key_t env_saved_state_key={0};
-random_seed_key_t env_saved_random_key={0};
+observation_t *o=0;
+state_key_t *env_saved_state_key=0;
+random_seed_key_t *env_saved_random_key=0;
 
-task_specification_t env_init()
+const char* env_init()
 {    
+	o=allocateRLStructPointer(0,0,0);
+	env_saved_state_key=allocateRLStructPointer(0,0,0);
+	env_saved_random_key=allocateRLStructPointer(0,0,0);
 	return "";
 }
 
-observation_t env_start()
+const observation_t *env_start()
 {
-	observation_t o={0};
-	clean_abstract_type(&o);
+	clearRLStruct(o);
 	return o;
 }
 
-reward_observation_t env_step(action_t a)
+const reward_observation_t *env_step(const action_t *a)
 {
-	reward_observation_t ro={0};
-	clean_abstract_type(&ro.o);
-	return ro;
+	static reward_observation_t ro={0};
+	clearRLStruct(o);
+	ro.observation=o;
+	return &ro;
 }
 
 void env_cleanup()
@@ -60,27 +65,27 @@ void env_cleanup()
 
 }
 
-void env_set_state(state_key_t sk)
+void env_set_state(const state_key_t *sk)
 {
-	copy_structure_to_structure(&env_saved_state_key, &sk);
+	replaceRLStruct(sk,env_saved_state_key);
 }
      
-void env_set_random_seed(random_seed_key_t rsk)
+void env_set_random_seed(const random_seed_key_t *rsk)
 {
-	copy_structure_to_structure(&env_saved_random_key, &rsk);
+	replaceRLStruct(rsk,env_saved_random_key);
 }
 
-state_key_t env_get_state()
+const state_key_t *env_get_state()
 {
 	return env_saved_state_key;
 }
 
-random_seed_key_t env_get_random_seed()
+const random_seed_key_t *env_get_random_seed()
 {
 	return env_saved_random_key;
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	return "";
 }
 	

@@ -35,9 +35,9 @@ reward_observation_t this_reward_observation;
 int current_state=0;
 
 
-task_specification_t env_init()
+const char* env_init()
 {    
-	task_specification_t task_spec="2:e:1_[i]_[0,20]:1_[i]_[0,1]:[-1,1]";
+	char* task_spec="2:e:1_[i]_[0,20]:1_[i]_[0,1]:[-1,1]";
 
 	/* Allocate the observation variable */
 	allocateRLStruct(&this_observation,1,0,0);
@@ -50,28 +50,28 @@ task_specification_t env_init()
 		 this_observation.charArray   = 0;
 	*/
 	/* Setup the reward_observation variable */
-	this_reward_observation.o=this_observation;
-	this_reward_observation.r=0;
+	this_reward_observation.observation=&this_observation;
+	this_reward_observation.reward=0;
 	this_reward_observation.terminal=0;
 
    return task_spec;
 }
 
-observation_t env_start()
+const observation_t *env_start()
 { 
 	current_state=10;
 	this_observation.intArray[0]=current_state;
-  	return this_observation;
+  	return &this_observation;
 }
 
-reward_observation_t env_step(action_t this_action)
+const reward_observation_t *env_step(const action_t *this_action)
 {
-	terminal_t episode_over=0;
-	reward_t the_reward=0;
+	int episode_over=0;
+	double the_reward=0;
 	
-	if(this_action.intArray[0]==0)
+	if(this_action->intArray[0]==0)
 		current_state--;
-	if(this_action.intArray[0]==1)
+	if(this_action->intArray[0]==1)
 		current_state++;
 
 	if(current_state<=0){
@@ -85,11 +85,11 @@ reward_observation_t env_step(action_t this_action)
 		the_reward=1;
 	}
 
-	this_reward_observation.o.intArray[0] = current_state;
-	this_reward_observation.r = the_reward;
+	this_reward_observation.observation->intArray[0] = current_state;
+	this_reward_observation.reward = the_reward;
 	this_reward_observation.terminal = episode_over;
 
-	return this_reward_observation;
+	return &this_reward_observation;
 }
 
 void env_cleanup()
@@ -97,37 +97,35 @@ void env_cleanup()
 	clearRLStruct(&this_observation);
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	if(strcmp(inMessage,"what is your name?")==0)
 		return "my name is skeleton_environment!";
 
 	return "I don't know how to respond to your message";
 }
 
-void env_set_state(state_key_t sk)
+void env_set_state(const state_key_t *sk)
 {
 	/* Advanced feature so not included in skeleton */
 	/* All you would need is a local variable that you set with this value */
 }
      
-void env_set_random_seed(random_seed_key_t rsk)
+void env_set_random_seed(const random_seed_key_t *rsk)
 {
 	/* Advanced feature so not included in skeleton */
 	/* All you would need is a local variable that you set with this value */
 }
 
-state_key_t env_get_state()
+const state_key_t *env_get_state()
 {
 	/* Advanced feature so just returning empty structure */
-  state_key_t theKey;
-  clearRLStruct(&theKey);
+  state_key_t *theKey=0;
   return theKey;
 }
 
-random_seed_key_t env_get_random_seed()
+const random_seed_key_t *env_get_random_seed()
 {
   /* Advanced feature so just returning empty structure */
-  random_seed_key_t theKey;
-  clearRLStruct(&theKey);
+  random_seed_key_t *theKey=0;
   return theKey;
 }

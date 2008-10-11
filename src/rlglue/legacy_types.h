@@ -37,9 +37,9 @@ and your old code will work.
 extern "C" {
 #endif
 
-	typedef task_specification_t Task_specification;
-	typedef reward_t Reward;
-	typedef terminal_t Terminal;
+	typedef char* Task_specification;
+	typedef double Reward;
+	typedef int Terminal;
 	typedef rl_abstract_type_t RL_abstract_type;
 	typedef observation_t Observation;
 	typedef action_t Action;

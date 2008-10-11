@@ -35,27 +35,28 @@ This agent doesn't implement all the methods.. isn't that bad?
 #include <stdlib.h>
 #include <string.h>
 #include <rlglue/Agent_common.h>
+#include <rlglue/utils/C/RLStruct_util.h>
 
 #include "useful_functions.h"
 
 
-message_t agent_responseMessage=0;
-action_t emptyAction;
-action_t nonEmptyAction;
+char* agent_responseMessage=0;
+action_t *emptyAction=0;
+action_t *nonEmptyAction=0;
 int agent_whichEpisode=0;
 
-void agent_init(const task_specification_t task_spec){
-	clean_abstract_type(&emptyAction);
-	clean_abstract_type(&nonEmptyAction);
+void agent_init(const char * task_spec){
+	emptyAction=allocateRLStructPointer(0,0,0);
+	nonEmptyAction=allocateRLStructPointer(0,0,0);
 	
-	set_k_ints_in_abstract_type(&nonEmptyAction,7);
-	set_k_doubles_in_abstract_type(&nonEmptyAction,3);
-	set_k_chars_in_abstract_type(&nonEmptyAction,1);
+	set_k_ints_in_abstract_type(nonEmptyAction,7);
+	set_k_doubles_in_abstract_type(nonEmptyAction,3);
+	set_k_chars_in_abstract_type(nonEmptyAction,1);
 
 	agent_whichEpisode=0;
 }
 
-action_t agent_start(observation_t o) {
+const action_t *agent_start(const observation_t *o) {
 	agent_whichEpisode++;
 	
 	if(agent_whichEpisode%2==0)
@@ -64,24 +65,24 @@ action_t agent_start(observation_t o) {
 	return nonEmptyAction;
 }
 
-action_t agent_step(reward_t reward, observation_t o) {
+const action_t *agent_step(const double reward, const observation_t *o) {
 	if(agent_whichEpisode%2==0)
 		return emptyAction;
 	
 	return nonEmptyAction;
 }
 
-void agent_end(reward_t reward) {
+void agent_end(const double reward) {
 }
 
 void agent_cleanup() {
-	clean_abstract_type(&emptyAction);
-	clean_abstract_type(&nonEmptyAction);
+	clearRLStruct(emptyAction);
+	clearRLStruct(nonEmptyAction);
 }
 
 void agent_freeze() {
 }
 
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
 	return "";
 }

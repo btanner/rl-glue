@@ -24,7 +24,7 @@
 action_t this_action;
 action_t last_action;
 
-observation_t last_observation;
+observation_t *last_observation=0;
 
 int randInRange(int max){
 	double r, x;
@@ -33,9 +33,10 @@ int randInRange(int max){
 	return (int)x;
 }
 
-void agent_init(const task_specification_t task_spec)
+void agent_init(const char* task_spec)
 {
 	/*Seed the random number generator*/
+
 	srand(time(0));
 	/*Here is where you might allocate storage for parameters (value function or policy, last action, last observation, etc)*/
 	
@@ -43,6 +44,7 @@ void agent_init(const task_specification_t task_spec)
 	
 	/*Allocate memory for a one-dimensional integer action using utility functions from RLStruct_util*/
 	allocateRLStruct(&this_action,1,0,0);
+	last_observation=allocateRLStructPointer(0,0,0);
 	
 	/* That is equivalent to:
 			 this_action.numInts     =  1;
@@ -54,19 +56,19 @@ void agent_init(const task_specification_t task_spec)
 	*/
 }
 
-action_t agent_start(observation_t this_observation) {
+const action_t *agent_start(const observation_t *this_observation) {
 	/* This agent always returns a random number, either 0 or 1 for its action */
 	int theIntAction=randInRange(1);
 	this_action.intArray[0]=theIntAction;
 
 	/* In a real action you might want to store the last observation and last action*/
 	replaceRLStruct(&this_action, &last_action);
-	replaceRLStruct(&this_observation, &last_observation);
+	replaceRLStruct(this_observation, last_observation);
 	
-	return this_action;
+	return &this_action;
 }
 
-action_t agent_step(reward_t reward, observation_t this_observation) {
+const action_t *agent_step(double reward, const observation_t *this_observation) {
 	/* This agent  returns 0 or 1 randomly for its action */
 	/* This agent always returns a random number, either 0 or 1 for its action */
 	int theIntAction=randInRange(1);
@@ -75,23 +77,23 @@ action_t agent_step(reward_t reward, observation_t this_observation) {
 	
 	/* In a real action you might want to store the last observation and last action*/
 	replaceRLStruct(&this_action, &last_action);
-	replaceRLStruct(&this_observation, &last_observation);
+	replaceRLStruct(this_observation, last_observation);
 	
-	return this_action;
+	return &this_action;
 }
 
-void agent_end(reward_t reward) {
+void agent_end(double reward) {
 	clearRLStruct(&last_action);
-	clearRLStruct(&last_observation);
+	clearRLStruct(last_observation);
 }
 
 void agent_cleanup() {
 	clearRLStruct(&this_action);
 	clearRLStruct(&last_action);
-	clearRLStruct(&last_observation);
+	freeRLStructPointer(last_observation);
 }
 
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
 	if(strcmp(inMessage,"what is your name?")==0)
 		return "my name is skeleton_agent!";
 

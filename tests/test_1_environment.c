@@ -29,74 +29,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <rlglue/Environment_common.h>
+#include <rlglue/utils/C/RLStruct_util.h>
 #include "useful_functions.h"
 
 
-observation_t o={0};
+observation_t *o=0;
 reward_observation_t ro={0};
-message_t env_responseMessage=0;
+char* env_responseMessage=0;
 int stepCount=0;
 
-task_specification_t env_init()
+const char* env_init()
 {    
+	o=allocateRLStructPointer(0,0,0);
 	return "sample task spec";
 }
 
-observation_t env_start()
+const observation_t *env_start()
 {
 	stepCount=0;
-	clean_abstract_type(&o);
-	makeKInts(&o,1);
-	makeKDoubles(&o,2);
-	makeKChars(&o,3);
-__RL_CHECK_STRUCT(&o)
+	clearRLStruct(o);
+	makeKInts(o,1);
+	makeKDoubles(o,2);
+	makeKChars(o,3);
+	__RL_CHECK_STRUCT(o)
 	return o;
 }
 
-reward_observation_t env_step(action_t a)
+const reward_observation_t *env_step(const action_t *a)
 {
-	clean_abstract_type(&o);
-	makeKInts(&o,1);
-	o.intArray[0]=stepCount;
+	clearRLStruct(o);
+	makeKInts(o,1);
+	o->intArray[0]=stepCount;
 	
-	ro.o=o;
-	ro.r=1.0;
+	ro.observation=o;
+	ro.reward=1.0;
   
 	stepCount++;
 	
 	ro.terminal=stepCount==5;
-	__RL_CHECK_STRUCT(&ro.o)
-    return ro;
+	__RL_CHECK_STRUCT(o)
+    return &ro;
 }
 
 void env_cleanup()
 {
-  clean_abstract_type(&o);
+  freeRLStructPointer(o);
+  
 }
 
-void env_set_state(state_key_t sk)
+void env_set_state(const state_key_t *sk)
 {
 }
      
-void env_set_random_seed(random_seed_key_t rsk)
+void env_set_random_seed(const random_seed_key_t *rsk)
 {
 }
 
-state_key_t env_get_state()
+const state_key_t *env_get_state()
 {
-	state_key_t theKey;
-	clean_abstract_type(&theKey);
+	state_key_t *theKey=0;
+	clearRLStruct(theKey);
 	return theKey;
 }
 
-random_seed_key_t env_get_random_seed()
+const random_seed_key_t *env_get_random_seed()
 {
-	random_seed_key_t theKey;
-	clean_abstract_type(&theKey);
+	random_seed_key_t *theKey=0;
+	clearRLStruct(theKey);
 	return theKey;
 }
 
-message_t env_message(const message_t inMessage) {
+const char* env_message(const char* inMessage) {
 	int timesToPrint=stepCount%3;
 	int i;
 	char tmpBuffer[1024];

@@ -29,6 +29,8 @@
 #include <string.h>
 #include <assert.h>
 #include <rlglue/RL_glue.h>
+#include <rlglue/utils/C/RLStruct_util.h>
+
 	
 #define LITTLE_ENDIAN_CHECK 0
 #define BIG_ENDIAN_CHECK    1
@@ -56,22 +58,22 @@ void check_fail(int condition){
 	
 	
 int main(int argc, char *argv[]) {
-  task_specification_t task_spec;
+  const char* task_spec;
 
 	if(machineEndianness()==LITTLE_ENDIAN_CHECK)
 		printf("This machine is LITTLE ENDIAN\n");
 	if(machineEndianness()==BIG_ENDIAN_CHECK)
 		printf("This machine is BIGENDIAN\n");
-		
-		printf("Sizes: char %u int %u long %u float %u double %u\n",(unsigned int)sizeof(char),(unsigned int)sizeof(int),(unsigned int)sizeof(long), (unsigned int)sizeof(float),(unsigned int)sizeof(double));
 
-  task_spec=RL_init();
+	printf("Sizes: char %u int %u long %u float %u double %u\n",(unsigned int)sizeof(char),(unsigned int)sizeof(int),(unsigned int)sizeof(long),(unsigned int)sizeof(float),(unsigned int)sizeof(double));
 
-  check_fail(strcmp(task_spec,"sample task spec")!=0);
-  
+	task_spec=RL_init();
+
+	check_fail(strcmp(task_spec,"sample task spec")!=0);
+
 	if(tests_failed!=0)
-		printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);
+	printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);
 	else
-		printf("Passed all %d checks in %s\n",test_count,__FILE__);
+	printf("Passed all %d checks in %s\n",test_count,__FILE__);
 	return tests_failed;
 }

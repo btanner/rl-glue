@@ -669,12 +669,7 @@ The artifacts of the C Codec are:
 \end{description}
 
 \subsection{Build Changes}
-We're not manually writing Makefiles anymore!  We've moved both RL-Glue and the C/C++ Codec to a \htmladdnormallink{GNU autotools system}{http://www.gnu.org/software/autoconf/}. You can build these projects using the following standard Linux/Unix procedure now:
-\begin{verbatim}
-	>$ ./configure
-	>$ make
-	>$ sudo make install
-\end{verbatim}
+We're not manually writing Makefiles anymore!  We've moved both RL-Glue and the C/C++ Codec to a \htmladdnormallink{GNU autotools system}{http://www.gnu.org/software/autoconf/}. Check the appropriate technical manual for details.
 
 \subsection{API Changes}
 All of the API changes have been included in all of the codecs.
@@ -691,24 +686,8 @@ Csaba Szepesvari made the request at some point that \texttt{RL\_Episode} should
 It made sense to us that \texttt{RL\_init} should return the task spec, in case the experiment program wants to know it, make a note of it, etc. The RL\_glue specification has now been updated to handle this.
 
 \subsection{Type Changes}
-All of the Type changes have been included in all of the codecs.
-
-\subsubsection{Typedefs}
-This is a big one. We revamped all of the type names for C/C++.  We made them all lower case, and added ``\_t'' to them to identify them as types.  This should reduce confusion so there is no more code like:\newline
-\texttt{Observation observation;}
-
-Instead it'll be:\newline
-\texttt{observation\_t observation;}
-
-We think the latter is easier to read.
-
-This is a pain to change if you have a lot of existing code, so we've made it easy to transition.  There is a file you can include which will define all the old, ugly type names. This is good news because it means you can migrate to the new type names at your leisure.
-\begin{verbatim}
-#include <rlglue/legacy_types.h>
-\end{verbatim}
-
-You can find all the old and new type names here:\newline
-\htmladdnormallink{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy\_types.h}{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy\_types.h}
+The main RL-Glue C/C++ code and the codecs have each undergone different changes to the types and their naming.
+Please refer to the specific technical manual for the language of interest for all the details.
 
 \subsubsection{charArray!}
 Some people have found the interface of abstract types that are arrays of \texttt{double} and \texttt{int} a little bit too constricting.  We've added a third array, this time of \texttt{char}.  Now people can push strings and char arrays of anything they want through observations, action, \texttt{state\_key} types, etc.

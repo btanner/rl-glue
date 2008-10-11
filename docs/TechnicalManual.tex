@@ -326,16 +326,17 @@ need to keep it.
 \subsubsection{Task Spec Example}
 \begin{verbatim}
 /********************   UNSAFE   *******************/
-task_specification_t task_spec_copy=0;
+char* task_spec_copy=0;
 	
-void agent_init(const task_specification_t task_spec){
+void agent_init(const char* task_spec){
         /*
-            Not making a copy, just keeping a pointer to the data 
+            Not making a copy, just keeping a pointer to the data
+            Compiler will even complain 
         */
     task_spec_copy=task_spec;
 }
 
-action_t agent_start(observation_t this_observation) {
+const action_t* agent_start(const observation_t* this_observation) {
         /*
             Behavior undefined.  Who knows if the string the task_spec
             was originally pointing to still exists?
@@ -346,9 +347,9 @@ action_t agent_start(observation_t this_observation) {
 
 \begin{verbatim}
 /********************   SAFE   *******************/
-task_specification_t task_spec_copy=0;
+char* task_spec_copy=0;
 	
-void agent_init(const task_specification_t task_spec){
+void agent_init(const char* task_spec){
         /*
             Allocating space (need length+1 for the terminator character)
         */
@@ -356,7 +357,7 @@ void agent_init(const task_specification_t task_spec){
     strcpy(task_spec_copy,task_spec);
 }
 
-action_t agent_start(observation_t this_observation) {
+const action_t* agent_start(const observation_t* this_observation) {
         /*
             This is fine, because even if 
             the task_spec was freed, we have a copy.
@@ -371,11 +372,11 @@ action_t agent_start(observation_t this_observation) {
 
 \begin{verbatim}
 /********************   UNSAFE   *******************/
-observation_t last_observation;
-action_t agent_start(observation_t this_observation) {
+observation_t* last_observation=0;
+const action_t* agent_start(const observation_t *this_observation) {
         /*
-            Unsafe, points last_observation to
-            this_observation's arrays!
+            Unsafe, points last_observation to this_observation's arrays!
+            Compiler will even complain (that's new)		
         */
     last_observation=this_observation;
 ...
@@ -383,20 +384,49 @@ action_t agent_start(observation_t this_observation) {
 
 \begin{verbatim}
 /********************   SAFE   *******************/
-observation_t last_observation;
-action_t agent_start(observation_t this_observation) {
+observation_t* last_observation=0;
+const action_t* agent_start(const observation_t *this_observation) {
         /*
-           This helper function actually frees the
-           allocated memory inside last_observation, allocates 
-           new memory, and copies from this_observation!
+           This helper function allocates a new struct and 
+           copies from this_observation!
         */
-    replaceRLStruct(&this_observation, &last_observation);
+    last_observation=duplicateRLStructToPointer(this_observation);
 ...
 \end{verbatim}
 
-These examples might make it clear why most of our samples use global variables for things that are changed often, like structures that we return, or structures keeping track of the previous action/observation etc.  
-This allows us to only worry about re-allocating the arrays inside the struct, instead of also worrying about pointers to the structs themselves.
+Alternatively, if we already had a pointer to a \texttt{observation\_t}.
+\begin{verbatim}
+/**************   Alternate 1 SAFE   *************/
+    /*Somewhere else in the code*/
+    observation_t* last_observation=allocateRLStructPointer(0,0,0);
+    ...
 
+const action_t* agent_start(const observation_t *this_observation) {
+    /*
+       This helper function allocates memory inside last_observation
+       if necessary and copies this_observation into it!
+    */
+
+    replaceRLStruct(this_observation,last_observation);
+...
+\end{verbatim}
+
+Or, if you don't like working with pointers:
+\begin{verbatim}
+/**************   Alternate 2 SAFE   *************/
+observation_t last_observation={0}; /* Not a pointer */
+const action_t* agent_start(const observation_t *this_observation) {
+        /*
+           This helper function allocates memory inside last_observation
+           if necessary and copies this_observation into it!
+        */
+    
+    replaceRLStruct(this_observation,&last_observation);
+...
+\end{verbatim}
+
+Remember that any memory that you allocate within an agent, environment, or experiment the old fashioned way \texttt{malloc/new} or using the convenience functions in \texttt{<rlglue/utils/C/RLStruct\_util.h>} should released
+by you in the appropriate \texttt{cleanup} function.
 \subsection{Free Your Mess}
 When using RL-Glue, you are responsible for cleaning up any memory that you allocate. The good news is that that you can trust that between function calls, any memory you've returned to a caller has either been
 copied or is not necessary (it is safe to free it).  Remember that in C/C++ it's not safe to return pointers to stack-based memory.
@@ -408,7 +438,7 @@ Copying, comparing, and allocating Strings in C can be tricky, so here are a cou
 
 \begin{verbatim}
 /********************   UNSAFE   *******************/
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
     char theBuffer[1024];
     sprintf(theBuffer,"this is an example response message\n");
         /*
@@ -421,9 +451,9 @@ message_t agent_message(const message_t inMessage) {
 
 \begin{verbatim}
 /****************   UNSAFE (MEMORY LEAK)   ***************/
-message_t agent_message(const message_t inMessage) {
+const char* agent_message(const char* inMessage) {
     char theBuffer[1024];
-    message_t returnString=0;
+    char* returnString=0;
     sprintf(theBuffer,"this is an example response message\n");
     returnString=(char *)calloc(strlen(theBuffer+1),sizeof(char));
     strcpy(returnString,theBuffer);
@@ -438,8 +468,8 @@ message_t agent_message(const message_t inMessage) {
 
 \begin{verbatim}
 /********************   SAFE   *******************/
-message_t agentReturnString=0; /*Global Variable */	
-message_t agent_message(const message_t inMessage) {
+char* agentReturnString=0; /*Global Variable */	
+const char* agent_message(const char* inMessage) {
     char theBuffer[1024];
     sprintf(theBuffer,"this is an example response message\n");
 
@@ -468,10 +498,10 @@ The types used here will be the same for the C/C++ network codec.
 The simple types are:
 
 \begin{verbatim}
-    typedef double reward_t;
-    typedef int terminal_t;
-    typedef char* message_t;
-    typedef char* task_specification_t;
+    Reward          : double
+    Terminal Flag   : int
+    Message         : char*
+    Task_Spec       : char*
 \end{verbatim}
 
 \def\rat{rl\_abstract\_type\_t}
@@ -500,34 +530,30 @@ The specific names and definitions of the structure types are:
     typedef rl_abstract_type_t state_key_t;
 \end{verbatim}
 
-The composite structure types returned by \texttt{env\_step} are:
+The composite structure types are:
 \begin{verbatim}
-typedef struct{
-    observation_t o;
-    action_t a;
-} observation_action_t;
+	typedef struct{
+	    const observation_t *observation;
+	    const action_t *aaction;
+	} observation_action_t;
 
-typedef struct{
-    reward_t r;
-    observation_t o;
-    terminal_t terminal;
-} reward_observation_t;
+	typedef struct{
+	    double reward;
+	    const observation_t *observation;
+	    int terminal;
+	} reward_observation_t;
 
-typedef struct {
-    reward_t r;
-    observation_t o;
-    action_t a;
-    terminal_t terminal;
-} reward_observation_action_terminal_t;
+	typedef struct {
+	    double reward;
+	    const observation_t *observation;
+	    const action_t *action;
+	    int terminal;
+	} reward_observation_action_terminal_t;
 \end{verbatim}
 
 \subsubsection{Summary}
 The type names are:
 \begin{verbatim}
-    reward_t
-    terminal_t
-    message_t
-    task_specification_t
     observation_t
     action_t
     observation_action_t
@@ -540,49 +566,48 @@ The type names are:
 \subsubsection{Agent Functions}
 All agents \textbf{should implement} these functions, located in \texttt{rlglue/Agent\_common.h}
 \begin{verbatim}
-    void agent_init(const task_specification_t task_spec);
-    action_t agent_start(observation_t o);
-    action_t agent_step(reward_t r, observation_t o);
-    void agent_end(reward_t r);  
-    void agent_cleanup();
-    message_t agent_message(const message_t message);
+	void agent_init(const char* task_spec);
+	const action_t* agent_start(const observation_t* observation);
+	const action_t* agent_step(double reward, const observation_t* observation);
+	void agent_end(double reward);  
+	void agent_cleanup();
+	const char* agent_message(const char* message);
 \end{verbatim}
 
 \subsubsection{Environment Functions}
 All environments \textbf{should implement} these functions, located in \texttt{rlglue/Environment\_common.h}
 \begin{verbatim}
-    task_specification_t env_init();
-    observation_t env_start();
-    reward_observation_t env_step(action_t a);
-    void env_cleanup();
-    message_t env_message(const message_t message);
-    void env_set_state(state_key_t sk);
-    void env_set_random_seed(random_seed_key_t rsk);
-    state_key_t env_get_state();
-    random_seed_key_t env_get_random_seed();
+	const char* env_init();
+	const observation_t* env_start();
+	const reward_observation_t* env_step(const action_t* action);
+	void env_cleanup();
+	void env_set_state(const state_key_t* stateKey);
+	void env_set_random_seed(const random_seed_key_t* randomKey);
+	const state_key_t* env_get_state();
+	const random_seed_key_t* env_get_random_seed();
+	const char* env_message(const char * message);
 \end{verbatim}
 
 \subsubsection{Experiments Functions}
 All experiments \textbf{can call} these functions, located in \texttt{rlglue/RL\_glue.h}
 \begin{verbatim}
-    task_specification_t RL_init();
-    observation_action_t RL_start();
-    reward_observation_action_terminal_t RL_step();
-    void RL_cleanup();
+	const char* RL_init();
+	const observation_action_t *RL_start();
+	const reward_observation_action_terminal_t *RL_step();
+	void RL_cleanup();
 
-    terminal_t RL_episode(unsigned int num_steps);
+	const char* RL_agent_message(const char* message);
+	const char* RL_env_message(const char* message);
 
-    message_t RL_agent_message(message_t message);
-    message_t RL_env_message(message_t message);
+	double RL_return();
+	int RL_num_steps();
+	int RL_num_episodes();
+	int RL_episode(unsigned int num_steps);
+	void RL_set_state(const state_key_t* stateKey);
+	void RL_set_random_seed(const random_seed_key_t* randomKey);
+	const state_key_t* RL_get_state();
+	const random_seed_key_t* RL_get_random_seed();
 
-    reward_t RL_return();
-    int RL_num_steps();
-    int RL_num_episodes();
-
-    void RL_set_state(state_key_t sk);
-    void RL_set_random_seed(random_seed_key_t rsk);
-    state_key_t RL_get_state();
-    random_seed_key_t RL_get_random_seed();
 \end{verbatim}
 
 \subsubsection{RLUtils Library Functions}
@@ -624,6 +649,12 @@ void allocateRLStruct(rl_abstract_type_t *dst,
 rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts,
                                             const unsigned int numDoubles,
                                             const unsigned int numChars);
+
+/* 
+    Create a new rl_abstract_type_t pointer that is a copy
+    of an existing one (src)
+*/
+rl_abstract_type_t *duplicateRLStructToPointer(const rl_abstract_type_t *src);
 \end{verbatim}
 
 
@@ -631,12 +662,104 @@ rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts,
 \section{Changes and 2.x Backward Compatibility}
 There were many changes from RL-Glue 2.x to RL-Glue 3.x.  Most of them are at the level of the API and project organization, and are addressed in the \htmladdnormallink{RL-Glue overview documentation}{http://rl-glue.googlecode.com/svn/trunk/docs/html/index.html}, not this technical manual.
 
-\subsection{Types}
-All of the types that existed in the RL-Glue 2.x  (ex: \texttt{Observation} instead of \texttt{observation\_t}) are still supported through a definition file called 
-\texttt{legacy\_types.h}.  If you don't want to update your old agents to the new types, you can use the old names by doing the following in your source files:
+\subsection{Build Changes}
+We're not manually writing Makefiles anymore!  We've moved both RL-Glue and the C/C++ Codec to a \htmladdnormallink{GNU autotools system}{http://www.gnu.org/software/autoconf/}.
+You can build these projects using the following standard Linux/Unix procedure now:
 \begin{verbatim}
-	#include<rlglue/legacy_types.h>
+	>$ ./configure
+	>$ make
+	>$ sudo make install
 \end{verbatim}
+
+\subsection{Header Location Changes}
+\subsubsection{Agents}
+\begin{verbatim}
+Old: #include <RL_common.h>
+New: #include <rlglue/Agent_common.h>
+\end{verbatim}
+
+\subsubsection{Environments}
+\begin{verbatim}
+Old: #include <RL_common.h>
+New: #include <rlglue/Environment_common.h>
+\end{verbatim}
+
+\subsubsection{Experiments}
+\begin{verbatim}
+Old: #include <RL_glue.h>
+New: #include <rlglue/RL_glue.h>
+\end{verbatim}
+
+\subsubsection{Miscellaneous}
+\begin{verbatim}
+Old: #include <RL_network.h>
+New: #include <rlglue/network/RL_network.h>
+\end{verbatim}
+
+\subsection{Typedefs}
+This is a big one. We revamped all of the type names for C/C++.  We made them all lower case, and added ``\_t'' to them to identify them as types.  This should reduce confusion so there is no more code like:\newline
+\texttt{Observation observation;}
+
+Instead it'll be:\newline
+\texttt{observation\_t observation;}
+
+We think the latter is easier to read.  We've also stopped using \texttt{typdef} for \texttt{reward}, \texttt{task\_spec}.  A first release of RL-Glue 3.0 and the C/C++ codec had new types \texttt{message\_t} and \texttt{terminal\_t}: these have been removed also.  Feedback from the community was that people preferred to see the actual types instead of these surrogates.
+
+If you really like the old type names, we've made it a little easier for your to keep your them.  There is a file you can include which will define all the old, ugly type names. This is good news because it means you can migrate to the new type names at your leisure.
+\begin{verbatim}
+#include <rlglue/legacy_types.h>
+\end{verbatim}
+
+You can find all the old and new type names here:\newline
+\htmladdnormallink{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy\_types.h}{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy\_types.h}
+
+\subsection{Composite Structures}
+
+\subsubsection{Member Naming}
+In RL-Glue 2.x, composite structures took the form:
+\begin{verbatim}
+typedef struct Reward_observation_t{
+   Reward r;
+   Observation o;
+   int terminal;
+} Reward_observation;
+\end{verbatim}
+
+Unfortunately, it is very inconsistent that the reward and observation are \texttt{r} and \texttt{o} respectively, 
+while the terminal flag is \texttt{terminal}.  With the second pass of RL-Glue 3.0 we are moving to a more verbose 
+naming scheme: we will fully name each member of these composite structs as \texttt{reward}, \texttt{action}, 
+\texttt{observation}, or \texttt{terminal}.
+
+
+
+
+\subsection{Const-Correctness and the Pointer Revolution}
+This is another big one.  This was not originally planned for RL-Glue 3.0, and it breaks backward compatibility with RL-Glue
+2.x in a serious way.  However, the payoff we hope to get by making the code easier to understand and debug should be 
+worth the effort in the long run.
+
+Many of the old function prototypes in RL-Glue passed structures by value.  A typical example:\newline
+\texttt{Action agent\_step(Reward r, Observation o);}
+
+In this example, Action and Observation are \texttt{struct}s, and Reward \texttt{typdef}'d to \texttt{double}.  In the 
+first revision of RL-Glue 3.0 we updated to:\newline
+\texttt{action\_t agent\_step(reward\_t r, observation\_t o);}
+
+Notice in this version that it might not be intuitive whether \texttt{r}, the reward, is a structure or a primitive type.  
+Safety is also not obvious: can the agent expect that the returned action will be changed by RL-Glue?  Should the agent 
+release the information in the observation when finished with it? 
+
+With the second pass of updates, we've taken the next leap to:\newline
+\texttt{const action\_t* agent\_step(double reward, const observation\_t* observation);}
+
+We feel it is more clear with this prototype that the agent should not try to change the observation, and that 
+RL-Glue will not change the action.  You can easily defeat these safety checks by casting away the \texttt{const}, 
+but at least the compiler will yell at you if you accidentally try to break the rules.
+
+We have made these sorts of changes to all functions that accept or return any derivative of 
+\texttt{rl\_abstract\_type\_t}.
+
+
 
 
 

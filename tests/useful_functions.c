@@ -94,29 +94,6 @@ void set_k_chars_in_abstract_type(rl_abstract_type_t *the_struct, int num_chars)
 
 
 
-void copy_structure_to_structure(rl_abstract_type_t *dst, const rl_abstract_type_t *src){
-	int i;
-	clean_abstract_type(dst);
-	/* Now the counts and arrays for ints, doubles, and chars are all 0 */
-	if(dst->numInts!=src->numInts){
-		dst->numInts=src->numInts;
-		dst->intArray=(int *)calloc(dst->numInts, sizeof(int));
-	}
-	for(i=0;i<dst->numInts;i++) dst->intArray[i]=src->intArray[i];
-
-	if(dst->numDoubles!=src->numDoubles){
-		dst->numDoubles=src->numDoubles;
-		dst->doubleArray=(double *)calloc(dst->numDoubles, sizeof(double));
-	}
-	for(i=0;i<dst->numDoubles;i++) dst->doubleArray[i]=src->doubleArray[i];
-	
-	for(i=0;i<dst->numChars;i++) dst->charArray[i]=src->charArray[i];
-	if(dst->numChars!=src->numChars){
-		dst->numChars=src->numChars;
-		dst->charArray=(char *)calloc(dst->numChars, sizeof(char));
-	}
-	for(i=0;i<dst->numChars;i++) dst->charArray[i]=src->charArray[i];
-}
 
 int compare_abstract_types(const rl_abstract_type_t *struct1,const rl_abstract_type_t *struct2){
 	int i;
@@ -137,23 +114,4 @@ int compare_abstract_types(const rl_abstract_type_t *struct1,const rl_abstract_t
 		return 6;
 	
 	return 0;
-}
-
-
-void clean_abstract_type(rl_abstract_type_t *the_struct){
-	the_struct->numInts=0;
-	the_struct->numDoubles=0;
-	the_struct->numChars=0;
-	if(the_struct->intArray!=0){
-		free(the_struct->intArray);
-		the_struct->intArray=0;
-	}
-	if(the_struct->doubleArray!=0){
-		free(the_struct->doubleArray);
-		the_struct->doubleArray=0;
-	}
-	if(the_struct->charArray!=0){
-		free(the_struct->charArray);
-		the_struct->charArray=0;
-	}	
 }

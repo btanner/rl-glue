@@ -26,6 +26,7 @@
 
 
 #include <stdio.h>
+#include <rlglue/utils/C/RLStruct_util.h>
 
 #include <rlglue/RL_glue.h>
 #include <string.h>
@@ -44,7 +45,7 @@
 	
 
 int main(int argc, char *argv[]) {
-	char *theResponse;
+	const char *theResponse;
 	
 	RL_init();
 
