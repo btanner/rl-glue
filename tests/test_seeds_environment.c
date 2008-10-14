@@ -34,9 +34,9 @@
 
 
 
-observation_t *o=0;
-state_key_t *env_saved_state_key=0;
-random_seed_key_t *env_saved_random_key=0;
+static observation_t *o=0;
+static state_key_t *env_saved_state_key=0;
+static random_seed_key_t *env_saved_random_key=0;
 
 const char* env_init()
 {    
@@ -62,7 +62,12 @@ const reward_observation_t *env_step(const action_t *a)
 
 void env_cleanup()
 {
-
+	freeRLStructPointer(o);
+	freeRLStructPointer(env_saved_state_key);
+	freeRLStructPointer(env_saved_random_key);
+	o=0;
+	env_saved_state_key=0;
+	env_saved_random_key=0;
 }
 
 void env_set_state(const state_key_t *sk)

@@ -106,9 +106,19 @@ int main(int argc, char *argv[]) {
 	returned_random_seed_key=RL_get_random_seed();
 	check_fail(compare_abstract_types(empty_random_seed,returned_random_seed_key)!=0);
 
-	
-	
-	
+	RL_cleanup();	
+
+	freeRLStructPointer(the_state_key);
+	the_state_key=0;
+
+	freeRLStructPointer(empty_state_key);
+	empty_state_key=0;
+
+	freeRLStructPointer(the_random_seed);
+	the_random_seed=0;
+
+	freeRLStructPointer(empty_random_seed);
+	empty_random_seed=0;
 	if(tests_failed!=0)
 		printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);
 	else

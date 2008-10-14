@@ -81,22 +81,25 @@ int main(int argc, char *argv[]) {
 	RL_episode(500);
         
 	t0=get_current_ms_time();
-	    RL_episode(0);
+	RL_episode(0);
 	t1=get_current_ms_time();
 	
-	    steps=RL_num_steps();
+	steps=RL_num_steps();
 	
-	  printf ("\telapsed time in ms: %ld, per step is %f\n", (t1 - t0), ((float)(t1-t0)/(float)steps));
+	printf ("\telapsed time in ms: %ld, per step is %f\n", (t1 - t0), ((float)(t1-t0)/(float)steps));
 		
 	t0=get_current_ms_time();
-	    RL_episode(0);
+	
+	RL_episode(0);
+	
 	t1=get_current_ms_time();
 
-	    steps=RL_num_steps();
+	steps=RL_num_steps();
 
-	  printf ("\telapsed time in ms: %ld, per step is %f\n", (t1 - t0), ((float)(t1-t0)/(float)steps));
+	printf ("\telapsed time in ms: %ld, per step is %f\n", (t1 - t0), ((float)(t1-t0)/(float)steps));
         
-	
+	RL_cleanup();
+
 	if(tests_failed!=0)
 		printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);
 	else

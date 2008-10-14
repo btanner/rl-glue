@@ -96,7 +96,9 @@ int main(int argc, char *argv[]) {
     check_fail(strcmp("five|5.5.|five",RL_env_message("five"))!=0);
 	check_fail(strcmp("five|4.|five",RL_agent_message("five"))!=0);
 	check_fail(roat->terminal==0);
-	
+
+	RL_cleanup();
+
 	if(tests_failed!=0)
 		printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);
 	else

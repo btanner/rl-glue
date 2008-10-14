@@ -40,10 +40,10 @@ This agent doesn't implement all the methods.. isn't that bad?
 #include "useful_functions.h"
 
 
-char* agent_responseMessage=0;
-action_t *emptyAction=0;
-action_t *nonEmptyAction=0;
-int agent_whichEpisode=0;
+static char* responseMessage=0;
+static action_t *emptyAction=0;
+static action_t *nonEmptyAction=0;
+static int whichEpisode=0;
 
 void agent_init(const char * task_spec){
 	emptyAction=allocateRLStructPointer(0,0,0);
@@ -53,20 +53,20 @@ void agent_init(const char * task_spec){
 	set_k_doubles_in_abstract_type(nonEmptyAction,3);
 	set_k_chars_in_abstract_type(nonEmptyAction,1);
 
-	agent_whichEpisode=0;
+	whichEpisode=0;
 }
 
 const action_t *agent_start(const observation_t *o) {
-	agent_whichEpisode++;
+	whichEpisode++;
 	
-	if(agent_whichEpisode%2==0)
+	if(whichEpisode%2==0)
 		return emptyAction;
 	
 	return nonEmptyAction;
 }
 
 const action_t *agent_step(const double reward, const observation_t *o) {
-	if(agent_whichEpisode%2==0)
+	if(whichEpisode%2==0)
 		return emptyAction;
 	
 	return nonEmptyAction;
@@ -76,8 +76,14 @@ void agent_end(const double reward) {
 }
 
 void agent_cleanup() {
-	clearRLStruct(emptyAction);
-	clearRLStruct(nonEmptyAction);
+	freeRLStructPointer(emptyAction);
+	freeRLStructPointer(nonEmptyAction);
+	emptyAction=0;
+	nonEmptyAction=0;
+	if(responseMessage!=0){
+		free(responseMessage);
+		responseMessage=0;
+	}
 }
 
 void agent_freeze() {

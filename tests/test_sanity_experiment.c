@@ -71,6 +71,8 @@ int main(int argc, char *argv[]) {
 
 	check_fail(strcmp(task_spec,"sample task spec")!=0);
 
+	RL_cleanup();
+
 	if(tests_failed!=0)
 	printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);
 	else

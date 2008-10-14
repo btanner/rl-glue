@@ -33,9 +33,9 @@
 
 #include "useful_functions.h"
 
-char* env_responseMessage=0;
-observation_t *emptyObservation=0;
-observation_t *nonEmptyObservation=0;
+static char* responseMessage=0;
+static observation_t *emptyObservation=0;
+static observation_t *nonEmptyObservation=0;
 
 
 int env_whichEpisode=0;
@@ -82,8 +82,12 @@ const reward_observation_t *env_step(const action_t *a)
 
 void env_cleanup()
 {
-	clearRLStruct(emptyObservation);
-	clearRLStruct(nonEmptyObservation);
+	freeRLStructPointer(emptyObservation);
+	freeRLStructPointer(nonEmptyObservation);
+	if(responseMessage!=0){
+		free(responseMessage);
+		responseMessage=0;
+	}
 }
 
 void env_set_state(const state_key_t *sk)

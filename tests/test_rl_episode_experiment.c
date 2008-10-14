@@ -78,6 +78,8 @@ int main(int argc, char *argv[]) {
 	isTerminal = RL_episode(7);
 	check_fail(isTerminal!=1);
 	check_fail(RL_num_steps()!=5);
+	
+	RL_cleanup();
 
 	if(tests_failed!=0)
 		printf("Failed %d / %d checks in %s\n",tests_failed,test_count, __FILE__);

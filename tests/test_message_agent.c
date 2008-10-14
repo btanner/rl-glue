@@ -40,8 +40,8 @@ This agent doesn't implement all the methods.. isn't that bad?
 #include "useful_functions.h"
 
 
-char* agent_responseMessage=0;
-action_t *emptyAction=0;
+static char* responseMessage=0;
+static action_t *emptyAction=0;
 
 
 
@@ -61,6 +61,12 @@ void agent_end(const double reward) {
 }
 
 void agent_cleanup() {
+	if(responseMessage!=0){
+		free(responseMessage);
+		responseMessage=0;
+	}
+	freeRLStructPointer(emptyAction);
+	emptyAction=0;
 }
 
 void agent_freeze() {
@@ -80,11 +86,11 @@ const char* agent_message(const char* inMessage) {
 	
 	sprintf(tmpBuffer,"%s", inMessage);
 
-	if(agent_responseMessage!=0){
-		free(agent_responseMessage);
-		agent_responseMessage=0;
+	if(responseMessage!=0){
+		free(responseMessage);
+		responseMessage=0;
 	}
-	agent_responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
-	sprintf(agent_responseMessage,"%s",tmpBuffer);
-	return agent_responseMessage;
+	responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
+	sprintf(responseMessage,"%s",tmpBuffer);
+	return responseMessage;
 }
