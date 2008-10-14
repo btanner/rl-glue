@@ -35,7 +35,6 @@
 
 static observation_t *o=0;
 static reward_observation_t ro={0};
-static char* responseMessage=0;
 static int stepCount=0;
 static int episodeCount=0;
 
@@ -104,16 +103,12 @@ void env_set_random_seed(const random_seed_key_t *rsk)
 
 const state_key_t *env_get_state()
 {
-	state_key_t *theKey=0;
-	clearRLStruct(theKey);
-	return theKey;
+	return 0;
 }
 
 const random_seed_key_t *env_get_random_seed()
 {
-	random_seed_key_t *theKey=0;
-	clearRLStruct(theKey);
-	return theKey;
+	return 0;
 }
 
 const char* env_message(const char* inMessage) {
