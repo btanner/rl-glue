@@ -38,9 +38,9 @@ This agent doesn't implement all the methods.. isn't that bad?
 
 #include <rlglue/utils/C/RLStruct_util.h>
 #include "useful_functions.h"
-action_t *action=0;
-char* agent_responseMessage=0;
-int agent_stepCount=0;
+static action_t *action=0;
+static char* responseMessage=0;
+static int stepCount=0;
 
 
 
@@ -49,7 +49,7 @@ void agent_init(const char * task_spec){
 
 const action_t *agent_start(const observation_t *o) {
 	__RL_CHECK_STRUCT(o);
-	agent_stepCount=0;
+	stepCount=0;
 
 	freeRLStructPointer(action);
 	action=duplicateRLStructToPointer(o);
@@ -60,7 +60,7 @@ const action_t *agent_start(const observation_t *o) {
 
 const action_t *agent_step(const double reward, const observation_t *o) {
 	__RL_CHECK_STRUCT(o);
-	agent_stepCount++;
+	stepCount++;
 
 	freeRLStructPointer(action);
 	action=duplicateRLStructToPointer(o);
@@ -72,27 +72,31 @@ void agent_end(const double reward) {
 }
 
 void agent_cleanup() {
+	freeRLStructPointer(action);
+	if(responseMessage!=0){
+		free responseMessage;
+	}
 }
 
 void agent_freeze() {
 }
 
 const char* agent_message(const char* inMessage) {
-	int timesToPrint=agent_stepCount%3;
+	int timesToPrint=stepCount%3;
 	int i;
 	char tmpBuffer[1024];
 	
 	sprintf(tmpBuffer,"%s|",inMessage);
 	for(i=0;i<timesToPrint;i++){
-		sprintf(tmpBuffer,"%s%d.", tmpBuffer,agent_stepCount);
+		sprintf(tmpBuffer,"%s%d.", tmpBuffer,stepCount);
 	}
 	sprintf(tmpBuffer,"%s|%s",tmpBuffer,inMessage);
 
-	if(agent_responseMessage!=0){
-		free(agent_responseMessage);
-		agent_responseMessage=0;
+	if(responseMessage!=0){
+		free(responseMessage);
+		responseMessage=0;
 	}
-	agent_responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
-	sprintf(agent_responseMessage,"%s",tmpBuffer);
-	return agent_responseMessage;
+	responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
+	sprintf(responseMessage,"%s",tmpBuffer);
+	return responseMessage;
 }

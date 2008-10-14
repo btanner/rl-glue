@@ -33,10 +33,10 @@
 #include "useful_functions.h"
 
 
-observation_t *o=0;
-reward_observation_t ro={0};
-char* env_responseMessage=0;
-int stepCount=0;
+static observation_t *o=0;
+static reward_observation_t ro={0};
+static char* responseMessage=0;
+static int stepCount=0;
 
 const char* env_init()
 {    
@@ -73,8 +73,10 @@ const reward_observation_t *env_step(const action_t *a)
 
 void env_cleanup()
 {
-  freeRLStructPointer(o);
-  
+	freeRLStructPointer(o);
+	if(responseMessage!=0){
+		free responseMessage;
+	} 
 }
 
 void env_set_state(const state_key_t *sk)
@@ -87,16 +89,14 @@ void env_set_random_seed(const random_seed_key_t *rsk)
 
 const state_key_t *env_get_state()
 {
-	state_key_t *theKey=0;
-	clearRLStruct(theKey);
-	return theKey;
+	/* Not implemented */
+	return 0;
 }
 
 const random_seed_key_t *env_get_random_seed()
 {
-	random_seed_key_t *theKey=0;
-	clearRLStruct(theKey);
-	return theKey;
+	/* Not implemented */
+	return 0;
 }
 
 const char* env_message(const char* inMessage) {
@@ -110,11 +110,11 @@ const char* env_message(const char* inMessage) {
 	}
 	sprintf(tmpBuffer,"%s|%s",tmpBuffer,inMessage);
 	
-	if(env_responseMessage!=0){
-		free(env_responseMessage);
-		env_responseMessage=0;
+	if(responseMessage!=0){
+		free(responseMessage);
+		responseMessage=0;
 	}
-	env_responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
-	sprintf(env_responseMessage,"%s",tmpBuffer);
-	return env_responseMessage;
+	responseMessage=(char *)calloc(strlen(tmpBuffer)+1,sizeof(char));
+	sprintf(responseMessage,"%s",tmpBuffer);
+	return responseMessage;
 }
