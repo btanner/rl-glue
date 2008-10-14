@@ -74,7 +74,8 @@ void agent_end(const double reward) {
 void agent_cleanup() {
 	freeRLStructPointer(action);
 	if(responseMessage!=0){
-		free responseMessage;
+		free(responseMessage);
+		responseMessage=0;
 	}
 }
 

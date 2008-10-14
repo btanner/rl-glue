@@ -75,7 +75,8 @@ void env_cleanup()
 {
 	freeRLStructPointer(o);
 	if(responseMessage!=0){
-		free responseMessage;
+		free(responseMessage);
+		responseMessage=0;
 	} 
 }
 
