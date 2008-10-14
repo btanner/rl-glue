@@ -14,7 +14,7 @@
  limitations under the License.
 
 * 
-*  $Revision$
+*  $Revission: 914 $
 *  $Date$
 *  $Author$
 *  $HeadURL$
@@ -208,7 +208,7 @@ void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
 
     /* Free the original data */
     free(buffer->data);
- 
+
     /* Set the buffers data to the new data pointer */
     buffer->data = new_data;
 
@@ -415,11 +415,8 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
 
 	rlBufferReserve(dst, dst->size + headerSize + dataSize);
 
-	/* fprintf(stderr, "send 1 offset = %u\n", offset); */
 	offset = rlBufferWrite(dst, offset, &src->numInts, 1, sizeof(unsigned int));
-	/* fprintf(stderr, "send 2 offset = %u\n", offset); */
 	offset = rlBufferWrite(dst, offset, &src->numDoubles, 1, sizeof(unsigned int));
-	/* fprintf(stderr, "send 3 offset = %u\n", offset); */
 	offset = rlBufferWrite(dst, offset, &src->numChars, 1, sizeof(unsigned int));
 
 	if (src->numInts > 0) {
@@ -451,13 +448,9 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
 	
 	assert(dst!=0);
 
-	/* fprintf(stderr, "recv 1 offset = %u\n", offset); */
 	offset = rlBufferRead(src, offset, &numIntsInBuffer, 1, sizeof(unsigned int));
-	/* fprintf(stderr, "recv 2 offset = %u\n", offset); */
 	offset = rlBufferRead(src, offset, &numDoublesInBuffer, 1, sizeof(unsigned int));
-	/* fprintf(stderr, "recv 3 offset = %u\n", offset); */
 	offset = rlBufferRead(src, offset, &numCharsInBuffer, 1, sizeof(unsigned int));
-	/* fprintf(stderr, "recv 4 offset = %u\n", offset); */
 
 
 	if(numIntsInBuffer>1000000 || numDoublesInBuffer>1000000 || numCharsInBuffer > 1000000){

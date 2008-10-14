@@ -79,7 +79,10 @@ void termination_handler(int signum) {
 void onRLInit(int theConnection) {
 	unsigned int TS_length=0;
 	unsigned int offset=0;
-	const char* TS=RL_init();
+	const char* TS=0;
+	
+
+	TS=RL_init();
 	rlBufferClear(&theBuffer);
 	/* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
 	initNoCleanUp=1;
@@ -200,9 +203,9 @@ void onRLCleanup(int theConnection) {
 	RL_cleanup();
 
 	rlBufferClear(&theBuffer);
-	clearRLStruct(globalStateKey);  
+	freeRLStructPointer(globalStateKey);  
 	globalStateKey=0;
-	clearRLStruct(globalRandomSeedKey);  
+	freeRLStructPointer(globalRandomSeedKey);  
 	globalRandomSeedKey=0;
 }
 
@@ -277,14 +280,12 @@ void onRLEnvMessage(int theConnection) {
 
 void runGlueEventLoop(int theConnection) {
   int glueState = 0;
-  
   do { 
     rlBufferClear(&theBuffer);
-    if (rlRecvBufferData(theConnection, &theBuffer, &glueState) == 0)
-      break;
+    	if (rlRecvBufferData(theConnection, &theBuffer, &glueState) == 0)
+      		break;
 
-
-    switch(glueState) {
+switch(glueState) {
     case kRLInit:
 	if(debug_glue_network)printf("\tDEBUG: kRLInit\n");
       onRLInit(theConnection);
@@ -383,12 +384,10 @@ int main(int argc, char** argv) {
 	}
 
 	rlBufferCreate(&theBuffer, 65536);
-
 	theConnection = rlConnectSystems();
 	assert(rlIsValidSocket(theConnection));
 	runGlueEventLoop(theConnection);
 	rlDisconnectSystems();
-
 	rlBufferDestroy(&theBuffer);
 
 	return 0;

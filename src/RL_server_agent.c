@@ -146,7 +146,9 @@ void agent_cleanup() {
 	rlRecvBufferData(rlGetAgentConnection(), &theBuffer, &agentState);
 	assert(agentState == kAgentCleanup);
 
-	clearRLStruct(globalAction);
+        rlBufferDestroy(&theBuffer);
+	
+	freeRLStructPointer(globalAction);
 	globalAction=0;
 
 	if (theOutMessage != 0) {

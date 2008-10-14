@@ -143,13 +143,13 @@ void env_cleanup() {
 
 	rlBufferDestroy(&theBuffer);
 
-	clearRLStruct(theObservation);
+	freeRLStructPointer(theObservation);
 	theObservation=0;
 	
-	clearRLStruct(globalStateKey);
+	freeRLStructPointer(globalStateKey);
 	globalStateKey=0;
 	
-	clearRLStruct(globalRandomSeedKey);
+	freeRLStructPointer(globalRandomSeedKey);
 	globalRandomSeedKey=0;
 
 	if (theTaskSpec != 0) {
