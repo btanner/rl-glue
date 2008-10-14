@@ -74,7 +74,9 @@ const reward_observation_t *env_step(const action_t *a)
 void env_cleanup()
 {
 	freeRLStructPointer(o);
+	o=0;
 	if(responseMessage!=0){
+	
 		free(responseMessage);
 		responseMessage=0;
 	} 

@@ -14,10 +14,10 @@
  limitations under the License.
 
 * 
-*  $Revision$
-*  $Date$
-*  $Author$
-*  $HeadURL$
+*  $Revision: 918 $
+*  $Date: 2008-10-14 12:38:05 -0600 (Tue, 14 Oct 2008) $
+*  $Author: brian@tannerpages.com $
+*  $HeadURL: https://rl-glue.googlecode.com/svn/trunk/tests/test_rl_episode_experiment.c $
 * 
 */
 #ifdef HAVE_CONFIG_H
@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
 	check_fail(isTerminal!=0);
 	check_fail(RL_num_steps()!=1);
 
+	RL_cleanup();
+	RL_init();
 	isTerminal = RL_episode(2);
 	check_fail(isTerminal!=0);
 	check_fail(RL_num_steps()!=2);
@@ -69,6 +71,10 @@ int main(int argc, char *argv[]) {
 	check_fail(isTerminal!=0);
 	check_fail(RL_num_steps()!=5);
 
+	RL_cleanup();
+	/*Duplicate on purpose to make sure it does't fould anyting up*/
+	RL_cleanup();
+	RL_init();
 	isTerminal = RL_episode(6);
 	check_fail(isTerminal!=1);
 	check_fail(RL_num_steps()!=5);
