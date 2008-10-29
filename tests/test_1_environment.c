@@ -34,7 +34,7 @@
 
 
 static observation_t *o=0;
-static reward_observation_t ro={0};
+static reward_observation_terminal_t ro={0};
 static char* responseMessage=0;
 static int stepCount=0;
 
@@ -55,7 +55,7 @@ const observation_t *env_start()
 	return o;
 }
 
-const reward_observation_t *env_step(const action_t *a)
+const reward_observation_terminal_t *env_step(const action_t *a)
 {
 	clearRLStruct(o);
 	makeKInts(o,1);
@@ -82,21 +82,21 @@ void env_cleanup()
 	} 
 }
 
-void env_set_state(const state_key_t *sk)
+void env_load_state(const state_key_t *sk)
 {
 }
      
-void env_set_random_seed(const random_seed_key_t *rsk)
+void env_load_random_seed(const random_seed_key_t *rsk)
 {
 }
 
-const state_key_t *env_get_state()
+const state_key_t *env_save_state()
 {
 	/* Not implemented */
 	return 0;
 }
 
-const random_seed_key_t *env_get_random_seed()
+const random_seed_key_t *env_save_random_seed()
 {
 	/* Not implemented */
 	return 0;

@@ -47,9 +47,9 @@ const observation_t *env_start()
 	return theObservation;
 }
 
-const reward_observation_t *env_step(const action_t *a)
+const reward_observation_terminal_t *env_step(const action_t *a)
 {
-	static reward_observation_t ro={0};
+	static reward_observation_terminal_t ro={0};
 	ro.observation=theObservation;
 	return &ro;
 }
@@ -64,20 +64,20 @@ void env_cleanup()
 	theObservation=0;
 }
 
-void env_set_state(const state_key_t *sk)
+void env_load_state(const state_key_t *sk)
 {
 }
      
-void env_set_random_seed(const random_seed_key_t *rsk)
+void env_load_random_seed(const random_seed_key_t *rsk)
 {
 }
 
-const state_key_t *env_get_state()
+const state_key_t *env_save_state()
 {
 	return 0;
 }
 
-const random_seed_key_t *env_get_random_seed()
+const random_seed_key_t *env_save_random_seed()
 {
 	return 0;
 }

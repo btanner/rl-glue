@@ -62,7 +62,7 @@ typedef struct
   double reward;
   const observation_t *observation;
   int terminal;
-} reward_observation_t;
+} reward_observation_terminal_t;
 
 typedef struct {
   double reward;
@@ -72,7 +72,7 @@ typedef struct {
 } reward_observation_action_terminal_t;
 
 typedef reward_observation_action_terminal_t roat_t;
-typedef reward_observation_t rot_t;
+typedef reward_observation_terminal_t rot_t;
 typedef observation_action_t oa_t;
 
 void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct);

@@ -19,7 +19,7 @@ librlglue_la_CFLAGS = -Wall -pedantic -std=c99 $(EXTRA_C_FLAGS) -DDEBUG_GLUE_NET
 librlglue_la_SOURCES = RL_direct_experiment.c RL_direct_environment.c RL_direct_agent.c RL_glue_debug.c RL_glue.c rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/RL_glue.h
 librlglue_la_LDFLAGS= -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE)
 librlglue_la_includedir=$(includedir)/rlglue
-librlglue_la_include_HEADERS = rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/legacy_types.h  rlglue/RL_glue.h 
+librlglue_la_include_HEADERS = rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/RL_glue.h 
 
 NETDEV_RELEASE=0:0:0
 NETDEV_VERSION=0:0:0

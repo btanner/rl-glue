@@ -165,33 +165,33 @@ void onRLEpisode(int theConnection) {
 	offset = rlBufferWrite(&theBuffer, offset, &terminal, 1, sizeof(int));
 }
 
-void onRLSetState(int theConnection) {
+void onRLLoadState(int theConnection) {
 	unsigned int offset = 0;
 	
 	if(globalStateKey==0)globalStateKey=allocateRLStructPointer(0,0,0);
 	offset = rlCopyBufferToADT(&theBuffer, offset, globalStateKey);
-	RL_set_state(globalStateKey);
+	RL_load_state(globalStateKey);
 	rlBufferClear(&theBuffer);
 }
 
-void onRLSetRandomSeed(int theConnection) {
+void onRLLoadRandomSeed(int theConnection) {
 	unsigned int offset = 0;
 	if(globalRandomSeedKey==0)globalRandomSeedKey=allocateRLStructPointer(0,0,0);
 	offset = rlCopyBufferToADT(&theBuffer, offset, globalRandomSeedKey);
-	RL_set_random_seed(globalRandomSeedKey);
+	RL_load_random_seed(globalRandomSeedKey);
 	rlBufferClear(&theBuffer);
 }
 
-void onRLGetState(int theConnection) {
+void onRLSaveState(int theConnection) {
 	unsigned int offset = 0;
-	const state_key_t *theStateKey = RL_get_state();
+	const state_key_t *theStateKey = RL_save_state();
 	rlBufferClear(&theBuffer);
 	offset = rlCopyADTToBuffer(theStateKey, &theBuffer, offset);
 }
 
-void onRLGetRandomSeed(int theConnection) {
+void onRLSaveRandomSeed(int theConnection) {
 	unsigned int offset = 0;
-	const random_seed_key_t *theRandomSeedKey = RL_get_random_seed();
+	const random_seed_key_t *theRandomSeedKey = RL_save_random_seed();
 	rlBufferClear(&theBuffer);
 	offset = rlCopyADTToBuffer(theRandomSeedKey, &theBuffer, offset);
 }
@@ -326,24 +326,24 @@ switch(glueState) {
       onRLEpisode(theConnection);
       break;
       
-    case kRLSetState:
-	if(debug_glue_network)printf("\tDEBUG: kRLSetState\n");
-      onRLSetState(theConnection);
+    case kRLLoadState:
+	if(debug_glue_network)printf("\tDEBUG: kRLLoadState\n");
+      onRLLoadState(theConnection);
       break;
       
-    case kRLSetRandomSeed:
-	if(debug_glue_network)printf("\tDEBUG: kRLSetRandomSeed\n");
-      onRLSetRandomSeed(theConnection);
+    case kRLLoadRandomSeed:
+	if(debug_glue_network)printf("\tDEBUG: kRLLoadRandomSeed\n");
+      onRLLoadRandomSeed(theConnection);
       break;
       
-    case kRLGetState:
-	if(debug_glue_network)printf("\tDEBUG: kRLGetState\n");
-      onRLGetState(theConnection);
+    case kRLSaveState:
+	if(debug_glue_network)printf("\tDEBUG: kRLSaveState\n");
+      onRLSaveState(theConnection);
       break;
       
-    case kRLGetRandomSeed:
-	if(debug_glue_network)printf("\tDEBUG: kRLGetRandomSeed\n");
-      onRLGetRandomSeed(theConnection);
+    case kRLSaveRandomSeed:
+	if(debug_glue_network)printf("\tDEBUG: kRLSaveRandomSeed\n");
+      onRLSaveRandomSeed(theConnection);
       break;
 
     case kRLAgentMessage:

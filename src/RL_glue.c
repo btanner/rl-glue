@@ -75,7 +75,7 @@ const observation_action_t *RL_start() {
 
 const reward_observation_action_terminal_t *RL_step() {
 	static reward_observation_action_terminal_t roa={0};
-	const reward_observation_t *ro;
+	const reward_observation_terminal_t *ro;
   	double this_reward=0;
 	const observation_t *last_state;
 
@@ -178,18 +178,18 @@ int RL_num_episodes() {
   return num_episodes;
 }
 
-const state_key_t *RL_get_state() {
-  return env_get_state();
+const state_key_t *RL_save_state() {
+  return env_save_state();
 }
 
-void RL_set_state(const state_key_t *sk) {
-  env_set_state(sk);
+void RL_load_state(const state_key_t *sk) {
+  env_load_state(sk);
 }
 
-void RL_set_random_seed(const random_seed_key_t  *rsk) {
-  env_set_random_seed(rsk);
+void RL_load_random_seed(const random_seed_key_t  *rsk) {
+  env_load_random_seed(rsk);
 }
 
-const random_seed_key_t *RL_get_random_seed() {
-  return env_get_random_seed();
+const random_seed_key_t *RL_save_random_seed() {
+  return env_save_random_seed();
 }

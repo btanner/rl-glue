@@ -31,7 +31,7 @@ all other steps.
 */
   
 observation_t this_observation;
-reward_observation_t this_reward_observation;
+reward_observation_terminal_t this_reward_observation;
 int current_state=0;
 
 
@@ -64,7 +64,7 @@ const observation_t *env_start()
   	return &this_observation;
 }
 
-const reward_observation_t *env_step(const action_t *this_action)
+const reward_observation_terminal_t *env_step(const action_t *this_action)
 {
 	int episode_over=0;
 	double the_reward=0;
@@ -104,26 +104,26 @@ const char* env_message(const char* inMessage) {
 	return "I don't know how to respond to your message";
 }
 
-void env_set_state(const state_key_t *sk)
+void env_load_state(const state_key_t *sk)
 {
 	/* Advanced feature so not included in skeleton */
 	/* All you would need is a local variable that you set with this value */
 }
      
-void env_set_random_seed(const random_seed_key_t *rsk)
+void env_load_random_seed(const random_seed_key_t *rsk)
 {
 	/* Advanced feature so not included in skeleton */
 	/* All you would need is a local variable that you set with this value */
 }
 
-const state_key_t *env_get_state()
+const state_key_t *env_save_state()
 {
 	/* Advanced feature so just returning empty structure */
   state_key_t *theKey=0;
   return theKey;
 }
 
-const random_seed_key_t *env_get_random_seed()
+const random_seed_key_t *env_save_random_seed()
 {
   /* Advanced feature so just returning empty structure */
   random_seed_key_t *theKey=0;

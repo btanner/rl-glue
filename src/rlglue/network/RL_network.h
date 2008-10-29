@@ -49,10 +49,10 @@ extern "C" {
 #define kEnvStart         12
 #define kEnvStep          13
 #define kEnvCleanup       14
-#define kEnvSetState      15
-#define kEnvSetRandomSeed 16
-#define kEnvGetState      17
-#define kEnvGetRandomSeed 18
+#define kEnvLoadState      15
+#define kEnvLoadRandomSeed 16
+#define kEnvSaveState      17
+#define kEnvSaveRandomSeed 18
 #define kEnvMessage       19
 
 #define kRLInit           20
@@ -63,10 +63,10 @@ extern "C" {
 #define kRLNumSteps       25
 #define kRLNumEpisodes    26
 #define kRLEpisode        27
-#define kRLSetState       28
-#define kRLSetRandomSeed  29
-#define kRLGetState       30
-#define kRLGetRandomSeed  31
+#define kRLLoadState       28
+#define kRLLoadRandomSeed  29
+#define kRLSaveState       30
+#define kRLSaveRandomSeed  31
 /*kRLFreeze is DEPRECATED this code is no longer valid */
 #define kRLFreeze         32
 #define kRLAgentMessage   33
