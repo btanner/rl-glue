@@ -69,8 +69,6 @@ void agent_cleanup() {
 	emptyAction=0;
 }
 
-void agent_freeze() {
-}
 
 const char* agent_message(const char* inMessage) {
 	char tmpBuffer[1024];

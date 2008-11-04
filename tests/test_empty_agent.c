@@ -86,9 +86,6 @@ void agent_cleanup() {
 	}
 }
 
-void agent_freeze() {
-}
-
 const char* agent_message(const char* inMessage) {
 	return "";
 }
