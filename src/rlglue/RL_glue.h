@@ -50,10 +50,6 @@ double RL_return();
 int RL_num_steps();
 int RL_num_episodes();
 int RL_episode(unsigned int num_steps);
-void RL_load_state(const state_key_t* stateKey);
-void RL_load_random_seed(const random_seed_key_t* randomKey);
-const state_key_t* RL_save_state();
-const random_seed_key_t* RL_save_random_seed();
 
 #ifdef __cplusplus
 }

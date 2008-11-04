@@ -178,18 +178,3 @@ int RL_num_episodes() {
   return num_episodes;
 }
 
-const state_key_t *RL_save_state() {
-  return env_save_state();
-}
-
-void RL_load_state(const state_key_t *sk) {
-  env_load_state(sk);
-}
-
-void RL_load_random_seed(const random_seed_key_t  *rsk) {
-  env_load_random_seed(rsk);
-}
-
-const random_seed_key_t *RL_save_random_seed() {
-  return env_save_random_seed();
-}

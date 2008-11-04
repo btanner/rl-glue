@@ -82,25 +82,6 @@ void env_cleanup()
 	} 
 }
 
-void env_load_state(const state_key_t *sk)
-{
-}
-     
-void env_load_random_seed(const random_seed_key_t *rsk)
-{
-}
-
-const state_key_t *env_save_state()
-{
-	/* Not implemented */
-	return 0;
-}
-
-const random_seed_key_t *env_save_random_seed()
-{
-	/* Not implemented */
-	return 0;
-}
 
 const char* env_message(const char* inMessage) {
 	int timesToPrint=stepCount%3;

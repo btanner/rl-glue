@@ -40,8 +40,6 @@
 static char* theTaskSpec   = 0;
 static rlBuffer theBuffer               = {0};
 static observation_t *theObservation = 0;
-static state_key_t *globalStateKey            = 0;
-static random_seed_key_t *globalRandomSeedKey = 0;
 static char* theOutMessage = 0;
 
 extern void rlSetEnvironmentConnection();
@@ -146,12 +144,6 @@ void env_cleanup() {
 	freeRLStructPointer(theObservation);
 	theObservation=0;
 	
-	freeRLStructPointer(globalStateKey);
-	globalStateKey=0;
-	
-	freeRLStructPointer(globalRandomSeedKey);
-	globalRandomSeedKey=0;
-
 	if (theTaskSpec != 0) {
 		free(theTaskSpec);
 		theTaskSpec = 0;
@@ -163,65 +155,6 @@ void env_cleanup() {
 	}
 }
 
-void env_load_state(const state_key_t *theStateKey) {
-  int envState = kEnvLoadState;
-  unsigned int offset = 0;
-
-  rlBufferClear(&theBuffer);
-  offset = rlCopyADTToBuffer(theStateKey, &theBuffer, offset);
-  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
-
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
-  assert(envState == kEnvLoadState);
-}
-
-void env_load_random_seed(const random_seed_key_t *theRandomSeedKey) {
-  int envState = kEnvLoadRandomSeed;
-  unsigned int offset = 0;
-
-  rlBufferClear(&theBuffer);
-  offset = rlCopyADTToBuffer(theRandomSeedKey, &theBuffer, offset);
-  rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
-
-  rlBufferClear(&theBuffer);
-  rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
-  assert(envState == kEnvLoadRandomSeed);
-}
-
-const state_key_t *env_save_state() {
-	int envState = kEnvSaveState;
-	unsigned int offset = 0;
-
-	rlBufferClear(&theBuffer);
-	rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
-
-	rlBufferClear(&theBuffer);
-	rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
-	assert(envState == kEnvSaveState);
-
-	if(globalStateKey==0)globalStateKey=allocateRLStructPointer(0,0,0);
-	offset = rlCopyBufferToADT(&theBuffer, offset, globalStateKey);
-
-	return globalStateKey;
-}
-
-const random_seed_key_t *env_save_random_seed() {
-	int envState = kEnvSaveRandomSeed;
-	unsigned int offset = 0;
-
-	rlBufferClear(&theBuffer);
-	rlSendBufferData(rlGetEnvironmentConnection(), &theBuffer, envState);
-
-	rlBufferClear(&theBuffer);
-	rlRecvBufferData(rlGetEnvironmentConnection(), &theBuffer, &envState);
-	assert(envState == kEnvSaveRandomSeed);
-
-	if(globalRandomSeedKey==0)globalRandomSeedKey=allocateRLStructPointer(0,0,0);
-	offset = rlCopyBufferToADT(&theBuffer, offset, globalRandomSeedKey);
-
-	return globalRandomSeedKey;
-}
 
 const char* env_message(const char* inMessage) {
   int envState = kEnvMessage;

@@ -90,27 +90,6 @@ void env_cleanup()
 	}
 }
 
-void env_load_state(const state_key_t *sk)
-{
-}
-     
-void env_load_random_seed(const random_seed_key_t *rsk)
-{
-}
-
-const state_key_t *env_save_state()
-{
-	state_key_t *theKey=0;
-	clearRLStruct(theKey);
-	return theKey;
-}
-
-const random_seed_key_t *env_save_random_seed()
-{
-	random_seed_key_t *theKey=0;
-	clearRLStruct(theKey);
-	return theKey;
-}
 
 const char* env_message(const char* inMessage) {
 	return "";

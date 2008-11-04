@@ -103,29 +103,3 @@ const char* env_message(const char* inMessage) {
 
 	return "I don't know how to respond to your message";
 }
-
-void env_load_state(const state_key_t *sk)
-{
-	/* Advanced feature so not included in skeleton */
-	/* All you would need is a local variable that you set with this value */
-}
-     
-void env_load_random_seed(const random_seed_key_t *rsk)
-{
-	/* Advanced feature so not included in skeleton */
-	/* All you would need is a local variable that you set with this value */
-}
-
-const state_key_t *env_save_state()
-{
-	/* Advanced feature so just returning empty structure */
-  state_key_t *theKey=0;
-  return theKey;
-}
-
-const random_seed_key_t *env_save_random_seed()
-{
-  /* Advanced feature so just returning empty structure */
-  random_seed_key_t *theKey=0;
-  return theKey;
-}

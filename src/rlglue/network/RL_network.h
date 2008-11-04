@@ -41,18 +41,12 @@ extern "C" {
 #define kAgentStep    6 /* event to respond to                          */
 #define kAgentEnd     7
 #define kAgentCleanup 8
-/*kAgentFreeze is DEPRECATED this code is no longer valid */
-#define kAgentFreeze  9
 #define kAgentMessage 10
 
 #define kEnvInit          11
 #define kEnvStart         12
 #define kEnvStep          13
 #define kEnvCleanup       14
-#define kEnvLoadState      15
-#define kEnvLoadRandomSeed 16
-#define kEnvSaveState      17
-#define kEnvSaveRandomSeed 18
 #define kEnvMessage       19
 
 #define kRLInit           20
@@ -63,12 +57,6 @@ extern "C" {
 #define kRLNumSteps       25
 #define kRLNumEpisodes    26
 #define kRLEpisode        27
-#define kRLLoadState       28
-#define kRLLoadRandomSeed  29
-#define kRLSaveState       30
-#define kRLSaveRandomSeed  31
-/*kRLFreeze is DEPRECATED this code is no longer valid */
-#define kRLFreeze         32
 #define kRLAgentMessage   33
 #define kRLEnvMessage     34
 

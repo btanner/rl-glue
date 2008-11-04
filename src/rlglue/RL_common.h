@@ -49,8 +49,6 @@ typedef struct
 
 typedef rl_abstract_type_t observation_t;
 typedef rl_abstract_type_t action_t;
-typedef rl_abstract_type_t random_seed_key_t;
-typedef rl_abstract_type_t state_key_t;
 
 typedef struct{
   const observation_t *observation;
