@@ -36,31 +36,37 @@ extern "C" {
 #define kAgentConnection       2
 #define kEnvironmentConnection 3
 
-#define kAgentInit    4 /* agent_* start by sending one of these values */
-#define kAgentStart   5 /* to the client to let it know what type of    */
-#define kAgentStep    6 /* event to respond to                          */
-#define kAgentEnd     7
-#define kAgentCleanup 8
-#define kAgentMessage 10
+#define kAgentInit    		4 /* agent_* start by sending one of these values */
+#define kAgentStart   		5 /* to the client to let it know what type of    */
+#define kAgentStep    		6 /* event to respond to                          */
+#define kAgentEnd     		7
+#define kAgentCleanup 		8
+#define kAgentMessage 		10
 
-#define kEnvInit          11
-#define kEnvStart         12
-#define kEnvStep          13
-#define kEnvCleanup       14
-#define kEnvMessage       19
+#define kEnvInit          	11
+#define kEnvStart         	12
+#define kEnvStep          	13
+#define kEnvCleanup       	14
+#define kEnvMessage       	19
 
-#define kRLInit           20
-#define kRLStart          21
-#define kRLStep           22
-#define kRLCleanup        23
-#define kRLReturn         24
-#define kRLNumSteps       25
-#define kRLNumEpisodes    26
-#define kRLEpisode        27
-#define kRLAgentMessage   33
-#define kRLEnvMessage     34
+#define kRLInit           	20
+#define kRLStart          	21
+#define kRLStep           	22
+#define kRLCleanup        	23
+#define kRLReturn         	24
+#define kRLNumSteps       	25
+#define kRLNumEpisodes    	26
+#define kRLEpisode        	27
+#define kRLAgentMessage   	33
+#define kRLEnvMessage     	34
 
-#define kRLTerm           35
+#define kRLEnvStart     	36
+#define kRLEnvStep     		37
+#define kRLAgentStart     	38
+#define kRLAgentStep     	39
+#define kRLAgentEnd     	40
+
+#define kRLTerm           	35
 
 #define kLocalHost "127.0.0.1"
 #define kDefaultPort 4096

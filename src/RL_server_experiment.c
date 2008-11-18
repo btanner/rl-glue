@@ -56,6 +56,10 @@ int theConnection = 0;
 /* Code added by Brian Tanner Oct 13/2007 to address double cleanup problem */
 unsigned short initNoCleanUp=0;
 
+static action_t ce_globalaction = {0};
+static observation_t clientagent_observation={0};
+
+
 void termination_handler(int signum) {
   fprintf(stderr, "Signal: %d has killed this process. Cleaning Up And Exiting....\n", signum);
 
@@ -103,6 +107,82 @@ void onRLStart(int theConnection) {
 	offset = 0;
 	offset = rlCopyADTToBuffer(obsAct->observation, &theBuffer, offset);
 	offset = rlCopyADTToBuffer(obsAct->action, &theBuffer, offset);
+}
+
+void onRLEnvStart(int theConnection) {
+	unsigned int offset = 0;
+	const observation_t *obs = RL_env_start();
+	__RL_CHECK_STRUCT(obs)
+	rlBufferClear(&theBuffer);
+	offset = 0;
+	offset = rlCopyADTToBuffer(obs, &theBuffer, offset);
+}
+
+void onRLAgentStart(int theConnection) {
+	const action_t *theAction;
+	unsigned int offset = 0;
+
+	/* Read the data in the buffer (data from server) */
+	offset = rlCopyBufferToADT(&theBuffer, offset, &clientagent_observation);
+	__RL_CHECK_STRUCT(&clientagent_observation)
+
+	/* Call RL method on the recv'd data */
+	theAction = RL_agent_start(&clientagent_observation);
+	__RL_CHECK_STRUCT(theAction)
+
+	/* Prepare the buffer for sending data back to the server */
+	rlBufferClear(&theBuffer);
+	offset = 0;
+	offset = rlCopyADTToBuffer(theAction, &theBuffer, offset);}
+
+void onRLEnvStep(int theConnection) {
+	const reward_observation_terminal_t *ro = 0;
+	unsigned int offset = 0;
+
+	offset = rlCopyBufferToADT(&theBuffer, offset, &ce_globalaction);
+	__RL_CHECK_STRUCT(&ce_globalaction);
+
+	ro = RL_env_step(&ce_globalaction);	
+	__RL_CHECK_STRUCT(ro->observation)
+
+	rlBufferClear(&theBuffer);
+	offset = 0;
+	offset = rlBufferWrite(&theBuffer, offset, &ro->terminal, 1, sizeof(int));
+	offset = rlBufferWrite(&theBuffer, offset, &ro->reward, 1, sizeof(double));
+	offset = rlCopyADTToBuffer(ro->observation, &theBuffer, offset);
+}
+void onRLAgentStep(int theConnection) {
+	double theReward = 0;
+	const action_t *theAction;
+	unsigned int offset = 0;
+
+	/* Read the data in the buffer (data from server) */
+	offset = rlBufferRead(&theBuffer, offset, &theReward, 1, sizeof(theReward));
+	offset = rlCopyBufferToADT(&theBuffer, offset, &clientagent_observation);
+	__RL_CHECK_STRUCT(&clientagent_observation)
+
+	/* Call RL method on the recv'd data */
+	theAction = RL_agent_step(theReward, &clientagent_observation);
+	__RL_CHECK_STRUCT(theAction)
+
+	/* Prepare the buffer for sending data back to the server */
+	rlBufferClear(&theBuffer);
+	offset = 0;
+
+	rlCopyADTToBuffer(theAction, &theBuffer, offset);
+}
+
+void onRLAgentEnd(int theConnection) {
+	double theReward = 0;
+
+	/* Read the data in the buffer (data from server) */
+	rlBufferRead(&theBuffer, 0, &theReward, 1, sizeof(double));
+
+	/* Call RL method on the recv'd data */
+	RL_agent_end(theReward);
+
+	/* Prepare the buffer for sending data back to the server */
+	rlBufferClear(&theBuffer);
 }
 
 
@@ -292,6 +372,26 @@ switch(glueState) {
     case kRLEnvMessage:
 	if(debug_glue_network)printf("\tDEBUG: kRLEnvMessage\n");
       onRLEnvMessage(theConnection);
+      break;
+
+    case kRLEnvStart:
+      onRLEnvStart(theConnection);
+      break;
+
+    case kRLEnvStep:
+      onRLEnvStep(theConnection);
+      break;
+
+    case kRLAgentStart:
+      onRLAgentStart(theConnection);
+      break;
+
+    case kRLAgentStep:
+      onRLAgentStep(theConnection);
+      break;
+
+    case kRLAgentEnd:
+      onRLAgentEnd(theConnection);
       break;
 
     case kRLTerm:

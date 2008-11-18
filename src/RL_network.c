@@ -192,13 +192,16 @@ void rlBufferClear(rlBuffer *buffer) {
 void rlBufferReserve(rlBuffer *buffer, unsigned int capacity) {
   unsigned char* new_data = 0;
   unsigned int new_capacity = 0;
-
   /* Ensure the buffer can hold the new data */
   if (capacity > buffer->capacity) {
     /* Allocate enough memory for the additional data */
     new_capacity = capacity + (capacity - buffer->capacity) * 2;
     assert(new_capacity > 0);
     new_data = (unsigned char*)calloc(new_capacity, sizeof(unsigned char));
+	if(new_data==0){
+		fprintf(stderr,"ERROR -- calloc returned null pointer when we asked for %u space in rlBufferReserve.\n",new_capacity);
+		fprintf(stderr,"Old buffer capacity was: %u, new was calculated = %u + (%u - %u) * 2\n",capacity,capacity,capacity,buffer->capacity);
+	}
     assert(new_data != 0);
 
     /* Copy the existing data into the the larger memory allocation */

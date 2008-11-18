@@ -73,6 +73,44 @@ const observation_action_t *RL_start() {
 	return &oa;
 }
 
+const action_t* RL_agent_start(const observation_t* observation){
+	return agent_start(observation);
+}
+const action_t* RL_agent_step(double reward, const observation_t* observation){
+	return agent_step(reward, observation);
+}
+void RL_agent_end(double reward){
+	agent_end(reward);
+}
+const observation_t* RL_env_start(){
+		const observation_t *thisObservation=0;
+
+		total_reward=0;
+		num_steps=1;
+
+		thisObservation = env_start();
+		return thisObservation;
+}
+const reward_observation_terminal_t* RL_env_step(const action_t* action){
+		const reward_observation_terminal_t *ro=0;
+	  	double this_reward=0;
+
+		__RL_CHECK_STRUCT(action)
+	  	ro = env_step(action);
+		__RL_CHECK_STRUCT(ro->observation)
+	  	this_reward = ro->reward;
+
+	  	total_reward += this_reward;
+
+		 if (ro->terminal == 1) {
+		   num_episodes += 1;
+		 }
+		 else {
+			num_steps+=1;
+		 }
+		 return ro;
+	}
+
 const reward_observation_action_terminal_t *RL_step() {
 	static reward_observation_action_terminal_t roa={0};
 	const reward_observation_terminal_t *ro;
