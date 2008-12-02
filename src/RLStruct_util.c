@@ -113,12 +113,24 @@ void freeRLStructPointer(rl_abstract_type_t *dst){
 	}
 }
 
+void reallocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars){
+	assert(dst!=0);
+	/* We could be clever here if we had wanted, and re-use the arrays if they were the same size
+	   as the new arrays.  We can still implement that optimization sometime in the future. Instead, for now
+	   we just free the old arrays and create new ones.
+	*/
+	clearRLStruct(dst);
+	allocateRLStruct(dst,numInts,numDoubles,numChars);
+}
 void allocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars){
 	assert(dst!=0);
-	clearRLStruct(dst);
 	dst->numInts=numInts;
 	dst->numDoubles=numDoubles;
 	dst->numChars=numChars;
+	
+	dst->intArray=0;
+	dst->doubleArray=0;
+	dst->charArray=0;
 	
 	if(dst->numInts!=0)
 		dst->intArray=(int *)calloc(dst->numInts,sizeof(int));

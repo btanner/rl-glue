@@ -43,8 +43,19 @@ void clearRLStruct(rl_abstract_type_t *dst);
 /*  calls clearRLStruct on dst, and then frees the pointers */
 void freeRLStructPointer(rl_abstract_type_t *dst);
 
+/*  Given a pointer to AN INITIALIZED rl_abstract_type_t, allocate arrays of the requested size and 
+    set numInts, numDoubles, numChars in the struct appropriately.  This code expects that numInts, numDoubles, and numChars inside
+	the struct are set appropriately, otherwise it will probably try to free up random memory.
+	
+	This will not leak memory if you pass it a structure with dynamic arrays in it
+*/
+void reallocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars);
+
 /*  Given a pointer to a rl_abstract_type_t, allocate arrays of the requested size and 
-    set numInts, numDoubles, numChars in the struct appropriately. */
+    set numInts, numDoubles, numChars in the struct appropriately. 
+
+	This will leak memory if you call it on a structure that has dynamic arrays in it already
+*/
 void allocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars);
 
 /* Create a new rl_abstract_type_t, allocate its arrays and its numInts/Doubles/Chars using allocateRLStruct, return the pointer */

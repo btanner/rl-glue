@@ -28,16 +28,16 @@
 This document has been laid out so that it can be used for: 
 \begin{enumerate}
 \item  {\bf RL-Glue what?} learning about RL-Glue at an abstract level
-\item {\bf Compatibility:} help convert existing and environments work with RL-Glue
-\item {\bf Plugging agents and environments together:} how to write experiment programs
-\item{\bf What function do I use to:} quick function reference for RL-Glue
+\item {\bf Compatibility:} converting existing agents and environments to RL-Glue
+\item {\bf Plugging agents and environments together:} writing experiment programs
+\item{\bf What function for...:} quick reference for RL-Glue functions
 \end{enumerate}
 
-In September 2008, the RL-Glue Project was split into two projects: RL-Glue and RL-Glue Extensions.
+In September 2008, immediately preceding RL-Glue 3.0 development, the RL-Glue Project was split into two projects: RL-Glue and RL-Glue Extensions.
 
 RL-Glue now only includes the RL-Glue interface and plugs for direct-compile C/C++ agents, environments and experiment programs.
 
-The RL-Glue Extensions Project contains codecs that allow C/C++, Java, Python, Matlab, and Lisp agents/environments/experiments to use RL-Glue.  This multi-language support was previously bundled with RL-Glue.  The reason for the split was partially to separate the technical details of using RL-Glue with a particular language from the high level overview of what RL-Glue does.
+The RL-Glue Extensions Project contains codecs that provide cross language support for RL-Glue (C/C++, Java, Python, Matlab, Lisp, etc).  This multi-language support was previously bundled with RL-Glue.  The reason for the split was partially to separate the technical details of using RL-Glue with a particular language from the high level overview of what RL-Glue does.
 
 This document is the high-level overview document: it contains contains {\bf NO} implementation specific technical details for writing programs.
 
@@ -83,7 +83,7 @@ In RL-Glue, the \textit{agent} is both the learning algorithm and the decision m
 
 The \textit{environment} is responsible for storing all the relevant details of the world, or problem of your experiment. The environment generates the observations/states/perceptions that are provided to the agent, and also determines the transition dynamics and rewards.  
 
-The experiment is the intermediary which (through RL-Glue) controls all communication between the agent and environment.  This structured separation is by design, division of the agent and environment both helps create modularized code and captures our intuitions about how much the agent and environment should ``know'' about each other.
+The \textit{experiment} is the intermediary which (through RL-Glue) controls all communication between the agent and environment.  This structured separation is by design, division of the agent and environment both helps create modularized code and captures our intuitions about how much the agent and environment should ``know'' about each other.
 
 The experiment program will be familiar to anyone who create reinforcement learning experiments. Akin to the typical main function in many reinforcement learning experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment {\bf x} number of times, perhaps doing {\bf y} trials of these {\bf x} episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section \ref{ref}) to assist in writing an experiment program.
 
@@ -108,7 +108,7 @@ In RL-Glue, Observations, Actions, and some other types are represented by struc
 \item list of ASCII characters
 \end{itemize}
 
-We have found that most action an observation types can easily be captured with this structure.  In a grid world, for example, the action can be an \texttt{int} list of length 1 (with valid values 0-3), corresponding to (N,S,E,W) and the observation can also be an \texttt{int} list of length 1 that maps to the agent's current state label (which is also the state of the environment, in this case). In a problem like Mountain Car, the actions are discrete (0-2) and the observation is the car's position and velocity (both real numbers). The action can be an \texttt{int} list of length 1 and the observation can be a \texttt{double} list of length two. Different implementation languages will use different languages constructors to encode observations and actions: please refer to the codec specific manual for your programming language of  choice for more details.
+We have found that most action and observation types can easily be captured with this structure.  In a grid world, for example, the action can be an \texttt{int} list of length 1 (with valid values 0-3), corresponding to (N,S,E,W) and the observation can also be an \texttt{int} list of length 1 that maps to the agent's current state label (which is also the state of the environment, in this case). In a problem like Mountain Car, the actions are discrete (0-2) and the observation is the car's position and velocity (both real numbers). The action can be an \texttt{int} list of length 1 and the observation can be a \texttt{double} list of length two. Different implementation languages will use different structures to encode observations and actions: please refer to the codec specific manual for your programming language of  choice for more details.
 
 \subsubsection{Environment Start}
 The \texttt{env\_start} function is very simple. The function takes no input and simply returns an observation. The \texttt{env\_start} function is the first function called at the beginning of an episode; \texttt{env\_start} chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudocode selects a random start state for a grid world and returns the observation:
@@ -121,12 +121,12 @@ The \texttt{env\_start} function is very simple. The function takes no input and
 
 
 \subsubsection{Environment Step}
-The other essential piece of a RL-Glue environment is the \texttt{env\_step} function. The \texttt{env\_step} function must take an action, as input, and return a observation, a reward and a termination flag. In most reinforcement learning problems, the  \texttt{env\_step} function updates the internal state of the environment, tests for end of episode and returns the new observation of state and current reward. In other words, step function encodes the state transition and reward functions. Keeping with the grid world example, the following would be a valid \texttt{env\_step} function:
+The other essential piece of a RL-Glue environment is the \texttt{env\_step} function. The \texttt{env\_step} function takes an action as input and returns an observation, a reward and a termination flag. In most reinforcement learning problems, the  \texttt{env\_step} function updates the internal state of the environment, tests for end of episode and returns the new observation of state and current reward. In other words, step function encodes the state transition and reward functions. Keeping with the grid world example, the following would be a valid \texttt{env\_step} function:
 \begin{verbatim}
 1. env_step(action) -> reward, observation, flag 
 2.      newState = updateState(action, state)
 3.      flag = isTerminal(newState)
-3.      reward = calculate reward for netState
+3.      reward = calculate reward for newState
 4.      set observation equal to newState
 5.      state = newState
 6. return reward, observation, flag
@@ -138,11 +138,11 @@ So thats it. Just fill in two functions and you have a valid RL-Glue environment
 \subsection{Additional Components Of A RL-Glue Environment}
 \label{envp2}
 
-So far we have only scratched the surface of what you can do with RL-Glue environments. Additional environment functions can be used to initialize data structures, get and set the state of the environment, get and set the random seed and send generic string messages to the environment. Before we go on describing these functions it is useful to understand the \texttt{task\_spec} language that is used, in RL-Glue, to encode basic information about environments. 
+So far we have only scratched the surface of what you can do with RL-Glue environments. Additional environment functions can be used to initialize data structures and flexibly communicate with the environment from the experiment through ascii messages.
 
 \subsubsection{Task Specification Language (\texttt{task\_spec})}
 \label{task}
-In an effort to provide the agent writer with simple and concise information about the environment, a \texttt{task\_spec} is passed from the environment, through RL-Glue, to the agent. The environment's init function (\texttt{env\_init}) encodes information about the problem in an ASCII string. The string is then passed to the agent's init function (\texttt{agent\_init}).  This information can also be used to check if an agent and environment pair are compatible. The agent is responsible for parsing any relevant information out of the \texttt{task\_spec} in the \texttt{agent\_init}  function. 
+In an effort to provide the agent writer with simple and concise information about the environment, some information, called the \texttt{task\_spec}, is provided by the environment for the agent.  The \texttt{task\_spec} encodes structural information about the structure of the observations, actions, and rewards. The environment's init function (\texttt{env\_init}) encodes this information as an ASCII string. The string is then passed to the agent's init function (\texttt{agent\_init}).  This information can also be used to check if an agent and environment pair are compatible. The agent is responsible for parsing any relevant information out of the \texttt{task\_spec} in the \texttt{agent\_init}  function. 
 
 More specifically, the \texttt{task\_spec} string encodes a version number, the number of observation action dimensions, the types of observations and actions, the ranges of the observations and actions and the min and max reward values. 
 
@@ -252,29 +252,32 @@ Once in a while you will find yourself wishing for the ability to add custom env
 8. return ""
 \end{verbatim}
 
-\subsubsection{Environment Get and Set Sate}
-It is often necessary to record the state of the environment and then reset the environment to a particular state to evaluate learning performance. For example, one might want to repeatedly evaluate the performance of a stochastic policy starting from a finite set of interesting states. The env\_get\_state\_key function returns a \texttt{state\_key} that can be used to restore the environment to the current state when the key was created. The \texttt{state\_key} is the same abstract data type as the observations and actions; the \texttt{state\_key} must be some combinations of lists of: \texttt{int}, \texttt{double}, and \texttt{character}. The \texttt{state\_key} can be as simple as an integer state label, or some high dimensional array, depending on the environment.  The env\_set\_state takes a \texttt{state\_key} as input and simply restores the environment to the state encoded in the key.
-
-Using these functions usually takes the agent out of the normal \textit{flow} of a learning experiment, because the agent's state transitions are no longer following the full sequence
-that the environment would generate.  Instead, the experiment program is able to help the agent jump around through the state space.
-
-The get and set state functions are meant to be used during a single learning experiment not across runs.
-
-For example, in an experiment program, you might want to do something like the following:
-\begin{verbatim}
-1. initialize RL-Glue
-2. until observation is interesting do next step of episode
-3. get state key for interesting observation from environment and store in stateKey
-4. for 100 steps
-5.      set environment state to stateKey (the interesting observation)
-6.      generate a sequence of experience
-\end{verbatim}
-
-Storing a \texttt{state\_key} in a file and then using that state key in a different experiment program or during a later run of the same experiment program is outside the intended 
-usage of the \texttt{env\_get\_state} and \texttt{env\_set\_state} functions. It may work with some RL-Glue environments and not others.
-        
-\subsubsection{Environment Get and Set Random Seed}
-It can be useful to record and set the seed of the environment's random number generator. Although the random seed can be well thought of as part of the state of the environment, there may be times when it is more convenient to access the random seed only with \texttt{env\_get\_random\_seed} and \texttt{env\_set\_random\_seed} functions. The environment get and set random functions return and take as input a random\_seed\_key, like the \texttt{state\_key} for setting states. Like the get and set state functions, \texttt{env\_get\_random\_seed} and \texttt{env\_set\_random\_seed} functions should not be used to store and set the random seed between distinct runs of RL-Glue.
+% 
+% This content has been removed because we are no longer have thse functions.
+%
+% \subsubsection{Environment Get and Set Sate}
+% It is often necessary to record the state of the environment and then reset the environment to a particular state to evaluate learning performance. For example, one might want to repeatedly evaluate the performance of a stochastic policy starting from a finite set of interesting states. The env\_get\_state\_key function returns a \texttt{state\_key} that can be used to restore the environment to the current state when the key was created. The \texttt{state\_key} is the same abstract data type as the observations and actions; the \texttt{state\_key} must be some combinations of lists of: \texttt{int}, \texttt{double}, and \texttt{character}. The \texttt{state\_key} can be as simple as an integer state label, or some high dimensional array, depending on the environment.  The env\_set\_state takes a \texttt{state\_key} as input and simply restores the environment to the state encoded in the key.
+% 
+% Using these functions usually takes the agent out of the normal \textit{flow} of a learning experiment, because the agent's state transitions are no longer following the full sequence
+% that the environment would generate.  Instead, the experiment program is able to help the agent jump around through the state space.
+% 
+% The get and set state functions are meant to be used during a single learning experiment not across runs.
+% 
+% For example, in an experiment program, you might want to do something like the following:
+% \begin{verbatim}
+% 1. initialize RL-Glue
+% 2. until observation is interesting do next step of episode
+% 3. get state key for interesting observation from environment and store in stateKey
+% 4. for 100 steps
+% 5.      set environment state to stateKey (the interesting observation)
+% 6.      generate a sequence of experience
+% \end{verbatim}
+% 
+% Storing a \texttt{state\_key} in a file and then using that state key in a different experiment program or during a later run of the same experiment program is outside the intended 
+% usage of the \texttt{env\_get\_state} and \texttt{env\_set\_state} functions. It may work with some RL-Glue environments and not others.
+%         
+% \subsubsection{Environment Get and Set Random Seed}
+% It can be useful to record and set the seed of the environment's random number generator. Although the random seed can be well thought of as part of the state of the environment, there may be times when it is more convenient to access the random seed only with \texttt{env\_get\_random\_seed} and \texttt{env\_set\_random\_seed} functions. The environment get and set random functions return and take as input a random\_seed\_key, like the \texttt{state\_key} for setting states. Like the get and set state functions, \texttt{env\_get\_random\_seed} and \texttt{env\_set\_random\_seed} functions should not be used to store and set the random seed between distinct runs of RL-Glue.
 
 \section{RL-Glue Agent Programs}
 \label{agent}
@@ -282,34 +285,31 @@ An RL-Glue agent can be as simple as a program the returns a random number on ev
 \subsection{Essential Components Of A RL-Glue Agent}
 \label{agentp1}
 
-An agent program is fully compatible with RL-Glue if initializes the action type and implements three functions: agent\_start, \texttt{agent\_step} and \texttt{agent\_end}. 
+An agent program is fully compatible with RL-Glue if it initializes the action type and implements three functions: \texttt{agent\_start}, \texttt{agent\_step} and \texttt{agent\_end}. 
 
 \subsubsection{Action Types}
-The three agent functions take observations and rewards as input and return actions. The observations and rewards are created by the environment, so the agent program needs to only read their values. The actions, however, must be defined by the agent. Just like observations actions can be any combination of a list of \texttt{int}, \texttt{double}, and \texttt{character} values.
+The primary agent functions take some combination of observations and rewards as input and return actions. The observations and rewards are created by the environment, so the agent program needs to only read their values. The actions, however, must be defined by the agent. Actions can be any combination of a list of \texttt{int}, \texttt{double}, and \texttt{character} values.
 
 \subsubsection{Agent Start}
 The \texttt{agent\_start} function selects the first action at the beginning of an episode based on the first observation from the environment. The \texttt{agent\_start} function does not receive a reward as input; \texttt{agent\_start} usually contains no learning update code. For example, the following function selects the first action based on the current value function estimate:
 \begin{verbatim}
 1. agent_start (observation) -> action
 2.      lastObservation=observation
-3.      for each action i
-4.           if highest valued action Q(observation,i)
-5.           then store i as chosenAction
-6. return chosenAction
+3.      for each action a
+4.           if highest valued action valueFunction(observation,a)
+5.           then store a as lastAction
+6. return lastAction
 \end{verbatim}
 
 \subsubsection{Agent Step}
-The \texttt{agent\_step} function encodes the heart of the agents' learning algorithm and action selection mechanism. At a minimum the step function must return an action every time it is called. In most learning agents, the step function queries the agent's action selection function and performs a learning update based on the input observation and reward. The following \texttt{agent\_step} function does a SARSA update on a tabular value function Q:
+The \texttt{agent\_step} function encodes the heart of the agents' learning algorithm and action selection mechanism. At a minimum the step function must return an action every time it is called. In most learning agents, the step function queries the agent's action selection function and performs a learning update based on the input observation and reward. The following \texttt{agent\_step} function shows pseudocode for a value update:
 \begin{verbatim}
 1. agent_step(reward, observation)-> action
-2.      newAction = egreedy(observation)
-3.      QofOld = Q(lastObservation,lastAction)
-4.      QofNew = Q(observation,newAction) 
-5.      Q(lastObservation,lastAction) = QofOld + alpha*[reward + gamma*QofNew - QofOld]
-6.      lastObservation = observation
-7.      lastAction = newAction
-8.      set chosenAction equal to newAction
-9. return chosenAction
+2.      update(valueFunction, lastObservation, lastAction, reward, observation)
+3.      newAction = select_action(observation, valueFunction)
+4.      lastObservation = observation
+5.      lastAction = newAction
+6. return newAction
 \end{verbatim}  
 Notice that the agent program must explicitly store the observation and action from the previous time step. RL-Glue does not make the history of actions, observations and rewards available to the agent or environment.
 
@@ -319,8 +319,7 @@ In an episodic task, the environment enters a terminal state that ends the episo
 Continuing with the SARSA example:
 \begin{verbatim}
 1. agent_end (reward) 
-2.      QofOld = Q(lastObservation,lastAction)
-3.      Q(lastObservation,lastAction) = QofOld + alpha*[reward - QofOld]
+2.      update(valueFunction, lastObservation, lastAction, reward)
 \end{verbatim}
 
 
@@ -331,7 +330,7 @@ The \texttt{agent\_end} function does not receive the final observation from the
 You now can construct a basic RL-Glue agent. RL-Glue agents, like environments, can be made more useful with the addition of a few optional agent functions. This section describes how to use initialization, cleanup and generic message functions.
 
 \subsubsection{Agent Initialization and Cleanup}
-Agent programs, like environments, often need to allocate and free various data structures. The \texttt{agent\_init}  and agent\_cleanup functions are called at the beginning and end of a learning experiment, respectively. The \texttt{agent\_init}  function receives the \texttt{task\_spec} string as input. The \texttt{agent\_init}  function usually parses the \texttt{task\_spec} and stores various information encoded in the string. For example, after parsing the Task Specification, the \texttt{agent\_init}  function can then initialize the value function array to the size state space using the number of states from the Task Specification. Remember the \texttt{task\_spec} is not required and could just be an empty string.      
+Agent programs, like environments, often need to allocate and free various data structures. The \texttt{agent\_init}  and \texttt{agent\_cleanup} functions are called at the beginning and end of a learning experiment, respectively. The \texttt{agent\_init}  function receives the \texttt{task\_spec} string as input. The \texttt{agent\_init}  function usually parses the \texttt{task\_spec} and stores various information encoded in the string. For example, after parsing the \texttt{task\_spec}, the \texttt{agent\_init}  function can then initialize the value function array to the size state space using the number of states from the \texttt{task\_spec}. Remember the \texttt{task\_spec} is not required and could just be an empty string.      
 
 \subsubsection{Agent Message}
 The \texttt{agent\_message} function is used to send an arbitrary string message to the agent program. This function can be used to change agent parameters, notify the agent that the exploration phase is over, and request the name of the agent program, for example.  People have created whole protocols that use \texttt{agent\_message} to set agent learning parameters, query their value functions, and more.
@@ -370,7 +369,7 @@ At a minimum the experiment program must call \texttt{RL\_init} and \texttt{RL\_
 \end{verbatim}
 This experiment program initializes the agent and environment (\texttt{RL\_init}), calls the start functions of the agent and environment (\texttt{RL\_start}) and then executes a 100 or less step episode. 
 
-The \texttt{RL\_step} function calls the \texttt{env\_step} function passing it the most recent agent action (in this case from agent\_start). The \texttt{env\_step} function returns the new observation, reward and terminal flag. If the flag {\bf is not} set the \texttt{agent\_step} function is called with the new observation and reward as input arguments. The action returned by \texttt{agent\_step} is stored by RL-Glue until the next call to RL\_step. If the flag {\bf is} set, the \texttt{agent\_end} function is called with the reward as input. This process continues until either the flag is set or 100 steps are completed. 
+The \texttt{RL\_step} function calls the \texttt{env\_step} function passing it the most recent agent action (in this case from \texttt{agent\_start}). The \texttt{env\_step} function returns the new observation, reward and terminal flag. If the flag {\bf is not} set the \texttt{agent\_step} function is called with the new observation and reward as input arguments. The action returned by \texttt{agent\_step} is stored by RL-Glue until the next call to RL\_step. If the flag {\bf is} set, the \texttt{agent\_end} function is called with the reward as input. This process continues until either the flag is set or 100 steps are completed. 
 
 Using the \texttt{RL\_step} function gives the experiment designer access to all the data produced during an episode; however, it is often more convenient to use the \texttt{RL\_episode} function when step-level control is not needed. Lines 5 and 6, in the above experiment program, can be replaced by a single call to RL\_episode(100). If the input to \texttt{RL\_episode} is zero, control will return to the experiment program if and only if the environment enters a terminal state (ie terminal flag from the \texttt{env\_step} function is set to true).
 
@@ -380,10 +379,10 @@ Putting these new functions together we can write a more useful experiment progr
 \begin{verbatim}
 1. RL_init()
 2. theReturn = 0
-3. for 1 = 1:100
+3. for 1...100
 4.      RL_episode(1000)
 5.      theReturn += RL_return()
-6.  Print theReturn/100
+6. Print theReturn/100
 7. RL_cleanup()
 \end{verbatim}
 The above experiment program runs 100 episodes, each with max length 1000, and computes the average cumulative reward per episode.
@@ -392,23 +391,23 @@ The above experiment program runs 100 episodes, each with max length 1000, and c
 \label{expp2}
 
 
-As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are accessed through calls to the RL-Glue interface from the experiment program. For example, to send a message to the agent use \texttt{RL\_agent\_message}. To get the state key from the environment use \texttt{RL\_get\_state}. The pattern is simple to follow:
-\begin{verbatim}
-     RL_set_state() -> env_set_state()
-     RL_get_random_seed() -> env_get_random_seed()
-     RL_set_random_seed() -> env_set_random_seed()
-     RL_env_message() -> env_message
-\end{verbatim}
-
+% As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are accessed through calls to the RL-Glue interface from the experiment program. For example, to send a message to the agent use \texttt{RL\_agent\_message}. To get the state key from the environment use \texttt{RL\_get\_state}. The pattern is simple to follow:
+% \begin{verbatim}
+%      RL_set_state() -> env_set_state()
+%      RL_get_random_seed() -> env_get_random_seed()
+%      RL_set_random_seed() -> env_set_random_seed()
+%      RL_env_message() -> env_message
+% \end{verbatim}
+% 
 \subsubsection{Training/Testing Phase Experiment}
 We can now produce more advanced experiment programs that might be used in typical reinforcement learning research:
 \begin{verbatim}
 1. RL_init()
 2. numSteps = 0
-3. for 1 = 1:1000
+3. for 1...1000
 4.      RL_episode(1000)
 5. RL_agent_message("freezeAgentPolicy")
-6. for 1 = 1:100
+6. for 1...100
 7.      RL_episode(1000)
 8.      numSteps += RL_num_steps()
 9.  Print numSteps/100
@@ -422,7 +421,7 @@ Feel free to combine, mix and match the various RL-Glue interface functions. You
 
 \section{Command and Function Reference}
 \label{ref}
-Once your comfortable with the basics and you have written a few agents and environments you may often find yourself wondering ``I need to do {\bf X}, what function should I use?''. You may also wonder what is the ``intended purpose'' of a particular RL-Glue function, when you are reviewing someone else's agent or environment code. This section provides a complete listing of all agent, environment and RL-Glue interface functions for quick reference.
+Once you are comfortable with the basics and you have written a few agents and environments you may often find yourself wondering ``I need to do {\bf X}, what function should I use?''. You may also wonder what is the ``intended purpose'' of a particular RL-Glue function, when you are reviewing someone else's agent or environment code. This section provides a complete listing of all agent, environment and RL-Glue interface functions for quick reference.
 \subsection{Agent Functions}
  
 Every agent must implement all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue to directly call these functions.
@@ -475,25 +474,25 @@ For a continuing task this is done once. For an episodic task, this is done at t
      env_step(action) -> reward, observation, terminal\end{verbatim}
 Complete one step in the environment. Take the action passed in and determine what the reward and next state are for that transition.
 
-\begin{verbatim}
-     env_get_state() -> state_key
-\end{verbatim}
-The \texttt{state\_key} is a compact representation of the current state of the environment such that at any point in the future, provided with the state\_key, the environment could return to that state. Note that this does not include the agent's value function, it is merely restoring the details of the environment. For example, in a static grid world this would be as simple as the position of the agent.
-
-\begin{verbatim}
-     env_set_state(state_key)\end{verbatim}
-Given the state\_key, the environment should return to it's exact formation when the \texttt{state\_key} was obtained. 
-
-\begin{verbatim}
-     env_get_random_seed() -> random_seed_key
-\end{verbatim}
-Causes the environment to `save' the state of the random number generator such that it could be restored upon presentation of \texttt{random\_seed\_key}.
-
-\begin{verbatim}
-     env_set_random_seed(random_seed_key)
-\end{verbatim}
-Sets the random seed used by the environment. Typically it is advantageous for the experiment program to control the randomness of the environment.  Usually
-this function would only be called with a value previously generated by \texttt{env\_get\_random\_seed}. \texttt{env\_set\_random\_seed} can be used in conjunction with \texttt{env\_set\_state} to save and restore a \texttt{random\_seed} such that the environment will behave exactly the same way it has previously when it was in this state and given the same actions.
+% \begin{verbatim}
+%      env_get_state() -> state_key
+% \end{verbatim}
+% The \texttt{state\_key} is a compact representation of the current state of the environment such that at any point in the future, provided with the state\_key, the environment could return to that state. Note that this does not include the agent's value function, it is merely restoring the details of the environment. For example, in a static grid world this would be as simple as the position of the agent.
+% 
+% \begin{verbatim}
+%      env_set_state(state_key)\end{verbatim}
+% Given the state\_key, the environment should return to it's exact formation when the \texttt{state\_key} was obtained. 
+% 
+% \begin{verbatim}
+%      env_get_random_seed() -> random_seed_key
+% \end{verbatim}
+% Causes the environment to `save' the state of the random number generator such that it could be restored upon presentation of \texttt{random\_seed\_key}.
+% 
+% \begin{verbatim}
+%      env_set_random_seed(random_seed_key)
+% \end{verbatim}
+% Sets the random seed used by the environment. Typically it is advantageous for the experiment program to control the randomness of the environment.  Usually
+% this function would only be called with a value previously generated by \texttt{env\_get\_random\_seed}. \texttt{env\_set\_random\_seed} can be used in conjunction with \texttt{env\_set\_state} to save and restore a \texttt{random\_seed} such that the environment will behave exactly the same way it has previously when it was in this state and given the same actions.
 
 \begin{verbatim}                 
      env_cleanup()\end{verbatim}
@@ -589,26 +588,26 @@ Return the number of steps elapsed in the current or just completed episode.
           agent_cleanup()
 \end{verbatim}
 Provides an opportunity to reclaim resources allocated by RL\_init.
-\begin{verbatim}
-     RL_set_state(State_key)
-          env_set_state(State_key)    
-\end{verbatim}
-Provides an opportunity to reset the state (see env\_set\_state for details).
-\begin{verbatim}
-     RL_set_random_seed(Random_seed_key)
-          env_set_random_seed(Random_seed_key)
-\end{verbatim}
-Provides an opportunity to reset the random seed key (see \texttt{env\_set\_random\_seed} for details).
-\begin{verbatim}
-     RL_get_state() -> State_key
-          return env_get_state()  
-\end{verbatim}
-Provides an opportunity to extract the state key from the environment (see env\_get\_state for details).
-\begin{verbatim}
-     RL_get_random_seed() -> Random_seed_key
-          return env_get_random_seed()   
-\end{verbatim}
-Provides an opportunity to extract the random seed key from the environment (see \texttt{env\_get\_random\_seed} for details).               
+% \begin{verbatim}
+%      RL_set_state(State_key)
+%           env_set_state(State_key)    
+% \end{verbatim}
+% Provides an opportunity to reset the state (see env\_set\_state for details).
+% \begin{verbatim}
+%      RL_set_random_seed(Random_seed_key)
+%           env_set_random_seed(Random_seed_key)
+% \end{verbatim}
+% Provides an opportunity to reset the random seed key (see \texttt{env\_set\_random\_seed} for details).
+% \begin{verbatim}
+%      RL_get_state() -> State_key
+%           return env_get_state()  
+% \end{verbatim}
+% Provides an opportunity to extract the state key from the environment (see env\_get\_state for details).
+% \begin{verbatim}
+%      RL_get_random_seed() -> Random_seed_key
+%           return env_get_random_seed()   
+% \end{verbatim}
+% Provides an opportunity to extract the random seed key from the environment (see \texttt{env\_get\_random\_seed} for details).               
 \begin{verbatim}
      RL_agent_message(input_message_string) -> output_message_string
           return agent_message(input_message_string)
@@ -626,7 +625,7 @@ Version 3.0 of RL-Glue represents a large series of updates with the intention o
 reinforcement learning community.  As part of that process, we made some pretty big changes.
 
 \subsection{The Codec Split}
-The codecs (including the C/C++ codec) have been split from the main RL-Glue project.  Each codec package is now more independently, and they each may offer something different to the user.  However, as always, they layer on RL-Glue.  The root page for all of the codecs is:\newline
+The codecs (including the C/C++ codec) have been split from the main RL-Glue project.  Each codec package is now more independent, and they each may offer something different to the user.  However, as always, they layer on RL-Glue.  The root page for all of the codecs is:\newline
 \htmladdnormallink{http://glue.rl-community.org/Home/Extensions}{http://glue.rl-community.org/Home/Extensions}
 
 As usual, you don't need to change your code depending on how it will be used.  The code for an agent, environment, or experiment is identical no matter if you will run it using sockets or directly compiled together.  The only difference is what library you link against.
@@ -640,21 +639,21 @@ When you download and install the RL-Glue project, you get a few artifacts:
 \begin{description}
 	\item [rl\_glue executable socket server] The server for running socket-based experiments.
 	\item [librlglue] A C library that can be linked against for creating executables where the agent, environment, and experiment program are all written in C or C++. These experiments have virtually no rl-glue calling overhead.
+	\item [librlgluenetdev] A C library that can includes the network code that is used by the rl\_glue socket server.  This code is re-used by the C/C++ network codec and by other custom codecs such as the Atari project.
+	\item [librlutils] A C library that provides implementations for some handy utility functions.  This code is expected to be re-used by most C/C++ agents and environments, either direct-compile or through the C/C++ network codec.
 	\item [Agent/Environment/Experiment Headers]  Four header files: RL\_glue.h Agent\_common.h, Environment\_common.h, and RL\_common.h. 
 \end{description}
  
 The way that they should be included in your agents/environments/experiments is like this:
 \begin{verbatim}
-<rlglue/RL_common.h>             /* Datastructures                                     */
-<rlglue/RL_glue.h>               /* Experiment (RL_) functions for experiments 
-                                  (includes RL_common)                                 */
-<rlglue/Agent_common.h>          /* Agent (agent_) functions (includes RL_common)      */
-<rlglue/Environment_common.h>    /* Environment (env_) functions (includes RL_common)  */
-<rlglue/Environment_common.h>    /* Environment (env_) functions (includes RL_common)  */
-<rlglue/utils/C/RLStruct_util.h> /* Handy utility functions for copying/initing structs*/
+<rlglue/RL_common.h>            /* Datastructures                                     */
+<rlglue/RL_glue.h>              /* (RL_) functions for experiments (includes RL_common)                                 */
+<rlglue/Agent_common.h>         /* Agent (agent_) functions (includes RL_common)      */
+<rlglue/Environment_common.h>   /* Environment (env_) functions (includes RL_common)  */
+<rlglue/utils/C/RLStruct_util.h>/* Handy utility functions for copying/initing structs*/
 \end{verbatim} 
 
-Generally, each of agent/env/experiment should only have to include one of these files.  You'll probably never include RL\_common.h, but it is needed by the others.
+Generally, each of agent/env/experiment should only have to include one of the glue or common files.  You'll probably never include RL\_common.h, but it is needed by the others.
 
 \subsubsection{RL-Glue-Extensions Project :: C/C++ Codec}
 The \htmladdnormallink{C/C++ codec}{http://glue.rl-community.org/Home/Extensions/c-c-codec} gives you libraries that can be used to build stand-alone socket-based agents, environment, and experiments.  The C Codec is in the rl-glue-ext project and is expected to change more frequently than the main RL-Glue project.
@@ -674,10 +673,17 @@ We're not manually writing Makefiles anymore!  We've moved both RL-Glue and the 
 \subsection{API Changes}
 All of the API changes have been included in all of the codecs.
 
+%%
+%% ADD SECTION HERE
+%%
+
 \subsubsection{RL\_Freeze and Agent\_Freeze}
 The freeze function were the first in a long series of ``special'' functions that some people wanted RL-Glue to support.  The long term solution to special methods is the messaging system, \texttt{RL\_agent\_message} and RL\_env\_message. With the messaging system you can create any protocol you want between your experiment and agent or experiment and environment.
 
 So, to reduce the clutter and kruft (cruft?) of the API, we've removed Freeze.  How do you unfreeze anyways?
+
+\subsubsection{RL\_set/get\_random\_seed/state}
+These functions have existed to control randomization and initialization of environments for a long time.  To this point, exactly how they were to be used was never standardized, and it felt like the right time to remove them and streamline the interface.  They have been removed.  We expect them to re-surface with specific use cases in a future optional \texttt{RL\_env\_message} message protocol.
 
 \subsubsection{RL\_Episode}
 Csaba Szepesvari made the request at some point that \texttt{RL\_Episode} should let you know whether it ended because the time step limit expired, or because the episode ended normally.  We now return the value of the terminal flag from the last \texttt{env\_step} of the episode. If the flag is set to 1, then the episode terminated normally, if not, the timeout ended the episode.  
@@ -690,7 +696,7 @@ The main RL-Glue C/C++ code and the codecs have each undergone different changes
 Please refer to the specific technical manual for the language of interest for all the details.
 
 \subsubsection{charArray!}
-Some people have found the interface of abstract types that are arrays of \texttt{double} and \texttt{int} a little bit too constricting.  We've added a third array, this time of \texttt{char}.  Now people can push strings and char arrays of anything they want through observations, action, \texttt{state\_key} types, etc.
+Some people have found the interface of abstract types that are arrays of \texttt{double} and \texttt{int} a little bit too restrictive.  We've added a third array, this time of \texttt{char}.  Now people can push strings and char arrays of anything they want through observations and actions.
 
 The rl\_abstract\_type\_t now looks like:
 \begin{verbatim}
@@ -705,7 +711,7 @@ typedef struct
 } rl_abstract_type_t;
 \end{verbatim}
 
-Keep in mind that charArray is an array of characters.  It is not necessarily null terminated.  We don't enforce null termination. Remember, 3 chars takes up 3 array spots, but ``123'' takes up 4 (`\\0' at the end).
+Keep in mind that charArray is an array of characters.  It is not necessarily null terminated.  We don't enforce null termination. Remember, 3 chars takes up 3 array spots, but ``123'' takes up 4 (`$\backslash$0' at the end).
 
 If you do the following, bad things will probably happen if the char array is not null terminated:
 \begin{verbatim}
@@ -728,16 +734,19 @@ First, you should join the RL-Glue Google Group Mailing List:\newline
 We're happy to answer any questions about RL-Glue.  Of course, try to search through previous messages first in case your question has been answered before.
 
 \subsection{Where did the task spec parsers go?}
-The \texttt{task\_spec} language has always been a bit of a sensitive topic, and writing good parsers for the task spec has never been easy. We're currently considering slightly changing the task spec format, to make
-it easier to read and easier to parse.  After that, we'll need (\textbf{Chance to Contribute!}) a parser for each codec.  We won't need to change the main RL-Glue project, but we will need to re-release all of the 
-codec software.  So, we're waiting on deciding on changes to the language and implementing the parsers.
+The \texttt{task\_spec} language has always been a bit of a sensitive topic, and writing good parsers for the task spec has never been easy. We have recently semi-finalized on a new \texttt{task\_spec} language in November 2008.  The final release of RL-Glue 3.0 and all of the codecs will include up to date \texttt{task\_spec} parsers, they are just not ready yet.  If you would like to help us out, please let us know.
+
+See the task spec page for more information:\newline
+\url{http://glue.rl-community.org/Home/rl-glue/task-spec-language}
+
 
 \subsection{Can I write my agents in $<$ insert language here $>$}
 Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:\newline
-\htmladdnormallink{http://glue.rl-community.org/Home/Extensions}{http://glue.rl-community.org/Home/Extensions}
+\url{http://glue.rl-community.org/Home/Extensions}
 
 \subsection{Does RL-Glue support multi-agent reinforcement learning?}
- No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  
+ No. RL-Glue is designed for single agent reinforcement learning. At present we are not planning a multi-agent extension of RL-Glue. We envision that this would be a separate project with a different audience and different objectives.  However, more recently some very reasonable proposals have been put forward, so you never know.  Let us know what you think in the RL-Glue Google group:\newline
+\url{http://groups.google.com/group/rl-glue}
  
 \subsection{Why isn't the RL-Glue interface object oriented?}
 RL-Glue is meant to be a low level protocol for connecting agents, environments, and experiments.  These interactions can
@@ -765,7 +774,7 @@ outside of the environment, the state stays within the  environment. The \texttt
 
 
 \subsection{Can RL-Glue handle sampling the same trajectory a number of times consecutively?}
-This can be done in RL-Glue using a couple of optional functions. Using env\_get\_state one can get a key for current environmental state. Then use \texttt{env\_set\_state} to initialize the environment to a particular state  given the key. Using \texttt{env\_get\_random\_seed} the user can acquire the random seed used by the environment, and reset it using \texttt{env\_set\_random\_seed} in the same fashion as getting and setting state described above. 
+This behavior can be achieved by writing custom functionality using \texttt{RL\_env\_message}.  The final release of RL-Glue 3.0 will include an example implementation of this functionality.
 
 \subsection{Why is there no RL\_freeze, RL\_unfreeze or RL\_frozen?}
 The functionality of Freeze can easily be replicated through \texttt{RL\_agent\_message} and \texttt{agent\_message}.  There are literally a hundred similar methods that would 
