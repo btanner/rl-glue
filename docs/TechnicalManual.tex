@@ -77,7 +77,7 @@ For example, maybe we want to install RL-Glue to \texttt{/Users/joe/glue}.  The 
 	>$ make install
 \end{verbatim}
 
-Provided everything goes well, the headers, libraries, and binaries have been respectively installed to\newline
+Provided everything goes well, the headers, libraries, binaries have been respectively installed to\newline
 \texttt{/Users/joe/glue/include}\newline
 \texttt{/Users/joe/glue/lib}\newline
 \texttt{/Users/joe/glue/bin}
@@ -103,10 +103,13 @@ You'll need to make sure that either you haven't reconfigured the directory you 
 
 That's it!  This will remove all of the headers, libraries, and binaries from \texttt{/Users/joe/glue}.
 
+You could also just delete the \texttt{glue} directory, but that may also remove related files and libraries in addition to RL-Glue (codec support files and such that you may have installed).
+
 \section{Agent, Environments, and Experiments}
 We have provided a skeleton agent, environment, and experiment program that can be compiled together and run as an experiment.
-This is a good starting point for projects that you may write in the future.  We'll start by explaining how to compile and
-run the experiment, then we'll talk in more detail about each part.
+This is a good starting point for projects that you may write in the future.  For now, the skeleton is extremely simple.  Before the official RL-Glue 3.0 release, we will add a complete sample learning agent this and each codec.
+
+We'll start by explaining how to compile and run the experiment, then we'll talk in more detail about each part.
 
 \subsection{Compiling and Running Skeleton}
 If RL-Glue has been installed in the default location, \texttt{/usr/local}, then you can compile and run the experiment like:
@@ -487,6 +490,17 @@ const char* agent_message(const char* inMessage) {
 \end{verbatim}
 
 
+
+\section{Socket Connections and Codecs}
+When using socket mode: the agent, environment, and experiment programs communicate with the \texttt{rl\_glue} server over sockets.  This can be either within a single machine, or over the Internet.
+
+RL-Glue use TCP/IP connections between all of the components.  RL-Glue operates in lock-step, not asynchronously.  There is no time-out mechanism, RL-Glue will wait for an agent or environment to return from a remote function call indefinitely unless the connection is terminated.  This is by design.   By default, RL-Glue listens (and codecs connect to) port $4096$ on \texttt{localhost}.
+
+In the future, an advanced technical guide will be available that describes how to write a codec to allow the language of your choice to connect to RL-Glue over sockets.  This will be an integral part of the growth and standardization of RL-Glue to a growing number of platforms and languages.  Until then, please contact us directly on the RL-Glue mailing list for further information:\\
+\url{http://groups.google.com/group/rl-glue}
+
+It's not impossible!  At least one enterprising individual, Gabor Balazs, has written a codec (LISP) without any direct help from the core RL-Glue team.  
+
 \section{RL-Glue C/C++ Specification Reference}
 This section will explain how the RL-Glue types and functions are defined for C/C++.  This is important both for direct-compile experiments, and for components that
  use the C/C++ network codec.
@@ -508,7 +522,7 @@ The simple types are:
 
 \subsubsection{Structure Types}
 \label{sec:structure-types}
-All of the major structure types (observations, actions, random seed keys, and state keys) are typedef'd to \texttt{\rat}.
+All of the major structure types (observations, actions) are typedef'd to \texttt{\rat}.
 
 \begin{verbatim}
 typedef struct
@@ -526,8 +540,6 @@ The specific names and definitions of the structure types are:
 \begin{verbatim}
     typedef rl_abstract_type_t observation_t;
     typedef rl_abstract_type_t action_t;
-    typedef rl_abstract_type_t random_seed_key_t;
-    typedef rl_abstract_type_t state_key_t;
 \end{verbatim}
 
 The composite structure types are:
@@ -541,7 +553,7 @@ The composite structure types are:
 	    double reward;
 	    const observation_t *observation;
 	    int terminal;
-	} reward_observation_t;
+	} reward_observation_terminal_t;
 
 	typedef struct {
 	    double reward;
@@ -557,7 +569,7 @@ The type names are:
     observation_t
     action_t
     observation_action_t
-    reward_observation_t
+    reward_observation_terminal_t
     reward_observation_action_t
 \end{verbatim}
 
@@ -579,12 +591,8 @@ All environments \textbf{should implement} these functions, located in \texttt{r
 \begin{verbatim}
 	const char* env_init();
 	const observation_t* env_start();
-	const reward_observation_t* env_step(const action_t* action);
+	const reward_observation_terminal_t* env_step(const action_t* action);
 	void env_cleanup();
-	void env_set_state(const state_key_t* stateKey);
-	void env_set_random_seed(const random_seed_key_t* randomKey);
-	const state_key_t* env_get_state();
-	const random_seed_key_t* env_get_random_seed();
 	const char* env_message(const char * message);
 \end{verbatim}
 
@@ -603,11 +611,6 @@ All experiments \textbf{can call} these functions, located in \texttt{rlglue/RL\
 	int RL_num_steps();
 	int RL_num_episodes();
 	int RL_episode(unsigned int num_steps);
-	void RL_set_state(const state_key_t* stateKey);
-	void RL_set_random_seed(const random_seed_key_t* randomKey);
-	const state_key_t* RL_get_state();
-	const random_seed_key_t* RL_get_random_seed();
-
 \end{verbatim}
 
 \subsubsection{RLUtils Library Functions}
@@ -618,43 +621,32 @@ You can get access to these functions by linking to libRLUtils (\texttt{-lrlutil
 #include <rlglue/utils/C/RLStruct_util.h>
 \end{verbatim}
 
+Prototypes with documentation can be found \htmladdnormallink{here}{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/utils/C/RLStruct_util.h}.
+
 \begin{verbatim}
-/*	Copies all of the data from src to dst, freeing and allocating only if necessary*/
-void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst);
+	void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst);
 
-/*  
-    Frees the 3 data arrays if they are not NULL, sets them to NULL, 
-    and sets numInts, numDoubles, numChars to 0
-*/
-void clearRLStruct(rl_abstract_type_t *dst);
+	void clearRLStruct(rl_abstract_type_t *dst);
 
-/*  calls clearRLStruct on dst, and then frees the dst pointer */
-void freeRLStructPointer(rl_abstract_type_t *dst);
+	void freeRLStructPointer(rl_abstract_type_t *dst);
 
-/*
-    Given a pointer to a rl_abstract_type_t, allocate arrays of the requested sizes,
-    set the contents of the arrays to 0, and set numInts, numDoubles,
-    numChars in the struct appropriately.
-*/
-void allocateRLStruct(rl_abstract_type_t *dst, 
-                      const unsigned int numInts,
-                      const unsigned int numDoubles,
-                      const unsigned int numChars);
+	void reallocateRLStruct(rl_abstract_type_t *dst, 
+                            const unsigned int numInts,
+                            const unsigned int numDoubles,
+                            const unsigned int numChars);
 
-/*
-    Create a new rl_abstract_type_t, allocate its arrays 
-    and its numInts/Doubles/Chars using allocateRLStruct, 
-    return the pointer
-*/
+	void allocateRLStruct(rl_abstract_type_t *dst, 
+                          const unsigned int numInts,
+                          const unsigned int numDoubles, 
+                          const unsigned int numChars);
+
 rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts,
                                             const unsigned int numDoubles,
                                             const unsigned int numChars);
 
-/* 
-    Create a new rl_abstract_type_t pointer that is a copy
-    of an existing one (src)
-*/
 rl_abstract_type_t *duplicateRLStructToPointer(const rl_abstract_type_t *src);
+
+
 \end{verbatim}
 
 
@@ -703,15 +695,9 @@ This is a big one. We revamped all of the type names for C/C++.  We made them al
 Instead it'll be:\newline
 \texttt{observation\_t observation;}
 
-We think the latter is easier to read.  We've also stopped using \texttt{typdef} for \texttt{reward}, \texttt{task\_spec}.  A first release of RL-Glue 3.0 and the C/C++ codec had new types \texttt{message\_t} and \texttt{terminal\_t}: these have been removed also.  Feedback from the community was that people preferred to see the actual types instead of these surrogates.
+We think the latter is easier to read.  We've also stopped using \texttt{typdef} for \texttt{reward}, \texttt{task\_spec}.  A first beta of RL-Glue 3.0 and the C/C++ codec had new types \texttt{message\_t} and \texttt{terminal\_t}: these have been removed also.  Feedback from the community was that people preferred to see the actual types instead of these surrogates.
 
-If you really like the old type names, we've made it a little easier for your to keep your them.  There is a file you can include which will define all the old, ugly type names. This is good news because it means you can migrate to the new type names at your leisure.
-\begin{verbatim}
-#include <rlglue/legacy_types.h>
-\end{verbatim}
-
-You can find all the old and new type names here:\newline
-\htmladdnormallink{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy\_types.h}{http://code.google.com/p/rl-glue/source/browse/trunk/src/rlglue/legacy\_types.h}
+The first beta of RL-Glue 3.0 also had a file called \texttt{legacy\_types.h} that would allow you to use the old type names.  This has been removed as of Release Candidate 4 (RC4) because of the major overhaul from structures to pointers (see Section \ref{pointers}). Sorry. 
 
 \subsection{Composite Structures}
 
@@ -734,6 +720,7 @@ naming scheme: we will fully name each member of these composite structs as \tex
 
 
 \subsection{Const-Correctness and the Pointer Revolution}
+\label{pointers}
 This is another big one.  This was not originally planned for RL-Glue 3.0, and it breaks backward compatibility with RL-Glue
 2.x in a serious way.  However, the payoff we hope to get by making the code easier to understand and debug should be 
 worth the effort in the long run.
@@ -747,7 +734,7 @@ first revision of RL-Glue 3.0 we updated to:\newline
 
 Notice in this version that it might not be intuitive whether \texttt{r}, the reward, is a structure or a primitive type.  
 Safety is also not obvious: can the agent expect that the returned action will be changed by RL-Glue?  Should the agent 
-release the information in the observation when finished with it? 
+\texttt{free} the dynamic arrays in \texttt{o} when finished with it? 
 
 With the second pass of updates, we've taken the next leap to:\newline
 \texttt{const action\_t* agent\_step(double reward, const observation\_t* observation);}
@@ -797,6 +784,12 @@ This tells you that the name of the release you have installed is \texttt{3.0-RC
 specific build from subversion is \texttt{r882}.
 
 
+\subsection{Error: ``C compiler cannot create executables'' when building RL-Glue}
+
+We have seen this on a fresh Linux Ubuntu machine.  Try installing g++:
+\begin{verbatim}
+> $ sudo apt-get install g++
+\end{verbatim}
 
 
 \section{Credits and Acknowledgements}

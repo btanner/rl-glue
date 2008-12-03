@@ -34,34 +34,61 @@ extern "C" {
 *	Created some functions for people not super savvy with C that might make using this codec a little easier.
 */
 
-/*	Copies all of the data from src to dst, freeing and allocating only if necessary*/
+/*	
+Copies all of the data from src to dst, freeing and allocating only if 
+necessary
+*/
 void replaceRLStruct(const rl_abstract_type_t *src, rl_abstract_type_t *dst);
 
-/*	Frees the 3 arrays if they are not null, sets them to null, and sets numInts, numDoubles, numChars to 0*/
+/*	
+Frees the 3 arrays if they are not null, sets them to null, and sets 
+numInts, numDoubles, numChars to 0
+*/
 void clearRLStruct(rl_abstract_type_t *dst);
 
-/*  calls clearRLStruct on dst, and then frees the pointers */
+/*  
+calls clearRLStruct on dst, and then frees the pointers
+*/
 void freeRLStructPointer(rl_abstract_type_t *dst);
 
-/*  Given a pointer to AN INITIALIZED rl_abstract_type_t, allocate arrays of the requested size and 
-    set numInts, numDoubles, numChars in the struct appropriately.  This code expects that numInts, numDoubles, and numChars inside
-	the struct are set appropriately, otherwise it will probably try to free up random memory.
+/*  
+Given a pointer to AN INITIALIZED rl_abstract_type_t, allocate arrays of 
+the requested size and set numInts, numDoubles, numChars in the struct 
+appropriately.  This code expects that numInts, numDoubles, and numChars 
+inside the struct are set appropriately, otherwise it will probably try 
+to free up random memory.
 	
-	This will not leak memory if you pass it a structure with dynamic arrays in it
+This will not leak memory if you pass it a structure with dynamic arrays in it
 */
-void reallocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars);
+void reallocateRLStruct(rl_abstract_type_t *dst, 
+						const unsigned int numInts,
+						const unsigned int numDoubles,
+						const unsigned int numChars);
 
-/*  Given a pointer to a rl_abstract_type_t, allocate arrays of the requested size and 
-    set numInts, numDoubles, numChars in the struct appropriately. 
+/*  
+Given a pointer to a rl_abstract_type_t, allocate arrays of the requested 
+size and set numInts, numDoubles, numChars in the struct appropriately. 
 
-	This will leak memory if you call it on a structure that has dynamic arrays in it already
+This will leak memory if you call it on a structure that has dynamic 
+arrays in it already
 */
-void allocateRLStruct(rl_abstract_type_t *dst, const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars);
+void allocateRLStruct(rl_abstract_type_t *dst, 
+					const unsigned int numInts,
+					const unsigned int numDoubles, 
+					const unsigned int numChars);
 
-/* Create a new rl_abstract_type_t, allocate its arrays and its numInts/Doubles/Chars using allocateRLStruct, return the pointer */
-rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts, const unsigned int numDoubles, const unsigned int numChars);
+/*	
+Create a new rl_abstract_type_t, allocate its arrays and its 
+numInts/Doubles/Chars using allocateRLStruct, return the pointer
+*/
+rl_abstract_type_t *allocateRLStructPointer(const unsigned int numInts,
+											const unsigned int numDoubles,
+											const unsigned int numChars);
 
-/* Create a new rl_abstract_type_t pointer that is a copy of an existing one (src) */
+/* 
+Create a new rl_abstract_type_t pointer that is a copy of an existing one 
+(src) 
+*/
 rl_abstract_type_t *duplicateRLStructToPointer(const rl_abstract_type_t *src);
 
 #ifdef __cplusplus

@@ -6,6 +6,10 @@ $key = q/sec:custom-flags/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/pointers/;
+$ref_files{$key} = "$dir".q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/sec:util-functions/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
