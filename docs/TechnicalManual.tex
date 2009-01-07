@@ -68,7 +68,7 @@ Provided everything goes well, the headers have now been installed to \texttt{/u
 
 \subsubsection{Install  To Custom Location (without \textit{root} access)}
 If you don't have \textit{sudo} or \textit{root} access on the target machine, you can install RL-Glue in your home directory (or other directory you have access to).
-If you install to a custom location, you will need set your \texttt{CFLAGS} and \texttt{LDFLAGS} variables appropriately when compiling your projects. See Section \ref{sec:custom-flags} for more information.
+If you install to a custom location, you will need to set your \texttt{CFLAGS} and \texttt{LDFLAGS} variables appropriately when compiling your projects. See Section \ref{sec:custom-flags} for more information.
 
 For example, maybe we want to install RL-Glue to \texttt{/Users/joe/glue}.  The commands are:
 \begin{verbatim}
@@ -107,7 +107,7 @@ You could also just delete the \texttt{glue} directory, but that may also remove
 
 \section{Agent, Environments, and Experiments}
 We have provided a skeleton agent, environment, and experiment program that can be compiled together and run as an experiment.
-This is a good starting point for projects that you may write in the future.  For now, the skeleton is extremely simple.  Before the official RL-Glue 3.0 release, we will add a complete sample learning agent this and each codec.
+This is a good starting point for projects that you may write in the future.  For now, the skeleton is extremely simple.  Before the official RL-Glue 3.0 release, we will add a complete sample learning agent for this and each codec.
 
 We'll start by explaining how to compile and run the experiment, then we'll talk in more detail about each part.
 
@@ -234,7 +234,7 @@ or just that it should do some fancier things, let us know and we'll be happy to
 
 
 \subsection{Environments}
-The Skeleton experiment provides a good example of how to create a simple environment. 
+The Skeleton environment provides a good example of how to create a simple environment. 
 
 The pertinent files are:
 \begin{verbatim}
@@ -428,7 +428,7 @@ const action_t* agent_start(const observation_t *this_observation) {
 ...
 \end{verbatim}
 
-Remember that any memory that you allocate within an agent, environment, or experiment the old fashioned way \texttt{malloc/new} or using the convenience functions in \texttt{<rlglue/utils/C/RLStruct\_util.h>} should released
+Remember that any memory that you allocate within an agent, environment, or experiment the old fashioned way \texttt{malloc/new} or using the convenience functions in \texttt{<rlglue/utils/C/RLStruct\_util.h>} should be released
 by you in the appropriate \texttt{cleanup} function.
 \subsection{Free Your Mess}
 When using RL-Glue, you are responsible for cleaning up any memory that you allocate. The good news is that that you can trust that between function calls, any memory you've returned to a caller has either been
@@ -570,7 +570,7 @@ The type names are:
     action_t
     observation_action_t
     reward_observation_terminal_t
-    reward_observation_action_t
+    reward_observation_action_terminal_t
 \end{verbatim}
 
 

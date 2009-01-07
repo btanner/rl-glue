@@ -217,7 +217,7 @@ Provided everything goes well, the headers have now been installed to <TT>/usr/l
 Install  To Custom Location (without <I>root</I> access)</A>
 </H3>
 If you don't have <I>sudo</I> or <I>root</I> access on the target machine, you can install RL-Glue in your home directory (or other directory you have access to).
-If you install to a custom location, you will need set your <TT>CFLAGS</TT> and <TT>LDFLAGS</TT> variables appropriately when compiling your projects. See Section <A HREF="#sec:custom-flags">2.2</A> for more information.
+If you install to a custom location, you will need to set your <TT>CFLAGS</TT> and <TT>LDFLAGS</TT> variables appropriately when compiling your projects. See Section <A HREF="#sec:custom-flags">2.2</A> for more information.
 
 <P>
 For example, maybe we want to install RL-Glue to <TT>/Users/joe/glue</TT>.  The commands are:
@@ -279,7 +279,7 @@ You could also just delete the <TT>glue</TT> directory, but that may also remove
 Agent, Environments, and Experiments</A>
 </H1>
 We have provided a skeleton agent, environment, and experiment program that can be compiled together and run as an experiment.
-This is a good starting point for projects that you may write in the future.  For now, the skeleton is extremely simple.  Before the official RL-Glue 3.0 release, we will add a complete sample learning agent this and each codec.
+This is a good starting point for projects that you may write in the future.  For now, the skeleton is extremely simple.  Before the official RL-Glue 3.0 release, we will add a complete sample learning agent for this and each codec.
 
 <P>
 We'll start by explaining how to compile and run the experiment, then we'll talk in more detail about each part.
@@ -441,7 +441,7 @@ or just that it should do some fancier things, let us know and we'll be happy to
 <H2><A NAME="SECTION00034000000000000000">
 Environments</A>
 </H2>
-The Skeleton experiment provides a good example of how to create a simple environment. 
+The Skeleton environment provides a good example of how to create a simple environment. 
 
 <P>
 The pertinent files are:
@@ -698,7 +698,7 @@ const action_t* agent_start(const observation_t *this_observation) {
 </PRE>
 
 <P>
-Remember that any memory that you allocate within an agent, environment, or experiment the old fashioned way <TT>malloc/new</TT> or using the convenience functions in <TT>&lt;rlglue/utils/C/RLStruct_util.h&gt;</TT> should released
+Remember that any memory that you allocate within an agent, environment, or experiment the old fashioned way <TT>malloc/new</TT> or using the convenience functions in <TT>&lt;rlglue/utils/C/RLStruct_util.h&gt;</TT> should be released
 by you in the appropriate <TT>cleanup</TT> function.
 
 <H2><A NAME="SECTION00052000000000000000">
@@ -879,7 +879,7 @@ The type names are:
     action_t
     observation_action_t
     reward_observation_terminal_t
-    reward_observation_action_t
+    reward_observation_action_terminal_t
 </PRE>
 
 <P>
@@ -1223,10 +1223,10 @@ If you would like to become a member of this project and contribute updates/chan
 Document Information</A>
 </H1>
 <PRE>
-Revision Number: $Rev: 914 $
+Revision Number: $Rev: 927 $
 Last Updated By: $Author: brian@tannerpages.com $
-Last Updated   : $Date: 2008-10-11 12:09:33 -0600 (Sat, 11 Oct 2008) $
-$URL: https://rl-glue.googlecode.com/svn/trunk/docs/TechnicalManual.tex $
+Last Updated   : $Date: 2008-12-02 23:21:50 -0500 (Tue, 02 Dec 2008) $
+$URL: http://rl-glue.googlecode.com/svn/trunk/docs/TechnicalManual.tex $
 </PRE>
 
 <P>
@@ -1249,7 +1249,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>TechnicalManual.tex -split 0 -dir tech_html -mkdir -title 'RL-Glue 3.0 Technical Details' -local_icons -math</TT>
 <P>
-The translation was initiated by Brian Tanner on 2008-12-02
+The translation was initiated by Brian Tanner on 2009-01-07
 <BR><HR><H4>Footnotes</H4>
 <DL>
 <DT><A NAME="foot303">... Apache-2.0</A><A
@@ -1280,7 +1280,7 @@ Autotools</A><A
 <!--End of Navigation Panel-->
 <ADDRESS>
 Brian Tanner
-2008-12-02
+2009-01-07
 </ADDRESS>
 </BODY>
 </HTML>
