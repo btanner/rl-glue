@@ -38,7 +38,7 @@ host_triplet = @host@
 check_PROGRAMS = test_sanity$(EXEEXT) test_1$(EXEEXT) \
 	test_message$(EXEEXT) test_rl_episode$(EXEEXT) \
 	test_init_cleanup$(EXEEXT) test_state_and_seed_keys$(EXEEXT) \
-	test_empty$(EXEEXT) test_speed$(EXEEXT)
+	test_empty$(EXEEXT) test_speed$(EXEEXT) test_cparser$(EXEEXT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -55,6 +55,10 @@ am_test_1_OBJECTS = test_1-test_1_environment.$(OBJEXT) \
 test_1_OBJECTS = $(am_test_1_OBJECTS)
 test_1_LDADD = $(LDADD)
 test_1_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
+am_test_cparser_OBJECTS = test_cparser-test_cparser.$(OBJEXT)
+test_cparser_OBJECTS = $(am_test_cparser_OBJECTS)
+test_cparser_LDADD = $(LDADD)
+test_cparser_DEPENDENCIES = ../src/librlglue.la ../src/librlutils.la
 am_test_empty_OBJECTS = test_empty-test_empty_environment.$(OBJEXT) \
 	test_empty-test_empty_agent.$(OBJEXT) \
 	test_empty-test_empty_experiment.$(OBJEXT) \
@@ -122,14 +126,16 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
-	$(test_init_cleanup_SOURCES) $(test_message_SOURCES) \
-	$(test_rl_episode_SOURCES) $(test_sanity_SOURCES) \
-	$(test_speed_SOURCES) $(test_state_and_seed_keys_SOURCES)
-DIST_SOURCES = $(test_1_SOURCES) $(test_empty_SOURCES) \
-	$(test_init_cleanup_SOURCES) $(test_message_SOURCES) \
-	$(test_rl_episode_SOURCES) $(test_sanity_SOURCES) \
-	$(test_speed_SOURCES) $(test_state_and_seed_keys_SOURCES)
+SOURCES = $(test_1_SOURCES) $(test_cparser_SOURCES) \
+	$(test_empty_SOURCES) $(test_init_cleanup_SOURCES) \
+	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
+	$(test_sanity_SOURCES) $(test_speed_SOURCES) \
+	$(test_state_and_seed_keys_SOURCES)
+DIST_SOURCES = $(test_1_SOURCES) $(test_cparser_SOURCES) \
+	$(test_empty_SOURCES) $(test_init_cleanup_SOURCES) \
+	$(test_message_SOURCES) $(test_rl_episode_SOURCES) \
+	$(test_sanity_SOURCES) $(test_speed_SOURCES) \
+	$(test_state_and_seed_keys_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -256,6 +262,8 @@ test_empty_SOURCES = test_empty_environment.c	test_empty_agent.c test_empty_expe
 test_empty_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_speed_SOURCES = test_speed_environment.c	test_1_agent.c test_speed_experiment.c useful_functions.c useful_functions.h
 test_speed_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+test_cparser_SOURCES = test_cparser.c
+test_cparser_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 all: all-am
 
 .SUFFIXES:
@@ -299,6 +307,9 @@ clean-checkPROGRAMS:
 test_1$(EXEEXT): $(test_1_OBJECTS) $(test_1_DEPENDENCIES) 
 	@rm -f test_1$(EXEEXT)
 	$(LINK) $(test_1_LDFLAGS) $(test_1_OBJECTS) $(test_1_LDADD) $(LIBS)
+test_cparser$(EXEEXT): $(test_cparser_OBJECTS) $(test_cparser_DEPENDENCIES) 
+	@rm -f test_cparser$(EXEEXT)
+	$(LINK) $(test_cparser_LDFLAGS) $(test_cparser_OBJECTS) $(test_cparser_LDADD) $(LIBS)
 test_empty$(EXEEXT): $(test_empty_OBJECTS) $(test_empty_DEPENDENCIES) 
 	@rm -f test_empty$(EXEEXT)
 	$(LINK) $(test_empty_LDFLAGS) $(test_empty_OBJECTS) $(test_empty_LDADD) $(LIBS)
@@ -331,6 +342,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1-test_1_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1-test_1_experiment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_1-useful_functions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_cparser-test_cparser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_environment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_empty-test_empty_experiment.Po@am__quote@
@@ -436,6 +448,20 @@ test_1-useful_functions.obj: useful_functions.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='useful_functions.c' object='test_1-useful_functions.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_1_CFLAGS) $(CFLAGS) -c -o test_1-useful_functions.obj `if test -f 'useful_functions.c'; then $(CYGPATH_W) 'useful_functions.c'; else $(CYGPATH_W) '$(srcdir)/useful_functions.c'; fi`
+
+test_cparser-test_cparser.o: test_cparser.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_cparser_CFLAGS) $(CFLAGS) -MT test_cparser-test_cparser.o -MD -MP -MF "$(DEPDIR)/test_cparser-test_cparser.Tpo" -c -o test_cparser-test_cparser.o `test -f 'test_cparser.c' || echo '$(srcdir)/'`test_cparser.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_cparser-test_cparser.Tpo" "$(DEPDIR)/test_cparser-test_cparser.Po"; else rm -f "$(DEPDIR)/test_cparser-test_cparser.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_cparser.c' object='test_cparser-test_cparser.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_cparser_CFLAGS) $(CFLAGS) -c -o test_cparser-test_cparser.o `test -f 'test_cparser.c' || echo '$(srcdir)/'`test_cparser.c
+
+test_cparser-test_cparser.obj: test_cparser.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_cparser_CFLAGS) $(CFLAGS) -MT test_cparser-test_cparser.obj -MD -MP -MF "$(DEPDIR)/test_cparser-test_cparser.Tpo" -c -o test_cparser-test_cparser.obj `if test -f 'test_cparser.c'; then $(CYGPATH_W) 'test_cparser.c'; else $(CYGPATH_W) '$(srcdir)/test_cparser.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/test_cparser-test_cparser.Tpo" "$(DEPDIR)/test_cparser-test_cparser.Po"; else rm -f "$(DEPDIR)/test_cparser-test_cparser.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test_cparser.c' object='test_cparser-test_cparser.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_cparser_CFLAGS) $(CFLAGS) -c -o test_cparser-test_cparser.obj `if test -f 'test_cparser.c'; then $(CYGPATH_W) 'test_cparser.c'; else $(CYGPATH_W) '$(srcdir)/test_cparser.c'; fi`
 
 test_empty-test_empty_environment.o: test_empty_environment.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_empty_CFLAGS) $(CFLAGS) -MT test_empty-test_empty_environment.o -MD -MP -MF "$(DEPDIR)/test_empty-test_empty_environment.Tpo" -c -o test_empty-test_empty_environment.o `test -f 'test_empty_environment.c' || echo '$(srcdir)/'`test_empty_environment.c; \

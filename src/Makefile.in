@@ -74,7 +74,8 @@ am_librlgluenetdev_la_OBJECTS = librlgluenetdev_la-RL_network.lo \
 	librlgluenetdev_la-RL_glue_debug.lo
 librlgluenetdev_la_OBJECTS = $(am_librlgluenetdev_la_OBJECTS)
 librlutils_la_LIBADD =
-am_librlutils_la_OBJECTS = librlutils_la-RLStruct_util.lo
+am_librlutils_la_OBJECTS = librlutils_la-RLStruct_util.lo \
+	librlutils_la-TaskSpec_Parser.lo
 librlutils_la_OBJECTS = $(am_librlutils_la_OBJECTS)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
@@ -223,10 +224,10 @@ lib_LTLIBRARIES = librlutils.la librlglue.la librlgluenetdev.la
 
 #librlutils is just the convenience methods for manipulating the RL structures
 #Many people will want to use this library in their own code
-librlutils_la_SOURCES = RLStruct_util.c rlglue/utils/C/RLStruct_util.h 
+librlutils_la_SOURCES = RLStruct_util.c TaskSpec_Parser.c rlglue/utils/C/RLStruct_util.h  rlglue/utils/C/TaskSpec_Parser.h
 librlutils_la_LDFLAGS = -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE) -no-missing
 librlutils_la_includedir = $(includedir)/rlglue/utils/C
-librlutils_la_include_HEADERS = rlglue/utils/C/RLStruct_util.h
+librlutils_la_include_HEADERS = rlglue/utils/C/RLStruct_util.h rlglue/utils/C/TaskSpec_Parser.h
 librlutils_la_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99 -g
 
 #librlglue is for direct-compile c/c++ experiments
@@ -367,6 +368,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlgluenetdev_la-RL_glue_debug.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlgluenetdev_la-RL_network.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlutils_la-RLStruct_util.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librlutils_la-TaskSpec_Parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rl_glue-RL_glue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rl_glue-RL_network_agent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rl_glue-RL_network_environment.Po@am__quote@
@@ -452,6 +454,13 @@ librlutils_la-RLStruct_util.lo: RLStruct_util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='RLStruct_util.c' object='librlutils_la-RLStruct_util.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librlutils_la_CFLAGS) $(CFLAGS) -c -o librlutils_la-RLStruct_util.lo `test -f 'RLStruct_util.c' || echo '$(srcdir)/'`RLStruct_util.c
+
+librlutils_la-TaskSpec_Parser.lo: TaskSpec_Parser.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librlutils_la_CFLAGS) $(CFLAGS) -MT librlutils_la-TaskSpec_Parser.lo -MD -MP -MF "$(DEPDIR)/librlutils_la-TaskSpec_Parser.Tpo" -c -o librlutils_la-TaskSpec_Parser.lo `test -f 'TaskSpec_Parser.c' || echo '$(srcdir)/'`TaskSpec_Parser.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/librlutils_la-TaskSpec_Parser.Tpo" "$(DEPDIR)/librlutils_la-TaskSpec_Parser.Plo"; else rm -f "$(DEPDIR)/librlutils_la-TaskSpec_Parser.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='TaskSpec_Parser.c' object='librlutils_la-TaskSpec_Parser.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librlutils_la_CFLAGS) $(CFLAGS) -c -o librlutils_la-TaskSpec_Parser.lo `test -f 'TaskSpec_Parser.c' || echo '$(srcdir)/'`TaskSpec_Parser.c
 
 rl_glue-RL_network_experiment.o: RL_network_experiment.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(rl_glue_CFLAGS) $(CFLAGS) -MT rl_glue-RL_network_experiment.o -MD -MP -MF "$(DEPDIR)/rl_glue-RL_network_experiment.Tpo" -c -o rl_glue-RL_network_experiment.o `test -f 'RL_network_experiment.c' || echo '$(srcdir)/'`RL_network_experiment.c; \

@@ -1,4 +1,4 @@
-check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_init_cleanup test_state_and_seed_keys test_empty test_speed
+check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_init_cleanup test_state_and_seed_keys test_empty test_speed test_cparser
 TESTS = $(check_PROGRAMS)
 
 INCLUDES = -I$(top_srcdir)/src
@@ -27,6 +27,11 @@ test_empty_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
 test_speed_SOURCES = test_speed_environment.c	test_1_agent.c test_speed_experiment.c useful_functions.c useful_functions.h
 test_speed_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+
+test_cparser_SOURCES = test_cparser.c
+test_cparser_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+
+
 
 #IF this is uncommented, then we get errors unless check_Programs is commented
 #noinst_PROGRAMS = $(TESTS)

@@ -7,10 +7,10 @@ lib_LTLIBRARIES = librlutils.la librlglue.la librlgluenetdev.la
 
 #librlutils is just the convenience methods for manipulating the RL structures
 #Many people will want to use this library in their own code
-librlutils_la_SOURCES = RLStruct_util.c rlglue/utils/C/RLStruct_util.h 
+librlutils_la_SOURCES = RLStruct_util.c TaskSpec_Parser.c rlglue/utils/C/RLStruct_util.h  rlglue/utils/C/TaskSpec_Parser.h
 librlutils_la_LDFLAGS= -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE) -no-missing
 librlutils_la_includedir=$(includedir)/rlglue/utils/C
-librlutils_la_include_HEADERS = rlglue/utils/C/RLStruct_util.h
+librlutils_la_include_HEADERS = rlglue/utils/C/RLStruct_util.h rlglue/utils/C/TaskSpec_Parser.h
 librlutils_la_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99 -g
 
 #librlglue is for direct-compile c/c++ experiments
