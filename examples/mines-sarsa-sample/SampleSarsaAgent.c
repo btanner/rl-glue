@@ -56,6 +56,12 @@ int exploring_frozen=0;
 
 /* Returns a random integer in [0,max] */
 int randInRange(int max);
+/* 
+ *	Selects a random action with probability 1-sarsa_epsilon, 
+ *	and the action with the highest value otherwise.  This is a 
+ *	quick'n'dirty implementation, it does not do tie-breaking or
+ *	even use a good method of random generation.
+*/
 int egreedy(int theState);
 int calculateArrayIndex(int theState, int theAction);
 void save_value_function(const char *fileName);
@@ -66,7 +72,10 @@ void agent_init(const char* task_spec)
 	/*Struct to hold the parsed task spec*/
 	taskspec_t ts;
 	int decode_result = dec_taskspec( &ts, task_spec );
-	assert(decode_result==0);
+	if(decode_result!=0){
+		printf("Could not decode task spec, code: %d for task spec: %s\n",decode_result,task_spec);
+		exit(1);
+	}
 	
 	/* Lots of assertions to make sure that we can handle this problem.  */
 	assert(ts.num_int_obs==1);
@@ -103,25 +112,12 @@ void agent_init(const char* task_spec)
 	/*Later we will parse this from the task spec, but for now*/
 	value_function=(double *)calloc(numActions*numStates,sizeof(double));
 	
-/*	{
-		int s=0;
-		int a=0;
-		
-		for(s=0;s<108;s++){
-			for(a=0;a<4;a++){
-				printf("%d %d %d\n",s,a,calculateArrayIndex(s,a));
-			}
-		}
-		exit(1);
-	}
-	*/
 }
 
 const action_t *agent_start(const observation_t *this_observation) {
 	int theIntAction=egreedy(this_observation->intArray[0]);
 	this_action.intArray[0]=theIntAction;
 
-	/* In a real action you might want to store the last observation and last action*/
 	replaceRLStruct(&this_action, &last_action);
 	replaceRLStruct(this_observation, last_observation);
 	
@@ -212,7 +208,7 @@ const char* agent_message(const char* inMessage) {
 	}
 
 	
-	return "SampleSarsaAgent does not understand your message.";
+	return "SampleSarsaAgent(C) does not understand your message.";
 			
 }
 
@@ -232,8 +228,8 @@ void load_value_function(const char *fileName){
 }
 
 int egreedy(int state){
-	int max = 0;
-	int i = 1;
+	int maxIndex = 0;
+	int a = 1;
 	int randFrequency=(int)(1.0f/sarsa_epsilon);
 
 	if(!exploring_frozen){
@@ -243,14 +239,14 @@ int egreedy(int state){
 	}
 
 /*otherwise choose the greedy action*/
-  max = 0;
-  for(i = 1; i < numActions; i++){
-    if(value_function[calculateArrayIndex(state,i)] > value_function[calculateArrayIndex(state,max)]) {
-      max = i;
+  maxIndex = 0;
+  for(a = 1; a < numActions; a++){
+    if(value_function[calculateArrayIndex(state,a)] > value_function[calculateArrayIndex(state,maxIndex)]) {
+      maxIndex = a;
     }
   }
 
-  return max;
+  return maxIndex;
 }
 
 int randInRange(int max){

@@ -18,10 +18,39 @@
 #include <math.h> /* for sqrt */
 #include <rlglue/RL_glue.h> /* RL_ function prototypes and RL-Glue types */
 
+typedef struct {
+	double mean;
+	double standard_dev;
+} evaluation_point_t;
+
 int whichEpisode=0;
+evaluation_point_t *evaluate_agent();
 
-void evaluate_agent();
 
+
+void save_result_csv(evaluation_point_t *the_score[], char *fileName){
+	FILE *fp;
+	int i=0;
+
+	fp=fopen(fileName, "w");
+	fprintf(fp, "#Results from SampleExperiment.c.  First line is means, second line is standard deviations.\n");
+	
+	for(i=0;i<21;i++){
+		fprintf(fp,"%.2f,",the_score[i]->mean);
+	}
+	fprintf(fp,"\n");
+	
+	for(i=0;i<21;i++){
+		fprintf(fp,"%.2f,",the_score[i]->standard_dev);
+	}
+	fprintf(fp,"\n");
+
+	fclose(fp);
+}
+
+void print_score(int afterEpisodes, evaluation_point_t *the_score) {
+    printf("%d\t\t%.2f\t\t%.2f\n", afterEpisodes, the_score->mean, the_score->standard_dev);
+}
 
 
 /*
@@ -30,16 +59,28 @@ void evaluate_agent();
 void offline_demo(){
 	int i=0;
 	int j=0;
-
-	printf("0");
-	evaluate_agent();
+	evaluation_point_t *this_score=0;
+	evaluation_point_t *statistics[21];
+	
+	this_score=evaluate_agent();
+	print_score(0,this_score);
+	statistics[0]=this_score;
+	
 	for(i=0;i<20;i++){
 		for(j=0;j<25;j++){
 			RL_episode(0);
 		}
-		printf("%d",((i+1)*25));
-		evaluate_agent();
+		this_score=evaluate_agent();
+		print_score((i+1)*25,this_score);
+		statistics[i+1]=this_score;
 	}
+	
+	save_result_csv(statistics,"results.csv");
+	
+	for(i=0;i<21;i++){
+		free(statistics[i]);
+	}
+	
 }
 
 int main(int argc, char *argv[]) {
@@ -47,6 +88,7 @@ int main(int argc, char *argv[]) {
 	printf("After Episode\tMean Return\tStandard Deviation\n-------------------------------------------------------------------------\n");
 	RL_init();
 	offline_demo();
+	
 	
 	printf("\nNow we will save the agent's learned value function to a file....\n");
 
@@ -59,22 +101,31 @@ int main(int argc, char *argv[]) {
 
 
 	printf("Evaluating the agent's default policy:\n\t\tMean Return\tStandardDeviation\n------------------------------------------------------\n");
-	evaluate_agent();
+	print_score(0,evaluate_agent());
 	
 	printf("\nLoading up the value function we saved earlier.\n");
 	RL_agent_message("load_policy results.dat");
 
 	printf("Evaluating the agent after loading the value function:\n\t\tMean Return\tStandardDeviation\n------------------------------------------------------\n");
-	evaluate_agent();
+	print_score(0,evaluate_agent());
+
+    printf("Evaluating the agent a few times from a fixed start state of 3,3:\n\t\tMean Return\tStandardDeviation\n-------------------------------------------\n");
+    RL_env_message("set-start-state 3 3");
+	print_score(0,evaluate_agent());
+
+	printf("Evaluating the agent again with the random start state:\n\t\tMean Return\tStandardDeviation\n-----------------------------------------------------\n");
+    RL_env_message("set-random-start-state");
+	print_score(0,evaluate_agent());
+
+
 	printf("\nProgram Complete.\n");
 	RL_cleanup();
-
 
 	return 0;
 }
 
 
-void evaluate_agent(){
+evaluation_point_t *evaluate_agent(){
 	int i=0;
 	double sum=0;
 	double sum_of_squares=0;
@@ -82,7 +133,8 @@ void evaluate_agent(){
 	double mean;
 	double variance;
 	double n=100.0f;
-
+	evaluation_point_t *eval_point=0;
+	
 	RL_agent_message("freeze learning");
 	for(i=0;i<10;i++){
 		/* We use a cutoff here in case the policy is bad
@@ -95,11 +147,10 @@ void evaluate_agent(){
 	
 	mean=sum/n;
 	variance = (sum_of_squares - n*mean*mean)/(n - 1.0f);
-	printf("\t\t%.2f\t",mean);
-	if(mean>=100.0f){
-		printf("\t");
-	}
-	printf("\t+/- %.2f \n",sqrt(variance));
+	eval_point=(evaluation_point_t *)malloc(sizeof(evaluation_point_t));
+	eval_point->mean=mean;
+	eval_point->standard_dev=sqrt(variance);
 
 	RL_agent_message("unfreeze learning");
+	return eval_point;
 }

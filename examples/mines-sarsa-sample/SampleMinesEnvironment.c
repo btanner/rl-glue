@@ -13,7 +13,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 
-	This code is adapted from the Mines.cpp code written by Mark Lee
+	This code is adapted from the Mines.cpp code written by Adam White
 	for earlier versions of RL-Glue.
 	
 	*  $Revision: 821 $
@@ -116,6 +116,12 @@ static observation_t this_observation;
 static reward_observation_terminal_t this_reward_observation;
 
 
+/* Used if a message is sent to the environment to use fixed start states */
+static int fixed_start_state=0;
+static int start_row=1;
+static int start_col=1;
+
+
 /*****************************
 
 	RL-Glue Methods 
@@ -149,24 +155,38 @@ const char* env_init(){
    return task_spec_string;
 }
 
+/* Sets state and returns 1 if valid, 0 if invalid or terminal */
+int set_agent_state(int row, int col){
+	the_world.agentRow=row;
+	the_world.agentCol=col;
+	
+	return check_valid(&the_world,row,col) && !check_terminal(row,col);
+}
 
+void set_random_state(){
+	int startRow=rand()%6;
+	int startCol=rand()%18;
+
+	while(!set_agent_state(startRow,startCol)){
+		startRow=rand()%6;
+		startCol=rand()%18;
+	}
+}
 /*
 	Standard RL-Glue method. Sets an initial state and returns
 	the corresponding observation.
 */
 const observation_t *env_start()
 { 
-	int startRow=rand()%6;
-	int startCol=rand()%18;
-	
-	while(check_terminal(startRow,startCol) || !check_valid(&the_world,startRow,startCol)){
-		startRow=rand()%6;
-		startCol=rand()%18;
-	}
-	
-	the_world.agentRow=startRow;
-	the_world.agentCol=startCol;
-
+	if(fixed_start_state){
+        int state_valid=set_agent_state(start_row,start_col);
+        if(!state_valid){
+            set_random_state();
+        }
+    }else{
+        set_random_state();
+    }
+    
 	this_observation.intArray[0]=calculate_flat_state(the_world);
   	return &this_observation;
 }
@@ -184,7 +204,6 @@ const reward_observation_terminal_t *env_step(const action_t *this_action)
 	this_reward_observation.reward = calculate_reward(the_world);
 	this_reward_observation.terminal = check_terminal(the_world.agentRow,the_world.agentCol);
 
-
 	return &this_reward_observation;
 }
 
@@ -194,7 +213,34 @@ void env_cleanup()
 }
 
 const char* env_message(const char* inMessage) {
-	return "SamplesMinesEnvironment does not respond to any messages.";
+	if(strcmp(inMessage,"set-random-start-state")==0){
+        fixed_start_state=0;
+        return "Message understood.  Using random start state.";
+    }
+    
+	if(strncmp(inMessage,"set-start-state",15)==0){
+	 	{
+			char *p;
+			char *inMessageCopy=(char *)malloc(strlen(inMessage)*sizeof(char));
+		
+			strcpy(inMessageCopy,inMessage);
+		
+			/* p will have set-start-state */
+			p = strtok (inMessageCopy," ");
+			/* p will have the row number string */
+			p = strtok (0," ");
+			start_row=atoi(p);
+			/* p will have the col number string */
+			p = strtok (0," ");
+			start_col=atoi(p);
+			free(inMessageCopy);
+		
+	        fixed_start_state=1;
+
+	        return "Message understood.  Using fixed start state.";
+    	}
+	}
+	return "SamplesMinesEnvironment does not respond to that message.";
 }
 
 
