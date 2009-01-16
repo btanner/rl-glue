@@ -24,26 +24,28 @@ extern "C" {
 
 
 /* current task spec version string */
-#define CURRENT_VERSTR "RL-Glue-3.0"
+#define CURRENT_VERSION "RL-Glue-3.0"
 
 /* problem types */
-#define TS_EPISODIC   1
-#define TS_CONTINUING 2
-#define TS_OTHER      0
+#define TSPEC_EPISODIC   1
+#define TSPEC_CONTINUING 2
+#define TSPEC_OTHER      0
 
 /* special range values */
-#define RV_NOTSPECIAL 0
-#define RV_NEGINF     1
-#define RV_POSINF     2
-#define RV_UNSPEC     3 /* unspecified */
+#define RVAL_NOTSPECIAL 0
+#define RVAL_NEGINF     1 /* negative infinity */
+#define RVAL_POSINF     2 /* positive infinity */
+#define RVAL_UNSPEC     3 /* unspecified */
 
 
 typedef struct {
+	unsigned int repeat_count; /* number of times this range tuple repeats */
 	int min, max;
 	char special_min, special_max;
 } int_range_t;
 
 typedef struct {
+	unsigned int repeat_count;
 	double min, max;
 	char special_min, special_max;
 } double_range_t;
@@ -53,36 +55,32 @@ typedef struct {
 	char *version;              /* task spec version string */
 	char problem_type;
 	double discount_factor;
-	int num_int_obs;            /* number of integral observation dimensions */
-	int_range_t *int_obs;       /* array of length num_int_obs,
-								   specifying range of each dimension */
-	int num_double_obs;         /* number of real (floating point) observation dimensions */
-	double_range_t *double_obs; /* array of length num_double_obs,
-								   specifying range of each dimension */
-	int charcount_obs;          /* number of characters in observation */
-	int num_int_act;            /* number of integral action dimensions */
-	int_range_t *int_act;       /* array of length num_int_act,
-								   specifying range of each dimension */
-	int num_double_act;         /* number of real (floating point) action dimensions */
-	double_range_t *double_act; /* array of length num_double_act,
-								   specifying range of each dimension */
-	int charcount_act;          /* number of characters in action */
+	int num_int_observations;            /* length of int_observations array */
+	int_range_t *int_observations;       /* array of integral observation dimensions */
+	int num_double_observations;         /* length of double_observations array */
+	double_range_t *double_observations; /* array of real observation dimensions */
+	int charcount_observations;          /* number of characters in observation */
+	int num_int_actions;            /* length of int_actions array */
+	int_range_t *int_actions;       /* array of integral action dimensions */
+	int num_double_actions;         /* length of double_actions array */
+	double_range_t *double_actions; /* array of real action dimensions */
+	int charcount_actions;          /* number of characters in action */
 	double_range_t reward;      /* range of (environmentally determined) reward */
 	char *extra_spec;           /* string of extra specifications (not parsed) */
 } taskspec_t;
 
 
-/* int dec_taskspec( taskspec_t *ts, const char *ts_str )
- * 
+/* decode_taskspec
+ *
  * Decode (i.e., parse) a given task specification string.
  *
  * Returns 0 on success,
  *         1 if task spec version is unsupported or not recognized, or
  *        -1 on failure.
  */
-int dec_taskspec( taskspec_t *ts, const char *ts_str );
+int decode_taskspec( taskspec_t *tspec, const char *tspec_string );
 
-/* enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
+/* encode_taskspec
  * 
  * Encode (i.e., generate) a task specification string given a task
  * spec structure. The given string buffer (in which to write the
@@ -90,17 +88,17 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str );
  *
  * Returns 0 on success, -1 on failure.
  */
-int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len );
+int encode_taskspec( const taskspec_t *tspec, char *tspec_string, size_t buf_len );
 
-/* int free_taskspec_struct( taskspec_t *ts )
- *
+/* free_taskspec_struct
+ * 
  * Free any dynamically allocated arrays in the given task spec
  * structure. This is available merely for convenience, but be careful
  * not to give it a bad task spec struct.
  *
  * Returns 0 on success, -1 on failure.
  */
-int free_taskspec_struct( taskspec_t *ts );
+int free_taskspec_struct( taskspec_t *tspec );
 
 
 #ifdef __cplusplus

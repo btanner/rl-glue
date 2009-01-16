@@ -31,7 +31,7 @@ extern "C" {
 
 
 /* for buffering during range processing. */
-#define VECT_BUF_LEN 10
+#define VECT_BUF_LEN 5
 
 /* Some utility functions (not intended for use outside this file): */
 
@@ -60,7 +60,7 @@ char const *find_nonspace( const char *s );
 char *find_end_ranges_list( const char *s, const char *end_delim );
 
 
-int dec_taskspec( taskspec_t *ts, const char *ts_str )
+int decode_taskspec( taskspec_t *tspec, const char *tspec_string )
 {
 	char const *cp, *cp_next; /* character pointers (for string parsing) */
 	char *cp_candidate_next; /* when deciding between two possible
@@ -73,26 +73,26 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 	/* set all pointers to NULL in the taskspec struct; this is
 	   necessary for clean calls to free_taskspec_struct. */
-	ts->version = NULL;
-	ts->int_obs = NULL;
-	ts->double_obs = NULL;
-	ts->int_act = NULL;
-	ts->double_act = NULL;
-	ts->extra_spec = NULL;
+	tspec->version = NULL;
+	tspec->int_observations = NULL;
+	tspec->double_observations = NULL;
+	tspec->int_actions = NULL;
+	tspec->double_actions = NULL;
+	tspec->extra_spec = NULL;
 
 	/* initialize all counts to zero */
-	ts->num_int_obs = 0;
-	ts->num_double_obs = 0;
-	ts->charcount_obs = 0;
-	ts->num_int_act = 0;
-	ts->num_double_act = 0;
-	ts->charcount_act = 0;
+	tspec->num_int_observations = 0;
+	tspec->num_double_observations = 0;
+	tspec->charcount_observations = 0;
+	tspec->num_int_actions = 0;
+	tspec->num_double_actions = 0;
+	tspec->charcount_actions = 0;
 
 	/*
 	 * Determine version:
 	 *
 	 */
-	cp = find_nonspace( ts_str );
+	cp = find_nonspace( tspec_string );
 	if (cp == NULL
 		|| strncasecmp( cp, "VERSION", strlen("VERSION") ))
 		return -1;
@@ -100,7 +100,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = find_nonspace( cp );
 	if (cp == NULL)
 		return -1;
-	if (strncmp( cp, CURRENT_VERSTR, strlen(CURRENT_VERSTR) ))
+	if (strncmp( cp, CURRENT_VERSION, strlen(CURRENT_VERSION) ))
 		return 1; /* unrecognized or unsupported version */
 
 	/* prepare to save copy of version string */
@@ -109,10 +109,11 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 		return -1;
 
 	/* save version string to taskspec struct */
-	ts->version = (char *)malloc( cp_next-cp+1 );
-	if (ts->version == NULL) /* insufficient memory!? */
+	tspec->version = (char *)malloc( cp_next-cp+1 );
+	if (tspec->version == NULL) /* insufficient memory!? */
 		return -1;
-	strncpy( ts->version, cp, cp_next-cp );
+	strncpy( tspec->version, cp, cp_next-cp );
+	*(tspec->version+(cp_next-cp)) = '\0';
 	cp = cp_next+1;
 
 	/*
@@ -122,21 +123,21 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = find_nonspace( cp );
 	if (cp == NULL
 		|| strncasecmp( cp, "PROBLEMTYPE", strlen("PROBLEMTYPE") )) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	cp = strchr( cp, ' ' );
 	cp = find_nonspace( cp );
 	if (cp == NULL) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	if (!strncmp( cp, "episodic", strlen("episodic") )) {
-		ts->problem_type = TS_EPISODIC;
+		tspec->problem_type = TSPEC_EPISODIC;
 	} else if (!strncmp( cp, "continuing", strlen("continuing") )) {
-		ts->problem_type = TS_CONTINUING;
+		tspec->problem_type = TSPEC_CONTINUING;
 	} else {
-		ts->problem_type = TS_OTHER;
+		tspec->problem_type = TSPEC_OTHER;
 	}
 
 	/*
@@ -147,37 +148,38 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = find_nonspace( cp ); 
 	if (cp == NULL
 		|| strncasecmp( cp, "DISCOUNTFACTOR", strlen("DISCOUNTFACTOR") )) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	cp = strchr( cp, ' ' );
 	cp = find_nonspace( cp );
 	if (cp == NULL || isalpha( *cp )) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	cp_next = strchr( cp, ' ' );
 	if (cp_next == NULL) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	tmpstr = (char *)malloc( cp_next-cp+1 );
 	if (tmpstr == NULL) { /* insufficient memory!? */
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	strncpy( tmpstr, cp, cp_next-cp );
+	*(tmpstr+(cp_next-cp)) = '\0';
 	errno = 0;
-	ts->discount_factor = strtod( tmpstr, &endptr );
-	if (ts->discount_factor == 0
+	tspec->discount_factor = strtod( tmpstr, &endptr );
+	if (tspec->discount_factor == 0
 		&& (endptr == tmpstr || errno == ERANGE)) {
 		free( tmpstr );
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* given discount factor is invalid */
 	}
 	free( tmpstr );
-	if (ts->discount_factor < 0. || ts->discount_factor > 1.) {
-		free_taskspec_struct( ts );
+	if (tspec->discount_factor < 0. || tspec->discount_factor > 1.) {
+		free_taskspec_struct( tspec );
 		return -1; /* discount factor out of bounds */
 	}
 	cp = cp_next+1;
@@ -189,7 +191,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = find_nonspace( cp );
 	if (cp == NULL
 		|| strncasecmp( cp, "OBSERVATIONS", strlen("OBSERVATIONS") )) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1;
 	}
 	cp = strchr( cp, ' ' );
@@ -206,7 +208,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 			cp_next = find_end_ranges_list( cp, "ACTIONS" );
 			cp_candidate_next = find_end_ranges_list( cp, "actions" );
 			if (cp_next == NULL && cp_candidate_next == NULL) {
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1; /* early task spec string termination */
 			}
 			if (cp_next == NULL
@@ -218,14 +220,15 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 			tmpstr = (char *)malloc( cp_next-cp );
 			if (tmpstr == NULL) { /* insufficient memory!? */
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1;
 			}
-			strncpy( tmpstr, cp, cp_next-1-cp );
-			ts->int_obs = get_int_dims( tmpstr, &(ts->num_int_obs) );
+			strncpy( tmpstr, cp, cp_next-cp-1 );
+			*(tmpstr+(cp_next-cp-1)) = '\0';
+			tspec->int_observations = get_int_dims( tmpstr, &(tspec->num_int_observations) );
 			free( tmpstr );
-			if (ts->num_int_obs == -1) {
-				free_taskspec_struct( ts );
+			if (tspec->num_int_observations == -1) {
+				free_taskspec_struct( tspec );
 				return -1;
 			}
 
@@ -237,7 +240,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 			cp_next = find_end_ranges_list( cp, "ACTIONS" );
 			cp_candidate_next = find_end_ranges_list( cp, "actions" );
 			if (cp_next == NULL && cp_candidate_next == NULL) {
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1; /* early task spec string termination */
 			}
 			if (cp_next == NULL
@@ -249,14 +252,15 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 			tmpstr = (char *)malloc( cp_next-cp );
 			if (tmpstr == NULL) { /* insufficient memory!? */
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1;
 			}
-			strncpy( tmpstr, cp, cp_next-1-cp );
-			ts->double_obs = get_double_dims( tmpstr, &(ts->num_double_obs) );
+			strncpy( tmpstr, cp, cp_next-cp-1 );
+			*(tmpstr+(cp_next-cp-1)) = '\0';
+			tspec->double_observations = get_double_dims( tmpstr, &(tspec->num_double_observations) );
 			free( tmpstr );
-			if (ts->num_double_obs == -1) {
-				free_taskspec_struct( ts );
+			if (tspec->num_double_observations == -1) {
+				free_taskspec_struct( tspec );
 				return -1;
 			}
 
@@ -267,7 +271,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 			cp_next = find_end_ranges_list( cp, "ACTIONS" );
 			cp_candidate_next = find_end_ranges_list( cp, "actions" );
 			if (cp_next == NULL && cp_candidate_next == NULL) {
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1; /* early task spec string termination */
 			}
 			if (cp_next == NULL
@@ -279,16 +283,16 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 			/* read the character count integer */
 			errno = 0;
-			ts->charcount_obs = strtol( cp, &endptr, 0 );
+			tspec->charcount_observations = strtol( cp, &endptr, 0 );
 			if (endptr == cp || errno == ERANGE
-				|| ts->charcount_obs < 0) {
-				free_taskspec_struct( ts );
+				|| tspec->charcount_observations < 0) {
+				free_taskspec_struct( tspec );
 				return -1; /* count read failed or count is negative */
 			}
 
 		} else { 
 
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* unrecognized dimension type */
 
 		}
@@ -297,7 +301,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 	}
 	if (cp == NULL) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* early task spec string termination */
 	}
 
@@ -319,7 +323,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 			cp_next = find_end_ranges_list( cp, "REWARDS" );
 			cp_candidate_next = find_end_ranges_list( cp, "rewards" );
 			if (cp_next == NULL && cp_candidate_next == NULL) {
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1; /* early task spec string termination */
 			}
 			if (cp_next == NULL
@@ -331,14 +335,15 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 			tmpstr = (char *)malloc( cp_next-cp );
 			if (tmpstr == NULL) { /* insufficient memory!? */
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1;
 			}
-			strncpy( tmpstr, cp, cp_next-1-cp );
-			ts->int_act = get_int_dims( tmpstr, &(ts->num_int_act) );
+			strncpy( tmpstr, cp, cp_next-cp-1 );
+			*(tmpstr+(cp_next-cp-1)) = '\0';
+			tspec->int_actions = get_int_dims( tmpstr, &(tspec->num_int_actions) );
 			free( tmpstr );
-			if (ts->num_int_act == -1) {
-				free_taskspec_struct( ts );
+			if (tspec->num_int_actions == -1) {
+				free_taskspec_struct( tspec );
 				return -1;
 			}
 
@@ -350,7 +355,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 			cp_next = find_end_ranges_list( cp, "REWARDS" );
 			cp_candidate_next = find_end_ranges_list( cp, "rewards" );
 			if (cp_next == NULL && cp_candidate_next == NULL) {
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1; /* early task spec string termination */
 			}
 			if (cp_next == NULL
@@ -362,14 +367,15 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 			tmpstr = (char *)malloc( cp_next-cp );
 			if (tmpstr == NULL) { /* insufficient memory!? */
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1;
 			}
-			strncpy( tmpstr, cp, cp_next-1-cp );
-			ts->double_act = get_double_dims( tmpstr, &(ts->num_double_act) );
+			strncpy( tmpstr, cp, cp_next-cp-1 );
+			*(tmpstr+(cp_next-cp-1)) = '\0';
+			tspec->double_actions = get_double_dims( tmpstr, &(tspec->num_double_actions) );
 			free( tmpstr );
-			if (ts->num_double_act == -1) {
-				free_taskspec_struct( ts );
+			if (tspec->num_double_actions == -1) {
+				free_taskspec_struct( tspec );
 				return -1;
 			}
 
@@ -380,7 +386,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 			cp_next = find_end_ranges_list( cp, "REWARDS" );
 			cp_candidate_next = find_end_ranges_list( cp, "rewards" );
 			if (cp_next == NULL && cp_candidate_next == NULL) {
-				free_taskspec_struct( ts );
+				free_taskspec_struct( tspec );
 				return -1; /* early task spec string termination */
 			}
 			if (cp_next == NULL
@@ -392,16 +398,16 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 			/* read the character count integer */
 			errno = 0;
-			ts->charcount_act = strtol( cp, &endptr, 0 );
+			tspec->charcount_actions = strtol( cp, &endptr, 0 );
 			if (endptr == cp || errno == ERANGE
-				|| ts->charcount_act < 0) {
-				free_taskspec_struct( ts );
+				|| tspec->charcount_actions < 0) {
+				free_taskspec_struct( tspec );
 				return -1; /* count read failed or count is negative */
 			}
 
 		} else { 
 
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* unrecognized dimension type */
 
 		}
@@ -410,7 +416,7 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 
 	}
 	if (cp == NULL) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* early task spec string termination */
 	}
 
@@ -421,32 +427,32 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = strchr( cp, ' ' );
 	cp = find_nonspace( cp );
 	if (*cp != '(') {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* malformed reward range */
 	}
 	cp = find_nonspace( cp+1 );
 	if (cp == NULL || *cp == '\0') {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* early task spec string termination */
 	}
 	
 	if (isalpha( *cp )) { /* a special value? */
 
 		if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-			ts->reward.special_min = RV_UNSPEC;
+			tspec->reward.special_min = RVAL_UNSPEC;
 		} else if (!strncasecmp( cp, "NEGINF", strlen("NEGINF") )) {
-			ts->reward.special_min = RV_NEGINF;
+			tspec->reward.special_min = RVAL_NEGINF;
 		} else {
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* malformed expression: unrecognized special type */
 		}
 
 	} else { /* attempt to extract the double */
 
 		errno = 0;
-		ts->reward.min = strtod( cp, &endptr );
+		tspec->reward.min = strtod( cp, &endptr );
 		if (endptr == cp || errno == ERANGE) {
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* malformed expression: invalid double string */
 		}
 
@@ -455,27 +461,27 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = strchr( cp, ' ' );
 	cp = find_nonspace( cp );
 	if (cp == NULL) {
-		free_taskspec_struct( ts ); 
+		free_taskspec_struct( tspec ); 
 		return -1; /* early task spec string termination */
 	}
 
 	if (isalpha( *cp )) { /* a special value? */
 
 		if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-			ts->reward.special_max = RV_UNSPEC;
+			tspec->reward.special_max = RVAL_UNSPEC;
 		} else if (!strncasecmp( cp, "POSINF", strlen("POSINF") )) {
-			ts->reward.special_max = RV_POSINF;
+			tspec->reward.special_max = RVAL_POSINF;
 		} else {
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* malformed expression: unrecognized special type */
 		}
 
 	} else { /* attempt to extract the double */
 
 		errno = 0;
-		ts->reward.max = strtod( cp, &endptr );
+		tspec->reward.max = strtod( cp, &endptr );
 		if (endptr == cp || errno == ERANGE) {
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* malformed expression: invalid double string */
 		}
 
@@ -484,13 +490,13 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp_next = strchr( cp, ')' );
 	cp = strchr( cp, ' ' );
 	if (cp == NULL || cp_next == NULL || *(cp_next+1) == '\0' ) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* early task spec string termination */
 	}
 	if (cp < cp_next) {
 		cp = find_nonspace( cp );
 		if (*cp != ')') {
-			free_taskspec_struct( ts );
+			free_taskspec_struct( tspec );
 			return -1; /* invalid tuple size */
 		}
 	}
@@ -503,25 +509,25 @@ int dec_taskspec( taskspec_t *ts, const char *ts_str )
 	cp = find_nonspace( cp );
 	if (cp == NULL
 		|| strncasecmp( cp, "EXTRA", strlen("EXTRA") )) {
-		free_taskspec_struct( ts );
+		free_taskspec_struct( tspec );
 		return -1; /* early task spec string termination */
 	}
 	cp = strchr( cp, ' ' );
 	if (cp != NULL
 		&& (cp = find_nonspace( cp )) != NULL) {
-		ts->extra_spec = (char *)malloc( strlen(cp)+1 );
-		if (ts->extra_spec == NULL) {
-			free_taskspec_struct( ts );
+		tspec->extra_spec = (char *)malloc( strlen(cp)+1 );
+		if (tspec->extra_spec == NULL) {
+			free_taskspec_struct( tspec );
 			return -1; /* insufficient memory!? */
 		}
-		strncpy( ts->extra_spec, cp, strlen(cp) );
+		strcpy( tspec->extra_spec, cp );
 	}
 
 	return 0;
 }
 
 
-int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
+int encode_taskspec( const taskspec_t *tspec, char *tspec_string, size_t buf_len )
 {
 	int i;
 	char *cp, *cp_end;
@@ -530,33 +536,33 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	if (buf_len < 2) /* ignore impractical buffer sizes */
 		return -1;
 
-	cp = ts_str; /* step through the buffer as the task spec string is built */
-	cp_end = ts_str+buf_len-1; /* point to end of available string buffer */
+	cp = tspec_string; /* step through the buffer as the task spec string is built */
+	cp_end = tspec_string+buf_len-1; /* point to end of available string buffer */
 
-	if (ts->version != NULL) {
-		nb = snprintf( cp, cp_end-cp, "VERSION %s ", ts->version );
-		if (nb < strlen("VERSION ")+strlen(ts->version)+1
-			|| cp+nb > ts_str+buf_len-2)
+	if (tspec->version != NULL) {
+		nb = snprintf( cp, cp_end-cp, "VERSION %s ", tspec->version );
+		if (nb < strlen("VERSION  ")
+			|| cp+nb > tspec_string+buf_len-2)
 			return -1;
-		cp += nb;
 	} else {
 		return -1;
 	}
+	cp += nb;
 
-	switch (ts->problem_type) {
-	case TS_EPISODIC:
+	switch (tspec->problem_type) {
+	case TSPEC_EPISODIC:
 		nb = snprintf( cp, cp_end-cp, "PROBLEMTYPE episodic " );
 		if (nb < strlen("PROBLEMTYPE episodic ")
 			|| cp+nb >= cp_end)
 			return -1;
 		break;
-	case TS_CONTINUING:
+	case TSPEC_CONTINUING:
 		nb = snprintf( cp, cp_end-cp, "PROBLEMTYPE continuing " );
 		if (nb < strlen("PROBLEMTYPE continuing ")
 			|| cp+nb >= cp_end)
 			return -1;
 		break;
-	case TS_OTHER:
+	case TSPEC_OTHER:
 		nb = snprintf( cp, cp_end-cp, "PROBLEMTYPE other " );
 		if (nb < strlen("PROBLEMTYPE other ")
 			|| cp+nb >= cp_end)
@@ -567,7 +573,7 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	}
 	cp += nb;
 
-	nb = snprintf( cp, cp_end-cp, "DISCOUNTFACTOR %f ", ts->discount_factor );
+	nb = snprintf( cp, cp_end-cp, "DISCOUNTFACTOR %g ", tspec->discount_factor );
 	if (nb < strlen("DISCOUNTFACTOR ") || cp+nb >= cp_end)
 		return -1;
 	cp += nb;
@@ -582,44 +588,56 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	cp += nb;
 	
 	/* print observation INTS */
-	if (ts->num_int_obs > 0) {
+	if (tspec->num_int_observations > 0) {
 		nb = snprintf( cp, cp_end-cp, "INTS " );
 		if (nb < strlen("INTS ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
-		for (i = 0; i < ts->num_int_obs; i++) {
+		for (i = 0; i < tspec->num_int_observations; i++) {
 			nb = snprintf( cp, cp_end-cp, "(" );
 			if (nb < 1 || cp+nb >= cp_end)
 				return -1;
 			cp += nb;
-			if ((ts->int_obs+i)->special_min == RV_NEGINF) {
-				nb = snprintf( cp, cp_end-cp, "NEGINF, " );
-				if (nb < strlen("NEGINF, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else if ((ts->int_obs+i)->special_min == RV_UNSPEC) {
-				nb = snprintf( cp, cp_end-cp, "UNSPEC, " );
-				if (nb < strlen("UNSPEC, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else {
-				nb = snprintf( cp, cp_end-cp, "%d, ", (ts->int_obs+i)->min );
+
+			/* print tuple repeat count if greater than 1 */
+			if ((tspec->int_observations+i)->repeat_count > 1) {
+				nb = snprintf( cp, cp_end-cp, "%d ", (tspec->int_observations+i)->repeat_count );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			}
-			if ((ts->int_obs+i)->special_max == RV_POSINF) {
+			
+			/* print infimum */
+			if ((tspec->int_observations+i)->special_min == RVAL_NEGINF) {
+				nb = snprintf( cp, cp_end-cp, "NEGINF " );
+				if (nb < strlen("NEGINF ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else if ((tspec->int_observations+i)->special_min == RVAL_UNSPEC) {
+				nb = snprintf( cp, cp_end-cp, "UNSPEC " );
+				if (nb < strlen("UNSPEC ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else {
+				nb = snprintf( cp, cp_end-cp, "%d ", (tspec->int_observations+i)->min );
+				if (nb < 2 || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			}
+
+			/* print supremum */
+			if ((tspec->int_observations+i)->special_max == RVAL_POSINF) {
 				nb = snprintf( cp, cp_end-cp, "POSINF) " );
 				if (nb < strlen("POSINF) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
-			} else if ((ts->int_obs+i)->special_max == RV_UNSPEC) {
+			} else if ((tspec->int_observations+i)->special_max == RVAL_UNSPEC) {
 				nb = snprintf( cp, cp_end-cp, "UNSPEC) " );
 				if (nb < strlen("UNSPEC) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			} else {
-				nb = snprintf( cp, cp_end-cp, "%d) ", (ts->int_obs+i)->max );
+				nb = snprintf( cp, cp_end-cp, "%d) ", (tspec->int_observations+i)->max );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
@@ -628,44 +646,56 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	}
 
 	/* print observation DOUBLES */
-	if (ts->num_double_obs > 0) {
+	if (tspec->num_double_observations > 0) {
 		nb = snprintf( cp, cp_end-cp, "DOUBLES " );
 		if (nb < strlen("DOUBLES ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
-		for (i = 0; i < ts->num_double_obs; i++) {
+		for (i = 0; i < tspec->num_double_observations; i++) {
 			nb = snprintf( cp, cp_end-cp, "(" );
 			if (nb < 1 || cp+nb >= cp_end)
 				return -1;
 			cp += nb;
-			if ((ts->double_obs+i)->special_min == RV_NEGINF) {
-				nb = snprintf( cp, cp_end-cp, "NEGINF, " );
-				if (nb < strlen("NEGINF, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else if ((ts->double_obs+i)->special_min == RV_UNSPEC) {
-				nb = snprintf( cp, cp_end-cp, "UNSPEC, " );
-				if (nb < strlen("UNSPEC, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else {
-				nb = snprintf( cp, cp_end-cp, "%f, ", (ts->double_obs+i)->min );
+
+			/* print tuple repeat count if greater than 1 */
+			if ((tspec->double_observations+i)->repeat_count > 1) {
+				nb = snprintf( cp, cp_end-cp, "%d ", (tspec->double_observations+i)->repeat_count );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			}
-			if ((ts->double_obs+i)->special_max == RV_POSINF) {
+
+			/* print infimum */
+			if ((tspec->double_observations+i)->special_min == RVAL_NEGINF) {
+				nb = snprintf( cp, cp_end-cp, "NEGINF " );
+				if (nb < strlen("NEGINF ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else if ((tspec->double_observations+i)->special_min == RVAL_UNSPEC) {
+				nb = snprintf( cp, cp_end-cp, "UNSPEC " );
+				if (nb < strlen("UNSPEC ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else {
+				nb = snprintf( cp, cp_end-cp, "%g ", (tspec->double_observations+i)->min );
+				if (nb < 2 || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			}
+
+			/* print supremum */
+			if ((tspec->double_observations+i)->special_max == RVAL_POSINF) {
 				nb = snprintf( cp, cp_end-cp, "POSINF) " );
 				if (nb < strlen("POSINF) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
-			} else if ((ts->double_obs+i)->special_max == RV_UNSPEC) {
+			} else if ((tspec->double_observations+i)->special_max == RVAL_UNSPEC) {
 				nb = snprintf( cp, cp_end-cp, "UNSPEC) " );
 				if (nb < strlen("UNSPEC) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			} else {
-				nb = snprintf( cp, cp_end-cp, "%f) ", (ts->double_obs+i)->max );
+				nb = snprintf( cp, cp_end-cp, "%g) ", (tspec->double_observations+i)->max );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
@@ -673,8 +703,8 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 		}
 	}
 
-	if (ts->charcount_obs > 0) {
-		nb = snprintf( cp, cp_end-cp, "CHARCOUNT %d ", ts->charcount_obs );
+	if (tspec->charcount_observations > 0) {
+		nb = snprintf( cp, cp_end-cp, "CHARCOUNT %d ", tspec->charcount_observations );
 		if (nb < strlen("CHARCOUNT ")+1 || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
@@ -690,44 +720,56 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	cp += nb;
 	
 	/* print action INTS */
-	if (ts->num_int_act > 0) {
+	if (tspec->num_int_actions > 0) {
 		nb = snprintf( cp, cp_end-cp, "INTS " );
 		if (nb < strlen("INTS ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
-		for (i = 0; i < ts->num_int_act; i++) {
+		for (i = 0; i < tspec->num_int_actions; i++) {
 			nb = snprintf( cp, cp_end-cp, "(" );
 			if (nb < 1 || cp+nb >= cp_end)
 				return -1;
 			cp += nb;
-			if ((ts->int_act+i)->special_min == RV_NEGINF) {
-				nb = snprintf( cp, cp_end-cp, "NEGINF, " );
-				if (nb < strlen("NEGINF, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else if ((ts->int_act+i)->special_min == RV_UNSPEC) {
-				nb = snprintf( cp, cp_end-cp, "UNSPEC, " );
-				if (nb < strlen("UNSPEC, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else {
-				nb = snprintf( cp, cp_end-cp, "%d, ", (ts->int_act+i)->min );
+
+			/* print tuple repeat count if greater than 1 */
+			if ((tspec->int_actions+i)->repeat_count > 1) {
+				nb = snprintf( cp, cp_end-cp, "%d ", (tspec->int_actions+i)->repeat_count );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			}
-			if ((ts->int_act+i)->special_max == RV_POSINF) {
+
+			/* print infimum */
+			if ((tspec->int_actions+i)->special_min == RVAL_NEGINF) {
+				nb = snprintf( cp, cp_end-cp, "NEGINF " );
+				if (nb < strlen("NEGINF ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else if ((tspec->int_actions+i)->special_min == RVAL_UNSPEC) {
+				nb = snprintf( cp, cp_end-cp, "UNSPEC " );
+				if (nb < strlen("UNSPEC ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else {
+				nb = snprintf( cp, cp_end-cp, "%d ", (tspec->int_actions+i)->min );
+				if (nb < 2 || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			}
+
+			/* print supremum */
+			if ((tspec->int_actions+i)->special_max == RVAL_POSINF) {
 				nb = snprintf( cp, cp_end-cp, "POSINF) " );
 				if (nb < strlen("POSINF) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
-			} else if ((ts->int_act+i)->special_max == RV_UNSPEC) {
+			} else if ((tspec->int_actions+i)->special_max == RVAL_UNSPEC) {
 				nb = snprintf( cp, cp_end-cp, "UNSPEC) " );
 				if (nb < strlen("UNSPEC) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			} else {
-				nb = snprintf( cp, cp_end-cp, "%d) ", (ts->int_act+i)->max );
+				nb = snprintf( cp, cp_end-cp, "%d) ", (tspec->int_actions+i)->max );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
@@ -736,44 +778,56 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	}
 
 	/* print action DOUBLES */
-	if (ts->num_double_act > 0) {
+	if (tspec->num_double_actions > 0) {
 		nb = snprintf( cp, cp_end-cp, "DOUBLES " );
 		if (nb < strlen("DOUBLES ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
-		for (i = 0; i < ts->num_double_act; i++) {
+		for (i = 0; i < tspec->num_double_actions; i++) {
 			nb = snprintf( cp, cp_end-cp, "(" );
 			if (nb < 1 || cp+nb >= cp_end)
 				return -1;
 			cp += nb;
-			if ((ts->double_act+i)->special_min == RV_NEGINF) {
-				nb = snprintf( cp, cp_end-cp, "NEGINF, " );
-				if (nb < strlen("NEGINF, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else if ((ts->double_act+i)->special_min == RV_UNSPEC) {
-				nb = snprintf( cp, cp_end-cp, "UNSPEC, " );
-				if (nb < strlen("UNSPEC, ") || cp+nb >= cp_end)
-					return -1;
-				cp += nb;
-			} else {
-				nb = snprintf( cp, cp_end-cp, "%f, ", (ts->double_act+i)->min );
+
+			/* print tuple repeat count if greater than 1 */
+			if ((tspec->double_actions+i)->repeat_count > 1) {
+				nb = snprintf( cp, cp_end-cp, "%d ", (tspec->double_actions+i)->repeat_count );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			}
-			if ((ts->double_act+i)->special_max == RV_POSINF) {
+
+			/* print infimum */
+			if ((tspec->double_actions+i)->special_min == RVAL_NEGINF) {
+				nb = snprintf( cp, cp_end-cp, "NEGINF " );
+				if (nb < strlen("NEGINF ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else if ((tspec->double_actions+i)->special_min == RVAL_UNSPEC) {
+				nb = snprintf( cp, cp_end-cp, "UNSPEC " );
+				if (nb < strlen("UNSPEC ") || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			} else {
+				nb = snprintf( cp, cp_end-cp, "%g ", (tspec->double_actions+i)->min );
+				if (nb < 2 || cp+nb >= cp_end)
+					return -1;
+				cp += nb;
+			}
+
+			/* print supremum */
+			if ((tspec->double_actions+i)->special_max == RVAL_POSINF) {
 				nb = snprintf( cp, cp_end-cp, "POSINF) " );
 				if (nb < strlen("POSINF) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
-			} else if ((ts->double_act+i)->special_max == RV_UNSPEC) {
+			} else if ((tspec->double_actions+i)->special_max == RVAL_UNSPEC) {
 				nb = snprintf( cp, cp_end-cp, "UNSPEC) " );
 				if (nb < strlen("UNSPEC) ") || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
 			} else {
-				nb = snprintf( cp, cp_end-cp, "%f) ", (ts->double_act+i)->max );
+				nb = snprintf( cp, cp_end-cp, "%g) ", (tspec->double_actions+i)->max );
 				if (nb < 2 || cp+nb >= cp_end)
 					return -1;
 				cp += nb;
@@ -781,8 +835,8 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 		}
 	}
 
-	if (ts->charcount_act > 0) {
-		nb = snprintf( cp, cp_end-cp, "CHARCOUNT %d ", ts->charcount_act );
+	if (tspec->charcount_actions > 0) {
+		nb = snprintf( cp, cp_end-cp, "CHARCOUNT %d ", tspec->charcount_actions );
 		if (nb < strlen("CHARCOUNT ")+1 || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
@@ -796,43 +850,43 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 	if (nb < strlen("REWARDS (") || cp+nb >= cp_end)
 		return -1;
 	cp += nb;
-	if ((ts->reward).special_min == RV_NEGINF) {
-		nb = snprintf( cp, cp_end-cp, "NEGINF, " );
-		if (nb < strlen("NEGINF, ") || cp+nb >= cp_end)
+	if ((tspec->reward).special_min == RVAL_NEGINF) {
+		nb = snprintf( cp, cp_end-cp, "NEGINF " );
+		if (nb < strlen("NEGINF ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
-	} else if ((ts->reward).special_min == RV_UNSPEC) {
-		nb = snprintf( cp, cp_end-cp, "UNSPEC, " );
-		if (nb < strlen("UNSPEC, ") || cp+nb >= cp_end)
+	} else if ((tspec->reward).special_min == RVAL_UNSPEC) {
+		nb = snprintf( cp, cp_end-cp, "UNSPEC " );
+		if (nb < strlen("UNSPEC ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
 	} else {
-		nb = snprintf( cp, cp_end-cp, "%f, ", (ts->reward).min );
+		nb = snprintf( cp, cp_end-cp, "%g ", (tspec->reward).min );
 		if (nb < 2 || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
 	}
-	if ((ts->reward).special_max == RV_POSINF) {
+	if ((tspec->reward).special_max == RVAL_POSINF) {
 		nb = snprintf( cp, cp_end-cp, "POSINF) " );
 		if (nb < strlen("POSINF) ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
-	} else if ((ts->reward).special_max == RV_UNSPEC) {
+	} else if ((tspec->reward).special_max == RVAL_UNSPEC) {
 		nb = snprintf( cp, cp_end-cp, "UNSPEC) " );
 		if (nb < strlen("UNSPEC) ") || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
 	} else {
-		nb = snprintf( cp, cp_end-cp, "%f) ", (ts->reward).max );
+		nb = snprintf( cp, cp_end-cp, "%g) ", (tspec->reward).max );
 		if (nb < 2 || cp+nb >= cp_end)
 			return -1;
 		cp += nb;
 	}
 
 	/* Extra spec string */
-	if (ts->extra_spec != NULL) {
-		nb = snprintf( cp, cp_end-cp, "EXTRA %s", ts->extra_spec );
-		if (nb < strlen("EXTRA ")+strlen(ts->extra_spec)
+	if (tspec->extra_spec != NULL) {
+		nb = snprintf( cp, cp_end-cp, "EXTRA %s", tspec->extra_spec );
+		if (nb < strlen("EXTRA ")+strlen(tspec->extra_spec)
 			|| cp+nb >= cp_end)
 			return -1;
 		cp += nb;
@@ -843,33 +897,33 @@ int enc_taskspec( const taskspec_t *ts, char *ts_str, size_t buf_len )
 }
 
 
-int free_taskspec_struct( taskspec_t *ts )
+int free_taskspec_struct( taskspec_t *tspec )
 {
 	/* There is probably a better, fault-tolerant way to do this... */
 
 	/* free allocated arrays; note that free ignores NULL pointers */
-	free( ts->version );
-	free( ts->int_obs );
-	free( ts->double_obs );
-	free( ts->int_act );
-	free( ts->double_act );
-	free( ts->extra_spec );
+	free( tspec->version );
+	free( tspec->int_observations );
+	free( tspec->double_observations );
+	free( tspec->int_actions );
+	free( tspec->double_actions );
+	free( tspec->extra_spec );
 
 	/* set all pointers to NULL in the taskspec struct */
-	ts->version = NULL;
-	ts->int_obs = NULL;
-	ts->double_obs = NULL;
-	ts->int_act = NULL;
-	ts->double_act = NULL;
-	ts->extra_spec = NULL;
+	tspec->version = NULL;
+	tspec->int_observations = NULL;
+	tspec->double_observations = NULL;
+	tspec->int_actions = NULL;
+	tspec->double_actions = NULL;
+	tspec->extra_spec = NULL;
 
 	/* initialize all counts to zero */
-	ts->num_int_obs = 0;
-	ts->num_double_obs = 0;
-	ts->charcount_obs = 0;
-	ts->num_int_act = 0;
-	ts->num_double_act = 0;
-	ts->charcount_act = 0;
+	tspec->num_int_observations = 0;
+	tspec->num_double_observations = 0;
+	tspec->charcount_observations = 0;
+	tspec->num_int_actions = 0;
+	tspec->num_double_actions = 0;
+	tspec->charcount_actions = 0;
 
 	return 0;
 }
@@ -879,10 +933,8 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 {
 	char const *cp,
 		*cp_close; /* point to the closing paren of the current pair */
-	int i;
 
 	int_range_t current_ran; /* range struct for processing each pair of parens */
-	int repeat_count; /* number of times to repeat a tuple */						   
 	
 	int_range_t *ran_vect;
 	int buf_len;
@@ -891,18 +943,17 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 	char *endptr; /* used for detecting errors in string-to-integer
 					 conversion with strtol */
 
+	*num_dims = 0;
+
 	/* ignore empty parameter strings */
-	if (range_str == NULL) {
-		*num_dims = 0;
+	if (range_str == NULL)
 		return NULL;
-	}
 
 	cp = range_str;
 	
 	/* allocate array of range structs; this will grow in length as more
 	   ranges are read. */
 	buf_len = VECT_BUF_LEN;
-	*num_dims = 0;
 	ran_vect = (int_range_t *)malloc( VECT_BUF_LEN*sizeof(int_range_t) );
 
 	/* step through each pair of parens */
@@ -915,8 +966,10 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 			return NULL;
 		}
 
-		current_ran.special_min = current_ran.special_max = RV_NOTSPECIAL;
-		repeat_count = 1;
+		/* clear previous current_ran field values */
+		current_ran.min = current_ran.max = 0;
+		current_ran.special_min = current_ran.special_max = RVAL_NOTSPECIAL;
+		current_ran.repeat_count = 1;
 
 		/* 
 		 * Extract the integers, checking for special values:
@@ -934,9 +987,9 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 		if (isalpha( *cp )) { /* a special value? */
 
 			if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-				current_ran.special_min = RV_UNSPEC;
+				current_ran.special_min = RVAL_UNSPEC;
 			} else if (!strncasecmp( cp, "NEGINF", strlen("NEGINF") )) {
-				current_ran.special_min = RV_NEGINF;
+				current_ran.special_min = RVAL_NEGINF;
 			} else {
 				free( ran_vect );
 				*num_dims = -1; /* malformed expression: unrecognized special type */
@@ -973,9 +1026,9 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 		if (isalpha( *cp )) { /* a special value? */
 
 			if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-				current_ran.special_max = RV_UNSPEC;
+				current_ran.special_max = RVAL_UNSPEC;
 			} else if (!strncasecmp( cp, "POSINF", strlen("POSINF") )) {
-				current_ran.special_max = RV_POSINF;
+				current_ran.special_max = RVAL_POSINF;
 			} else {
 				free( ran_vect );
 				*num_dims = -1; /* malformed expression: unrecognized special type */
@@ -1001,11 +1054,11 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 		else
 			cp = find_nonspace( cp );
 
-		if (cp < cp_close) { /* Third entry is present, thus a
-								repeat-count was given. */
+		if (cp != NULL && cp < cp_close) { /* Third entry is present,
+											  thus a repeat-count was given. */
 
-			if (current_ran.special_min != RV_NOTSPECIAL
-				|| current_ran.special_max == RV_POSINF) {
+			if (current_ran.special_min != RVAL_NOTSPECIAL
+				|| current_ran.special_max == RVAL_POSINF) {
 				free( ran_vect );
 				*num_dims = -1; /* malformed expression: repeat-count
 								   cannot be a special value, or min
@@ -1015,11 +1068,11 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 			}
 
 			/* adjust values in int_range struct to handle third entry */
-			repeat_count = current_ran.min;
+			current_ran.repeat_count = current_ran.min;
 			current_ran.min = current_ran.max;
 			current_ran.special_min = current_ran.special_max;
 
-			if (repeat_count < 1) {
+			if (current_ran.repeat_count < 1) {
 				free( ran_vect );
 				*num_dims = -1; /* invalid repeat-count */
 				return NULL;
@@ -1028,9 +1081,9 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 			if (isalpha( *cp )) { /* a special value? */
 
 				if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-					current_ran.special_max = RV_UNSPEC;
+					current_ran.special_max = RVAL_UNSPEC;
 				} else if (!strncasecmp( cp, "POSINF", strlen("POSINF") )) {
-					current_ran.special_max = RV_POSINF;
+					current_ran.special_max = RVAL_POSINF;
 				} else {
 					free( ran_vect );
 					*num_dims = -1; /* malformed expression: unrecognized special type */
@@ -1062,7 +1115,7 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 		}
 		cp = cp_close+1;		
 
-		(*num_dims) += repeat_count;
+		(*num_dims)++;
 		if (*num_dims > buf_len) { /* grow buffer if necessary */
 			buf_len = (*num_dims)+VECT_BUF_LEN;
 			tmp_ir_ptr = (int_range_t *)realloc( ran_vect, buf_len*sizeof(int_range_t) );
@@ -1075,12 +1128,11 @@ int_range_t *get_int_dims( const char *range_str, int *num_dims )
 		}
 		
 		/* finally, add this int range struct to the array */
-		for (i = 0; i < repeat_count; i++) {
-			(ran_vect+(*num_dims)-repeat_count+i)->min = current_ran.min;
-			(ran_vect+(*num_dims)-repeat_count+i)->max = current_ran.max;
-			(ran_vect+(*num_dims)-repeat_count+i)->special_min = current_ran.special_min;
-			(ran_vect+(*num_dims)-repeat_count+i)->special_max = current_ran.special_max;
-		}
+		(ran_vect+(*num_dims)-1)->min = current_ran.min;
+		(ran_vect+(*num_dims)-1)->max = current_ran.max;
+		(ran_vect+(*num_dims)-1)->special_min = current_ran.special_min;
+		(ran_vect+(*num_dims)-1)->special_max = current_ran.special_max;
+		(ran_vect+(*num_dims)-1)->repeat_count = current_ran.repeat_count;
 
 	}
 
@@ -1103,10 +1155,8 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 {
 	char const *cp,
 		*cp_close; /* point to the closing paren of the current pair */
-	int i;
 
 	double_range_t current_ran; /* range struct for processing each pair of parens */
-	int repeat_count; /* number of times to repeat a tuple */						   
 	
 	double_range_t *ran_vect;
 	int buf_len;
@@ -1139,8 +1189,10 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 			return NULL;
 		}
 
-		current_ran.special_min = current_ran.special_max = RV_NOTSPECIAL;
-		repeat_count = 1;
+		/* clear previous current_ran field values */
+		current_ran.min = current_ran.max = 0.;
+		current_ran.special_min = current_ran.special_max = RVAL_NOTSPECIAL;
+		current_ran.repeat_count = 1;
 
 		/* 
 		 * Extract the numbers, checking for special values:
@@ -1158,9 +1210,9 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 		if (isalpha( *cp )) { /* a special value? */
 
 			if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-				current_ran.special_min = RV_UNSPEC;
+				current_ran.special_min = RVAL_UNSPEC;
 			} else if (!strncasecmp( cp, "NEGINF", strlen("NEGINF") )) {
-				current_ran.special_min = RV_NEGINF;
+				current_ran.special_min = RVAL_NEGINF;
 			} else {
 				free( ran_vect );
 				*num_dims = -1; /* malformed expression: unrecognized special type */
@@ -1197,9 +1249,9 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 		if (isalpha( *cp )) { /* a special value? */
 
 			if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-				current_ran.special_max = RV_UNSPEC;
+				current_ran.special_max = RVAL_UNSPEC;
 			} else if (!strncasecmp( cp, "POSINF", strlen("POSINF") )) {
-				current_ran.special_max = RV_POSINF;
+				current_ran.special_max = RVAL_POSINF;
 			} else {
 				free( ran_vect );
 				*num_dims = -1; /* malformed expression: unrecognized special type */
@@ -1225,11 +1277,11 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 		else
 			cp = find_nonspace( cp );
 
-		if (cp < cp_close) { /* Third entry is present, thus a
-								repeat-count was given. */
+		if (cp != NULL && cp < cp_close) { /* Third entry is present, thus a
+											  repeat-count was given. */
 
-			if (current_ran.special_min != RV_NOTSPECIAL
-				|| current_ran.special_max == RV_POSINF) {
+			if (current_ran.special_min != RVAL_NOTSPECIAL
+				|| current_ran.special_max == RVAL_POSINF) {
 				free( ran_vect );
 				*num_dims = -1; /* malformed expression: repeat-count
 								   cannot be a special value, or min
@@ -1239,11 +1291,11 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 			}
 
 			/* adjust values in double_range struct to handle third entry */
-			repeat_count = (int)current_ran.min;
+			current_ran.repeat_count = (int)current_ran.min;
 			current_ran.min = current_ran.max;
 			current_ran.special_min = current_ran.special_max;
 
-			if (repeat_count < 1) {
+			if (current_ran.repeat_count < 1) {
 				free( ran_vect );
 				*num_dims = -1; /* invalid repeat-count */
 				return NULL;
@@ -1252,9 +1304,9 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 			if (isalpha( *cp )) { /* a special value? */
 
 				if (!strncasecmp( cp, "UNSPEC", strlen("UNSPEC") )) {
-					current_ran.special_max = RV_UNSPEC;
+					current_ran.special_max = RVAL_UNSPEC;
 				} else if (!strncasecmp( cp, "POSINF", strlen("POSINF") )) {
-					current_ran.special_max = RV_POSINF;
+					current_ran.special_max = RVAL_POSINF;
 				} else {
 					free( ran_vect );
 					*num_dims = -1; /* malformed expression: unrecognized special type */
@@ -1286,7 +1338,7 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 		}
 		cp = cp_close+1;		
 
-		(*num_dims) += repeat_count;
+		(*num_dims)++;
 		if (*num_dims > buf_len) { /* grow buffer if necessary */
 			buf_len = (*num_dims)+VECT_BUF_LEN;
 			tmp_ir_ptr = (double_range_t *)realloc( ran_vect, buf_len*sizeof(double_range_t) );
@@ -1299,12 +1351,11 @@ double_range_t *get_double_dims( const char *range_str, int *num_dims )
 		}
 		
 		/* finally, add this double range struct to the array */
-		for (i = 0; i < repeat_count; i++) {
-			(ran_vect+(*num_dims)-repeat_count+i)->min = current_ran.min;
-			(ran_vect+(*num_dims)-repeat_count+i)->max = current_ran.max;
-			(ran_vect+(*num_dims)-repeat_count+i)->special_min = current_ran.special_min;
-			(ran_vect+(*num_dims)-repeat_count+i)->special_max = current_ran.special_max;
-		}
+		(ran_vect+(*num_dims)-1)->min = current_ran.min;
+		(ran_vect+(*num_dims)-1)->max = current_ran.max;
+		(ran_vect+(*num_dims)-1)->special_min = current_ran.special_min;
+		(ran_vect+(*num_dims)-1)->special_max = current_ran.special_max;
+		(ran_vect+(*num_dims)-1)->repeat_count = current_ran.repeat_count;
 
 	}
 
