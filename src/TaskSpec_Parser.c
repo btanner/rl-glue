@@ -424,6 +424,9 @@ int decode_taskspec( taskspec_t *tspec, const char *tspec_string )
 	 * Reward range:
 	 *
 	 */
+	/* initialize the reward range structure */
+	tspec->reward.special_min = tspec->reward.special_max = RVAL_NOTSPECIAL;
+
 	cp = strchr( cp, ' ' );
 	cp = find_nonspace( cp );
 	if (*cp != '(') {
@@ -1432,6 +1435,820 @@ char const *find_nonspace( const char *s )
 		return NULL;
 	else
 		return cp;
+}
+
+
+/*
+ * Definitions for accessor methods:
+ *
+ */
+
+int isEpisodic( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1;
+
+	if (tspec->problem_type == TSPEC_EPISODIC)
+		return 1;
+	else
+		return 0;
+}
+
+int isContinuing( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1;
+
+	if (tspec->problem_type == TSPEC_CONTINUING)
+		return 1;
+	else
+		return 0;
+}
+
+int isOtherType( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1;
+
+	if (tspec->problem_type == TSPEC_OTHER)
+		return 1;
+	else
+		return 0;
+}
+
+int_range_t getIntObs( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+	int i;
+	int ind_accumulator; /* for stepping through the observation
+							ranges array */
+
+	ir.repeat_count = 0;
+	ir.min = ir.max = 0;
+	ir.special_min = ir.special_max = RVAL_NOTSPECIAL;
+
+	if (tspec == NULL || tspec->num_int_observations == 0 || index < 0)
+		return ir; /* invalid request */
+
+	ir.repeat_count = 1;
+	
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_int_observations; i++) {
+		ind_accumulator += (tspec->int_observations+i)->repeat_count;
+		if (index < ind_accumulator) {
+			/* desired observation range found */
+			ir.min = (tspec->int_observations+i)->min;
+			ir.max = (tspec->int_observations+i)->max;
+			ir.special_min = (tspec->int_observations+i)->special_min;
+			ir.special_max = (tspec->int_observations+i)->special_max;
+
+			return ir;
+		}
+	}
+
+	/* given index is out of bounds; return empty range */
+	return ir;
+}
+
+double_range_t getDoubleObs( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+	int i;
+	int ind_accumulator; /* for stepping through the observation
+							ranges array */
+
+	dr.repeat_count = 0;
+	dr.min = dr.max = 0.;
+	dr.special_min = dr.special_max = RVAL_NOTSPECIAL;
+
+	if (tspec == NULL || tspec->num_double_observations == 0 || index < 0)
+		return dr; /* invalid request */
+
+	dr.repeat_count = 1;
+	
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_double_observations; i++) {
+		ind_accumulator += (tspec->double_observations+i)->repeat_count;
+		if (index < ind_accumulator) {
+			/* desired observation range found */
+			dr.min = (tspec->double_observations+i)->min;
+			dr.max = (tspec->double_observations+i)->max;
+			dr.special_min = (tspec->double_observations+i)->special_min;
+			dr.special_max = (tspec->double_observations+i)->special_max;
+
+			return dr;
+		}
+	}
+
+	/* given index is out of bounds; return empty range */
+	return dr;
+}
+
+int_range_t getIntAct( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+	int i;
+	int ind_accumulator; /* for stepping through the action ranges array */
+
+	ir.repeat_count = 0;
+	ir.min = ir.max = 0;
+	ir.special_min = ir.special_max = RVAL_NOTSPECIAL;
+
+	if (tspec == NULL || tspec->num_int_actions == 0 || index < 0)
+		return ir; /* invalid request */
+
+	ir.repeat_count = 1;
+	
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_int_actions; i++) {
+		ind_accumulator += (tspec->int_actions+i)->repeat_count;
+		if (index < ind_accumulator) {
+			/* desired action range found */
+			ir.min = (tspec->int_actions+i)->min;
+			ir.max = (tspec->int_actions+i)->max;
+			ir.special_min = (tspec->int_actions+i)->special_min;
+			ir.special_max = (tspec->int_actions+i)->special_max;
+
+			return ir;
+		}
+	}
+
+	/* given index is out of bounds; return empty range */
+	return ir;
+}
+
+double_range_t getDoubleAct( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+	int i;
+	int ind_accumulator; /* for stepping through the action ranges array */
+
+	dr.repeat_count = 0;
+	dr.min = dr.max = 0.;
+	dr.special_min = dr.special_max = RVAL_NOTSPECIAL;
+
+	if (tspec == NULL || tspec->num_double_actions == 0 || index < 0)
+		return dr; /* invalid request */
+
+	dr.repeat_count = 1;
+	
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_double_actions; i++) {
+		ind_accumulator += (tspec->double_actions+i)->repeat_count;
+		if (index < ind_accumulator) {
+			/* desired action range found */
+			dr.min = (tspec->double_actions+i)->min;
+			dr.max = (tspec->double_actions+i)->max;
+			dr.special_min = (tspec->double_actions+i)->special_min;
+			dr.special_max = (tspec->double_actions+i)->special_max;
+
+			return dr;
+		}
+	}
+
+	/* given index is out of bounds; return empty range */
+	return dr;
+}
+
+/* Observation space */
+int getNumIntObs( taskspec_t *tspec )
+{
+	int i;
+	int ind_accumulator;
+
+	if (tspec == NULL)
+		return -1;
+
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_int_observations; i++)
+		ind_accumulator += (tspec->int_observations+i)->repeat_count;
+
+	return ind_accumulator;
+}
+
+int getIntObsMax( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	return ir.max;
+}
+
+int getIntObsMin( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	return ir.min;
+}
+
+int isIntObsMax_special( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	
+	if (ir.special_max != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntObsMax_posInf( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	
+	if (ir.special_max == RVAL_POSINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntObsMax_unspec( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	
+	if (ir.special_max == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntObsMin_special( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	
+	if (ir.special_min != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntObsMin_negInf( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	
+	if (ir.special_min == RVAL_NEGINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntObsMin_unspec( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_observations == 0
+		|| index < 0 || index > getNumIntObs( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntObs( tspec, index );
+	
+	if (ir.special_min == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int getNumDoubleObs( taskspec_t *tspec )
+{
+	int i;
+	int ind_accumulator;
+
+	if (tspec == NULL)
+		return -1;
+
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_double_observations; i++)
+		ind_accumulator += (tspec->double_observations+i)->repeat_count;
+
+	return ind_accumulator;
+}
+
+double getDoubleObsMax( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+	return dr.max;
+}
+
+double getDoubleObsMin( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+	return dr.min;
+}
+
+int isDoubleObsMax_special( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+
+	if (dr.special_max != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleObsMax_posInf( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+
+	if (dr.special_max == RVAL_POSINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleObsMax_unspec( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+
+	if (dr.special_max == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleObsMin_special( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+
+	if (dr.special_min != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleObsMin_negInf( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+
+	if (dr.special_min == RVAL_NEGINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleObsMin_unspec( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_observations == 0
+		|| index < 0 || index > getNumDoubleObs( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleObs( tspec, index );
+
+	if (dr.special_min == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int getCharcountObs( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	return tspec->charcount_observations;
+}
+
+/* Action space */
+int getNumIntAct( taskspec_t *tspec )
+{
+	int i;
+	int ind_accumulator;
+
+	if (tspec == NULL)
+		return -1;
+
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_int_actions; i++)
+		ind_accumulator += (tspec->int_actions+i)->repeat_count;
+
+	return ind_accumulator;
+}
+
+int getIntActMax( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+	return ir.max;
+}
+
+int getIntActMin( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+	
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+	return ir.min;
+}
+
+int isIntActMax_special( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+
+	if (ir.special_max != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntActMax_posInf( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+
+	if (ir.special_max == RVAL_POSINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntActMax_unspec( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+
+	if (ir.special_max == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntActMin_special( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+
+	if (ir.special_min != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntActMin_negInf( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+
+	if (ir.special_max == RVAL_NEGINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isIntActMin_unspec( taskspec_t *tspec, int index )
+{
+	int_range_t ir;
+
+	if (tspec == NULL || tspec->num_int_actions == 0
+		|| index < 0 || index > getNumIntAct( tspec )-1)
+		return -1; /* invalid request */
+
+	ir = getIntAct( tspec, index );
+
+	if (ir.special_max == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int getNumDoubleAct( taskspec_t *tspec )
+{
+	int i;
+	int ind_accumulator;
+
+	if (tspec == NULL)
+		return -1;
+
+	ind_accumulator = 0;
+	for (i = 0; i < tspec->num_double_actions; i++)
+		ind_accumulator += (tspec->double_actions+i)->repeat_count;
+
+	return ind_accumulator;
+}
+
+double getDoubleActMax( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	return dr.max;
+}
+
+double getDoubleActMin( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	return dr.min;
+}
+
+int isDoubleActMax_special( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	
+	if (dr.special_max != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleActMax_posInf( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	
+	if (dr.special_max == RVAL_POSINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleActMax_unspec( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	
+	if (dr.special_max == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleActMin_special( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	
+	if (dr.special_min != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleActMin_negInf( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	
+	if (dr.special_min == RVAL_NEGINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isDoubleActMin_unspec( taskspec_t *tspec, int index )
+{
+	double_range_t dr;
+
+	if (tspec == NULL || tspec->num_double_actions == 0
+		|| index < 0 || index > getNumDoubleAct( tspec )-1)
+		return -1; /* invalid request */
+
+	dr = getDoubleAct( tspec, index );
+	
+	if (dr.special_min == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int getCharcountAct( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	return tspec->charcount_actions;
+}
+
+/* Reward range */
+double getRewardMax( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	return (tspec->reward).max;
+}
+
+double getRewardMin( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	return (tspec->reward).min;
+}
+
+int isRewardMax_special( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	if ((tspec->reward).special_max != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isRewardMax_posInf( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	if ((tspec->reward).special_max == RVAL_POSINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isRewardMax_unspec( taskspec_t *tspec ) 
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	if ((tspec->reward).special_max == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
+}
+
+int isRewardMin_special( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	if ((tspec->reward).special_min != RVAL_NOTSPECIAL)
+		return 1;
+	else
+		return 0;
+}
+
+int isRewardMin_negInf( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	if ((tspec->reward).special_min == RVAL_NEGINF)
+		return 1;
+	else
+		return 0;
+}
+
+int isRewardMin_unspec( taskspec_t *tspec )
+{
+	if (tspec == NULL)
+		return -1; /* invalid request */
+
+	if ((tspec->reward).special_min == RVAL_UNSPEC)
+		return 1;
+	else
+		return 0;
 }
 
 

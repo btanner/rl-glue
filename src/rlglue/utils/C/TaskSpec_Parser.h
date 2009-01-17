@@ -101,6 +101,99 @@ int encode_taskspec( const taskspec_t *tspec, char *tspec_string, size_t buf_len
 int free_taskspec_struct( taskspec_t *tspec );
 
 
+/*
+ * Accessor methods:
+ *
+ * NOTE, indices are 0-based, i.e., numbering starts at 0.
+ *
+ * Requests for numerical min and max values that are of a special
+ * type, such as positive infinity, result in an undefined return
+ * value. That is, call the corresponding _special function before
+ * attempting to read numerical (int or double) values.
+ *
+ * Access functions (prefix of "get") have undefined return values if
+ * the given index is out of range or the taskspec_t pointer is NULL,
+ * unless specified otherwise. NULL taskspec_t pointers are ignored in
+ * all functions.
+ *
+ * All is... type functions return nonzero if the condition is true,
+ * zero otherwise. For example, isEpisodic will return 1 if the
+ * problem is episodic, 0 otherwise. -1 is returned upon error.
+ *
+ * Finally, these routines are somewhat awkward due to the lack of
+ * exception handling and classes in C.
+ */
+
+int isEpisodic( taskspec_t *tspec );
+int isContinuing( taskspec_t *tspec );
+int isOtherType( taskspec_t *tspec );
+
+/* get copies of range structures; the returned structure contains no
+   pointers and is a copy (pass by value) of the original entry in the
+   taskspec_t structure; hence, it can be manipulated at will by the
+   caller. */
+int_range_t getIntObs( taskspec_t *tspec, int index );
+double_range_t getDoubleObs( taskspec_t *tspec, int index );
+int_range_t getIntAct( taskspec_t *tspec, int index );
+double_range_t getDoubleAct( taskspec_t *tspec, int index );
+
+/* Observation space */
+int getNumIntObs( taskspec_t *tspec );
+int getIntObsMax( taskspec_t *tspec, int index );
+int getIntObsMin( taskspec_t *tspec, int index );
+int isIntObsMax_special( taskspec_t *tspec, int index );
+int isIntObsMax_posInf( taskspec_t *tspec, int index );
+int isIntObsMax_unspec( taskspec_t *tspec, int index );
+int isIntObsMin_special( taskspec_t *tspec, int index );
+int isIntObsMin_negInf( taskspec_t *tspec, int index );
+int isIntObsMin_unspec( taskspec_t *tspec, int index );
+
+int getNumDoubleObs( taskspec_t *tspec );
+double getDoubleObsMax( taskspec_t *tspec, int index );
+double getDoubleObsMin( taskspec_t *tspec, int index );
+int isDoubleObsMax_special( taskspec_t *tspec, int index );
+int isDoubleObsMax_posInf( taskspec_t *tspec, int index );
+int isDoubleObsMax_unspec( taskspec_t *tspec, int index );
+int isDoubleObsMin_special( taskspec_t *tspec, int index );
+int isDoubleObsMin_negInf( taskspec_t *tspec, int index );
+int isDoubleObsMin_unspec( taskspec_t *tspec, int index );
+
+int getCharcountObs( taskspec_t *tspec );
+
+/* Action space */
+int getNumIntAct( taskspec_t *tspec );
+int getIntActMax( taskspec_t *tspec, int index );
+int getIntActMin( taskspec_t *tspec, int index );
+int isIntActMax_special( taskspec_t *tspec, int index );
+int isIntActMax_posInf( taskspec_t *tspec, int index );
+int isIntActMax_unspec( taskspec_t *tspec, int index );
+int isIntActMin_special( taskspec_t *tspec, int index );
+int isIntActMin_negInf( taskspec_t *tspec, int index );
+int isIntActMin_unspec( taskspec_t *tspec, int index );
+
+int getNumDoubleAct( taskspec_t *tspec );
+double getDoubleActMax( taskspec_t *tspec, int index );
+double getDoubleActMin( taskspec_t *tspec, int index );
+int isDoubleActMax_special( taskspec_t *tspec, int index );
+int isDoubleActMax_posInf( taskspec_t *tspec, int index );
+int isDoubleActMax_unspec( taskspec_t *tspec, int index );
+int isDoubleActMin_special( taskspec_t *tspec, int index );
+int isDoubleActMin_negInf( taskspec_t *tspec, int index );
+int isDoubleActMin_unspec( taskspec_t *tspec, int index );
+
+int getCharcountAct( taskspec_t *tspec );
+
+/* Reward range */
+double getRewardMax( taskspec_t *tspec );
+double getRewardMin( taskspec_t *tspec );
+int isRewardMax_special( taskspec_t *tspec );
+int isRewardMax_posInf( taskspec_t *tspec );
+int isRewardMax_unspec( taskspec_t *tspec ); 
+int isRewardMin_special( taskspec_t *tspec );
+int isRewardMin_negInf( taskspec_t *tspec );
+int isRewardMin_unspec( taskspec_t *tspec );
+
+
 #ifdef __cplusplus
 }
 #endif

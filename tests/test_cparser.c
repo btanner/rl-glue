@@ -21,7 +21,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <rlglue/utils/C/TaskSpec_Parser.h>
+/* #include <rlglue/utils/C/TaskSpec_Parser.h> */
+#include "TaskSpec_Parser.h"
 
 
 #define BUF_SIZE 1024
@@ -51,7 +52,7 @@ int main( int argc, char **argv )
 	} else if (argc == 3) {
 		test_fp = fopen( argv[1], "r" );
 		noise_frac = atof( argv[2] );
-	}else {
+	} else {
 		printf( "Usage: %s [test-strings-file] [noise-fraction]\n", argv[0] );
 		return 1;
 	}
