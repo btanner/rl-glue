@@ -70,26 +70,30 @@ void load_value_function(const char *fileName);
 void agent_init(const char* task_spec)
 {
 	/*Struct to hold the parsed task spec*/
-	taskspec_t ts;
-	int decode_result = dec_taskspec( &ts, task_spec );
+	taskspec_t *ts=(taskspec_t*)malloc(sizeof(taskspec_t));
+	int decode_result = decode_taskspec( ts, task_spec );
 	if(decode_result!=0){
 		printf("Could not decode task spec, code: %d for task spec: %s\n",decode_result,task_spec);
 		exit(1);
 	}
 	
 	/* Lots of assertions to make sure that we can handle this problem.  */
-	assert(ts.num_int_obs==1);
-	assert(ts.num_double_obs==0);
-	assert(ts.int_obs[0].special_min==RV_NOTSPECIAL);
-	assert(ts.int_obs[0].special_max==RV_NOTSPECIAL);
-	numStates=ts.int_obs[0].max+1;
+	assert(getNumIntObs(ts)==1);
+	assert(getNumDoubleObs(ts)==0);
+	assert(isIntObsMax_special(ts,0)==0);
+	assert(isIntObsMin_special(ts,0)==0);
 
-	assert(ts.num_int_act==1);
-	assert(ts.num_double_act==0);
-	assert(ts.int_act[0].special_min==RV_NOTSPECIAL);
-	assert(ts.int_act[0].special_max==RV_NOTSPECIAL);
-	numActions=ts.int_act[0].max+1;
 	
+	numStates=getIntObsMax(ts,0)+1;
+
+	assert(getNumIntAct(ts)==1);
+	assert(getNumDoubleAct(ts)==0);
+	assert(isIntActMax_special(ts,0)==0);
+	assert(isIntActMin_special(ts,0)==0);
+
+	numActions=getIntActMax(ts,0)+1;
+
+	free_taskspec_struct(ts);
 	/*Here is where you might allocate storage for parameters (value function or policy, last action, last observation, etc)*/
 	
 	/*Here you would parse the task spec if you felt like it*/
@@ -260,6 +264,8 @@ int randInRange(int max){
 int calculateArrayIndex(int theState, int theAction){
 	assert(theState<numStates);
 	assert(theAction<numActions);
+	
+	
 
 	return theState*numActions+theAction;
 }

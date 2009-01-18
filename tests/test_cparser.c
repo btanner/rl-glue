@@ -21,8 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 
-/* #include <rlglue/utils/C/TaskSpec_Parser.h> */
-#include "TaskSpec_Parser.h"
+#include <rlglue/utils/C/TaskSpec_Parser.h>
 
 
 #define BUF_SIZE 1024

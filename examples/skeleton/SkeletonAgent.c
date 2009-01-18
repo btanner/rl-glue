@@ -36,7 +36,6 @@ int randInRange(int max){
 void agent_init(const char* task_spec)
 {
 	/*Seed the random number generator*/
-
 	srand(time(0));
 	/*Here is where you might allocate storage for parameters (value function or policy, last action, last observation, etc)*/
 	
