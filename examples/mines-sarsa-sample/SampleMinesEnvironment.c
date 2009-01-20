@@ -213,11 +213,19 @@ void env_cleanup()
 }
 
 const char* env_message(const char* inMessage) {
+	/*	Message Description
+ 	 * 'set-random-start-state'
+	 * Action: Set flag to do random starting states (the default)
+	 */
 	if(strcmp(inMessage,"set-random-start-state")==0){
         fixed_start_state=0;
         return "Message understood.  Using random start state.";
     }
     
+	/*	Message Description
+ 	 * 'set-start-state X Y'
+	 * Action: Set flag to do fixed starting states (row=X, col=Y)
+	 */
 	if(strncmp(inMessage,"set-start-state",15)==0){
 	 	{
 			char *p;
