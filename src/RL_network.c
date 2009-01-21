@@ -474,7 +474,7 @@ unsigned int rlCopyBufferToADT(const rlBuffer* src, unsigned int offset, rl_abst
 
 
 	/*Just clear out DST for now, one day we will make an optimization pass and make this more efficient */
-	allocateRLStruct(dst,numIntsInBuffer,numDoublesInBuffer,numCharsInBuffer);	
+	reallocateRLStruct(dst,numIntsInBuffer,numDoublesInBuffer,numCharsInBuffer);	
 
 	if(numIntsInBuffer>0){
 		offset = rlBufferRead(src, offset, dst->intArray, dst->numInts, sizeof(int));

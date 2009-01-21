@@ -132,11 +132,11 @@ evaluation_point_t *evaluate_agent(){
 	double this_return=0;
 	double mean;
 	double variance;
-	double n=100.0f;
+	int n=10000;
 	evaluation_point_t *eval_point=0;
 	
 	RL_agent_message("freeze learning");
-	for(i=0;i<10;i++){
+	for(i=0;i<n;i++){
 		/* We use a cutoff here in case the policy is bad
 		   and will never end an episode */
 		RL_episode(5000);
@@ -145,8 +145,8 @@ evaluation_point_t *evaluate_agent(){
 		sum_of_squares+=this_return*this_return;
 	}
 	
-	mean=sum/n;
-	variance = (sum_of_squares - n*mean*mean)/(n - 1.0f);
+	mean=sum/(double)n;
+	variance = (sum_of_squares - (double)n*mean*mean)/((double)n - 1.0f);
 	eval_point=(evaluation_point_t *)malloc(sizeof(evaluation_point_t));
 	eval_point->mean=mean;
 	eval_point->standard_dev=sqrt(variance);
