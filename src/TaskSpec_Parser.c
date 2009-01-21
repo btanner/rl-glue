@@ -100,8 +100,18 @@ int decode_taskspec( taskspec_t *tspec, const char *tspec_string )
 	cp = find_nonspace( cp );
 	if (cp == NULL)
 		return -1;
-	if (strncmp( cp, CURRENT_VERSION, strlen(CURRENT_VERSION) ))
+	if (strncmp( cp, CURRENT_VERSION, strlen(CURRENT_VERSION) )) {
+		/* store copy of unrecognized version name to task spec structure */
+		cp_next = strchr( cp, ' ' );
+		if (cp_next == NULL)
+			return -1;
+		tspec->version = (char *)malloc( cp_next-cp+1 );
+		if (tspec->version == NULL) /* insufficient memory!? */
+			return -1;
+		strncpy( tspec->version, cp, cp_next-cp );
+		*(tspec->version+(cp_next-cp)) = '\0';
 		return 1; /* unrecognized or unsupported version */
+	}
 
 	/* prepare to save copy of version string */
 	cp_next = strchr( cp, ' ' );
