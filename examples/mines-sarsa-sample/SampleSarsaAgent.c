@@ -180,31 +180,57 @@ void agent_cleanup() {
 const char* agent_message(const char* inMessage) {
 	static char buffer[128];
 	
+	/*	Message Description
+ 	 * 'freeze learning'
+	 * Action: Set flag to stop updating policy
+	 */
 	if(strcmp(inMessage,"freeze learning")==0){
 		policy_frozen=1;
 		return "message understood, policy frozen";
 	}
+	/*	Message Description
+ 	* unfreeze learning
+ 	* Action: Set flag to resume updating policy
+	*/
 	if(strcmp(inMessage,"unfreeze learning")==0){
 		policy_frozen=0;
 		return "message understood, policy unfrozen";
 	}
+	/*Message Description
+ 	* freeze exploring
+ 	* Action: Set flag to stop exploring (greedy actions only)
+	*/
 	if(strcmp(inMessage,"freeze exploring")==0){
 		exploring_frozen=1;
 		return "message understood, exploring frozen";
 	}
+	/*Message Description
+ 	* unfreeze exploring
+ 	* Action: Set flag to resume exploring (e-greedy actions)
+	*/
 	if(strcmp(inMessage,"unfreeze exploring")==0){
 		exploring_frozen=0;
 		return "message understood, exploring unfrozen";
 	}
+	/*Message Description
+ 	* save_policy FILENAME
+ 	* Action: Save current value function in binary format to 
+	* file called FILENAME
+	*/
 	if(strncmp(inMessage,"save_policy",11)==0){
-		strlcpy(buffer,inMessage+12,sizeof(buffer));
+		strncpy(buffer,inMessage+12,sizeof(buffer));
 		printf("Saving value function...");
 		save_value_function(buffer);
 		printf("Saved.\n");
 		return "message understood, saving policy";
 	}
+	/*Message Description
+ 	* load_policy FILENAME
+ 	* Action: Load value function in binary format from 
+	* file called FILENAME
+	*/
 	if(strncmp(inMessage,"load_policy",11)==0){
-		strlcpy(buffer,inMessage+12,sizeof(buffer));
+		strncpy(buffer,inMessage+12,sizeof(buffer));
 		printf("Loading value function...");
 		load_value_function(buffer);
 		printf("Loaded.\n");
@@ -249,7 +275,6 @@ int egreedy(int state){
       maxIndex = a;
     }
   }
-
   return maxIndex;
 }
 

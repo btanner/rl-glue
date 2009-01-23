@@ -84,7 +84,7 @@ void offline_demo(){
 }
 
 int main(int argc, char *argv[]) {
-	printf("Starting offline demo\n----------------------------\nWill alternate learning for 25 episodes, then freeze policy and evaluate for 100 episodes.\n\n");
+	printf("Starting offline demo\n----------------------------\nWill alternate learning for 25 episodes, then freeze policy and evaluate for 10 episodes.\n\n");
 	printf("After Episode\tMean Return\tStandard Deviation\n-------------------------------------------------------------------------\n");
 	RL_init();
 	offline_demo();
@@ -124,7 +124,10 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-
+/**
+ * Tell the agent to stop learning, then execute n episodes with his current
+ * policy.  Estimate the mean and variance of the return over these episodes.
+ */
 evaluation_point_t *evaluate_agent(){
 	int i=0;
 	double sum=0;
@@ -132,7 +135,7 @@ evaluation_point_t *evaluate_agent(){
 	double this_return=0;
 	double mean;
 	double variance;
-	int n=10000;
+	int n=10;
 	evaluation_point_t *eval_point=0;
 	
 	RL_agent_message("freeze learning");

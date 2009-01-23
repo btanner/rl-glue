@@ -41,9 +41,6 @@
 	and -100 for stepping on a mine.
 */
 
-
-
-
 #define WORLD_FREE 0
 #define WORLD_OBSTACLE 1
 #define WORLD_MINE 2 
