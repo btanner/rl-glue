@@ -238,7 +238,7 @@ const char* agent_message(const char* inMessage) {
 	}
 
 	
-	return "SampleSarsaAgent(C) does not understand your message.";
+	return "SampleSarsaAgent(C/C++) does not understand your message.";
 			
 }
 

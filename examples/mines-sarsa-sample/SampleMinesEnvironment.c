@@ -128,7 +128,7 @@ const char* env_init(){
 	char *task_spec_string="VERSION RL-Glue-3.0 PROBLEMTYPE episodic "
 							 "DISCOUNTFACTOR 1 OBSERVATIONS INTS (0 107) "
 							 "ACTIONS INTS (0 3)  REWARDS (-100.0 10.0) "
-							"EXTRA SampleMinesEnvironment by Brian Tanner.";
+							"EXTRA SampleMinesEnvironment(C/C++) by Brian Tanner.";
 
 	  the_world.numRows = 6;
 	  the_world.numCols = 18;
@@ -245,7 +245,7 @@ const char* env_message(const char* inMessage) {
 	        return "Message understood.  Using fixed start state.";
     	}
 	}
-	return "SamplesMinesEnvironment does not respond to that message.";
+	return "SamplesMinesEnvironment(C/C++) does not respond to that message.";
 }
 
 

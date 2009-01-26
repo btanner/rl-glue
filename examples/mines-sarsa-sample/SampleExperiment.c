@@ -23,10 +23,9 @@ typedef struct {
 	double standard_dev;
 } evaluation_point_t;
 
-int whichEpisode=0;
 evaluation_point_t *evaluate_agent();
-
-
+void single_evaluation();
+void print_score(int afterEpisodes, evaluation_point_t *the_score);
 
 void save_result_csv(evaluation_point_t *the_score[], char *fileName){
 	FILE *fp;
@@ -47,11 +46,6 @@ void save_result_csv(evaluation_point_t *the_score[], char *fileName){
 
 	fclose(fp);
 }
-
-void print_score(int afterEpisodes, evaluation_point_t *the_score) {
-    printf("%d\t\t%.2f\t\t%.2f\n", afterEpisodes, the_score->mean, the_score->standard_dev);
-}
-
 
 /*
 	This function will freeze the agent's policy and test it after every 25 episodes.
@@ -83,7 +77,10 @@ void offline_demo(){
 	
 }
 
+
+
 int main(int argc, char *argv[]) {
+
 	printf("Starting offline demo\n----------------------------\nWill alternate learning for 25 episodes, then freeze policy and evaluate for 10 episodes.\n\n");
 	printf("After Episode\tMean Return\tStandard Deviation\n-------------------------------------------------------------------------\n");
 	RL_init();
@@ -101,21 +98,21 @@ int main(int argc, char *argv[]) {
 
 
 	printf("Evaluating the agent's default policy:\n\t\tMean Return\tStandardDeviation\n------------------------------------------------------\n");
-	print_score(0,evaluate_agent());
+	single_evaluation();
 	
 	printf("\nLoading up the value function we saved earlier.\n");
 	RL_agent_message("load_policy results.dat");
 
 	printf("Evaluating the agent after loading the value function:\n\t\tMean Return\tStandardDeviation\n------------------------------------------------------\n");
-	print_score(0,evaluate_agent());
+	single_evaluation();
 
     printf("Evaluating the agent a few times from a fixed start state of 3,3:\n\t\tMean Return\tStandardDeviation\n-------------------------------------------\n");
     RL_env_message("set-start-state 3 3");
-	print_score(0,evaluate_agent());
+	single_evaluation();
 
 	printf("Evaluating the agent again with the random start state:\n\t\tMean Return\tStandardDeviation\n-----------------------------------------------------\n");
     RL_env_message("set-random-start-state");
-	print_score(0,evaluate_agent());
+	single_evaluation();
 
 
 	printf("\nProgram Complete.\n");
@@ -157,3 +154,19 @@ evaluation_point_t *evaluate_agent(){
 	RL_agent_message("unfreeze learning");
 	return eval_point;
 }
+
+/**
+* Just do a single evaluate_agent and print it
+**/
+void single_evaluation(){
+	evaluation_point_t *this_score=0;
+	this_score=evaluate_agent();
+	print_score(0,this_score);
+	free(this_score);
+}
+
+
+void print_score(int afterEpisodes, evaluation_point_t *the_score) {
+    printf("%d\t\t%.2f\t\t%.2f\n", afterEpisodes, the_score->mean, the_score->standard_dev);
+}
+
