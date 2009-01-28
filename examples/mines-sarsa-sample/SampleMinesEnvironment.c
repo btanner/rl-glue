@@ -84,6 +84,10 @@ double calculate_reward(world_description_t aWorld);
 void updatePosition(world_description_t *aWorld, int theAction);
 
 
+/* Prints out the map to the screen */
+void print_state();
+
+
 /*
 	world_map is an array that describes the world.
 
@@ -245,6 +249,15 @@ const char* env_message(const char* inMessage) {
 	        return "Message understood.  Using fixed start state.";
     	}
 	}
+
+	/*	Message Description
+ 	 * 'print-state'
+	 * Action: Print the map and the current agent location
+	 */
+	if(strcmp(inMessage,"print-state")==0){
+		print_state();
+		return "Message understood.  Printed the state.";
+    }
 	return "SamplesMinesEnvironment(C/C++) does not respond to that message.";
 }
 
@@ -313,5 +326,35 @@ void updatePosition(world_description_t *aWorld, int theAction){
    		aWorld->agentRow = newRow;
    		aWorld->agentCol = newCol;
 	}
+}
+
+void print_state(){
+	int row,col;
+	printf("Agent is at: %d,%d\n",the_world.agentRow,the_world.agentCol);
+	printf("Columns:0-10                10-17\n");
+	printf("Col    ");
+	for(col=0;col<18;col++){
+		printf("%d ",col%10);
+	}
+
+	for(row=0;row<6;row++){
+		printf("\nRow: %d ",row);
+		
+		for(col=0;col<18;col++){
+			if(the_world.agentRow==row && the_world.agentCol==col)
+				printf("A ");
+			else{
+				if(world_map[row][col]==WORLD_GOAL)
+					printf("G ");
+				if(world_map[row][col]==WORLD_MINE)
+					printf("M ");
+				if(world_map[row][col]==WORLD_OBSTACLE)
+					printf("* ");
+				if(world_map[row][col]==WORLD_FREE)
+					printf("  ");
+			}
+		}
+	}
+	printf("\n");
 }
 

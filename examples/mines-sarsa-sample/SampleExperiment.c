@@ -80,7 +80,6 @@ void offline_demo(){
 
 
 int main(int argc, char *argv[]) {
-
 	printf("Starting offline demo\n----------------------------\nWill alternate learning for 25 episodes, then freeze policy and evaluate for 10 episodes.\n\n");
 	printf("After Episode\tMean Return\tStandard Deviation\n-------------------------------------------------------------------------\n");
 	RL_init();
@@ -106,8 +105,12 @@ int main(int argc, char *argv[]) {
 	printf("Evaluating the agent after loading the value function:\n\t\tMean Return\tStandardDeviation\n------------------------------------------------------\n");
 	single_evaluation();
 
-    printf("Evaluating the agent a few times from a fixed start state of 3,3:\n\t\tMean Return\tStandardDeviation\n-------------------------------------------\n");
-    RL_env_message("set-start-state 3 3");
+	printf("Telling the environment to use fixed start state of 2,3.\n");
+	RL_env_message("set-start-state 2 3");
+	RL_start();
+	printf("Telling the environment to print the current state to the screen.\n");
+	RL_env_message("print-state");
+    printf("Evaluating the agent a few times from a fixed start state of 2,3:\n\t\tMean Return\tStandardDeviation\n-------------------------------------------\n");
 	single_evaluation();
 
 	printf("Evaluating the agent again with the random start state:\n\t\tMean Return\tStandardDeviation\n-----------------------------------------------------\n");
