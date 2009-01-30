@@ -93,7 +93,8 @@ void agent_init(const char* task_spec)
 
 	numActions=getIntActMax(ts,0)+1;
 
-	free_taskspec_struct(ts);
+	free_taskspec_struct(ts); /* Make the taskspec struct a "blank slate" */
+	free(ts); /* Free the structure itself */
 	/*Here is where you might allocate storage for parameters (value function or policy, last action, last observation, etc)*/
 	
 	/*Here you would parse the task spec if you felt like it*/

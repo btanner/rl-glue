@@ -230,7 +230,7 @@ const char* env_message(const char* inMessage) {
 	if(strncmp(inMessage,"set-start-state",15)==0){
 	 	{
 			char *p;
-			char *inMessageCopy=(char *)malloc(strlen(inMessage)*sizeof(char));
+			char *inMessageCopy=(char *)malloc((strlen(inMessage)+1)*sizeof(char));
 		
 			strcpy(inMessageCopy,inMessage);
 		
