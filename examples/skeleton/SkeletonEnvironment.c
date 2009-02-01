@@ -37,7 +37,7 @@ int current_state=0;
 
 const char* env_init()
 {    
-	char* task_spec="2:e:1_[i]_[0,20]:1_[i]_[0,1]:[-1,1]";
+	char* task_spec="VERSION RL-Glue-3.0 PROBLEMTYPE episodic DISCOUNTFACTOR 1.0 OBSERVATIONS INTS (0 20) ACTIONS INTS (0 1)  REWARDS (-1.0 1.0)  EXTRA skeleton_environment(C/C++) by Brian Tanner.";
 
 	/* Allocate the observation variable */
 	allocateRLStruct(&this_observation,1,0,0);
@@ -103,3 +103,4 @@ const char* env_message(const char* inMessage) {
 
 	return "I don't know how to respond to your message";
 }
+

@@ -6,6 +6,22 @@ $key = q/sec:custom-flags/;
 $external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/mines-sample/;
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sec:env/;
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sarsa-sample/;
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sec:gotchas-shared-libs/;
+$external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/pointers/;
 $external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
@@ -14,11 +30,11 @@ $key = q/sec:util-functions/;
 $external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/sec:agent/;
+$key = q/mines-sarsa-sample/;
 $external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/sec:gotchas-shared-libs/;
+$key = q/sec:agent/;
 $external_labels{$key} = "$URL/" . q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
@@ -34,7 +50,23 @@ $noresave{$key} = "$nosave";
 
 
 $key = q/sec:custom-flags/;
-$external_latex_labels{$key} = q|2.2|; 
+$external_latex_labels{$key} = q|2.3|; 
+$noresave{$key} = "$nosave";
+
+$key = q/mines-sample/;
+$external_latex_labels{$key} = q|2.8.1|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sec:env/;
+$external_latex_labels{$key} = q|2.5|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sarsa-sample/;
+$external_latex_labels{$key} = q|2.8.2|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sec:gotchas-shared-libs/;
+$external_latex_labels{$key} = q|2.7.2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/pointers/;
@@ -45,12 +77,12 @@ $key = q/sec:util-functions/;
 $external_latex_labels{$key} = q|6.2.4|; 
 $noresave{$key} = "$nosave";
 
-$key = q/sec:agent/;
-$external_latex_labels{$key} = q|2.3|; 
+$key = q/mines-sarsa-sample/;
+$external_latex_labels{$key} = q|2.8|; 
 $noresave{$key} = "$nosave";
 
-$key = q/sec:gotchas-shared-libs/;
-$external_latex_labels{$key} = q|2.6.2|; 
+$key = q/sec:agent/;
+$external_latex_labels{$key} = q|2.4|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sec:structure-types/;

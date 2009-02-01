@@ -4,7 +4,7 @@ CFLAGS := $(CFLAGS) -Wall -pedantic -g
 all: SampleExperiment
 
 SampleExperiment: SampleExperiment.o SampleSarsaAgent.o SampleMinesEnvironment.o
-	$(CC)  $(LDFLAGS) SampleExperiment.o SampleSarsaAgent.o SampleMinesEnvironment.o -lrlglue -lrlutils -o SampleExperiment      
+	$(CC)  $(LDFLAGS) SampleExperiment.o SampleSarsaAgent.o SampleMinesEnvironment.o -lm -lrlglue -lrlutils -o SampleExperiment      
 
 SampleExperiment.o: SampleExperiment.c
 	$(CC)  $(CFLAGS) -c SampleExperiment.c -o SampleExperiment.o 

@@ -105,7 +105,19 @@ That's it!  This will remove all of the headers, libraries, and binaries from \t
 
 You could also just delete the \texttt{glue} directory, but that may also remove related files and libraries in addition to RL-Glue (codec support files and such that you may have installed).
 
-\section{Agent, Environments, and Experiments}
+
+
+\section{Sample Project}
+We have included two example projects with this codec, located in the \texttt{examples} directory.  The  \texttt{skeleton} and \texttt{mines-sarsa-sample} projects each contain an agent, environment, and experiment written in C.
+
+The \texttt{skeleton} contains all of the bare-bones plumbing that is required to create an agent/environment/experiment with this codec and might be a good starting point for creating your own components.
+
+The \texttt{mines-sarsa-sample} contains a fully functional tabular Sarsa learning algorithm, a discrete-observation grid world problem, and an experiment program that can run these together and gather results.  More details below in Section \ref{mines-sarsa-sample}.
+
+In the following sections, we will describe the skeleton project.  Running and using the \texttt{mines-sarsa-sample} is analogous.
+
+
+\subsection{Agent, Environments, and Experiments}
 We have provided a skeleton agent, environment, and experiment program that can be compiled together and run as an experiment.
 This is a good starting point for projects that you may write in the future.  For now, the skeleton is extremely simple.  Before the official RL-Glue 3.0 release, we will add a complete sample learning agent for this and each codec.
 
@@ -144,8 +156,10 @@ You should see output like the following if it worked:
 \begin{verbatim}
 	>$ ./SkeletonExperiment
 	Experiment starting up!
-	RL_init called, the environment sent task spec: 2:e:1_[i]_[0,5]:1_[i]_[0,1]:[-1,1]
-
+	RL_init called, the environment sent task spec: VERSION RL-Glue-3.0 
+		PROBLEMTYPE episodic DISCOUNTFACTOR 1.0 OBSERVATIONS INTS (0 20) 
+		ACTIONS INTS (0 1)  REWARDS (-1.0 1.0)  
+		EXTRA skeleton_environment(C/C++) by Brian Tanner.
 
 	----------Sending some sample messages----------
 	Agent responded to "what is your name?" with: my name is skeleton_agent!
@@ -212,9 +226,7 @@ In some cases (64-bit linux looks in \texttt{/usr/local/lib64}?) you may have to
 When you open a new terminal window, all of these environment variables will be lost unless you put the appropriate \texttt{export} lines in your shell startup script.
 
 
-
-
-\subsection{Agents}
+\subsection{Skeleton Agent}
 \label{sec:agent}
 Th Skeleton agent implements all the required functions and provides a good example of how to create a simple agent.
 
@@ -228,12 +240,10 @@ This agent does not learn anything and randomly chooses integer action $0$ or $1
 The Skeleton agent is very simple and well documented, so we won't spend any more time talking about it in these instructions.
 Please open it up and take a look.
 
-\textbf{POSSIBLE CONTRIBUTION}: If you take a look at the agent and you think it's not easy to understand, think it could be better documented, 
-or just that it should do some fancier things, let us know and we'll be happy to do it!
 
 
-
-\subsection{Environments}
+\subsection{Skeleton Environment}
+\label{sec:env}
 The Skeleton environment provides a good example of how to create a simple environment. 
 
 The pertinent files are:
@@ -247,10 +257,8 @@ There are two actions, $\{0, 1\}$.  Action $0$ decrements the state number, and 
 The Skeleton environment is very simple and well documented, so we won't spend any more time talking about it in these instructions.
 Please open it up and take a look.
 
-\textbf{POSSIBLE CONTRIBUTION}: If you take a look at the environment and you think it's not easy to understand, think it could be better documented, 
-or just that it should do some fancier things, let us know and we'll be happy to do it!
 
-\subsection{Experiments}
+\subsection{Skeleton Experiment}
 The Skeleton experiment implements all the required functions and provides a good example of how to create a simple experiment.  This section will follow the same 
 pattern as the agent version (Section \ref{sec:agent}).  This section will be less detailed because many ideas are similar or identical.
 
@@ -264,8 +272,7 @@ This experiment runs \texttt{RL\_Episode} a few times, sends some messages to th
 The Skeleton experiment is very simple and well documented, so we won't spend any more time talking about it in these instructions.
 Please open it up and take a look.
 
-\textbf{POSSIBLE CONTRIBUTION}: If you take a look at the experiment and you think it's not easy to understand, think it could be better documented, 
-or just that it should do some fancier things, let us know and we'll be happy to do it!
+
 
 \subsection{Gotchas!}
 \subsubsection{Crashes and Bus Errors in Experiment Program}
@@ -286,6 +293,36 @@ You can troubleshoot this problem by doing:
 	>$ LD_DEBUG=libs ./SkeletonExperiment
 \end{verbatim}
 If you see that \texttt{/usr/local/lib} is not in the search path, you may want to add it to your library search path using \texttt{LDFLAGS} or \texttt{LD\_LIBRARY\_PATH}.  See Section \ref{sec:custom-flags} for more information.  
+
+
+
+\subsection{Going Further -- Mines Sarsa Example Project}
+\label{mines-sarsa-sample}
+The \texttt{skeleton} sample project is extremely limited and only shows the mechanics of how RL-Glue components are structured.  The \texttt{mines-sarsa} sample project is much richer.
+
+\subsubsection{Sample-Mines-Environment}
+\label{mines-sample}
+The 
+\htmladdnormallink{mines
+ environment}{http://code.google.com/p/rl-glue/source/browse/trunk/examples/mines-sarsa-sample/SampleMinesEnvironment.c} 
+is internally a two-dimensional, discrete grid world where the agent receives a penalty per step until reaching a goal state, hopefully without stepping on any exploding land-mines along the way.  The (x,y) state is flattened into a discrete, scalar observation for the agent.  This environment can receive special messages from the experiment program to print the current state to the screen, and also to toggle between random starting states and a fixed starting-state specified by the experiment.
+
+The task specification string\footnote{\url{http://glue.rl-community.org/Home/rl-glue/task-spec-language}} is manually because there is not yet a task spec builder for C/C++. 
+
+\subsubsection{Samples-Sarsa-Agent}
+\label{sarsa-sample}
+The 
+\htmladdnormallink{SARSA agent}{http://code.google.com/p/rl-glue/source/browse/trunk/examples/mines-sarsa-sample/SampleSarsaAgent.c}
+is a tabular learning agent that uses $\epsilon-greedy$ exploration as described in \htmladdnormallink{Reinforcement Learning: An Introduction}{http://www.cs.ualberta.ca/~sutton/book/ebook/node64.html} by Sutton and Barto.
+
+The SARSA agent parses the task specification string using the C/C++ task spec parser.  This agent can receive special messages from the experiment program to pause/unpause learning, pause/unpause exploring, save the current value function to a file, and load the the value function from a file.
+
+\subsubsection{Sample-Experiment}
+The sample experiment program runs the show.  First, it alternates running the agent in the environment for a number of episodes, and telling the agent to pause learning so that the current performance can be evaluated.  These results are saved to a comma-separated-value file.
+
+The sample experiment then tells the agent to save the value function to a file, and then resets the experiment (and agent) to initial conditions.  After verifying that the agent's initial policy is bad, the experiment tells the agent to load the value function from the file.  The agent is evaluated again using this previously-learned value function, and performance is dramatically better.
+
+Finally, the experiment sends a message to specify that the environment should use a fixed (instead of random) starting state, and runs the agent from that fixed start state for a while.
 
 \section{Advanced Features}
 \subsection{Listening on Custom Ports}
@@ -796,6 +833,8 @@ We have seen this on a fresh Linux Ubuntu machine.  Try installing g++:
 Andrew Butcher originally wrote the RL-Glue library and network library.  Thanks Andrew.
 
 Brian Tanner has since grabbed the torch and has continued to develop RL-Glue and the codecs.
+
+Special thanks to Scott Livingston for creating the new C/C++ task spec parser.
 
 \subsection{Contributing}
 If you would like to become a member of this project and contribute updates/changes to the code, please send a message to rl-glue@googlegroups.com.

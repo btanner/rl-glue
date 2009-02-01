@@ -6,6 +6,22 @@ $key = q/sec:custom-flags/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/mines-sample/;
+$ref_files{$key} = "$dir".q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sec:env/;
+$ref_files{$key} = "$dir".q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sarsa-sample/;
+$ref_files{$key} = "$dir".q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/sec:gotchas-shared-libs/;
+$ref_files{$key} = "$dir".q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/pointers/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
@@ -14,11 +30,11 @@ $key = q/sec:util-functions/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/sec:agent/;
+$key = q/mines-sarsa-sample/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/sec:gotchas-shared-libs/;
+$key = q/sec:agent/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
