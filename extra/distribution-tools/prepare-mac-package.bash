@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=3.0
+VERSION=`./install_root/usr/local/bin/rl_glue --pv`
 DISTNAME=RL-Glue-$VERSION-and-C-Codec
 PACKAGENAME=$DISTNAME.pkg
 IMAGENAME=$DISTNAME.dmg
