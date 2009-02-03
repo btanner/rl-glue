@@ -22,7 +22,7 @@
 #include <string.h>
 
 #include <rlglue/utils/C/TaskSpec_Parser.h>
-
+#include <rlglue/utils/C/RLStruct_util.h>
 
 #define BUF_SIZE 1024
 

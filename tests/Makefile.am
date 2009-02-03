@@ -28,8 +28,8 @@ test_empty_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 test_speed_SOURCES = test_speed_environment.c	test_1_agent.c test_speed_experiment.c useful_functions.c useful_functions.h
 test_speed_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
-test_cparser_SOURCES = test_cparser.c
-test_cparser_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
+#test_cparser_SOURCES = test_cparser.c
+#test_cparser_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
 
 
