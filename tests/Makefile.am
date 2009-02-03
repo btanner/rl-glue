@@ -1,4 +1,5 @@
-check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_init_cleanup test_state_and_seed_keys test_empty test_speed test_cparser
+check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_init_cleanup test_state_and_seed_keys test_empty test_speed 
+#test_cparser
 TESTS = $(check_PROGRAMS)
 
 INCLUDES = -I$(top_srcdir)/src
