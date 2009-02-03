@@ -32,10 +32,6 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 
-#define __RL_CHECK_STRUCT(X)  if(__rlglue_check_abstract_type(X)!=0){printf("Struct failed validity check at file %s line %d\n",__FILE__,__LINE__);abort();}
-
-
-
 /* Strings are not guaranteed to be null terminated I think */
 typedef struct
 {
@@ -73,9 +69,6 @@ typedef reward_observation_action_terminal_t roat_t;
 typedef reward_observation_terminal_t rot_t;
 typedef observation_action_t oa_t;
 
-void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct);
-int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct);
-char * __rlglue_get_svn_version();
 
 #ifdef __cplusplus
 }

@@ -91,6 +91,12 @@ Create a new rl_abstract_type_t pointer that is a copy of an existing one
 */
 rl_abstract_type_t *duplicateRLStructToPointer(const rl_abstract_type_t *src);
 
+void __rlglue_print_abstract_type(const rl_abstract_type_t *theStruct);
+int __rlglue_check_abstract_type(const rl_abstract_type_t *theStruct);
+char * __rlglue_get_svn_version();
+#define __RL_CHECK_STRUCT(X)  if(__rlglue_check_abstract_type(X)!=0){printf("Struct failed validity check at file %s line %d\n",__FILE__,__LINE__);abort();}
+
+
 #ifdef __cplusplus
 }
 #endif

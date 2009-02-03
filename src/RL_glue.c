@@ -28,6 +28,8 @@
 #include <rlglue/Agent_common.h>
 #include <rlglue/Environment_common.h>
 
+#include <rlglue/utils/C/RLStruct_util.h>
+
 #include <assert.h>
 
 
