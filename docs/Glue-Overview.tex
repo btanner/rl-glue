@@ -113,7 +113,7 @@ We have found that most action and observation types can easily be captured with
 \subsubsection{Environment Start}
 The \texttt{env\_start} function is very simple. The function takes no input and simply returns an observation. The \texttt{env\_start} function is the first function called at the beginning of an episode; \texttt{env\_start} chooses the initial state of the environment and returns the corresponding observation. For example, the following pseudocode selects a random start state for a grid world and returns the observation:
 \begin{verbatim}
-1. env_start -> observation
+1. env_start --> observation
 2.      state = rand()*num_states
 3.      set observation equal to state
 4. return observation
@@ -123,7 +123,7 @@ The \texttt{env\_start} function is very simple. The function takes no input and
 \subsubsection{Environment Step}
 The other essential piece of a RL-Glue environment is the \texttt{env\_step} function. The \texttt{env\_step} function takes an action as input and returns an observation, a reward and a termination flag. In most reinforcement learning problems, the  \texttt{env\_step} function updates the internal state of the environment, tests for end of episode and returns the new observation of state and current reward. In other words, step function encodes the state transition and reward functions. Keeping with the grid world example, the following would be a valid \texttt{env\_step} function:
 \begin{verbatim}
-1. env_step(action) -> reward, observation, flag 
+1. env_step(action) --> reward, observation, flag 
 2.      newState = updateState(action, state)
 3.      flag = isTerminal(newState)
 3.      reward = calculate reward for newState
@@ -148,90 +148,6 @@ More specifically, the \texttt{task\_spec} string encodes a version number, the 
 
 The \texttt{task\_spec} is constantly evolving to match the state-of-art of learning algorithms and tasks being solved in reinforcement learning research; we expect that the \texttt{task\_spec} will evolve much faster than the main RL-Glue protocol.  To prevent this document from becoming quickly outdated, we have separated the \texttt{task\_spec} documentation from the main RL-Glue documentation. Please see the \htmladdnormallink{online \texttt{task\_spec} documentation}{http://glue.rl-community.org/Home/rl-glue/task-spec-language} for details about different \texttt{task\_spec} versions.
 
-%
-%The \texttt{task\_spec} is stored as a string with the following format:
-%\begin{verbatim}
-%     "V:E:O:A:R"
-%\end{verbatim}		
-%For example, this is a sample \texttt{task\_spec} provided as one of the examples below:
-%\begin{verbatim}
-%     "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0]"
-%\end{verbatim}     
-%The V corresponds to the version number of the \texttt{task\_spec} language. E corresponds to the type of task being solved. It has a character value of `e' if the task is episodic and `c' if the task is continuing. O and A correspond to Observation and Action information respectively. Finally, the R corresponds to the range of rewards for the task. Within each of O, A and R a range can be provided, however if the values are unknown or infinite in magnitude, two special input values have been defined.
-%\\\\
-%The format of O and A are identical. We will describe the form of O only. O contains three components, separated by underscore characters ("\_") :
-%\begin{verbatim}        
-%     #dimensions_dimensionTypes_dimensionRanges
-%\end{verbatim}
-%\#dimensions is an integer value specifying the number of dimensions in the Observation space. dimensionTypes is a list specifying the type of each dimension variable. The dimensionTypes list is composed of \#dimensions components separated by comma characters (``,") within square brackets ([x1,x2,x3,..., xn] where xi  represents the ith value). Each comma-separated value in the list describes the type of values assigned to each Observation variable in the environment. In general, Observation variables can have one of the following 2 types:
-%\begin{verbatim}
-%     `i' - integer value
-%     `f' - float value
-%\end{verbatim}
-%Thus a dimensionTypes list corresponding to an Observation space with 1 dimension has the following form:
-%\begin{verbatim}
-%     [a] where a is an element of [`i',`f']
-%\end{verbatim}
-%So a dimensionTypes list with one integer value would be:    
-%\begin{verbatim}    
-%     [i]
-%\end{verbatim}     
-%An Observation space with 2 dimensions would have a dimensionTypes with the following form:
-%\begin{verbatim}
-%     [a,b] where a and b are elements of [`i',`f']
-%\end{verbatim}
-%indicating the value type of the first (a) and second (b) Observation variables. Thus a three dimensional Observation with one float, integer dimension and another float dimension would have the following dimensionTypes:
-%\begin{verbatim}
-%     "[f,i,f]"
-%\end{verbatim}
-%The dimensionRanges is a list specifying the range of each dimension variable in the Observation space.  The dimensionRanges is composed of \#dimensions components separated by underscore characters. Each dimensionRanges component specifies the upper and lower bound of values for each Observation variable. If the bounds are unknown or unspecified, you can leave an empty space in the place of a value. If the bounds are positive or negative infinity, you can use inf or -inf to represent your range. These can be used in combination. For example one valid range could be an unknown lower bound and infinite upper bound, or a lower bound of -inf and an upper bound of 1. You can be as precise (though you must be accurate) as you wish. A dimensionRanges corresponding to an Observation space with a single dimension variable would have the following form:
-%\begin{verbatim}
-%     [O1MIN, O1MAX]
-%\end{verbatim}
-%So a dimensionRanges list for binary dimension varaible would be: [0,1]
-%A dimensionRanges list for variable with no upper or lower bound unspecified would be: [] or [,] (both are valid).
-%A dimensionRanges with one or two unbounded value can take on a value of inf or -inf. Eg [0, inf] or [-inf,1] or [-inf,inf].
-%\\\\
-%An Observation space with 2 dimensions would have a dimensionRanges with the following form:
-%\begin{verbatim}
-%     [O1MIN, O1MAX]_[O2MIN, O2MAX]
-%\end{verbatim}
-%indicating the minimal and maximal values of Observation variables O1 and O2 respectively. This definition can be then trivially extended to Observation spaces with N dimensions.
-%\\\\
-%NOTE: the dimensionRanges of an Observation space with 1 or more unbounded values may not be representable in this way. An unbounded value has no minimal or maximal range. Thus, we simply do not specify the range in the dimensionRanges for any Observation variables with unbounded values. For example, consider a problem with 3 Observation dimensions. The first and third Observation variables have interval values and the second has unbounded ratio value. The corresponding dimensionRanges for this problem is encoded as:
-%\begin{verbatim}
-%     [O1MIN, O1MAX]_[,]_[O3MIN, O3MAX]
-%\end{verbatim}
-%indicating the minimal and maximal values of Observation variables O1 and O3.
-%\\\\
-%The format of A (Action space information) is identical to that of O (Observation space information) and thus the definitions above hold for Action spaces.
-%\\\\
-%Lastly the R (Reward space information) is merely a range specifier. By the Reward Hypothesis there is only ever one reward signal (which in RL-Glue is always a floating point number) so the \#dimensions and dimensionType information becomes meaningless. The reward range can again be specified to be unknown or infinite in the same manner as the Observation ranges.  A rewardRange follows the following form:
-%\begin{verbatim}
-%     [rewardMin, rewardMax]
-%\end{verbatim}
-%In the case of a reward with rewards -1 or 0 the rewardRange would appear as such: [-1,0].
-%If no lower bound was known and the upper bound was positive infinity, the rewardRange would appear as such: [,-inf]
-%\subsubsection{Example Task\_Specification}
-%Consider a simple gridworld with Actions North, South, East and West and a single dimension Observation of grid position. If we encode actions as 0, 1 ,2 ,3 and position as an integer between 0 and N-1, we get the following Task\_specification:
-%\begin{verbatim}
-%     "2:e:1_[i]_[0,N-1]:1_[i]_[0,3]:[-1,0] "
-%\end{verbatim}
-%This \texttt{task\_spec} provides the following information:
-%\begin{itemize}
-
-%\item \texttt{task\_spec} version 2.0 supported
-%\item the task is episodic
-%\item Observation space has one dimension
-%\item the Observation variable has integer values (discrete state)
-%\item range of Observation variable is 0 to N-1
-%\item Action space has one dimension
-%\item the Action variable has integer values (discrete actions: tabular)
-%\item range of Action variable is 0 to 3
-%\item range of the rewards is -1 to 0
-%\end{itemize}
-
-%
 
         
 \subsubsection{Environment Initialization and Cleanup}        
@@ -242,7 +158,7 @@ The \texttt{env\_cleanup} function usually deallocates or frees anything allocat
 \subsubsection{Environment Message}
 Once in a while you will find yourself wishing for the ability to add custom environment functions to RL-Glue that can be called by your experiment program. The \texttt{env\_message} function allows you to basically add your own functionality to the RL-Glue spec. You can send a string message to the environment and it can respond with a string. For example: you could make random starting states a parameter of your environment by using a message to toggle that property:
 \begin{verbatim}
-1. env_message(inMessage) -> outMessage
+1. env_message(inMessage) --> outMessage
 2.      if inMessage == "turnOffRandomStarts"  
 3.           randStarts = false
 4.      end 
@@ -252,32 +168,6 @@ Once in a while you will find yourself wishing for the ability to add custom env
 8. return ""
 \end{verbatim}
 
-% 
-% This content has been removed because we are no longer have thse functions.
-%
-% \subsubsection{Environment Get and Set Sate}
-% It is often necessary to record the state of the environment and then reset the environment to a particular state to evaluate learning performance. For example, one might want to repeatedly evaluate the performance of a stochastic policy starting from a finite set of interesting states. The env\_get\_state\_key function returns a \texttt{state\_key} that can be used to restore the environment to the current state when the key was created. The \texttt{state\_key} is the same abstract data type as the observations and actions; the \texttt{state\_key} must be some combinations of lists of: \texttt{int}, \texttt{double}, and \texttt{character}. The \texttt{state\_key} can be as simple as an integer state label, or some high dimensional array, depending on the environment.  The env\_set\_state takes a \texttt{state\_key} as input and simply restores the environment to the state encoded in the key.
-% 
-% Using these functions usually takes the agent out of the normal \textit{flow} of a learning experiment, because the agent's state transitions are no longer following the full sequence
-% that the environment would generate.  Instead, the experiment program is able to help the agent jump around through the state space.
-% 
-% The get and set state functions are meant to be used during a single learning experiment not across runs.
-% 
-% For example, in an experiment program, you might want to do something like the following:
-% \begin{verbatim}
-% 1. initialize RL-Glue
-% 2. until observation is interesting do next step of episode
-% 3. get state key for interesting observation from environment and store in stateKey
-% 4. for 100 steps
-% 5.      set environment state to stateKey (the interesting observation)
-% 6.      generate a sequence of experience
-% \end{verbatim}
-% 
-% Storing a \texttt{state\_key} in a file and then using that state key in a different experiment program or during a later run of the same experiment program is outside the intended 
-% usage of the \texttt{env\_get\_state} and \texttt{env\_set\_state} functions. It may work with some RL-Glue environments and not others.
-%         
-% \subsubsection{Environment Get and Set Random Seed}
-% It can be useful to record and set the seed of the environment's random number generator. Although the random seed can be well thought of as part of the state of the environment, there may be times when it is more convenient to access the random seed only with \texttt{env\_get\_random\_seed} and \texttt{env\_set\_random\_seed} functions. The environment get and set random functions return and take as input a random\_seed\_key, like the \texttt{state\_key} for setting states. Like the get and set state functions, \texttt{env\_get\_random\_seed} and \texttt{env\_set\_random\_seed} functions should not be used to store and set the random seed between distinct runs of RL-Glue.
 
 \section{RL-Glue Agent Programs}
 \label{agent}
@@ -293,7 +183,7 @@ The primary agent functions take some combination of observations and rewards as
 \subsubsection{Agent Start}
 The \texttt{agent\_start} function selects the first action at the beginning of an episode based on the first observation from the environment. The \texttt{agent\_start} function does not receive a reward as input; \texttt{agent\_start} usually contains no learning update code. For example, the following function selects the first action based on the current value function estimate:
 \begin{verbatim}
-1. agent_start (observation) -> action
+1. agent_start (observation) --> action
 2.      lastObservation=observation
 3.      for each action a
 4.           if highest valued action valueFunction(observation,a)
@@ -337,7 +227,7 @@ The \texttt{agent\_message} function is used to send an arbitrary string message
 
 Here is a quick example of how you could query the current values of some parameters of an agent:
 \begin{verbatim}
-agent_message(inMessage) -> outMessage
+agent_message(inMessage) --> outMessage
       if inMessage == "getCurrentStepSize"  
            return alpha
       end 
@@ -391,14 +281,6 @@ The above experiment program runs 100 episodes, each with max length 1000, and c
 \label{expp2}
 
 
-% As you know from previous sections (about agent and environment programs) there are several optional agent and environment functions that provide more advanced control. These functions are accessed through calls to the RL-Glue interface from the experiment program. For example, to send a message to the agent use \texttt{RL\_agent\_message}. To get the state key from the environment use \texttt{RL\_get\_state}. The pattern is simple to follow:
-% \begin{verbatim}
-%      RL_set_state() -> env_set_state()
-%      RL_get_random_seed() -> env_get_random_seed()
-%      RL_set_random_seed() -> env_set_random_seed()
-%      RL_env_message() -> env_message
-% \end{verbatim}
-% 
 \subsubsection{Training/Testing Phase Experiment}
 We can now produce more advanced experiment programs that might be used in typical reinforcement learning research:
 \begin{verbatim}
@@ -432,12 +314,12 @@ Every agent must implement all of the following routines. Note these functions a
 This function will be called first, even before \texttt{agent\_start}. The \texttt{task\_spec} is a description of important experiment information, including but not exclusive to a description of the state and action space. The RL-Glue standard for writing \texttt{task\_spec} strings is found \htmladdnormallink{here}{http://glue.rl-community.org/Home/rl-glue/task-spec-language}.  In \texttt{agent\_init} , information about the environment is extracted from the \texttt{task\_spec} and then used to set up any necessary resources (for example, initialize the value function).
 
 \begin{verbatim}
-     agent_start(first_observation) -> first_action
+     agent_start(first_observation) --> first_action
 \end{verbatim}
 Given the first\_observation (the observation of the agent in the start state) the agent must then return the action it wishes to perform. This is called once if the task is continuing, else it happens at the beginning of each episode.
 
 \begin{verbatim}
-     agent_step(reward, observation) -> action
+     agent_step(reward, observation) --> action
 \end{verbatim}
 This is the most important function of the agent. Given the reward garnered by the agent's previous action and the resulting observation, choose the next action to take. Any learning (policy improvement) should be done through this function.
 
@@ -452,7 +334,7 @@ If the agent is in an episodic environment, this function will be called after t
 This function is called at the end of a run/trial and can be used to free any resources which may have been allocated in \texttt{agent\_init} . Calls to agent\_cleanup should be in a one to one ratio with the calls to \texttt{agent\_init} .
 
 \begin{verbatim}
-     agent_message(input_message) -> output_message
+     agent_message(input_message) --> output_message
 \end{verbatim}     
 The \texttt{agent\_message} function is a jack of all trades and master of none. Having no particular functionality, it is up to the user to determine what \texttt{agent\_message} should implement. If there is any information which needs to be passed in or out of the agent, this message should do it. For example, if it is desirable that an agent's learning parameters be tweaked mid experiment, the author could establish an input string that triggers this action. Likewise, if the author wished to extract a representation of the value function, they could establish an input string which would cause \texttt{agent\_message} to return the desired information.
 
@@ -462,44 +344,24 @@ NOTE: Unlike the other functions, \texttt{agent\_message} can be called at any t
 \label{Eref}
 Every environment must implement all of the following routines. Note these functions are only accessed by the RL-Glue. Experiment programs should not try to bypass the Glue and directly call these functions.
 \begin{verbatim}
-     env_init() -> task_specification
+     env_init() --> task_specification
 \end{verbatim}
 This routine will be called exactly once for each trial/run. This function is an ideal place to initialize all environment information and allocate any resources required to represent the environment. It must return a \texttt{task\_spec} which adheres to the \texttt{task\_spec} language. A \texttt{task\_spec} stores information regarding the observation and action space, as well as whether the task is episodic or continuous.
 
 \begin{verbatim}
-     env_start() -> first_observation\end{verbatim}
+     env_start() --> first_observation\end{verbatim}
 For a continuing task this is done once. For an episodic task, this is done at the beginning of each episode. \texttt{env\_start} assembles a first\_observation given the agent is in the start state. Note the start state cannot also be a terminal state.
 
 \begin{verbatim}
-     env_step(action) -> reward, observation, terminal\end{verbatim}
+     env_step(action) --> reward, observation, terminal\end{verbatim}
 Complete one step in the environment. Take the action passed in and determine what the reward and next state are for that transition.
-
-% \begin{verbatim}
-%      env_get_state() -> state_key
-% \end{verbatim}
-% The \texttt{state\_key} is a compact representation of the current state of the environment such that at any point in the future, provided with the state\_key, the environment could return to that state. Note that this does not include the agent's value function, it is merely restoring the details of the environment. For example, in a static grid world this would be as simple as the position of the agent.
-% 
-% \begin{verbatim}
-%      env_set_state(state_key)\end{verbatim}
-% Given the state\_key, the environment should return to it's exact formation when the \texttt{state\_key} was obtained. 
-% 
-% \begin{verbatim}
-%      env_get_random_seed() -> random_seed_key
-% \end{verbatim}
-% Causes the environment to `save' the state of the random number generator such that it could be restored upon presentation of \texttt{random\_seed\_key}.
-% 
-% \begin{verbatim}
-%      env_set_random_seed(random_seed_key)
-% \end{verbatim}
-% Sets the random seed used by the environment. Typically it is advantageous for the experiment program to control the randomness of the environment.  Usually
-% this function would only be called with a value previously generated by \texttt{env\_get\_random\_seed}. \texttt{env\_set\_random\_seed} can be used in conjunction with \texttt{env\_set\_state} to save and restore a \texttt{random\_seed} such that the environment will behave exactly the same way it has previously when it was in this state and given the same actions.
 
 \begin{verbatim}                 
      env_cleanup()\end{verbatim}
 This can be used to release any allocated resources. It will be called once for every call to \texttt{env\_init}.
 
 \begin{verbatim}
-     env_message(input_string) -> output_string
+     env_message(input_string) --> output_string
 \end{verbatim}
 Similar to \texttt{agent\_message}, this function allows for any message passing to the environment required by the experiment program. This may be used to modify the environment mid experiment. Any information that needs to passed in or out of the environment can be handled by this function.
 
@@ -517,7 +379,7 @@ To understand the following, it is helpful to think of an episode as consisting 
 where the episode lasts T time steps (T may be infinite) and terminal\_observation is a special, designated observation signaling the end of the episode.
 
 \begin{verbatim}
-RL_init()
+RL_init() --> task_specification
      agent_init(env_init())
 \end{verbatim}
 This initializes everything, passing the environment's \texttt{task\_spec} to the agent. This should be called at the beginning of every trial.
@@ -575,11 +437,11 @@ RL_episode(steps) --> terminal
 
 Do one episode until a termination observation occurs or until steps steps have elapsed, whichever comes first.  As you might imagine, this is done by calling RL\_start, then \texttt{RL\_step} until the terminal observation occurs.  If steps is set to 0, it is taken to be the case where there is no limitation on the number of steps taken and \texttt{RL\_episode} will continue until a termination observation occurs. If no terminal observation is reached before num\_steps is reached, the agent does not call agent\_end, it simply stops.
 \begin{verbatim}
-     RL_return() -> return
+     RL_return() --> return
 \end{verbatim}
 Return the cumulative total reward of the current or just completed episode.  The collection of all the rewards received in an episode (the return) is done within \texttt{RL\_return}; however, any discounting of rewards must be done inside the environment or agent.
 \begin{verbatim}
-     RL_num_steps() -> num_steps
+     RL_num_steps() --> num_steps
 \end{verbatim}
 Return the number of steps elapsed in the current or just completed episode.
 \begin{verbatim}
@@ -588,33 +450,14 @@ Return the number of steps elapsed in the current or just completed episode.
           agent_cleanup()
 \end{verbatim}
 Provides an opportunity to reclaim resources allocated by RL\_init.
-% \begin{verbatim}
-%      RL_set_state(State_key)
-%           env_set_state(State_key)    
-% \end{verbatim}
-% Provides an opportunity to reset the state (see env\_set\_state for details).
-% \begin{verbatim}
-%      RL_set_random_seed(Random_seed_key)
-%           env_set_random_seed(Random_seed_key)
-% \end{verbatim}
-% Provides an opportunity to reset the random seed key (see \texttt{env\_set\_random\_seed} for details).
-% \begin{verbatim}
-%      RL_get_state() -> State_key
-%           return env_get_state()  
-% \end{verbatim}
-% Provides an opportunity to extract the state key from the environment (see env\_get\_state for details).
-% \begin{verbatim}
-%      RL_get_random_seed() -> Random_seed_key
-%           return env_get_random_seed()   
-% \end{verbatim}
-% Provides an opportunity to extract the random seed key from the environment (see \texttt{env\_get\_random\_seed} for details).               
+
 \begin{verbatim}
-     RL_agent_message(input_message_string) -> output_message_string
+     RL_agent_message(input_message_string) --> output_message_string
           return agent_message(input_message_string)
 \end{verbatim}
 This message passes the input string to the agent and returns the reply string given by the agent. See \texttt{agent\_message} for more details.                
 \begin{verbatim}
-     RL_env_message(input_message_string) -> output_message_string
+     RL_env_message(input_message_string) --> output_message_string
           return env_message(input_message_string)
 \end{verbatim}
 This message passes the input string to the environment and returns the reply string given by the environment. See \texttt{env\_message} for more details. 
@@ -646,11 +489,12 @@ When you download and install the RL-Glue project, you get a few artifacts:
  
 The way that they should be included in your agents/environments/experiments is like this:
 \begin{verbatim}
-<rlglue/RL_common.h>            /* Datastructures                                     */
+<rlglue/RL_common.h>            /* Data structures                                     */
 <rlglue/RL_glue.h>              /* (RL_) functions for experiments (includes RL_common)                                 */
 <rlglue/Agent_common.h>         /* Agent (agent_) functions (includes RL_common)      */
 <rlglue/Environment_common.h>   /* Environment (env_) functions (includes RL_common)  */
 <rlglue/utils/C/RLStruct_util.h>/* Handy utility functions for copying/initing structs*/
+<rlglue/utils/C/TaskSpec_Parser.h>/* Task Spec Parser fuctions*/
 \end{verbatim} 
 
 Generally, each of agent/env/experiment should only have to include one of the glue or common files.  You'll probably never include RL\_common.h, but it is needed by the others.
@@ -733,12 +577,6 @@ First, you should join the RL-Glue Google Group Mailing List:\newline
 
 We're happy to answer any questions about RL-Glue.  Of course, try to search through previous messages first in case your question has been answered before.
 
-\subsection{Where did the task spec parsers go?}
-The \texttt{task\_spec} language has always been a bit of a sensitive topic, and writing good parsers for the task spec has never been easy. We have recently semi-finalized on a new \texttt{task\_spec} language in November 2008.  The final release of RL-Glue 3.0 and all of the codecs will include up to date \texttt{task\_spec} parsers, they are just not ready yet.  If you would like to help us out, please let us know.
-
-See the task spec page for more information:\newline
-\url{http://glue.rl-community.org/Home/rl-glue/task-spec-language}
-
 
 \subsection{Can I write my agents in $<$ insert language here $>$}
 Yes! Maybe.  Writing agents/environments/experiments in different languages require there to be a codec for that language.  As of writing, there are codecs for C/C++, Java, Matlab, Python, and Lisp.  Check out the codecs project for more information:\newline
@@ -774,7 +612,7 @@ outside of the environment, the state stays within the  environment. The \texttt
 
 
 \subsection{Can RL-Glue handle sampling the same trajectory a number of times consecutively?}
-This behavior can be achieved by writing custom functionality using \texttt{RL\_env\_message}.  The final release of RL-Glue 3.0 will include an example implementation of this functionality.
+This behavior can be achieved by clever crafting of messages between the agent, environment, and experiment programs.  We do not have a working example because nobody has ever seriously approached us about using RL-Glue in this way.  Contact us if you are interested.
 
 \subsection{Why is there no RL\_freeze, RL\_unfreeze or RL\_frozen?}
 The functionality of Freeze can easily be replicated through \texttt{RL\_agent\_message} and \texttt{agent\_message}.  There are literally a hundred similar methods that would 
