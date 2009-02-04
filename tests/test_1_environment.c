@@ -58,15 +58,51 @@ const observation_t *env_start()
 const reward_observation_terminal_t *env_step(const action_t *a)
 {
 	clearRLStruct(o);
-	makeKInts(o,1);
-	o->intArray[0]=stepCount;
-	
-	ro.observation=o;
-	ro.reward=1.0;
-  
-	stepCount++;
-	
-	ro.terminal=stepCount==5;
+
+/* Gabor has made it so this environment will step past terminal.  This is
+   not something we want to do in general at all.
+
+   But, in order to keep the other tests all working, I'll allow it*/
+    if(5 > stepCount)
+    {
+        makeKInts(o,1);
+        o->intArray[0]=stepCount;
+        
+        ro.observation=o;
+        ro.reward=1.0;
+      
+        stepCount++;
+        
+        ro.terminal=stepCount==5;
+    }
+    else
+    {
+        makeKInts(o, 5);
+        makeKDoubles(o, 5);
+        makeKChars(o, 5);
+
+        o->intArray[0] = 173;
+        o->intArray[1] = -173;
+        o->intArray[2] = 2147483647;
+        o->intArray[3] = 0;
+        o->intArray[4] = -2147483648;
+
+        o->doubleArray[0] = 0.0078125;
+        o->doubleArray[1] = -0.0078125;
+        o->doubleArray[2] = 0.0;
+        o->doubleArray[3] = 0.0078125e150;
+        o->doubleArray[4] = -0.0078125e150;
+
+        o->charArray[0] = 'g';
+        o->charArray[1] = 'F';
+        o->charArray[2] = '?';
+        o->charArray[3] = ' ';
+        o->charArray[4] = '&';
+
+        ro.reward = -2.0;
+        ro.terminal = 0;
+    }
+
 	__RL_CHECK_STRUCT(o)
     return &ro;
 }

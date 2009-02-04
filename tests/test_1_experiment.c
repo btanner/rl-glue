@@ -96,6 +96,32 @@ int main(int argc, char *argv[]) {
     check_fail(strcmp("five|5.5.|five",RL_env_message("five"))!=0);
 	check_fail(strcmp("five|4.|five",RL_agent_message("five"))!=0);
 	check_fail(roat->terminal==0);
+	/* Gabor has made it so this environment will step past terminal.  This is
+	   not something we want to do in general at all.
+
+	   But, in order to keep the other tests all working, I'll allow it*/
+	
+	roat=RL_step();
+	check_fail(roat->observation->numInts!=5);
+	check_fail(roat->observation->numDoubles!=5);
+	check_fail(roat->observation->numChars!=5);
+	check_fail(roat->observation->intArray[0]!=173);
+	check_fail(roat->observation->intArray[1]!=-173);
+	check_fail(roat->observation->intArray[2]!=2147483647);
+	check_fail(roat->observation->intArray[3]!=0);
+	
+	check_fail(roat->observation->intArray[4]!=-2147483648);
+	check_fail(roat->observation->doubleArray[0]!=0.0078125);
+	check_fail(roat->observation->doubleArray[1]!=-0.0078125);
+	check_fail(roat->observation->doubleArray[2]!=0);
+	check_fail(roat->observation->doubleArray[3]!=0.0078125e150);
+	check_fail(roat->observation->doubleArray[4]!=-0.0078125e150);
+	check_fail(roat->observation->charArray[0]!='g');
+	check_fail(roat->observation->charArray[1]!='F');
+	check_fail(roat->observation->charArray[2]!='?');
+	check_fail(roat->observation->charArray[3]!=' ');
+	check_fail(roat->observation->charArray[4]!='&');
+
 
 	RL_cleanup();
 
