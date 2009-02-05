@@ -10,6 +10,7 @@
 
 \usepackage{jmlr2e}
 \usepackage{graphicx}% Definitions of handy macros can go here
+\usepackage{hyperref}
 
 \newcommand{\dataset}{{\cal D}}
 \newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
@@ -96,12 +97,12 @@ The network mode allows the agent, environment and experiment programs to be wri
 
 
 \section{$<$RL-Glue Related Projects$>$}
-RL-Glue has had a significant impact on the reinforcement learning community and has been used in several projects. The reinforcement learning library\footnote{http://library.rl-community.org/} (RL-Libary) is mechanism for sharing RL-Glue compatible code. RL-Library is a public repository of agent, environment, experiment and utility programs for the reinforcement learning community. The RL-Library is an open-source project that promotes submissions of RL-Glue related codes. RL-Viz\footnote{http://code.google.com/p/rl-viz/} is an API layered on top of RL-Glue. RL-Viz can be used to dynamically load agent and environment programs, modify parameters at runtime and visualize interaction and performance.  The reinforcement learning competition\footnote{http://www.rl-competition.org/} is an annual event where teams from around the world compare their learning algorithms on a variety of challenging environments. RL-Glue has been used as the evaluation system for all three events. Finally, the Critter Bot\footnote{http://www.cs.ualberta.ca/~sokolsky/critterbot/} is an mobile robot that is outfitted with a unusually rich set of subjective sensors. The robot is compatible with rl-glue; agents developed for simulated environments can easily employed on the robot.
+RL-Glue has had a significant impact on the reinforcement learning community and has been used in several projects. The reinforcement learning library\footnote{http://library.rl-community.org/} (RL-Libary) is mechanism for sharing RL-Glue compatible code. RL-Library is a public repository of agent, environment, experiment and utility programs for the reinforcement learning community. The RL-Library is an open-source project that promotes submissions of RL-Glue related codes. RL-Viz\footnote{http://code.google.com/p/rl-viz/} is an API layered on top of RL-Glue. RL-Viz can be used to dynamically load agent and environment programs, modify parameters at runtime and visualize interaction and performance.  The reinforcement learning competition\footnote{http://www.rl-competition.org/} is an annual event where teams from around the world compare their learning algorithms on a variety of challenging environments. RL-Glue has been used as the evaluation system for all three events. Finally, the Critter Bot\footnote{http://www.cs.ualberta.ca/$\sim$sokolsky/critterbot/} is an mobile robot that is outfitted with a unusually rich set of subjective sensors. The robot is compatible with rl-glue; agents developed for simulated environments can easily employed on the robot.
 
 The socket architecture of RL-Glue can be used to connect agent programs to other software projects. Currently socket bridges exist for connecting RL-Glue to a keepaway soccer server, a real-time strategy game engine and an Atari emulator. Our socket architecture helps lower the barriers for researchers wishing to work on larger scale environments by providing with a simple and familiar interface. These environments will soon be accessible via RL-Library. 
 
 
-RL-Glue has been used for teaching reinforcement learning in several university courses and evaluating learning performance in papers published in leading conferences. An up-to-date list of what RL-Glue is used for can be found online at:% {\url http://glue.rl-
+RL-Glue has been used for teaching reinforcement learning in several university courses and evaluating learning performance in papers published in leading conferences. An up-to-date list of what RL-Glue is used for can be found online at: {\url http://glue.rl-community.org/rl-glue-in-practice}
 
 
 
@@ -125,7 +126,7 @@ Some of these alternative packages are distributed with a number agents and envi
 
 RL-Glue is not just an evaluation tool or development environment: RL-Glue is a community project with many levels of possible participation. The easiest and most obvious way to participate is to submit agent, environment and experiment programs to RL-Library. Developers can also help extend RL-Glue compatibility to additional languages by submitting new codecs. The RL-Glue project welcomes code submissions and improvements for all parts of the code base.   	
 
-The RL-Glue Software Project has received significant contributions at many of the levels discussed above. The Lisp codecs were contributed by Gabor Balazs. Jose Antonio Martin H. developed a native windows implementation of RL-Glue. More??
+The RL-Glue Software Project has received significant contributions at many of the levels discussed above. The Lisp codecs were contributed by Gabor Balazs. Jose Antonio Martin H. developed a native windows implementation of RL-Glue. Quickly list library contributions ....
 
 RL-Glue is available under the Apache License, Version 2.0.
 	
