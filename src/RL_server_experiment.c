@@ -47,6 +47,7 @@
 /* MS WINDOWS Headers needed by WSAStartup in the main function */
 #include <winsock.h>
 #include <winsock2.h>
+#pragma comment(lib,"libws2_32")
 #endif
 
 const char* kUnknownMessage = "Unknown message: %s\n";
@@ -416,6 +417,13 @@ switch(glueState) {
 
 int main(int argc, char** argv) {
 	char usageBuffer[1024];
+    #ifdef HAVE_MINGW
+    WSADATA wsadata;
+    if (WSAStartup(MAKEWORD(1,1), &wsadata) == SOCKET_ERROR) {
+       printf("Error creating socket.");
+       return -1;
+       }
+    #endif
 
 	if (argc > 1) {
 		/* pick up --pv*/
@@ -447,6 +455,10 @@ int main(int argc, char** argv) {
 	runGlueEventLoop(theConnection);
 	rlDisconnectSystems();
 	rlBufferDestroy(&theBuffer);
+	#ifdef HAVE_MINGW
+    closesocket(theConnection);
+    WSACleanup();
+    #endif
 
 	return 0;
 }

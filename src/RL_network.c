@@ -1,5 +1,4 @@
-/* 
-* Copyright (C) 2007, Andrew Butcher
+/* Copyright (C) 2007, Andrew Butcher
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -37,6 +36,7 @@
 #include <winsock.h>
 #include <winsock2.h>
 #define SLEEPALIAS(n) Sleep(n);
+#pragma comment(lib,"libws2_32")
 typedef int socklen_t;
 #else
 /* POSIX Network Headers */
@@ -118,6 +118,7 @@ int rlListen(int theSocket, short thePort) {
   if (theStatus == -1)
 	{
 		fprintf(stderr,"Could not open socket\n");
+		perror("bind");
 		exit(1);
 	}
   
