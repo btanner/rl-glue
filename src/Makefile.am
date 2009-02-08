@@ -2,6 +2,11 @@
 GLUE_RELEASE=3:0:0
 GLUE_VERSION=3:0:0
 
+
+if MINGW
+  WINFLAGS = -lws2_32
+endif
+
 EXTRA_C_FLAGS=-O2
 lib_LTLIBRARIES = librlutils.la librlglue.la librlgluenetdev.la
 
@@ -41,5 +46,5 @@ rl_glue_SOURCES = RL_network_experiment.c RL_server_environment.c RL_network_age
 #This is basically a no-op suggested by: http://www.gnu.org/software/libtool/manual/automake/Libtool-Issues.html to solve a problem where because both targets build rlglue.c
 rl_glue_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99 $(EXTRA_C_FLAGS)
 #Taking this out because GDB refuses to look it up when debugging rl_glue
-rl_glue_LDADD   = librlgluenetdev.la
+rl_glue_LDADD   = librlgluenetdev.la $(WINFLAGS)
 

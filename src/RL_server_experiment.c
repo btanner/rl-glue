@@ -43,6 +43,12 @@
 
 #include "RL_network_glue.h"
 
+#ifdef HAVE_MINGW  
+/* MS WINDOWS Headers needed by WSAStartup in the main function */
+#include <winsock.h>
+#include <winsock2.h>
+#endif
+
 const char* kUnknownMessage = "Unknown message: %s\n";
 
 

@@ -31,13 +31,24 @@
 #include <string.h> /* memset */
 #include <stdio.h> /* fprintf */
 
-/* Network Headers */
+#ifdef HAVE_MINGW
+/* MS WINDOWS Headers and extra types*/
+#include <windows.h>
+#include <winsock.h>
+#include <winsock2.h>
+#define SLEEPALIAS(n) Sleep(n);
+typedef int socklen_t;
+#else
+/* POSIX Network Headers */
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#define SLEEPALIAS(n) sleep(n);
+#endif
+
 
 /* RL_netlib Library Header */
 #include <rlglue/network/RL_network.h>
@@ -392,7 +403,7 @@ int rlWaitForConnection(const char *address, const short port, const int retryTi
     isConnected = rlConnect(theConnection, address, port);
     if (isConnected == -1) { 
       rlClose(theConnection);
-      sleep(retryTimeout);
+      SLEEPALIAS(retryTimeout);
     }
   }
 
