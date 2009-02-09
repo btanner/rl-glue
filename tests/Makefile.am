@@ -1,4 +1,4 @@
-check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_init_cleanup test_state_and_seed_keys test_empty test_speed 
+check_PROGRAMS= test_sanity test_1 test_message test_rl_episode test_init_cleanup test_empty test_speed 
 #test_cparser
 TESTS = $(check_PROGRAMS)
 
@@ -19,9 +19,6 @@ test_rl_episode_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
 test_init_cleanup_SOURCES = test_1_environment.c  test_1_agent.c test_init_cleanup_experiment.c useful_functions.c useful_functions.h
 test_init_cleanup_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
-
-test_state_and_seed_keys_SOURCES = test_seeds_environment.c	test_1_agent.c test_seeds_experiment.c useful_functions.c useful_functions.h
-test_state_and_seed_keys_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
 
 test_empty_SOURCES = test_empty_environment.c	test_empty_agent.c test_empty_experiment.c useful_functions.c useful_functions.h
 test_empty_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99
