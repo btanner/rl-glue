@@ -49,7 +49,24 @@ All of the official downloads of the RL-Glue Core can be found here:\newline
 You may also check the code out directly from the subversion:
 \texttt{svn checkout http://rl-glue.googlecode.com/svn/trunk rl-glue}
 
+\subsection{Binary Distributions}
+\subsubsection{Windows Binary rl\_glue.exe Package}
+This package is intended for Microsoft Windows users who plan to write agents, environments, and experiments in languages other than C/C++.
+
+This distribution is simply the \texttt{rl\_glue.exe} executable socket server, precompiled for Windows, and the GlueOverview and TechnicalManual PDF files.  Using this distribution does not allow you to install the C/C++ codec, because that codec requires access to certain shared libraries not included in this binary package.
+
+If you use this distribution, you can start \texttt{rl\_glue.exe} a number of ways.  You can just double-click it, for example.  This will probably be very tedious in the long run. 
+
+You should probably put \texttt{rl\_glue.exe} into your \texttt{\$PATH}, so that you can easily find it either from the Windows \texttt{COMMAND} program, or from within other programs like Matlab.  By default, the \texttt{Windows/System} folder is in the path, so if you put \texttt{rl\_glue.exe} in that folder, you will be able to start it easily.  If you put it elsewhere you should consider updating your Windows path to include it.   There are instructions on the Internet that can help you with this, for example \htmladdnormallink{these}{http://www.computerhope.com/issues/ch000549.htm}.
+
+Once \texttt{rl\_glue.exe} is in your \texttt{\$PATH}, you can start it from the windows \texttt{COMMAND} program by typing:
+\begin{verbatim}
+	C:\DOCUME~1\ADMINI~1>rl_glue.exe
+\end{verbatim}
+
 \subsubsection{Intel Mac OX 10.3+ Package}
+This package is intended for all Intel Mac 10.3+ users.
+
 This distribution is an installer package bundled into a Mac Disk Image (.dmg).  This is a graphical installer application and should be fairly self explanatory. This distribution comes with an uninstall script that can be used to remove this codec from your system.
 
 \subsection{Installing From Source}
@@ -71,7 +88,7 @@ Provided everything goes well, the headers have now been installed to \texttt{/u
 \textbf{NOTE:} On many Linux systems, \texttt{/usr/local} is not actually on the library and header search paths by default, but \texttt{/usr} surely is. In this case, you may want to follow the instructions in Section \ref{custom-install-location} system with \texttt{--prefix=/usr}.
 
 
-\subsubsection{Install  To Custom Location (maybe without \textit{root} access)}
+\subsubsection{Install To Custom Location (maybe without \textit{root} access)}
 \label{custom-install-location}
 You might want to install RL-Glue to a location other than the default of \texttt{/usr/local}.
 
@@ -91,7 +108,7 @@ Provided everything goes well, the headers, libraries, binaries have been respec
 \texttt{/Users/joe/glue/bin}
 
 
-\subsection{Uninstall}
+\subsubsection{Uninstall}
 If you decide that you don't want  RL-Glue on your machine anymore, you can easily uninstall it.  The procedures varies a tiny bit depending on if you installed it to the default location, or to a custom location.
 
 \subsubsection{RL-Glue Installed To Default Location}

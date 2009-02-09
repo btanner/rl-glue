@@ -58,7 +58,7 @@ $external_latex_labels{$key} = q|2.3|;
 $noresave{$key} = "$nosave";
 
 $key = q/custom-install-location/;
-$external_latex_labels{$key} = q|1.3.2|; 
+$external_latex_labels{$key} = q|1.4.2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/mines-sample/;
