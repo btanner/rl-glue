@@ -10,6 +10,10 @@ $key = q/mines-sample/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/custom-install-location/;
+$ref_files{$key} = "$dir".q|TechnicalManual.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/sec:env/;
 $ref_files{$key} = "$dir".q|TechnicalManual.html|; 
 $noresave{$key} = "$nosave";

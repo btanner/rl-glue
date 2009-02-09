@@ -68,7 +68,13 @@ The steps are:
 
 Provided everything goes well, the headers have now been installed to \texttt{/usr/local/include} the libs to \texttt{/usr/local/lib}, and \texttt{rl\_glue} to \texttt{/usr/local/bin}.
 
-\subsubsection{Install  To Custom Location (without \textit{root} access)}
+\textbf{NOTE:} On many Linux systems, \texttt{/usr/local} is not actually on the library and header search paths by default, but \texttt{/usr} surely is. In this case, you may want to follow the instructions in Section \ref{custom-install-location} system with \texttt{--prefix=/usr}.
+
+
+\subsubsection{Install  To Custom Location (maybe without \textit{root} access)}
+\label{custom-install-location}
+You might want to install RL-Glue to a location other than the default of \texttt{/usr/local}.
+
 If you don't have \textit{sudo} or \textit{root} access on the target machine, you can install RL-Glue in your home directory (or other directory you have access to).
 If you install to a custom location, you will need to set your \texttt{CFLAGS} and \texttt{LDFLAGS} variables appropriately when compiling your projects. See Section \ref{sec:custom-flags} for more information.
 
@@ -309,7 +315,7 @@ The
  environment}{http://code.google.com/p/rl-glue/source/browse/trunk/examples/mines-sarsa-sample/SampleMinesEnvironment.c} 
 is internally a two-dimensional, discrete grid world where the agent receives a penalty per step until reaching a goal state, hopefully without stepping on any exploding land-mines along the way.  The (x,y) state is flattened into a discrete, scalar observation for the agent.  This environment can receive special messages from the experiment program to print the current state to the screen, and also to toggle between random starting states and a fixed starting-state specified by the experiment.
 
-The task specification string\footnote{\url{http://glue.rl-community.org/Home/rl-glue/task-spec-language}} is manually because there is not yet a task spec builder for C/C++. 
+The task specification string\footnote{\url{http://glue.rl-community.org/Home/rl-glue/task-spec-language}} is manually created because there is not yet a task spec builder for C/C++. 
 
 \subsubsection{Samples-Sarsa-Agent}
 \label{sarsa-sample}

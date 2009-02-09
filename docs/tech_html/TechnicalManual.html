@@ -154,7 +154,7 @@ so we won't rehash all of the high level RL-Glue ideas.
 
 <P>
 This software project is licensed under the Apache-2.0<A NAME="tex2html1"
-  HREF="#foot326"><SUP>1</SUP></A> license. We're not lawyers, but our intention is that this code 
+  HREF="#foot333"><SUP>1</SUP></A> license. We're not lawyers, but our intention is that this code 
 should be used however it is useful.  We'd appreciate to hear what you're using it for, and to get credit if appropriate.
 
 <P>
@@ -168,9 +168,9 @@ Software Requirements</A>
 </H2>
 This project requires nothing more exotic than a C compiler, Make, etc.  This project uses a configure script that was created by GNU 
 Autotools<A NAME="tex2html5"
-  HREF="#foot327"><SUP>2</SUP></A>, so it should compile and run without problems 
+  HREF="#foot334"><SUP>2</SUP></A>, so it should compile and run without problems 
 on most *nix platforms (Unix, Linux, Mac OS X, Windows using CYGWIN<A NAME="tex2html7"
-  HREF="#foot328"><SUP>3</SUP></A>). 
+  HREF="#foot335"><SUP>3</SUP></A>). 
 
 <P>
 
@@ -222,10 +222,18 @@ The steps are:
 Provided everything goes well, the headers have now been installed to <TT>/usr/local/include</TT> the libs to <TT>/usr/local/lib</TT>, and <TT>rl_glue</TT> to <TT>/usr/local/bin</TT>.
 
 <P>
+<B>NOTE:</B> On many Linux systems, <TT>/usr/local</TT> is not actually on the library and header search paths by default, but <TT>/usr</TT> surely is. In this case, you may want to follow the instructions in Section <A HREF="#custom-install-location">1.3.2</A> system with <TT>-prefix=/usr</TT>.
 
-<H3><A NAME="SECTION00023200000000000000">
-Install  To Custom Location (without <I>root</I> access)</A>
+<P>
+
+<H3><A NAME="SECTION00023200000000000000"></A>
+<A NAME="custom-install-location"></A>
+<BR>
+Install  To Custom Location (maybe without <I>root</I> access)
 </H3>
+You might want to install RL-Glue to a location other than the default of <TT>/usr/local</TT>.
+
+<P>
 If you don't have <I>sudo</I> or <I>root</I> access on the target machine, you can install RL-Glue in your home directory (or other directory you have access to).
 If you install to a custom location, you will need to set your <TT>CFLAGS</TT> and <TT>LDFLAGS</TT> variables appropriately when compiling your projects. See Section <A HREF="#sec:custom-flags">2.3</A> for more information.
 
@@ -567,7 +575,7 @@ is internally a two-dimensional, discrete grid world where the agent receives a 
 
 <P>
 The task specification string<A NAME="tex2html10"
-  HREF="#foot330"><SUP>4</SUP></A> is manually because there is not yet a task spec builder for C/C++. 
+  HREF="#foot337"><SUP>4</SUP></A> is manually created because there is not yet a task spec builder for C/C++. 
 
 <P>
 
@@ -1306,9 +1314,9 @@ If you would like to become a member of this project and contribute updates/chan
 Document Information</A>
 </H1>
 <PRE>
-Revision Number: $Rev: 947 $
+Revision Number: $Rev: 968 $
 Last Updated By: $Author: brian@tannerpages.com $
-Last Updated   : $Date: 2009-02-01 11:21:26 -0700 (Sun, 01 Feb 2009) $
+Last Updated   : $Date: 2009-02-05 00:20:12 -0700 (Thu, 05 Feb 2009) $
 $URL: https://rl-glue.googlecode.com/svn/trunk/docs/TechnicalManual.tex $
 </PRE>
 
@@ -1332,29 +1340,29 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>TechnicalManual.tex -split 0 -dir tech_html -mkdir -title 'RL-Glue 3.0 Technical Details' -local_icons -math</TT>
 <P>
-The translation was initiated by Brian Tanner on 2009-02-05
+The translation was initiated by Brian Tanner on 2009-02-08
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot326">... Apache-2.0</A><A
+<DT><A NAME="foot333">... Apache-2.0</A><A
  HREF="TechnicalManual.html#tex2html1"><SUP>1</SUP></A></DT>
 <DD><TT><A NAME="tex2html2"
   HREF="http://www.apache.org/licenses/LICENSE-2.0.html">http://www.apache.org/licenses/LICENSE-2.0.html</A></TT>
 
 </DD>
-<DT><A NAME="foot327">...
+<DT><A NAME="foot334">...
 Autotools</A><A
  HREF="TechnicalManual.html#tex2html5"><SUP>2</SUP></A></DT>
 <DD><TT><A NAME="tex2html6"
   HREF="http://sources.redhat.com/autobook/">http://sources.redhat.com/autobook/</A></TT>
 
 </DD>
-<DT><A NAME="foot328">... CYGWIN</A><A
+<DT><A NAME="foot335">... CYGWIN</A><A
  HREF="TechnicalManual.html#tex2html7"><SUP>3</SUP></A></DT>
 <DD><TT><A NAME="tex2html8"
   HREF="http://www.cygwin.com/">http://www.cygwin.com/</A></TT>
 
 </DD>
-<DT><A NAME="foot330">... string</A><A
+<DT><A NAME="foot337">... string</A><A
  HREF="TechnicalManual.html#tex2html10"><SUP>4</SUP></A></DT>
 <DD><TT><A NAME="tex2html11"
   HREF="http://glue.rl-community.org/Home/rl-glue/task-spec-language">http://glue.rl-community.org/Home/rl-glue/task-spec-language</A></TT>
@@ -1369,7 +1377,7 @@ Autotools</A><A
 <!--End of Navigation Panel-->
 <ADDRESS>
 Brian Tanner
-2009-02-05
+2009-02-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -178,7 +178,7 @@ How to Use This Document</A>
 </H2>
 
 <P>
-This document has been divided to reflect the purposes described above. To learn about the major components of RL-Glue and a description of how those components interact see Section <A HREF="#RL-Glue">2</A>. To learn how to make environment and agent programs compatible with RL-Glue we recommend sections <A HREF="#envp1">3.1</A> and <A HREF="#agentp1">4.1</A>. Sections <A HREF="#envp1">3.1</A> and <A HREF="#agentp1">4.1</A> describe only the mandatory functions that RL-Glue environments and agents must implement. Sections <A HREF="#envp2">3.2</A> and <A HREF="#agentp2">4.2</A> describe advanced environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section <A HREF="#exp">5</A>. For quick function reference see Section <A HREF="#ref">6</A>. Frequently asked questions can be found in Section <A HREF="#faq">8</A>. A summary of and explanations for all changes from RL-Glue 2.X to RL-Glue 3.0 can be found in Section <A HREF="#change">7</A>.
+This document has been divided to reflect the purposes described above. To learn about the major components of RL-Glue and a description of how those components interact see Section <A HREF="#RL-Glue"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. To learn how to make environment and agent programs compatible with RL-Glue we recommend sections <A HREF="#envp1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> and <A HREF="#agentp1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Sections <A HREF="#envp1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> and <A HREF="#agentp1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> describe only the mandatory functions that RL-Glue environments and agents must implement. Sections <A HREF="#envp2"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> and <A HREF="#agentp2"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> describe advanced environment and agent functions. To learn about experiment programs and how they interact with RL-Glue see Section <A HREF="#exp"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. For quick function reference see Section <A HREF="#ref"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Frequently asked questions can be found in Section <A HREF="#faq"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. A summary of and explanations for all changes from RL-Glue 2.X to RL-Glue 3.0 can be found in Section <A HREF="#change"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
 RL-Glue uses naming conventions and definitions from Sutton and Barto's text: ``Reinforcement Learning: An Introduction".  This text is available for free online: <TT><A NAME="tex2html3"
@@ -207,7 +207,7 @@ have used RL-Glue for benchmarking participant submissions, further exemplifying
 
 <DIV ALIGN="CENTER"><A NAME="fig:glue-connections"></A><A NAME="52"></A>
 <TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure:</STRONG>
 The RL-Glue Standard. Arrows indicate function call direction.</CAPTION>
 <TR><TD>
 <DIV ALIGN="CENTER">
@@ -221,7 +221,7 @@ The RL-Glue Standard. Arrows indicate function call direction.</CAPTION>
 </DIV>
 
 <P>
-RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for the reinforcement learning community to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to ``plug in'' agents, environments and experiment programs without having to continually rewrite the connecting code for these pieces. An experiment program is, very simply, code stating how many times to run an agent in an environment and what data should be extracted from this interaction. Provided the agent, environment, and experiment program follow the RL-Glue protocol, by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure <A HREF="#fig:glue-connections">1</A> is a diagram which shows how function calls work in RL-Glue.
+RL-Glue is both a set of ideas and standards, as well as a software implementation. In theory, RL-Glue is a protocol for the reinforcement learning community to follow. Having this very simple standard of necessary functions facilitates the exchange and comparison of agents and environments without limiting their abilities. As software, RL-Glue is functionally a test harness to ``plug in'' agents, environments and experiment programs without having to continually rewrite the connecting code for these pieces. An experiment program is, very simply, code stating how many times to run an agent in an environment and what data should be extracted from this interaction. Provided the agent, environment, and experiment program follow the RL-Glue protocol, by implementing the few necessary functions, they can easily be plugged in with the RL-Glue code to have an experiment running quite effortlessly. Figure <A HREF="#fig:glue-connections"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> is a diagram which shows how function calls work in RL-Glue.
 
 <P>
 The Experiment Program contains the ``main function'' which will make all of the requests for information through RL-Glue. These requests are usually related to setting up, starting and running the experiment and then gathering data about the agent's performance. The experiment program can never interact with the agent or environment directly: all contact goes through the RL-Glue interface.  There is also no direct contact between the agent and the environment. Any information the agent or environment returns is passed through RL-Glue to the module which needs it.  
@@ -243,7 +243,7 @@ The <I>environment</I> is responsible for storing all the relevant details of th
 The <I>experiment</I> is the intermediary which (through RL-Glue) controls all communication between the agent and environment.  This structured separation is by design, division of the agent and environment both helps create modularized code and captures our intuitions about how much the agent and environment should ``know'' about each other.
 
 <P>
-The experiment program will be familiar to anyone who has created reinforcement learning experiments. Akin to the typical main function in many reinforcement learning experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment <B>x</B> number of times, perhaps doing <B>y</B> trials of these <B>x</B> episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section <A HREF="#ref">6</A>) to assist in writing an experiment program.
+The experiment program will be familiar to anyone who has created reinforcement learning experiments. Akin to the typical main function in many reinforcement learning experiments, an RL-Glue experiment program is a control loop which runs the agent through the environment <B>x</B> number of times, perhaps doing <B>y</B> trials of these <B>x</B> episodes, all the while gathering data about how efficiently the agent has behaved or how quickly it has learned. RL-Glue provides several functions (Section <A HREF="#ref"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) to assist in writing an experiment program.
 
 <P>
 
@@ -522,7 +522,7 @@ The <TT>RL_step</TT> function calls the <TT>env_step</TT> function passing it th
 Using the <TT>RL_step</TT> function gives the experiment designer access to all the data produced during an episode; however, it is often more convenient to use the <TT>RL_episode</TT> function when step-level control is not needed. Lines 5 through 7, in the above experiment program, can be replaced by a single call to RL_episode(100). If the input to <TT>RL_episode</TT> is zero, control will return to the experiment program if and only if the environment enters a terminal state (i.e., terminal flag from the <TT>env_step</TT> function is set to true).
 
 <P>
-The <TT>RL_step</TT> function allows the experiment program to record/sum/average the reward at each step, but the <TT>RL_episode</TT> function runs many (perhaps millions of) steps before returning control to the experiment program. The <TT>RL_return</TT> and <TT>RL_num_steps</TT> functions allow the experiment program to retrieve the cumulative reward and the number of steps used during the episode. Specifically, <TT>RL_return</TT> returns the sum of rewards accumulated during the current or most recently completed episode (it is reset to zero at the start of every episode). The <TT>RL_num_steps</TT> returns the number of steps elapsed during the current or most recently completed episode (also reset to zero). The function reference in Section <A HREF="#ref">6</A> provides pseudo code for each of the RL-Glue interface functions.
+The <TT>RL_step</TT> function allows the experiment program to record/sum/average the reward at each step, but the <TT>RL_episode</TT> function runs many (perhaps millions of) steps before returning control to the experiment program. The <TT>RL_return</TT> and <TT>RL_num_steps</TT> functions allow the experiment program to retrieve the cumulative reward and the number of steps used during the episode. Specifically, <TT>RL_return</TT> returns the sum of rewards accumulated during the current or most recently completed episode (it is reset to zero at the start of every episode). The <TT>RL_num_steps</TT> returns the number of steps elapsed during the current or most recently completed episode (also reset to zero). The function reference in Section <A HREF="#ref"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> provides pseudo code for each of the RL-Glue interface functions.
 
 <P>
 Putting these new functions together we can write a more useful experiment program:
@@ -1077,7 +1077,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>Glue-Overview.tex -split 0 -dir html -mkdir -title 'RL-Glue 3.0' -local_icons -math</TT>
 <P>
-The translation was initiated by Brian Tanner on 2009-02-05<HR>
+The translation was initiated by Brian Tanner on 2009-02-08<HR>
 <!--Navigation Panel-->
 <IMG WIDTH="81" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next_inactive" SRC="nx_grp_g.png"> 
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_g.png"> 
@@ -1086,7 +1086,7 @@ The translation was initiated by Brian Tanner on 2009-02-05<HR>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Brian Tanner
-2009-02-05
+2009-02-08
 </ADDRESS>
 </BODY>
 </HTML>
