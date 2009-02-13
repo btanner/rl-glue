@@ -856,7 +856,7 @@ const char* agent_message(const char* inMessage) {
     char theBuffer[1024];
     char* returnString=0;
     sprintf(theBuffer,"this is an example response message\n");
-    returnString=(char *)calloc(strlen(theBuffer+1),sizeof(char));
+    returnString=(char *)calloc(strlen(theBuffer)+1,sizeof(char));
     strcpy(returnString,theBuffer);
         /*
             Memory leak... every time this function is called
@@ -882,7 +882,7 @@ const char* agent_message(const char* inMessage) {
         free(agentReturnString);
         agentReturnString=0;
     }
-    agentReturnString=(char *)calloc(strlen(theBuffer+1),sizeof(char));
+    agentReturnString=(char *)calloc(strlen(theBuffer)+1,sizeof(char));
     strcpy(agentReturnString,theBuffer);
     return agentReturnString;
 }
@@ -896,7 +896,7 @@ Socket Connections and Codecs</A>
 When using socket mode: the agent, environment, and experiment programs communicate with the <TT>rl_glue</TT> server over sockets.  This can be either within a single machine, or over the Internet.
 
 <P>
-RL-Glue use TCP/IP connections between all of the components.  RL-Glue operates in lock-step, not asynchronously.  There is no time-out mechanism, RL-Glue will wait for an agent or environment to return from a remote function call indefinitely unless the connection is terminated.  This is by design.   By default, RL-Glue listens (and codecs connect to) port 4096 on <TT>localhost</TT>.
+RL-Glue uses TCP/IP connections between all of the components.  RL-Glue operates in lock-step, not asynchronously.  There is no time-out mechanism, RL-Glue will wait for an agent or environment to return from a remote function call indefinitely unless the connection is terminated.  This is by design.   By default, RL-Glue listens (and codecs connect to) port 4096 on <TT>localhost</TT>.
 
 <P>
 In the future, an advanced technical guide will be available that describes how to write a codec to allow the language of your choice to connect to RL-Glue over sockets.  This will be an integral part of the growth and standardization of RL-Glue to a growing number of platforms and languages.  Until then, please contact us directly on the RL-Glue mailing list for further information:
@@ -1344,9 +1344,9 @@ If you would like to become a member of this project and contribute updates/chan
 Document Information</A>
 </H1>
 <PRE>
-Revision Number: $Rev: 974 $
+Revision Number: $Rev: 980 $
 Last Updated By: $Author: brian@tannerpages.com $
-Last Updated   : $Date: 2009-02-08 19:40:13 -0700 (Sun, 08 Feb 2009) $
+Last Updated   : $Date: 2009-02-09 16:51:57 -0700 (Mon, 09 Feb 2009) $
 $URL: https://rl-glue.googlecode.com/svn/trunk/docs/TechnicalManual.tex $
 </PRE>
 
@@ -1370,7 +1370,7 @@ Mathematics Department, Macquarie University, Sydney.
 The command line arguments were: <BR>
  <STRONG>latex2html</STRONG> <TT>TechnicalManual.tex -split 0 -dir tech_html -mkdir -title 'RL-Glue 3.0 Technical Details' -local_icons -math</TT>
 <P>
-The translation was initiated by Brian Tanner on 2009-02-09
+The translation was initiated by Brian Tanner on 2009-02-13
 <BR><HR><H4>Footnotes</H4>
 <DL>
 <DT><A NAME="foot349">... Apache-2.0</A><A
@@ -1407,7 +1407,7 @@ Autotools</A><A
 <!--End of Navigation Panel-->
 <ADDRESS>
 Brian Tanner
-2009-02-09
+2009-02-13
 </ADDRESS>
 </BODY>
 </HTML>
