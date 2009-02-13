@@ -58,7 +58,7 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(librlglue_la_includedir)" \
+	"$(DESTDIR)$(man1dir)" "$(DESTDIR)$(librlglue_la_includedir)" \
 	"$(DESTDIR)$(librlgluenetdev_la_includedir)" \
 	"$(DESTDIR)$(librlutils_la_includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
@@ -105,6 +105,9 @@ SOURCES = $(librlglue_la_SOURCES) $(librlgluenetdev_la_SOURCES) \
 	$(librlutils_la_SOURCES) $(rl_glue_SOURCES)
 DIST_SOURCES = $(librlglue_la_SOURCES) $(librlgluenetdev_la_SOURCES) \
 	$(librlutils_la_SOURCES) $(rl_glue_SOURCES)
+man1dir = $(mandir)/man1
+NROFF = nroff
+MANS = $(man_MANS)
 librlglue_la_includeHEADERS_INSTALL = $(INSTALL_HEADER)
 librlgluenetdev_la_includeHEADERS_INSTALL = $(INSTALL_HEADER)
 librlutils_la_includeHEADERS_INSTALL = $(INSTALL_HEADER)
@@ -226,6 +229,7 @@ target_alias = @target_alias@
 GLUE_RELEASE = 3:0:0
 GLUE_VERSION = 3:0:0
 @MINGW_TRUE@WINFLAGS = -lws2_32
+man_MANS = rl_glue.1
 EXTRA_C_FLAGS = -O2
 lib_LTLIBRARIES = librlutils.la librlglue.la librlgluenetdev.la
 
@@ -590,6 +594,51 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
+install-man1: $(man1_MANS) $(man_MANS)
+	@$(NORMAL_INSTALL)
+	test -z "$(man1dir)" || $(mkdir_p) "$(DESTDIR)$(man1dir)"
+	@list='$(man1_MANS) $(dist_man1_MANS) $(nodist_man1_MANS)'; \
+	l2='$(man_MANS) $(dist_man_MANS) $(nodist_man_MANS)'; \
+	for i in $$l2; do \
+	  case "$$i" in \
+	    *.1*) list="$$list $$i" ;; \
+	  esac; \
+	done; \
+	for i in $$list; do \
+	  if test -f $(srcdir)/$$i; then file=$(srcdir)/$$i; \
+	  else file=$$i; fi; \
+	  ext=`echo $$i | sed -e 's/^.*\\.//'`; \
+	  case "$$ext" in \
+	    1*) ;; \
+	    *) ext='1' ;; \
+	  esac; \
+	  inst=`echo $$i | sed -e 's/\\.[0-9a-z]*$$//'`; \
+	  inst=`echo $$inst | sed -e 's/^.*\///'`; \
+	  inst=`echo $$inst | sed '$(transform)'`.$$ext; \
+	  echo " $(INSTALL_DATA) '$$file' '$(DESTDIR)$(man1dir)/$$inst'"; \
+	  $(INSTALL_DATA) "$$file" "$(DESTDIR)$(man1dir)/$$inst"; \
+	done
+uninstall-man1:
+	@$(NORMAL_UNINSTALL)
+	@list='$(man1_MANS) $(dist_man1_MANS) $(nodist_man1_MANS)'; \
+	l2='$(man_MANS) $(dist_man_MANS) $(nodist_man_MANS)'; \
+	for i in $$l2; do \
+	  case "$$i" in \
+	    *.1*) list="$$list $$i" ;; \
+	  esac; \
+	done; \
+	for i in $$list; do \
+	  ext=`echo $$i | sed -e 's/^.*\\.//'`; \
+	  case "$$ext" in \
+	    1*) ;; \
+	    *) ext='1' ;; \
+	  esac; \
+	  inst=`echo $$i | sed -e 's/\\.[0-9a-z]*$$//'`; \
+	  inst=`echo $$inst | sed -e 's/^.*\///'`; \
+	  inst=`echo $$inst | sed '$(transform)'`.$$ext; \
+	  echo " rm -f '$(DESTDIR)$(man1dir)/$$inst'"; \
+	  rm -f "$(DESTDIR)$(man1dir)/$$inst"; \
+	done
 install-librlglue_la_includeHEADERS: $(librlglue_la_include_HEADERS)
 	@$(NORMAL_INSTALL)
 	test -z "$(librlglue_la_includedir)" || $(mkdir_p) "$(DESTDIR)$(librlglue_la_includedir)"
@@ -720,11 +769,11 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(MANS) $(HEADERS)
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(librlglue_la_includedir)" "$(DESTDIR)$(librlgluenetdev_la_includedir)" "$(DESTDIR)$(librlutils_la_includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(librlglue_la_includedir)" "$(DESTDIR)$(librlgluenetdev_la_includedir)" "$(DESTDIR)$(librlutils_la_includedir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -774,13 +823,13 @@ info-am:
 
 install-data-am: install-librlglue_la_includeHEADERS \
 	install-librlgluenetdev_la_includeHEADERS \
-	install-librlutils_la_includeHEADERS
+	install-librlutils_la_includeHEADERS install-man
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
 install-info: install-info-am
 
-install-man:
+install-man: install-man1
 
 installcheck-am:
 
@@ -805,7 +854,9 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
 	uninstall-libLTLIBRARIES uninstall-librlglue_la_includeHEADERS \
 	uninstall-librlgluenetdev_la_includeHEADERS \
-	uninstall-librlutils_la_includeHEADERS
+	uninstall-librlutils_la_includeHEADERS uninstall-man
+
+uninstall-man: uninstall-man1
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
 	clean-generic clean-libLTLIBRARIES clean-libtool ctags \
@@ -816,15 +867,16 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
 	install-info install-info-am install-libLTLIBRARIES \
 	install-librlglue_la_includeHEADERS \
 	install-librlgluenetdev_la_includeHEADERS \
-	install-librlutils_la_includeHEADERS install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-info-am uninstall-libLTLIBRARIES \
-	uninstall-librlglue_la_includeHEADERS \
+	install-librlutils_la_includeHEADERS install-man install-man1 \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-libLTLIBRARIES uninstall-librlglue_la_includeHEADERS \
 	uninstall-librlgluenetdev_la_includeHEADERS \
-	uninstall-librlutils_la_includeHEADERS
+	uninstall-librlutils_la_includeHEADERS uninstall-man \
+	uninstall-man1
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
