@@ -1,4 +1,4 @@
-\documentclass[twopage,11pt]{article}
+\documentclass[twoside,11pt]{article}
 
 % Any additional packages needed should be included after jmlr2e.
 % Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
@@ -12,12 +12,10 @@
 \usepackage{graphicx}% Definitions of handy macros can go here
 \usepackage{hyperref}
 
-\newcommand{\dataset}{{\cal D}}
-\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
 
 % Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
 
-\jmlrheading{1}{2008}{1-48}{4/00}{10/00}{RL-Glue Tanner and White}
+\jmlrheading{1}{2009}{1-4}{2/09}{10/09}{Brian Tanner and Adam White}
 
 % Short headings should be running head and authors last names
 
@@ -26,17 +24,16 @@
 
 \begin{document}
 
-\title{RL-Glue Core \& Codecs 3.0 : Language Independent Software  for Reinforcement Learning Experiments}
+\title{The RL-Glue Software Project : A Language Independent Interface for Reinforcement Learning Experiments}
 % \title{The RL-Glue Software Project: An Open Source Framework for Reinforcement Learning Experiments}
 
-%Title... I don't like framework because it sounds like you have to fit into it. One tentative title I had jotted down was:
+%Other ideas
 %RL-Glue: Open source, language independent software for reinforcement learning experiments
-%I like that one, but maybe it's not differentiated enough from the protocol.... but really, I disagree with Rich a bit here.  The software is called "RL-Glue", not "The RL-Glue software project". The debian package is rl-glue, the libraries are librlglue, the project is rl-glue.googlecode.com.
-%I think it bogs down this paper to call it "The RL-Glue Software Project".
-%That's how I'm feeling right now, sick, reading the title.
 
-%Maybe we can tech it up.  I'm going back and changing it a different way.
-%What about how it is now? With the 3.0?
+%RL-Glue Core and Codec 3.0: Language Independent Software for Reinforcement Learning Experiments
+
+%My personal favorite so far
+%RL-Glue 3.0: Language Independent Software for Reinforcement Learning Experiments
 
 \author{\name Brian Tanner \AND Adam White  \email \{btanner,awhite\}@cs.ualberta.ca \\
        \addr Department of Computing Science\\
@@ -47,15 +44,14 @@
 
 \maketitle
 
-\begin{abstract}
+\begin{abstract}%
 %Note: will fix this later. still represents the paper well. but needs to be touched up
 RL-Glue (Reinforcement Learning Glue) provides a standard interface that allows reinforcement learning agents, environments, and experiment programs to communicate with each other, even if they are written in different languages. The standardization provided by RL-Glue facilitates code-sharing and collaboration, reducing the need to re-engineer tasks and experimental apparatus from the literature in order to verify and compare-to the results of others.
-%Brian stopped here.
 RL-Glue is well suited for empirical research, course work and industrial scale projects. Our software features a minimalist interface and supports C, C++, Java, Python, Matlab and Lisp and runs on many computing platforms including Linux, Mac OS X, and Microsoft Windows. RL-Glue can be easily extended to support additional programming languages and other evaluation software using a TCP/IP interface. RL-Glue has been used to teach classes, to evaluate competitors in international reinforcement learning competitions and is currently used by several other open-source software and hardware projects.
 \end{abstract}
 
 \section{Introduction and Motivation}
-In reinforcement learning an {\it agent} learns the effects of its {\it actions} through trial and error interaction with the {\it environment} [\cite{rlbook, rlsurvey,ndp}]. The agent selects actions based on its {\it observation} of the state of the environment and a scalar {\it reward} signal. The agent's objective is to select actions which maximize the sum of future rewards. The observations and rewards produced by the environment depend on the actions selected by the agent; the environment is not a static data-set, but rather a dynamic program that interacts with the agent.
+In reinforcement learning an {\it agent} learns the effects of its {\it actions} through trial and error interaction with the {\it environment} \citep{rlbook, rlsurvey,ndp}. The agent selects actions based on its {\it observation} of the state of the environment and a scalar {\it reward} signal. The agent's objective is to select actions which maximize the sum of future rewards. The observations and rewards produced by the environment depend on the actions selected by the agent; the environment is not a static data-set, but rather a interactive computer program.
 %More differentiation from SL??
 %Brian Feb 12 2009: I changed this a bit.  It's still not perfect.
 %I moved away from the word "encoded", because technically every program is encoded as a file.  Pedantic, yes.
@@ -63,14 +59,17 @@ In reinforcement learning an {\it agent} learns the effects of its {\it actions}
 
 
 Different members of the reinforcement learning community use various incompatible software frameworks, making collaboration difficult and thus slowing the progress in our community. It is can be time consuming, difficult, and sometimes even impossible to exactly reproduce the work of others.  There is simply not enough space in the course of a conference publication to share a detailed specification of the environment, the agent, and the overall experimental apparatus.
-Some reinforcement learning environments have become publicly available in different variations that are still each referred to, in the literature, as ``the standard", ``well-known" or ``classical"  versions [\cite{whiteThesis}]. %The RL-Glue Software Project is meant alleviate the evaluation difficulties facing reinforcement learning practitioners.
+In the most extreme cases, some reinforcement learning environments have become publicly available in different variations that are still each referred to, in the literature, as ``the standard", ``well-known" or ``classical"  versions \citep{whiteThesis}. %The RL-Glue Software Project is meant alleviate the evaluation difficulties facing reinforcement learning practitioners.
 %Brian Feb 12 2009: This last sentence is important, or something like it is, to cap off the paragraph, but I really don't like that sentence.
 
 %Maybe the motivation is strong enough that we dont need to talk about competitions and benchmarks...they are more difficult to defend anyway.
 %There has also been significant interest, in recent years, in establishing annual agent competitions and benchmark problems, necessitating a standard evaluation system for reinforcement learning. 
 
 
-%Brian: I think it's strong enough as is.
+%Brian: I think it's strong enough as is.  But, I think it needs another paragraph to get us off and running.
+
+We believe that a standard programming interface for reinforcement learning experiments will remove the barriers to collaboration and accelerate the pace of research in reinforcement learning.  To encourage widespread adoption, this interface should be easy to adhere to and it should not force the community to abandon their favorite tools or languages.  With these goals in mind, we have designed the \textit{RL-Glue Protocol} and provided an implementation: the RL-Glue Software Project.
+
 
 
 
@@ -81,17 +80,19 @@ Some reinforcement learning environments have become publicly available in diffe
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width = 9 cm]{glue.pdf}
+\includegraphics[width=9cm]{glue.pdf}
 \vspace{-0.2cm}
-\caption{\small The RL-Glue system architecture. Arrows indicate function call direction.}\label{fig:RLDIA}
+\caption{\small The RL-Glue Protocol splits reinforcement learning framework into four components.  Arrows indicate function call direction.}\label{fig:RLDIA}
 \end{center}
 \vspace{-0.4cm}
 \end{figure}
 
 %Brian: I agree with Shimon when he made this point about the AIM paper, we can't cite a paper that doesn't exist.  Perhaps you guys can release a tech report before this gets submitted.
-The RL-Glue Software is an implementation of the RL-Glue Protocol [\cite{whitesutton}]. The RL-Glue Protocol is a standard for communication between agent and environment programs. The RL-Glue Protocol (illustrated in Figure \ref{fig:RLDIA}) separates the reinforcement learning framework into four main components: the agent program, environment program, experiment program and the RL-Glue interface. The agent program contains the learning algorithm and action selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program controls the experiment's execution, including the sequence of agent-environment interactions and capturing statistical information about the agent's performance.  The RL-Glue interface mediates the communication between the agent and environment programs in response to commands from the experiment program. 
+\citeauthor{whitesutton}'s RL-Glue Protocol (\citeyear{whitesutton}), illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement learning framework into four main components: the agent program, environment program, experiment program and the RL-Glue interface. The agent program contains the learning algorithm and action selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program controls the experiment's execution, including the sequence of agent-environment interactions and capturing statistical information about the agent's performance.  The RL-Glue interface mediates the communication between the agent and environment programs in response to commands from the experiment program. 
 
-The RL-Glue Software can be run in either {\it native} or {\it network} mode. In native mode, the agent, environment and experiment program are compiled into a single C/C++ executable, and they communicate using function calls.  In networked mode, the agent, environment and experiment program communicate through RL-Glue over a TCP/IP socket connection. The network mode allows the agent, environment and experiment programs to be written in any programming language that supports socket I/O. The native mode can execute more steps per second, while the network mode is more flexible and portable. The agent and environment programs are completely agnostic of the execution mode.       
+The RL-Glue Software (RL-Glue) is an implementation of \citeauthor{whitesutton}'s RL-Glue Protocol.  RL-Glue can be used either in {\it internal} or {\it external} mode.  When using internal mode, the agent, environment and experiment are linked into a single program, and their communication is through function calls.  Internal mode is currently an option if the agent, environment, and experiment are written exclusively in Java or C/C++.  When using  external mode, the agent, environment and experiment are linked into separate programs.  Each program connects to the RL-Glue server program, and all communication is over TCP/IP socket connections. The external mode allows these programs to be written in any programming language that supports socket communication.  External mode is currently supported for C/C++, Java, Python, Lisp, and Matlab.
+
+Each mode has its strengths and weaknesses. Internal mode has less overhead, so it can can execute more steps per second. External mode is more flexible and portable.  The performance difference between the two modes vanishes as the agents or environments become complex and their computation dominates the socket overhead in terms of time per step.  The agent and environment programs are completely agnostic of their execution mode, the difference is only in how they are linked together, if that.
 
 %This feels out of place, maybe it's better after the software intro... moving.
 %Nope, still feels out of place, commenting out for now
@@ -106,10 +107,11 @@ The RL-Glue Software can be run in either {\it native} or {\it network} mode. In
 
 
 
-\section{RL-Glue Software in Practice}
-The RL-Glue Software Project has had a significant impact on the reinforcement learning community and has been used in several other projects. The reinforcement learning library\footnote{http://library.rl-community.org/} (RL-Libary) is a public repository of RL-Glue compatible agent, environment, experiment and utility programs.  The RL-Library is an open-source project that invites submissions from the reinforcement learning community. RL-Viz\footnote{http://code.google.com/p/rl-viz/} is an API layered on top of  RL-Glue, and can be used to dynamically load agent and environment programs, modify parameters at runtime and visualize interaction and performance.  The reinforcement learning competition\footnote{http://www.rl-competition.org/} is an annual event where teams from around the world compare their learning algorithms on a variety of challenging environments. The RL-Glue Software has been used as the evaluation system for all three competitions. Finally, the Critter Bot\footnote{\url{http://www.cs.ualberta.ca/~sokolsky/critterbot/}} is a mobile robot that is outfitted with a unusually rich set of subjective sensors. The Critter Bot is compatible with RL-Glue agents; agents developed for simulated environments can easily deployed to the robot.
+\section{RL-Glue in Practice}
+RL-Glue has made a significant impact on the reinforcement learning community and has been used in several other projects. The reinforcement learning library\footnote{http://library.rl-community.org/} (RL-Libary) is a public repository of RL-Glue compatible agent, environment, and experiment programs.  The RL-Library is an open-source project that invites submissions from the reinforcement learning community.
+ RL-Viz\footnote{http://code.google.com/p/rl-viz/} is an API layered on top of  RL-Glue, and can be used to dynamically load agent and environment programs, modify parameters at runtime and visualize interaction and performance.  The reinforcement learning competition\footnote{http://www.rl-competition.org/} is an annual event where teams from around the world compare their learning algorithms on a variety of challenging environments. The RL-Glue Software has been used as the evaluation system for all three competitions. Critterbot\footnote{\url{http://www.cs.ualberta.ca/~sokolsky/critterbot/}} is a mobile robot platform that is compatible with RL-Glue; agents developed for simulated environments can easily be deployed to the robot.
 
-The socket architecture of RL-Glue can also be used to connect agent programs to other software projects. Currently, socket bridges exist for connecting RL-Glue to a keepaway soccer server, a real-time strategy game engine and an Atari emulator. Our socket architecture helps lower the barriers for researchers wishing to work on larger scale environments by providing a simple and familiar interface. These environments will soon be accessible via RL-Library. 
+The socket architecture of RL-Glue allow various projects to be connected as RL-Glue environment programs. Currently, socket bridges exist for connecting the keepaway soccer server, a real-time strategy game engine and an Atari emulator to RL-Glue. Our socket architecture helps lower the barriers for researchers wishing to work on larger scale environments by providing a simple and familiar interface. These environments will soon be accessible via RL-Library. 
 
 The RL-Glue Software has been used for teaching reinforcement learning in several university courses and evaluating learning performance in scientific articles published in leading conferences. The RL-Glue website\footnote{\url{http://glue.rl-community.org/rl-glue-in-practice}} includes an updated list of all known projects that have benefited from RL-Glue.
 
@@ -132,20 +134,41 @@ Some of these alternative packages are distributed with a number agents and envi
  
  
 \section{RL-Glue Open Source Project}
-%NOTE: I am thinking about removing codecs from the paper ...
-%Brian: I've noticed that its very low on codecs.  I think that's risky, but if you are pretty keen on it I'll see what I can do.
+\begin{tabular}{ l l }
+  Website &  \url{http://glue.rl-community.org} \\
+    &  \url{http://rl-glue.googlecode.com} \\
+    &  \url{http://rl-glue-ext.googlecode.com} \\
+  License & Apache 2.0  \\
+\end{tabular}
+\newline
+\newline
+RL-Glue is not just a tool: it is also a community project with many levels of possible participation. The community is invited to submit agent, environment and experiment programs to the RL-Library. Developers can also extend the reach of RL-Glue compatibility by writing external or internal -mode interfaces for their favorite programming language.  The RL-Glue Software project also welcomes code submissions and improvements for all parts of the code base.  We appreciate all of the contributions to these projects, and we try to keep track of them\footnote{\url{http://site-with-contributions}}.
 
-The RL-Glue Software is not just an evaluation tool or development environment: it is also a community project with many levels of possible participation. The easiest and most obvious way to participate is to submit agent, environment and experiment programs to the RL-Library. Developers can also extend the reach of RL-Glue  compatibility by writing socket-level interfaces for their favorite programming language.  The RL-Glue Software project also welcomes code submissions and improvements for all parts of the code base.   	
-
-The RL-Glue Software Project has received significant contributions at many of the levels discussed above. The Lisp socket code was contributed by Gabor Balazs. Jose Antonio Martin H. developed a native windows implementation of the RL-Glue Software. The RL-Library has also received several environments submitted from previous competitions participants and paper authors. %Webpage detailing project contributions?
+% The RL-Glue Software Project has received significant contributions at many of the levels discussed above. The Lisp socket code was contributed by Gabor Balazs. Jose Antonio Martin H. developed a native windows implementation of the RL-Glue Software. The RL-Library has also received several environments submitted from previous competitions participants and paper authors.
+%Webpage detailing project contributions?
 %Brian: That's a good idea. Very good.
 
 %Brian: Obviously, this is  WAY out of place.
-RL-Glue is available under the Apache License, Version 2.0.
-	
 
-\section{History of RL-Glue}
-The RL-Glue Software project has gone through several iterations adding new features, supported languages and developers. The first release of the software, RL-Glue 1.0 in 2005, provided support for C/C++, Java and Python through a file-pipe interface. The primary contributors at the time were Adam White, Mark Lee and Richard Sutton. The next release of the software, RL-Glue 2.0 in 2007, introduced the socket communication architecture. RL-Glue 2.0 was created by White, Andrew Butcher, Lee, and Brian Tanner. The current release adds new languages (Matlab and Lisp), new example projects, platform-specific distributions, install programs, extensive documentation, and more.  The primary developer of RL-Glue 3.0 is Brian Tanner.
+
+
+\section{Acknowledgements}
+We would like to thank all of the users, testers, and developers for their contributions to RL-Glue 3.0. Special thanks to 
+Gabor Balasz,  %get the accents right
+Jose Antonio Martin H.,  %get the accents right
+Scott Livingston, %Middle Initial?
+Marc Bellemare, 
+Istvan Svita,  %get the accents right
+Marc Lanctot, 
+Anna Koop, 
+Dan Lizotte,
+Richard Sutton,
+Monica Dinculescu,
+Jordan Frank, and
+Andrew Butcher.  Of course, we also owe a great debt to all of the talented people responsible for the history of RL-Glue\footnote{\url{http://site-with-history}}.
+
+% \section{History of RL-Glue}
+% The RL-Glue Software project has gone through several iterations adding new features, supported languages and developers. The first release of the software, RL-Glue 1.0 in 2005, provided support for C/C++, Java and Python through a file-pipe interface. The primary contributors at the time were Adam White, Mark Lee and Richard Sutton. The next release of the software, RL-Glue 2.0 in 2007, introduced the socket communication architecture. RL-Glue 2.0 was created by White, Andrew Butcher, Lee, and Brian Tanner. The current release adds new languages (Matlab and Lisp), new example projects, platform-specific distributions, install programs, extensive documentation, and more.  The primary developer of RL-Glue 3.0 is Brian Tanner.
    
 
 
@@ -161,7 +184,7 @@ The RL-Glue Software project has gone through several iterations adding new feat
                           % for long bibs.
 
 
-
+\bibliographystyle{natbib}
 \bibliography{jmlrTake2}
 
 
