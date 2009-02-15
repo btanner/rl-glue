@@ -228,6 +228,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 GLUE_RELEASE = 3:0:0
 GLUE_VERSION = 3:0:0
+EXTRA_DIST = rl_glue.1
 @MINGW_TRUE@WINFLAGS = -lws2_32
 man_MANS = rl_glue.1
 EXTRA_C_FLAGS = -O2
