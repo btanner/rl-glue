@@ -46,7 +46,9 @@
 
 \begin{abstract}%
 %Note: will fix this later. still represents the paper well. but needs to be touched up
-RL-Glue (Reinforcement Learning Glue) provides a standard interface that allows reinforcement learning agents, environments, and experiment programs to communicate with each other, even if they are written in different languages. The standardization provided by RL-Glue facilitates code-sharing and collaboration, reducing the need to re-engineer tasks and experimental apparatus from the literature in order to verify and compare-to the results of others.
+RL-Glue (Reinforcement Learning Glue) provides a standard programming interface for learning experiments.
+%that allows reinforcement learning agents, environments, and experiment programs to communicate with each other, even if they are written in different languages. 
+The standardization provided by RL-Glue facilitates code-sharing and collaboration, reducing the need to re-engineer tasks and experimental apparatus from the literature in order to verify and compare-to the results of others.
 RL-Glue is well suited for empirical research, course work and industrial scale projects. Our software features a minimalist interface and supports C, C++, Java, Python, Matlab and Lisp and runs on many computing platforms including Linux, Mac OS X, and Microsoft Windows. RL-Glue can be easily extended to support additional programming languages and other evaluation software using a TCP/IP interface. RL-Glue has been used to teach classes, to evaluate participants during international reinforcement learning competitions and is currently used by several other open-source software and hardware projects.
 \end{abstract}
 
@@ -58,7 +60,7 @@ In reinforcement learning an {\it agent} learns the effects of its {\it actions}
  
 
 
-Different members of the reinforcement learning community create their agents and environments using various incompatible software frameworks, making collaboration difficult and thus slowing the progress in our community. It  can be time consuming, difficult, and sometimes even impossible to exactly reproduce the work of others.  There is simply not enough space in the course of a conference publication to share a detailed specification of the environment, the agent, and the overall experimental apparatus.
+Different members of the reinforcement learning community create agent and environment programs using various incompatible software frameworks, making collaboration difficult and thus slowing the progress in our community. It  can be time consuming, difficult, and sometimes even impossible to exactly reproduce the work of others.  There is simply not enough space in the course of a conference publication to share a detailed specification of the environment, the agent, and the overall experimental apparatus.
 In the most extreme cases, the source code for some reinforcement learning environments have become publicly available in different variations that are still each referred to, in the literature, as ``the standard", ``well-known" or ``classical"  versions \citep{whiteThesis}. %The RL-Glue Software Project is meant alleviate the evaluation difficulties facing reinforcement learning practitioners.
 %Brian Feb 12 2009: This last sentence is important, or something like it is, to cap off the paragraph, but I really don't like that sentence.
 
@@ -68,7 +70,7 @@ In the most extreme cases, the source code for some reinforcement learning envir
 
 %Brian: I think it's strong enough as is.  But, I think it needs another paragraph to get us off and running.
 
-We believe that a standard programming interface for reinforcement learning experiments will remove the barriers to collaboration and accelerate the pace of research in reinforcement learning.  To encourage widespread adoption, this interface should be easy to adhere to and it should not force the community to abandon their favorite tools or languages.  With these goals in mind, we have implemented the RL-Glue Software Project: a language independent interface for reinforcement learning experiments.
+We believe that a standard programming interface for reinforcement learning experiments will remove the barriers to collaboration and accelerate the pace of research in reinforcement learning.  To encourage widespread adoption, this interface should be easy to adhere to and it should not force users to abandon their favorite tools or languages.  With these goals in mind, we have developed the RL-Glue Software Project: a language independent interface for reinforcement learning experiments.
 
 
 
@@ -80,7 +82,7 @@ We believe that a standard programming interface for reinforcement learning expe
 
 
 %Brian: I agree with Shimon when he made this point about the AIM paper, we can't cite a paper that doesn't exist.  Perhaps you guys can release a tech report before this gets submitted.
-\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}), illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement learning framework into four main components: the agent program, environment program, experiment program and the RL-Glue interface. The agent program contains the learning algorithm and action selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program controls the experiment's execution, including the sequence of agent-environment interactions and capturing statistical information about the agent's performance.  The RL-Glue interface mediates the communication between the agent and environment programs in response to commands from the experiment program. 
+\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}), illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement learning framework into four main components: the agent program, environment program, experiment program and the RL-Glue interface. The agent program contains the learning algorithm and action selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program controls the experiment's execution, including the sequence of agent-environment interactions and agent performance evaluation.  The RL-Glue interface mediates the communication between the agent and environment programs in response to commands from the experiment program. 
 
 \begin{figure}[ht]
 \begin{center}
@@ -91,6 +93,11 @@ We believe that a standard programming interface for reinforcement learning expe
 \vspace{-0.4cm}
 \end{figure}
 
+%<<<<<<< .mine
+%%Brian: I agree with Shimon when he made this point about the AIM paper, we can't cite a paper that doesn't exist.  Perhaps you guys can release a tech report before this gets submitted.
+%\citeauthor{whitesutton}'s RL-Glue Protocol (\citeyear{whitesutton}), illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement learning framework into four main components: the agent program, environment program, experiment program and the RL-Glue interface. The agent program contains the learning algorithm and action selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program controls the experiment's execution, including the sequence of agent-environment interactions and collects statistics about the agent's performance.  The RL-Glue interface mediates the communication between the agent and environment programs in response to commands from the experiment program. 
+%=======
+%>>>>>>> .r992
 
 The RL-Glue Software (RL-Glue) is an implementation of \citeauthor{whiteThesis}'s RL-Glue Protocol.  RL-Glue can be used either in {\it internal} or {\it external} mode.  When using \textit{internal} mode, the agent, environment and experiment are linked into a single program, and their communication is through function calls.  Internal mode is currently an option if the agent, environment, and experiment are written exclusively in Java or C/C++.  When using  \textit{external} mode, the agent, environment and experiment are linked into separate programs.  Each program connects to the RL-Glue server program, and all communication is over TCP/IP socket connections. The external mode allows these programs to be written in any programming language that supports socket communication.  External mode is currently supported for C/C++, Java, Python, Lisp, and Matlab.
 
@@ -110,7 +117,7 @@ Each mode has its strengths and weaknesses. Internal mode has less overhead, so 
 
 
 \section{RL-Glue in Practice}
-RL-Glue has provided a common interface for a number of software and hardware projects in the reinforcement learning community.  For example, there is an annual competition,\footnote{\url{http://www.rl-competition.org/}} where teams from around the world compare their learning algorithms on a variety of challenging environments.  The competition software can be used to dynamically load agent and environment programs, modify parameters at runtime and visualize interaction and performance, all using an API\footnote{\url{http://code.google.com/p/rl-viz/}} that is layered on top of RL-Glue.  At the conclusion of the competition, all of the environments and sample agents are added to the RL-Library,\footnote{\url{http://library.rl-community.org/}} a public, community-supported repository of agent, environment, and experiment programs that are compatible with RL-Glue.
+RL-Glue has provided a common interface for a number of software and hardware projects in the reinforcement learning community.  For example, there is an annual competition,\footnote{\url{http://www.rl-competition.org/}} where teams from around the world compare their learning algorithms on a variety of challenging environments.  The competition software uses an API\footnote{\url{http://code.google.com/p/rl-viz/}} that is layered on top of RL-Glue to dynamically load agent and environment programs, modify parameters at runtime and visualize interaction and performance.  All of the environments and sample agents, provided with the competition software, are added to the RL-Library,\footnote{\url{http://library.rl-community.org/}} a public, community-supported repository of RL-Glue compatible code. Additionally, the RL-Library has been designed as anarchive for top competition agents, experiment code used in publications, challenge problems and state of the art agent programs. 
 
 
 
@@ -123,8 +130,8 @@ RL-Glue has been used for teaching reinforcement learning in several university 
 \section{Other Reinforcement Learning Software Projects}
 RL-Glue is not the first software project that aims to  standardize empirical reinforcement learning or to make agent and environment programs more accessible within our community.  However, RL-Glue is the only project that offers a standardized language-independent interface, rich actions and observations, and fine-grained control of the experiment.
 
-These other projects, most notably: CLSquare,\footnote{\url{http://www.ni.uos.de/index.php?id=70}}  PIQLE,\footnote{\url{http://piqle.sourceforge.net/}} RL Toolbox,\footnote{\url{http://www.igi.tugraz.at/ril-toolbox/}
-} JRLF,\footnote{\url{http://mykel.kochenderfer.com/jrlf/}}  and LibPG,\footnote{\url{http://code.google.com/p/libpgrl/}} offer significant value to the reinforcement learning community by offering agents and environments, intuitive visualizations, programming tools, etc.  Users should not be forced to choose between RL-Glue and these alternative projects. Our design goals have been to make it relatively easy to make existing frameworks communicate with RL-Glue.  We are eager to offer assistance in bridging these frameworks to RL-Glue, with the hope of improving access to all of these tools for all members of our community.
+Other projects, most notably: CLSquare,\footnote{\url{http://www.ni.uos.de/index.php?id=70}}  PIQLE,\footnote{\url{http://piqle.sourceforge.net/}} RL Toolbox,\footnote{\url{http://www.igi.tugraz.at/ril-toolbox/}
+} JRLF,\footnote{\url{http://mykel.kochenderfer.com/jrlf/}}  and LibPG,\footnote{\url{http://code.google.com/p/libpgrl/}} offer significant value to the reinforcement learning community by offering agents and environments, intuitive visualizations, programming tools, etc.  Users should not be forced to choose between RL-Glue and these alternative projects. Our design goals makes it relatively easy to interface existing frameworks with RL-Glue.  We are eager to offer assistance in bridging these frameworks to RL-Glue, with the hope of improving access to all of these tools for all members of our community.
 
 
 
