@@ -24,12 +24,13 @@
 
 \begin{document}
 
-\title{The RL-Glue Software Project : A Language-Independent Interface for Reinforcement-Learning Experiments}
+\title{RL-Glue : Language-Independent Software for Reinforcement-Learning Experiments}
 
 
 \author{\name Brian Tanner \AND Adam White  \email \{btanner,awhite\}@cs.ualberta.ca \\
        \addr Department of Computing Science\\
        University of Alberta\\
+/bin/bash: University: command not found
        Edmonton, AB 98195-4322, Canada}
 
 \editor{ Soeren Sonnenburg}
@@ -59,7 +60,7 @@ We believe that a standard programming interface for reinforcement-learning expe
 
 \section{RL-Glue}
 
-\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}), illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement-learning framework into four main components: the agent program, the environment program, the experiment program and the RL-Glue interface. The agent program contains the learning algorithm and action-selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program directs the experiment's execution, including the sequence of agent-environment interactions and agent performance evaluation.  The RL-Glue interface mediates the communication between the agent and environment programs in response to commands from the experiment program. 
+\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}) describes how decision-making, data collection, and problem description aspects of a reinforcement-learning experiment should be arranged into components, and how these components should communicate with each other.  This protocol, illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement-learning experiment into four main components: the agent program, the environment program, the experiment program and the RL-Glue program. The agent program contains the learning algorithm and action-selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program directs the experiment's execution, including the sequence of agent-environment interactions and agent performance evaluation.  The RL-Glue program mediates the communication between the agent and environment programs in response to commands from the experiment program. 
 
 \begin{figure}[ht]
 \begin{center}
