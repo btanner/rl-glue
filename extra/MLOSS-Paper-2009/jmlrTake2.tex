@@ -44,7 +44,12 @@ RL-Glue is well suited for empirical research, course work and industrial-scale 
 \end{abstract}
 
 \section{Introduction and Motivation}
-In reinforcement learning an {\it agent} learns the effects of its {\it actions} through trial and error interaction with an {\it environment} \citep{rlbook, rlsurvey,ndp}. The agent selects actions based on {\it observations} from the environment and scalar {\it rewards}. The agent's objective is to select actions which maximize its future rewards. The observations and rewards produced by the environment depend on the actions selected by the agent; the environment is not a static data-set, but rather an interactive computer program.
+Reinforcement learning is a popular branch of machine learning. Reinforcement learning methods have been successfully applied to several challenging problems including backgammon, helicopter flight  and evaluator control\citep{rlbook}. Outside of machine learning, reinforcement learning models and formalisms have influenced operations research, psychology and neuroscience. 
+
+The reinforcement learning problem cannot be encoded in a data-file. In reinforcement learning, an {\it agent} learns from the consequences of its {\it actions}, rather than explicit instruction as in supervised learning \citep{rlbook, rlsurvey,ndp}. The agent selects actions based on {\it observations} from the {\it environment} and scalar {\it rewards}. The agent's objective is to select actions which maximize its future rewards. The observations and rewards produced by the environment depend on the actions selected by the agent; the agent and environment must be interactive computer programs.
+ 
+
+%In reinforcement learning an {\it agent} learns the effects of its {\it actions} through trial and error interaction with an {\it environment} \citep{rlbook, rlsurvey,ndp}. The agent selects actions based on {\it observations} from the environment and scalar {\it rewards}. The agent's objective is to select actions which maximize its future rewards. The observations and rewards produced by the environment depend on the actions selected by the agent; the environment is not a static data-set, but rather an interactive computer program.
 
 
 Different members of the reinforcement-learning community create agent and environment programs using various incompatible software frameworks, making collaboration difficult and thus slowing progress in our community. It  can be time consuming, difficult, and sometimes even impossible to exactly reproduce the work of others.  There is simply not enough space in the course of a conference publication to share a detailed specification of the environment, the agent, and the overall experimental apparatus.
