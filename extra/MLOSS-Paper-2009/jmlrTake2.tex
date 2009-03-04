@@ -64,20 +64,21 @@ We believe that a standard programming interface for reinforcement-learning expe
 	 
 
 \section{RL-Glue}
+%\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}) describes how decision-making, data collection, and problem description aspects of a reinforcement-learning experiment should be arranged into components, and how these components should communicate with each other.  This protocol, illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement-learning experiment into four programs: the agent, the environment, the experiment and the RL-Glue programs. 
 
-\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}) describes how decision-making, data collection, and problem description aspects of a reinforcement-learning experiment should be arranged into components, and how these components should communicate with each other.  This protocol, illustrated in Figure \ref{fig:RLDIA}, separates the reinforcement-learning experiment into four main components: the agent program, the environment program, the experiment program and the RL-Glue program. The agent program contains the learning algorithm and action-selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program directs the experiment's execution, including the sequence of agent-environment interactions and agent performance evaluation.  The RL-Glue program mediates the communication between the agent and environment programs in response to commands from the experiment program. 
+\citeauthor{whiteThesis}'s RL-Glue Protocol (\citeyear{whiteThesis}) controls the connection, communication, and data transfer between four programs: the agent, the environment, the experiment and the RL-Glue programs. The agent program contains the learning algorithm and action-selection mechanism. The environment program implements the dynamics of the task and generates the rewards. The experiment program directs the experiment's execution, including the sequence of agent-environment interactions and agent performance evaluation.  The RL-Glue program mediates the communication between the agent and environment programs in response to commands from the experiment program. The RL-Glue Software (RL-Glue) is an implementation of \citeauthor{whiteThesis}'s RL-Glue Protocol. 
+%This probably doesnt work as a topic sentence. Maybe this sentence is a good finish for the previous program
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=9cm]{glue.pdf}
 \vspace{-0.2cm}
-\caption{\small The RL-Glue Protocol treats the reinforcement-learning framework as four components.  Arrows indicate function call direction.}\label{fig:RLDIA}
+\caption{\small The four programs connected via the RL-Glue Protocol.  Arrows indicate function call direction.}\label{fig:RLDIA}
 \end{center}
 \vspace{-0.4cm}
 \end{figure}
 
-
-The RL-Glue Software (RL-Glue) is an implementation of \citeauthor{whiteThesis}'s RL-Glue Protocol.  RL-Glue can be used either in  internal or external mode.  In \textit{internal} mode, the agent, environment and experiment are linked into a single program, and their communication is through function calls.  Internal mode is currently an option if the agent, environment, and experiment are written exclusively in Java or C/C++.  In  \textit{external} mode, the agent, environment and experiment are linked into separate programs.  Each program connects to the RL-Glue server program, and all communication is over TCP/IP socket connections. The external mode allows these programs to be written in any programming language that supports socket communication.  External mode is currently supported for C/C++, Java, Python, Lisp, and Matlab.
+ RL-Glue can be used either in  internal or external mode.  In \textit{internal} mode, the agent, environment and experiment are linked into a single program, and their communication is through function calls.  Internal mode is currently an option if the agent, environment, and experiment are written exclusively in Java or C/C++.  In  \textit{external} mode, the agent, environment and experiment are linked into separate programs.  Each program connects to the RL-Glue server program, and all communication is over TCP/IP socket connections. The external mode allows these programs to be written in any programming language that supports socket communication.  External mode is currently supported for C/C++, Java, Python, Lisp, and Matlab.
 
 Each mode has its strengths and weaknesses. Internal mode has less overhead, so it can execute more steps per second. External mode is more flexible and portable.  The performance difference between the two modes vanishes as the agent or environment becomes complex such that computation dominates the socket overhead in terms of time per step.  The agent and environment are indifferent and unaware of their execution mode: the difference in modes lies only in how the agent and environment are linked or loaded.
 
