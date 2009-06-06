@@ -421,11 +421,14 @@ unsigned int rlCopyADTToBuffer(const rl_abstract_type_t* src, rlBuffer* dst, uns
 	/* The header is made up of the counts: numInts, numDoubles, and numChars */
 	const int headerSize = sizeof(unsigned int) * 3;
 	/* The body is all of the ints, doubles, and chars */
-	const int dataSize   = src->numInts * sizeof(int) + src->numDoubles * sizeof(double) + src->numChars * sizeof(char);
-
+	int dataSize   = 0;
+	
 	if(src==0){
 		src=&emptyAbstractType;
 	}
+	
+	dataSize=src->numInts * sizeof(int) + src->numDoubles * sizeof(double) + src->numChars * sizeof(char);
+	
 	__RL_CHECK_STRUCT(src);
 
 	rlBufferReserve(dst, dst->size + headerSize + dataSize);

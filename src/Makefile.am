@@ -9,7 +9,7 @@ if MINGW
 endif
 man_MANS = rl_glue.1
 
-EXTRA_C_FLAGS=-O2
+EXTRA_C_FLAGS=-O2 -g
 lib_LTLIBRARIES = librlutils.la librlglue.la librlgluenetdev.la
 
 #librlutils is just the convenience methods for manipulating the RL structures
@@ -22,7 +22,7 @@ librlutils_la_CFLAGS = $(AM_CFLAGS) -Wall -pedantic -std=c99 -g
 
 #librlglue is for direct-compile c/c++ experiments
 #It does not use any of the network code
-librlglue_la_CFLAGS = -Wall -pedantic -std=c99 $(EXTRA_C_FLAGS) -DDEBUG_GLUE_NETWORK
+librlglue_la_CFLAGS = -Wall -pedantic -std=c99 $(EXTRA_C_FLAGS) -DDEBUG_GLUE_NETWORK 
 librlglue_la_SOURCES = RL_direct_experiment.c RL_direct_environment.c RL_direct_agent.c RL_glue_debug.c RL_glue.c rlglue/RL_common.h rlglue/Agent_common.h rlglue/Environment_common.h rlglue/RL_glue.h
 librlglue_la_LDFLAGS= -version-info $(GLUE_VERSION) -release $(GLUE_RELEASE)
 librlglue_la_includedir=$(includedir)/rlglue

@@ -114,7 +114,7 @@ const reward_observation_terminal_t* RL_env_step(const action_t* action){
 	}
 
 const reward_observation_action_terminal_t *RL_step() {
-	static reward_observation_action_terminal_t roa={0};
+	static reward_observation_action_terminal_t roa={0,0,0,0};
 	const reward_observation_terminal_t *ro;
   	double this_reward=0;
 	const observation_t *last_state;

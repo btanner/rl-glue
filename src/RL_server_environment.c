@@ -102,7 +102,7 @@ const observation_t *env_start() {
 
 const reward_observation_terminal_t *env_step(const action_t *theAction) {
   int envState = kEnvStep;
-  static reward_observation_terminal_t ro = {0};
+  static reward_observation_terminal_t ro = {0,0,0};
   unsigned int offset = 0;
 
   __RL_CHECK_STRUCT(theAction)
